@@ -1,2 +1,2 @@
 # aem-aws-stack-builder
-AWS Cloudformation (yaml) for creating AEM Stack
+Cloudformation templates (yaml) for creating an AEM Stack

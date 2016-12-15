@@ -1,0 +1,353 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create Subnets, InternetGateway, and RouteTable for AEM Stack
+
+Parameters:
+  VpcIdParameter:
+    Type: String
+    Default: vpc-342aec50
+    Description: The VPC to create the AEM Network in.
+  AvailabilityZoneAParameter:
+    Type: String
+    Default: ap-southeast-2a
+    Description: Availability Zone A
+  AvailabilityZoneBParameter:
+    Type: String
+    Default: ap-southeast-2b
+    Description: Availability Zone B
+  PublishDispatcherSubnetACidrBlockParameter:
+    Type: String
+    Default: 10.0.10.0/25
+    Description: AEM Publish Dispatcher Subnet A Cidr Block
+  PublishDispatcherSubnetBCidrBlockParameter:
+    Type: String
+    Default: 10.0.10.128/25
+    Description: AEM Publish Dispatcher Subnet B Cidr Block
+  PublishSubnetACidrBlockParameter:
+    Type: String
+    Default: 10.0.11.0/25
+    Description: AEM Publish Subnet A Cidr Block
+  PublishSubnetBCidrBlockParameter:
+    Type: String
+    Default: 10.0.11.128/25
+    Description: AEM Publish Subnet B Cidr Block
+  AuthorSubnetACidrBlockParameter:
+    Type: String
+    Default: 10.0.12.0/25
+    Description: AEM Author Subnet A Cidr Block
+  AuthorSubnetBCidrBlockParameter:
+    Type: String
+    Default: 10.0.12.128/25
+    Description: AEM Author Subnet B Cidr Block
+  AuthorDispatcherSubnetACidrBlockParameter:
+    Type: String
+    Default: 10.0.13.0/25
+    Description: AEM Author Dispatcher Subnet A Cidr Block
+  AuthorDispatcherSubnetBCidrBlockParameter:
+    Type: String
+    Default: 10.0.13.128/25
+    Description: AEM Author Dispatcher Subnet B Cidr Block
+  ToolSubnetACidrBlockParameter:
+    Type: String
+    Default: 10.0.14.0/25
+    Description: Tool Subnet A Cidr Block
+  ToolSubnetBCidrBlockParameter:
+    Type: String
+    Default: 10.0.14.128/25
+    Description: Tool Subnet B Cidr Block
+
+
+Resources:
+  Ec2InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: AEM VPC Internet Gateway
+  Ec2VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId:
+        Ref: Ec2InternetGateway
+      VpcId:
+        Ref: VpcIdParameter
+
+
+  PublishDispatcherSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: PublishDispatcherSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Publish Dispatcher Subnet A
+      VpcId:
+        Ref: VpcIdParameter
+  PublishDispatcherSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: PublishDispatcherSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Publish Dispatcher Subnet B
+      VpcId:
+        Ref: VpcIdParameter
+
+  PublishSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: PublishSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Publish Subnet A
+      VpcId:
+        Ref: VpcIdParameter
+  PublishSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: PublishSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Publish Subnet B
+      VpcId:
+        Ref: VpcIdParameter
+
+  AuthorSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: AuthorSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Author Subnet A
+      VpcId:
+        Ref: VpcIdParameter
+  AuthorSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: AuthorSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Author Subnet B
+      VpcId:
+        Ref: VpcIdParameter
+
+  AuthorDispatcherSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: AuthorDispatcherSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Author Dispatcher Subnet A
+      VpcId:
+        Ref: VpcIdParameter
+  AuthorDispatcherSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: AuthorDispatcherSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Author Dispatcher Subnet B
+      VpcId:
+        Ref: VpcIdParameter
+
+  ToolSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: ToolSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Tool Subnet A
+      VpcId:
+        Ref: VpcIdParameter
+  ToolSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: ToolSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: AEM Tool Subnet B
+      VpcId:
+        Ref: VpcIdParameter
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VpcIdParameter
+      Tags:
+        - Key: Name
+          Value: AEM VPC Public Route Table
+  PublicInternetGatewayRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: Ec2InternetGateway
+      RouteTableId:
+        Ref: PublicRouteTable
+    DependsOn: Ec2VPCGatewayAttachment
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VpcIdParameter
+      Tags:
+        - Key: Name
+          Value: AEM VPC Private Route Table
+
+  PublishDispatcherSubnetAPublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PublicRouteTable
+      SubnetId:
+        Ref: PublishDispatcherSubnetA
+  PublishDispatcherSubnetBPublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PublicRouteTable
+      SubnetId:
+        Ref: PublishDispatcherSubnetB
+
+  PublishSubnetAPrivatecRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PublishSubnetA
+  PublishSubnetBPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PublishSubnetB
+  AuthorSubnetAPrivatecRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: AuthorSubnetA
+  AuthorSubnetBPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: AuthorSubnetB
+  AuthorDispatcherSubnetAPrivatecRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: AuthorDispatcherSubnetA
+  AuthorDispatcherSubnetBPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: AuthorDispatcherSubnetB
+  ToolSubnetAPrivatecRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: ToolSubnetA
+  ToolSubnetBPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: ToolSubnetB
+
+
+Outputs:
+  PublishDispatcherSubnetA:
+    Value: 
+      Ref: PublishDispatcherSubnetA
+    Description: The Publish Dispatcher Subnet in Availability Zone A
+  PublishDispatcherSubnetB:
+    Value: 
+      Ref: PublishDispatcherSubnetB
+    Description: The Publish Dispatcher Subnet in Availability Zone B
+  PublishSubnetA:
+    Value: 
+      Ref: PublishSubnetA
+    Description: The Publish Subnet in Availability Zone A
+  PublishSubnetB:
+    Value: 
+      Ref: PublishSubnetB
+    Description: The Publish Subnet in Availability Zone B
+  AuthorSubnetA:
+    Value: 
+      Ref: AuthorSubnetA
+    Description: The Author Subnet in Availability Zone A
+  AuthorSubnetB:
+    Value: 
+      Ref: AuthorSubnetB
+    Description: The Author Subnet in Availability Zone B
+  AuthorDispatcherSubnetA:
+    Value: 
+      Ref: AuthorDispatcherSubnetA
+    Description: The Author Dispatcher Subnet in Availability Zone A
+  AuthorDispatcherSubnetB:
+    Value: 
+      Ref: AuthorDispatcherSubnetB
+    Description: The Author Dispatcher Subnet in Availability Zone B
+  ToolSubnetA:
+    Value: 
+      Ref: ToolSubnetA
+    Description: The Tool Subnet in Availability Zone A
+  ToolSubnetB:
+    Value: 
+      Ref: ToolSubnetB
+    Description: he Tool Subnet in Availability Zone B

@@ -1,0 +1,36 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create a VPC for the AEM Stack
+
+Parameters:
+  Ec2VpcCidrBlockParameter:
+    Type: String
+    Default: 10.0.8.0/21
+    Description: The CidrBlock for the VPC
+  Ec2VpcTagNameParameter:
+    Type: String
+    Default: AEM VPC
+    Description: The name of the VPC for the AEM Stack
+
+Resources:
+  Ec2Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock:
+        Ref: Ec2VpcCidrBlockParameter
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value:
+            Ref: Ec2VpcTagNameParameter
+
+Outputs:
+  Ec2Vpc:
+    Value: 
+      Ref: Ec2Vpc
+    Description: The newly created VPC for the AEM Stack
+    
