@@ -13,11 +13,37 @@ Requirements
 ## Usage
 
 
+Create VPC Stack:
+```
+make create-vpc-stack
+```
+
+
+Create Network Stack:
+```
+make create-network-stack
+```
+
+
+Delete VPC Stack:
+
+```
+make delete-vpc-stack
+```
+
+
+Delete Network Stack:
+```
+make delete-network-stack
+```
+
+
+
 
 
 ## Configuration
 
-
+Work in Progress
 
 
 ## Development
@@ -25,7 +51,7 @@ Requirements
 Requirements:
 * [ShellCheck](https://github.com/koalaman/shellcheck)
 
-Validate cloudformation templates:
+Validate Cloudformation templates:
 ```
 make validate
 ```
