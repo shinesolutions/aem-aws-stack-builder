@@ -33,4 +33,3 @@ Outputs:
     Value: 
       Ref: Ec2Vpc
     Description: The newly created VPC for the AEM Stack
-    
