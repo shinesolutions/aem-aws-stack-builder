@@ -4,14 +4,9 @@ validate:
 shellcheck:
 	shellcheck scripts/validate.sh
 
-create-vpc-stack:
-	./scripts/create-stack.sh michaeld-aem-vpc-stack templates/vpc.yaml
+create-stack:
+	./scripts/create-stack.sh michaeld-aem-${stack}-stack templates/${stack}.yaml
 
-delete-vpc-stack:
-	./scripts/delete-stack.sh michaeld-aem-vpc-stack templates/vpc.yaml
+delete-stack:
+	./scripts/delete-stack.sh michaeld-aem-${stack}-stack templates/${stack}.yaml
 
-create-network-stack:
-	./scripts/create-stack.sh michaeld-aem-network-stack templates/network.yaml
-
-delete-network-stack:
-	./scripts/delete-stack.sh michaeld-aem-network-stack templates/network.yaml
