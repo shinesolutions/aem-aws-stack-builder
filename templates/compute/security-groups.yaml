@@ -36,7 +36,7 @@ Resources:
       GroupDescription: AEM Publish Dispatcher Security Group
       SecurityGroupEgress:
         - IpProtocol: "-1"
-          CidrIp: 10.0.20.0/24
+          CidrIp: 10.0.21.0/24
       SecurityGroupIngress:
         - IpProtocol: "-1"
           CidrIp: 10.0.20.0/24
