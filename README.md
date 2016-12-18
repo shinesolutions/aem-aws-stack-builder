@@ -15,28 +15,38 @@ Requirements
 
 Create VPC Stack:
 ```
-make create-stack stack=vpc
+make create-network-stack stack=vpc
 ```
 
 
 Create Network Stack:
 ```
-make create-stack stack=network
+make create-network-stack stack=network
 ```
 
 
 Delete VPC Stack:
 
 ```
-make delete-stack stack=vpc
+make delete-network-stack stack=vpc
 ```
 
 
 Delete Network Stack:
 ```
-make delete-stack stack=network
+make delete-network-stack stack=network
 ```
 
+
+Create Security Groups Stack:
+```
+make create-compute-stack stack=security-groups
+```
+
+Delete Security Groups Stack:
+```
+make delete-compute-stack stack=security-groups
+```
 
 
 

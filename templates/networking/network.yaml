@@ -7,7 +7,7 @@ Description:
 Parameters:
   VpcIdParameter:
     Type: String
-    Default: vpc-342aec50
+    Default: vpc-ddc001b9
     Description: The VPC to create the AEM Network in.
   AvailabilityZoneAParameter:
     Type: String

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TEMPLATES="$PWD/templates/*"
+TEMPLATES="$PWD/templates/*/*"
 
 for template in $TEMPLATES
 do
