@@ -6,7 +6,7 @@ Description:
 
 Parameters:
   VpcIdParameter:
-    Type: String
+    Type: AWS::EC2::VPC::Id
     Default: vpc-ddc001b9
     Description: The VPC to create the AEM Network in.
   AvailabilityZoneAParameter:

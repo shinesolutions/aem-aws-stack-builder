@@ -12,6 +12,7 @@ Requirements
 
 ## Usage
 
+### Network Stack
 
 Create VPC Stack:
 ```
@@ -37,6 +38,7 @@ Delete Network Stack:
 make delete-network-stack stack=network
 ```
 
+### Compute Stack
 
 Create Security Groups Stack:
 ```
