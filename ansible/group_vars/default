@@ -1,6 +1,0 @@
-vpc:
-  stack_name: "aem-vpc-stack"
-
-network:
-  stack_name: "aem-network-stack"
-  vpc_id: "vpc-a59454c1"

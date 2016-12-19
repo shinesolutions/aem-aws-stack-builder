@@ -34,6 +34,18 @@
         template: "../templates/networking/network.yaml"
         template_parameters:
           VpcIdParameter: "{{ network.vpc_id }}"
+          AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"
+          AvailabilityZoneBParameter: "{{ aws.availability_zone_b }}"
+          PublishDispatcherSubnetACidrBlockParameter: "{{ network.publish_dispatcher_subnet_a_cidr_block }}"
+          PublishDispatcherSubnetBCidrBlockParameter: "{{ network.publish_dispatcher_subnet_b_cidr_block }}"
+          PublishSubnetACidrBlockParameter: "{{ network.publish_subnet_a_cidr_block }}"
+          PublishSubnetBCidrBlockParameter: "{{ network.publish_subnet_b_cidr_block }}"
+          AuthorSubnetACidrBlockParameter: "{{ network.author_subnet_a_cidr_block }}"
+          AuthorSubnetBCidrBlockParameter: "{{ network.author_subnet_b_cidr_block }}"
+          AuthorDispatcherSubnetACidrBlockParameter: "{{ network.author_dispatcher_subnet_a_cidr_block }}"
+          AuthorDispatcherSubnetBCidrBlockParameter: "{{ network.author_dispatcher_subnet_b_cidr_block }}"
+          ToolSubnetACidrBlockParameter: "{{ network.tool_subnet_a_cidr_block }}"
+          ToolSubnetBCidrBlockParameter: "{{ network.tool_subnet_b_cidr_block }}"
       tags:
       - create-network
 

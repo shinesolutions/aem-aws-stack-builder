@@ -29,4 +29,3 @@ ansible-create-network-stack:
 
 ansible-detele-network-stack:
 	ansible-playbook -vvv ansible/network-stack.yaml -i ansible/${inventory} --tags delete-network
-

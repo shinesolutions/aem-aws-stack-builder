@@ -1,0 +1,16 @@
+vpc:
+  stack_name: aem-vpc-stack
+
+network:
+  stack_name: aem-network-stack
+  vpc_id: vpc-a59454c1
+  publish_dispatcher_subnet_a_cidr_block: 10.0.10.0/25
+  publish_dispatcher_subnet_b_cidr_block: 10.0.10.128/25
+  publish_subnet_a_cidr_block: 10.0.11.0/25
+  publish_subnet_b_cidr_block: 10.0.11.128/25
+  author_subnet_a_cidr_block: 10.0.12.0/25
+  author_subnet_b_cidr_block: 10.0.12.128/25
+  author_dispatcher_subnet_a_cidr_block: 10.0.13.0/25
+  author_dispatcher_subnet_b_cidr_block: 10.0.13.128/25
+  tool_subnet_a_cidr_block: 10.0.14.0/25
+  tool_subnet_b_cidr_block: 10.0.14.128/25

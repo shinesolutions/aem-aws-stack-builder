@@ -58,6 +58,27 @@ Requirements:
 * [Boto](https://github.com/boto/boto)
 
 
+Create VPC Stack:
+```
+make ansible-create-vpc-stack inventory=default
+```
+
+Delete VPC Stack:
+```
+make ansible-delete-vpc-stack inventory=default
+```
+
+Create Network Stack:
+```
+make ansible-create-network-stack inventory=default
+```
+
+Delete Network Stack:
+```
+make ansible-delete-network-stack inventory=default
+```
+
+
 
 ## Configuration
 
@@ -78,5 +99,8 @@ Check Shell Scripts
 ```
 make shellcheck
 ```
+
+
+https://github.com/k1LoW/awspec
 
 
