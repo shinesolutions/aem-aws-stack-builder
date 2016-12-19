@@ -1,6 +1,2 @@
 aws:
   region: "ap-southeast-2"
-
-
-network:
-  vpc_id: "vpc-a59454c1"

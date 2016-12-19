@@ -7,17 +7,19 @@
   tasks:
     - name: Create AEM VPC Stack
       cloudformation:
-        stack_name: "aem-vpc-stack"
+        stack_name: "{{ vpc.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../templates/networking/vpc.yaml"
+        template_parameters:
+          Ec2VpcCidrBlockParameter: "{{ vpc.vpc_cidr_block }}"
       tags:
       - create-vpc
 
     - name: Delete AEM VPC Stack
       cloudformation:
-        stack_name: "aem-vpc-stack"
+        stack_name: "{{ vpc.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:
@@ -25,7 +27,7 @@
 
     - name: Create AEM Network Stack
       cloudformation:
-        stack_name: "aem-network-stack"
+        stack_name: "{{ network.stack_name }}"
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
@@ -37,7 +39,7 @@
 
     - name: Delete AEM Network Stack
       cloudformation:
-        stack_name: "aem-network-stack"
+        stack_name: "{{ network.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:
