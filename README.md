@@ -50,6 +50,12 @@ Delete Security Groups Stack:
 make delete-compute-stack stack=security-groups
 ```
 
+## Ansible
+
+Requirements:
+
+* [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
+* [Boto](https://github.com/boto/boto)
 
 
 

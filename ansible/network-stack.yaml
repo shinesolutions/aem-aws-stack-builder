@@ -1,0 +1,44 @@
+---
+- name: AEM Network CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Create AEM VPC Stack
+      cloudformation:
+        stack_name: "aem-vpc-stack"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../templates/networking/vpc.yaml"
+      tags:
+      - create-vpc
+
+    - name: Delete AEM VPC Stack
+      cloudformation:
+        stack_name: "aem-vpc-stack"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete-vpc
+
+    - name: Create AEM Network Stack
+      cloudformation:
+        stack_name: "aem-network-stack"
+        state: present
+        region: "{{ aws.region }}"
+        disable_rollback: true
+        template: "../templates/networking/network.yaml"
+        template_parameters:
+          VpcIdParameter: "{{ network.vpc_id }}"
+      tags:
+      - create-network
+
+    - name: Delete AEM Network Stack
+      cloudformation:
+        stack_name: "aem-network-stack"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete-network

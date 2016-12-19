@@ -15,3 +15,18 @@ create-compute-stack:
 
 delete-compute-stack:
 	./scripts/delete-stack.sh aem-${stack}-stack templates/compute/${stack}.yaml
+
+
+
+ansible-create-vpc-stack:
+	ansible-playbook -vvv ansible/network-stack.yaml --tags create-vpc
+
+ansible-delete-vpc-stack:
+	ansible-playbook -vvv ansible/network-stack.yaml --tags delete-vpc
+
+ansible-create-network-stack:
+	ansible-playbook -vvv ansible/network-stack.yaml --tags create-network
+
+ansible-detele-network-stack:
+	ansible-playbook -vvv ansible/network-stack.yaml --tags delete-network
+
