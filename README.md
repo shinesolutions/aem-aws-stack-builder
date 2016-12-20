@@ -60,22 +60,22 @@ Requirements:
 
 Create VPC Stack:
 ```
-make ansible-create-vpc-stack inventory=default
+make ansible-create-stack stack=vpc inventory=default
 ```
 
 Delete VPC Stack:
 ```
-make ansible-delete-vpc-stack inventory=default
+make ansible-delete-stack stack=vpc inventory=default
 ```
 
 Create Network Stack:
 ```
-make ansible-create-network-stack inventory=default
+make ansible-create-stack stack=network inventory=default
 ```
 
 Delete Network Stack:
 ```
-make ansible-delete-network-stack inventory=default
+make ansible-delete-stack stack=network inventory=default
 ```
 
 

@@ -1,0 +1,77 @@
+---
+- name: AEM Publish CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Get AEM Stack VPC
+      ec2_vpc_net_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ ec2_vpc.tag_name }}"
+      register: aem_stack_vpc
+      tags:
+       - create
+
+    - name: Get Publish AMI
+      ec2_ami_find:
+        ami_tags:
+          component: publish
+          version: "{{ publish.ami_version }}"
+        sort: creationDate
+        sort_order: descending
+        sort_end: 1
+      register: publish_ami
+      tags:
+       - create
+
+    - name: Get Publish Security Group
+      ec2_group_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": AEM Publish Security Group
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_security_group
+      tags:
+       - create
+
+    - name: Get Publish Subnet A
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": AEM Publish Subnet A
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_subnet_a
+      tags:
+       - create
+
+    - name: Get Publish Subnet B
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": AEM Publish Subnet B
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_subnet_b
+      tags:
+       - create
+
+    - name: Create AEM Publish Stack
+      cloudformation:
+        stack_name: "{{ publish.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../templates/compute/publish.yaml"
+        template_parameters:
+          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
+      tags:
+      - create
+
+    - name: Delete AEM Publish Stack
+      cloudformation:
+        stack_name: "{{ publish.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

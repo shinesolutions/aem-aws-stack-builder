@@ -1,0 +1,27 @@
+---
+- name: AEM VPC CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Create AEM VPC Stack
+      cloudformation:
+        stack_name: "{{ ec2_vpc.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../templates/networking/vpc.yaml"
+        template_parameters:
+          Ec2VpcCidrBlockParameter: "{{ ec2_vpc.cidr_block }}"
+          Ec2VpcTagNameParameter: "{{ ec2_vpc.tag_name }}"
+      tags:
+      - create
+
+    - name: Delete AEM VPC Stack
+      cloudformation:
+        stack_name: "{{ vpc.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

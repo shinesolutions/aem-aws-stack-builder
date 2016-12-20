@@ -1,0 +1,60 @@
+---
+- name: AEM Network CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Get AEM Stack VPC
+      ec2_vpc_net_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ ec2_vpc.tag_name }}"
+      register: aem_stack_vpc
+      tags:
+      - create
+
+    - name: Create AEM Network Stack
+      cloudformation:
+        stack_name: "{{ network.stack_name }}"
+        state: present
+        region: "{{ aws.region }}"
+        disable_rollback: true
+        template: "../templates/networking/network.yaml"
+        template_parameters:
+          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
+          AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"
+          AvailabilityZoneBParameter: "{{ aws.availability_zone_b }}"
+          Ec2InternetGatewayTagNameParameter: "{{ network.internet_gateway.tag_name }}"
+          PublishDispatcherSubnetACidrBlockParameter: "{{ network.publish_dispatcher.subnet_a.cidr_block }}"
+          PublishDispatcherSubnetATagNameParameter: "{{ network.publish_dispatcher.subnet_a.tag_name }}"
+          PublishDispatcherSubnetBCidrBlockParameter: "{{ network.publish_dispatcher.subnet_b.cidr_block }}"
+          PublishDispatcherSubnetBTagNameParameter: "{{ network.publish_dispatcher.subnet_b.tag_name }}"
+          PublishSubnetACidrBlockParameter: "{{ network.publish.subnet_a.cidr_block }}"
+          PublishSubnetATagNameParameter: "{{ network.publish.subnet_a.tag_name }}"
+          PublishSubnetBCidrBlockParameter: "{{ network.publish.subnet_b.cidr_block }}"
+          PublishSubnetBTagNameParameter: "{{ network.publish.subnet_b.tag_name }}"
+          AuthorSubnetACidrBlockParameter: "{{ network.author.subnet_a.cidr_block }}"
+          AuthorSubnetATagNameParameter: "{{ network.author.subnet_a.tag_name }}"
+          AuthorSubnetBCidrBlockParameter: "{{ network.author.subnet_b.cidr_block }}"
+          AuthorSubnetBTagNameParameter: "{{ network.author.subnet_b.tag_name }}"
+          AuthorDispatcherSubnetACidrBlockParameter: "{{ network.author_dispatcher.subnet_a.cidr_block }}"
+          AuthorDispatcherSubnetATagNameParameter: "{{ network.author_dispatcher.subnet_a.tag_name }}"
+          AuthorDispatcherSubnetBCidrBlockParameter: "{{ network.author_dispatcher.subnet_b.cidr_block }}"
+          AuthorDispatcherSubnetBTagNameParameter: "{{ network.author_dispatcher.subnet_b.tag_name }}"
+          ToolSubnetACidrBlockParameter: "{{ network.tool.subnet_a.cidr_block }}"
+          ToolSubnetATagNameParameter: "{{ network.tool.subnet_a.tag_name }}"
+          ToolSubnetBCidrBlockParameter: "{{ network.tool.subnet_b.cidr_block }}"
+          ToolSubnetBTagNameParameter: "{{ network.tool.subnet_b.tag_name }}"
+          PublicRouteTableTagNameParameter: "{{ network.internet_gateway.tag_name }}"
+          PrivateRouteTableTagNameParameter: "{{ network.internet_gateway.tag_name }}"
+      tags:
+      - create
+
+    - name: Delete AEM Network Stack
+      cloudformation:
+        stack_name: "{{ network.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

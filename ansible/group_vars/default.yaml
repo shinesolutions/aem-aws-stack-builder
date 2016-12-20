@@ -6,94 +6,108 @@ ec2_vpc:
 
 network:
   stack_name: aem-network-stack
-  publish_dispatcher_subnet_a_cidr_block: 10.0.10.0/25
-  publish_dispatcher_subnet_b_cidr_block: 10.0.10.128/25
-  publish_subnet_a_cidr_block: 10.0.11.0/25
-  publish_subnet_b_cidr_block: 10.0.11.128/25
-  author_subnet_a_cidr_block: 10.0.12.0/25
-  author_subnet_b_cidr_block: 10.0.12.128/25
-  author_dispatcher_subnet_a_cidr_block: 10.0.13.0/25
-  author_dispatcher_subnet_b_cidr_block: 10.0.13.128/25
-  tool_subnet_a_cidr_block: 10.0.14.0/25
-  tool_subnet_b_cidr_block: 10.0.14.128/25
+
+  internet_gateway:
+    tag_name: AEM VPC Internet Gateway
+
+  publish_dispatcher:
+    subnet_a:
+      cidr_block: 10.0.10.0/25
+      tag_name: AEM Publish Dispatcher Subnet A
+    subnet_b:
+      cidr_block: 10.0.10.128/25
+      tag_name: AEM Publish Dispatcher Subnet B
+
+  publish:
+    subnet_a:
+      cidr_block: 10.0.11.0/25
+      tag_name: AEM Publish Subnet A
+    subnet_b:
+      cidr_block: 10.0.11.128/25
+      tag_name: AEM Publish Subnet B
+
+  author:
+    subnet_a:
+      cidr_block: 10.0.12.0/25
+      tag_name: AEM Author Subnet A
+    subnet_b:
+      cidr_block: 10.0.12.128/25
+      tag_name: AEM Auhtor Subnet B
+
+  author_dispatcher:
+    subnet_a:
+      cidr_block: 10.0.13.0/25
+      tag_name: AEM Author Dispatcher Subnet A
+    subnet_b:
+      cidr_block: 10.0.13.128/25
+      tag_name: AEM Author Dispatcher Subnet B
+
+  tool:
+    subnet_a:
+      cidr_block: 10.0.14.0/25
+      tag_name: AEM Tool Subnet A
+    subnet_b:
+      cidr_block: 10.0.14.128/25
+      tag_name: AEM Tool Subnet B
+
+  public_route_table:
+    tag_name: AEM VPC Public Route Table
+
+  private_route_table:
+    tag_name: AEM VPC Private Route Table
+
   hosted_zone: aem.
 
+
 compute:
-  key_pair_name: aem-stack-key-pair
   stack_name: default
-  application_version: 
+  key_pair_name: aem-default-stack-key-pair
+  application_version: 1.0.0
 
 security_groups:
   stack_name: aem-security-groups-stack
+  publish_dispatcher_elb:
+    tag_name: AEM Publish Dispatcher ELB Security Group
+  publish_dispatcher:
+    tag_name: AEM Publish Dispatcher Security Group
+
 
 dispatcher:
-  ami_id: ami-429ea621
-
-publish_dispatcher_elb:
-  security_group: 
-  subnet_a:
-  subnet_b:
+  ami_version: 1.0.0
 
 publish_dispatcher:
-  security_group:
+  stack_name: aem-publish-dispatcher-stack
   instance_type: t2.micro
-  subnet_a:
-  subnet_b:
   min_size: 2
   max_size: 2
 
 publish:
-  ami_id: ami-3794ac54
-  security_group:
+  stack_name: aem-publish-stack
+  ami_version: 1.0.0
   instance_type: m3.large
-  subnet_a:
-  subnet_b:
   min_size: 2
   max_size: 2
 
 author:
-  ami_id: ami-059fa766
+  stack_name: aem-author-stack
+  ami_version: 1.0.0
   instance_type: m3.large
-  security_group: 
-
-author_primary:
-  subnet:  
-
-author_standby:
-  subnet:
-
-author_elb:
-  security_group: 
-  subnet_a:
-  subnet_b:
 
 author_dispatcher:
-  security_group:
+  stack_name: aem-author-dispatcher-stack
   instance_type: t2.micro
-  subnet_a:
-  subnet_b:
   min_size: 2
   max_size: 2
 
-author_dispatcher_elb:
-  security_group: 
-  subnet_a:
-  subnet_b:
-
-tools:
-  subnet_a:
-  subnet_b:
 
 orchestrator:
-  ami_id: ami-429ea621
+  ami_version: 1.0.0
   instance_type: t2.small
-  security_group:
   min_size: 1
   max_size: 1
 
 chaos_monkey:
-  ami_id: ami-429ea621
+  ami_version: 1.0.0
   instance_type: t2.micro
-  security_group:
   min_size: 1
   max_size: 1

@@ -18,14 +18,8 @@ delete-compute-stack:
 
 
 
-ansible-create-vpc-stack:
-	ansible-playbook -vvv ansible/network-stack.yaml -i ansible/${inventory} --tags create-vpc
+ansible-create-stack:
+	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags create
 
-ansible-delete-vpc-stack:
-	ansible-playbook -vvv ansible/network-stack.yaml -i ansible/${inventory} --tags delete-vpc
-
-ansible-create-network-stack:
-	ansible-playbook -vvv ansible/network-stack.yaml -i ansible/${inventory} --tags create-network
-
-ansible-detele-network-stack:
-	ansible-playbook -vvv ansible/network-stack.yaml -i ansible/${inventory} --tags delete-network
+ansible-delete-stack:
+	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags delete

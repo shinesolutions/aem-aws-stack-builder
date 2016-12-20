@@ -1,0 +1,47 @@
+---
+- name: AEM Tools CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Get AEM Stack VPC
+      ec2_vpc_net_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ ec2_vpc.tag_name }}"
+      register: aem_stack_vpc
+      tags:
+       - create
+
+    - name: Get Orchestrator AMI
+      ec2_ami_find:
+        ami_tags:
+          component: java
+          version: "{{ orchestrator.ami_version }}"
+        sort: creationDate
+        sort_order: descending
+        sort_end: 1
+      register: publish_ami
+      tags:
+       - create
+
+    - name: Create AEM Tools Stack
+      cloudformation:
+        stack_name: "{{ tools.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../templates/compute/tools.yaml"
+        template_parameters:
+          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
+      tags:
+      - create
+
+    - name: Delete AEM Tools Stack
+      cloudformation:
+        stack_name: "{{ tools.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

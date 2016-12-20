@@ -1,0 +1,27 @@
+---
+- name: AEM Author CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Get AEM Stack VPC
+      ec2_vpc_net_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ ec2_vpc.tag_name }}"
+      register: aem_stack_vpc
+      tags:
+      - create
+
+    - name: Get Author AMI
+      ec2_ami_find:
+        ami_tags:
+          component: author
+          version: "{{ author.ami_version }}"
+        sort: creationDate
+        sort_order: descending
+        sort_end: 1
+      register: author_ami
+      tags:
+      - create

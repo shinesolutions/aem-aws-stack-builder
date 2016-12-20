@@ -1,0 +1,87 @@
+---
+- name: AEM Publish Dispatcher CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Get AEM Stack VPC
+      ec2_vpc_net_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ ec2_vpc.tag_name }}"
+      register: aem_stack_vpc
+      tags:
+       - create
+
+    - name: Get Dispatcher AMI
+      ec2_ami_find:
+        ami_tags:
+          component: dispatcher
+          version: "{{ dispatcher.ami_version }}"
+        sort: creationDate
+        sort_order: descending
+        sort_end: 1
+      register: dispatcher_ami
+      tags:
+       - create
+
+    - name: Get Publish Dispatcher ELB Security Group
+      ec2_group_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": AEM Publish Dispatcher ELB Security Group
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_dispatcher_elb_security_group
+      tags:
+       - create
+
+    - name: Get Publish Dispatcher Subnet A
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.publish_dispatcher.subnet_a.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_dispatcher_subnet_a
+      tags:
+       - create
+
+    - name: Get Publish Dispatcher Subnet B
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.publish_dispatcher.subnet_b.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_dispatcher_subnet_b
+      tags:
+       - create
+
+    - name: Get Publish Dispatcher Security Group
+      ec2_group_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": AEM Publish Dispatcher Security Group
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_dispatcher_security_group
+      tags:
+       - create
+
+    - name: Create AEM Publish Dispatcher Stack
+      cloudformation:
+        stack_name: "{{ publish_dispatcher.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../templates/compute/publish-dispatcher.yaml"
+        template_parameters:
+          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
+      tags:
+      - create
+
+    - name: Delete AEM Publish Dispatcher Stack
+      cloudformation:
+        stack_name: "{{ publish_dispatcher.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

@@ -9,6 +9,14 @@ Parameters:
     Type: AWS::EC2::VPC::Id
     Default: vpc-ddc001b9
     Description: The VPC to create the AEM Stack Security Groups in.
+  PublishDispatcherELBSecurityGroupTagNameParameter:
+    Type: String
+    Default: AEM Publish Dispatcher ELB Security Group
+    Description: AEM Publish Dispatcher ELB Security Group Name
+  PublishDispatcherSecurityGroupTagNameParameter:
+    Type: String
+    Default: AEM Publish Dispatcher Security Group
+    Description: AEM Publish Dispatcher Security Group Name
 
 Resources:
   PublishDispatcherELBSecurityGroup:
@@ -26,7 +34,8 @@ Resources:
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
-          Value: AEM Publish Dispatcher ELB Security Group
+          Value:
+            Ref: PublishDispatcherELBSecurityGroupTagNameParameter
       VpcId: 
         Ref: VpcIdParameter
   
@@ -42,7 +51,8 @@ Resources:
           CidrIp: 10.0.20.0/24
       Tags:
         - Key: Name
-          Value: AEM Publish Dispatcher Security Group
+          Value:
+            Ref: PublishDispatcherSecurityGroupTagNameParameter
       VpcId: 
         Ref: VpcIdParameter
 
