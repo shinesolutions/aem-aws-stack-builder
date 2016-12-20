@@ -1,72 +1,622 @@
 ---
-AWSTemplateFormatVersion: "2010-09-09"
-
-Description:
-  Create security groups for the AEM Stack
-
-Parameters:
-  VpcIdParameter:
-    Type: AWS::EC2::VPC::Id
-    Default: vpc-ddc001b9
-    Description: The VPC to create the AEM Stack Security Groups in.
-  PublishDispatcherELBSecurityGroupTagNameParameter:
-    Type: String
-    Default: AEM Publish Dispatcher ELB Security Group
-    Description: AEM Publish Dispatcher ELB Security Group Name
-  PublishDispatcherSecurityGroupTagNameParameter:
-    Type: String
-    Default: AEM Publish Dispatcher Security Group
-    Description: AEM Publish Dispatcher Security Group Name
-
-Resources:
-  PublishDispatcherELBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties: 
-      GroupDescription: AEM Publish Dispatcher ELB Security Group
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: '80'
-          ToPort: '80'
-          CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp
-          FromPort: '443'
-          ToPort: '443'
-          CidrIp: 0.0.0.0/0
-      Tags:
-        - Key: Name
-          Value:
-            Ref: PublishDispatcherELBSecurityGroupTagNameParameter
-      VpcId: 
-        Ref: VpcIdParameter
-  
-  PublishDispatcherSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties: 
-      GroupDescription: AEM Publish Dispatcher Security Group
-      SecurityGroupEgress:
-        - IpProtocol: "-1"
-          CidrIp: 10.0.21.0/24
-      SecurityGroupIngress:
-        - IpProtocol: "-1"
-          CidrIp: 10.0.20.0/24
-      Tags:
-        - Key: Name
-          Value:
-            Ref: PublishDispatcherSecurityGroupTagNameParameter
-      VpcId: 
-        Ref: VpcIdParameter
-
-  PublishDispatcherELBSecurityGroupEgress:
-    Type: AWS::EC2::SecurityGroupEgress
-    Properties:
-      DestinationSecurityGroupId:  
-        Fn::GetAtt:
-        - PublishDispatcherSecurityGroup
-        - GroupId
-      FromPort: '443'
-      GroupId: 
-        Fn::GetAtt:
-        - PublishDispatcherELBSecurityGroup
-        - GroupId
-      IpProtocol: tcp
-      ToPort: '443'
+  AWSTemplateFormatVersion: "2010-09-09"
+  Description: "AEM - Security Group configuration"
+  Parameters:
+    VPCid:
+      Description: "VPC ID"
+      Type: "AWS::EC2::VPC::Id"
+      Default: ""
+    TagEnvironment:
+      Description: "Tag - Environment"
+      Type: "String"
+      Default: "DEV"
+  Resources:
+    SecGrpWebELB:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpWebELB"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "tcp"
+            FromPort: "80"
+            ToPort: "80"
+            CidrIp: "0.0.0.0/0"
+          -
+            IpProtocol: "tcp"
+            FromPort: "443"
+            ToPort: "443"
+            CidrIp: "0.0.0.0/0"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T1-SG-WebELB"
+    SecGrpWebELBE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMDispatcher"
+        GroupId:  !Ref "SecGrpWebELB"
+    SecGrpWebELBE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8080"
+        ToPort: "8080"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMDispatcher"
+        GroupId:  !Ref "SecGrpWebELB"
+    SecGrpAEMDispatcher:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMDispatcher"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        SecurityGroupEgress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.21.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T2-SG-AEMDispatcher"
+    SecGrpAEMDispatcherI0:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        SourceSecurityGroupId:  !Ref "SecGrpWebELB"
+        GroupId:  !Ref "SecGrpAEMDispatcher"
+    SecGrpAEMDispatcherI1:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMDispatcher"
+    SecGrpAEMDispatcherI2:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8080"
+        ToPort: "8080"
+        SourceSecurityGroupId:  !Ref "SecGrpWebELB"
+        GroupId:  !Ref "SecGrpAEMDispatcher"
+    SecGrpAEMDispatcherI3:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8080"
+        ToPort: "8080"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMDispatcher"
+    SecGrpAEMDispatcherE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4503"
+        ToPort: "4503"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMDispatcher"
+    SecGrpAEMDispatcherE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMDispatcher"
+    SecGrpAEMPublisher:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMPublisher"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        SecurityGroupEgress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.21.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T3-SG-AEMPublisher"
+    SecGrpAEMPublisherI0:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4503"
+        ToPort: "4503"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMDispatcher"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMPublisherI1:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4503"
+        ToPort: "4503"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMPublisherI2:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4503"
+        ToPort: "4503"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMOrchestrator"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMPublisherI3:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMDispatcher"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMPublisherI4:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMPublisherI5:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMOrchestrator"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMPublisherE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMDispatcher"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMPublisherE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8080"
+        ToPort: "8080"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMDispatcher"
+        GroupId:  !Ref "SecGrpAEMPublisher"
+    SecGrpAEMAuthor:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMAuthor"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        SecurityGroupEgress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.21.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T4A-SG-AEMAuthor"
+    SecGrpAEMAuthorI0:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4502"
+        ToPort: "4502"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAuthorELB"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorI1:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAuthorELB"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorI2:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorI3:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8023"
+        ToPort: "8023"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4503"
+        ToPort: "4503"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAthDispatcher"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorE2:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorE3:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorE4:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8023"
+        ToPort: "8023"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMAuthor"
+    SecGrpAEMAuthorELB:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMAuthorELB"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T4B-SG-AEMAuthorELB"
+    SecGrpAEMAuthorELBI0:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4502"
+        ToPort: "4502"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAthDispatcher"
+        GroupId:  !Ref "SecGrpAEMAuthorELB"
+    SecGrpAEMAuthorELBI1:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4502"
+        ToPort: "4502"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMOrchestrator"
+        GroupId:  !Ref "SecGrpAEMAuthorELB"
+    SecGrpAEMAuthorELBI2:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAthDispatcher"
+        GroupId:  !Ref "SecGrpAEMAuthorELB"
+    SecGrpAEMAuthorELBI3:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMOrchestrator"
+        GroupId:  !Ref "SecGrpAEMAuthorELB"
+    SecGrpAEMAuthorELBE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4502"
+        ToPort: "4502"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMAuthorELB"
+    SecGrpAEMAuthorELBE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMAuthorELB"
+    SecGrpAEMAthDispatcher:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMAthDispatcher"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        SecurityGroupEgress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.21.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T4C-SG-AEMAthDispatcher"
+    SecGrpAEMAthDispatcherI0:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+        GroupId:  !Ref "SecGrpAEMAthDispatcher"
+    SecGrpAEMAthDispatcherI1:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8080"
+        ToPort: "8080"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+        GroupId:  !Ref "SecGrpAEMAthDispatcher"
+    SecGrpAEMAthDispatcherI2:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMAuthor"
+        GroupId:  !Ref "SecGrpAEMAthDispatcher"
+    SecGrpAEMAthDispatcherE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4502"
+        ToPort: "4502"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthorELB"
+        GroupId:  !Ref "SecGrpAEMAthDispatcher"
+    SecGrpAEMAthDispatcherE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthorELB"
+        GroupId:  !Ref "SecGrpAEMAthDispatcher"
+    SecGrpAEMAthDispatcherELB:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMAthDispatcherELB"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T4D-SG-AEMAthDispatcherELB"
+    SecGrpAEMAthDispatcherELBI0:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "80"
+        ToPort: "80"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMOrchestrator"
+        GroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+    SecGrpAEMAthDispatcherELBI1:
+      Type: "AWS::EC2::SecurityGroupIngress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        SourceSecurityGroupId:  !Ref "SecGrpAEMOrchestrator"
+        GroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+    SecGrpAEMAthDispatcherELBE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAthDispatcher"
+        GroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+    SecGrpAEMAthDispatcherELBE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "8080"
+        ToPort: "8080"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAthDispatcher"
+        GroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+    SecGrpAEMOrchestrator:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMOrchestrator"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        SecurityGroupEgress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.21.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T5-SG-AEMOrchestrator"
+    SecGrpAEMOrchestratorE0:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "80"
+        ToPort: "80"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+        GroupId:  !Ref "SecGrpAEMOrchestrator"
+    SecGrpAEMOrchestratorE1:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "443"
+        ToPort: "443"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAthDispatcherELB"
+        GroupId:  !Ref "SecGrpAEMOrchestrator"
+    SecGrpAEMOrchestratorE2:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4502"
+        ToPort: "4502"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthorELB"
+        GroupId:  !Ref "SecGrpAEMOrchestrator"
+    SecGrpAEMOrchestratorE3:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "4503"
+        ToPort: "4503"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMOrchestrator"
+    SecGrpAEMOrchestratorE4:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMAuthorELB"
+        GroupId:  !Ref "SecGrpAEMOrchestrator"
+    SecGrpAEMOrchestratorE5:
+      Type: "AWS::EC2::SecurityGroupEgress"
+      Properties:
+        IpProtocol: "tcp"
+        FromPort: "5433"
+        ToPort: "5433"
+        DestinationSecurityGroupId:  !Ref "SecGrpAEMPublisher"
+        GroupId:  !Ref "SecGrpAEMOrchestrator"
+    SecGrpAEMChaosMonkey:
+      Type: "AWS::EC2::SecurityGroup"
+      Properties:
+        GroupDescription: "AEM - SecGrpAEMChaosMonkey"
+        VpcId: !Ref  "VPCid"
+        SecurityGroupIngress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.20.0/24"
+        SecurityGroupEgress:
+          -
+            IpProtocol: "-1"
+            FromPort: "-1"
+            ToPort: "-1"
+            CidrIp: "10.0.21.0/24"
+        Tags:
+          -
+            Key: "Environment"
+            Value: !Ref  "TagEnvironment"
+          -
+            Key: "Name"
+            Value: "T5-SG-AEMChaosMonkey"
+  Outputs:
+    SecGrpELBWeb:
+      Value: !Ref  "SecGrpWebELB"
+      Description: ""
+    SecGrpDispatcher:
+      Value: !Ref  "SecGrpAEMDispatcher"
+      Description: ""
+    SecGrpPublisher:
+      Value: !Ref  "SecGrpAEMPublisher"
+      Description: ""
+    SecGrpAuthor:
+      Value: !Ref  "SecGrpAEMAuthor"
+      Description: ""
+    SecGrpELBAuthor:
+      Value: !Ref  "SecGrpAEMAuthorELB"
+      Description: ""
+    SecGrpAuthorDisp:
+      Value: !Ref  "SecGrpAEMAthDispatcher"
+      Description: ""
+    SecGrpELBAuthorDisp:
+      Value: !Ref  "SecGrpAEMAthDispatcherELB"
+      Description: ""
+    SecGrpOrchestrator:
+      Value: !Ref  "SecGrpAEMOrchestrator"
+      Description: ""
+    SecGrpAEMChaosMonkey:
+      Value: !Ref  "SecGrpAEMChaosMonkey"
+      Description: ""
