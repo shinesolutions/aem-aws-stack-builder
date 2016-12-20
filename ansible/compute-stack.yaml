@@ -1,0 +1,27 @@
+---
+- name: AEM Compute CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Create AEM Security Groups Stack
+      cloudformation:
+        stack_name: "{{ security_groups.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../templates/compute/security-groups.yaml"
+        template_parameters:
+          VpcIdParameter: "{{ network.vpc_id }}"
+      tags:
+      - create-security-groups
+
+    - name: Delete AEM Security Groups Stack
+      cloudformation:
+        stack_name: "{{ security_groups.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete-security-groups
+

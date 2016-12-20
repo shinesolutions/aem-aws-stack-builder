@@ -1,9 +1,11 @@
-vpc:
+
+ec2_vpc:
   stack_name: aem-vpc-stack
+  tag_name: AEM Stack VPC
+  cidr_block: 10.0.8.0/21
 
 network:
   stack_name: aem-network-stack
-  vpc_id: vpc-a59454c1
   publish_dispatcher_subnet_a_cidr_block: 10.0.10.0/25
   publish_dispatcher_subnet_b_cidr_block: 10.0.10.128/25
   publish_subnet_a_cidr_block: 10.0.11.0/25
@@ -14,3 +16,84 @@ network:
   author_dispatcher_subnet_b_cidr_block: 10.0.13.128/25
   tool_subnet_a_cidr_block: 10.0.14.0/25
   tool_subnet_b_cidr_block: 10.0.14.128/25
+  hosted_zone: aem.
+
+compute:
+  key_pair_name: aem-stack-key-pair
+  stack_name: default
+  application_version: 
+
+security_groups:
+  stack_name: aem-security-groups-stack
+
+dispatcher:
+  ami_id: ami-429ea621
+
+publish_dispatcher_elb:
+  security_group: 
+  subnet_a:
+  subnet_b:
+
+publish_dispatcher:
+  security_group:
+  instance_type: t2.micro
+  subnet_a:
+  subnet_b:
+  min_size: 2
+  max_size: 2
+
+publish:
+  ami_id: ami-3794ac54
+  security_group:
+  instance_type: m3.large
+  subnet_a:
+  subnet_b:
+  min_size: 2
+  max_size: 2
+
+author:
+  ami_id: ami-059fa766
+  instance_type: m3.large
+  security_group: 
+
+author_primary:
+  subnet:  
+
+author_standby:
+  subnet:
+
+author_elb:
+  security_group: 
+  subnet_a:
+  subnet_b:
+
+author_dispatcher:
+  security_group:
+  instance_type: t2.micro
+  subnet_a:
+  subnet_b:
+  min_size: 2
+  max_size: 2
+
+author_dispatcher_elb:
+  security_group: 
+  subnet_a:
+  subnet_b:
+
+tools:
+  subnet_a:
+  subnet_b:
+
+orchestrator:
+  ami_id: ami-429ea621
+  instance_type: t2.small
+  security_group:
+  min_size: 1
+  max_size: 1
+
+chaos_monkey:
+  ami_id: ami-429ea621
+  instance_type: t2.micro
+  security_group:
+  min_size: 1
+  max_size: 1

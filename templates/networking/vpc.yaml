@@ -11,7 +11,7 @@ Parameters:
     Description: The CidrBlock for the VPC
   Ec2VpcTagNameParameter:
     Type: String
-    Default: AEM VPC
+    Default: AEM Stack VPC
     Description: The name of the VPC for the AEM Stack
 
 Resources:
