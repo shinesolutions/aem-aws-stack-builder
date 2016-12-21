@@ -23,8 +23,17 @@
         template: "../templates/compute/security-groups.yaml"
         template_parameters:
           VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
-          PublishDispatcherELBSecurityGroupTagNameParameter: ""
-          PublishDispatcherSecurityGroupTagNameParameter: ""
+          SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
+          PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
+          PublishDispatcherELBSecurityGroupTagNameParameter: "{{ security_groups.publish_dispatcher_elb.tag_name }}"
+          PublishDispatcherSecurityGroupTagNameParameter: "{{ security_groups.publish_dispatcher.tag_name }}"
+          AuthorSecurityGroupTagNameParameter: "{{ security_groups.author.tag_name }}"
+          AuthorELBSecurityGroupTagNameParameter: "{{ security_groups.author_elb.tag_name }}"
+          AuthorDispatcherSecurityGroupTagNameParameter: "{{ security_groups.author_dispatcher.tag_name }}"
+          AuthorDispatcherELBSecurityGroupTagNameParameter: "{{ security_groups.author_dispatcher_elb.tag_name }}"
+          AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
+          OrchestratorSecurityGroupTagNameParameter: "{{ security_groups.orchestrator.tag_name }}"
+          ChaosMonkeySecurityGroupTagNameParameter: "{{ security_groups.chaos_monkey.tag_name }}"
       tags:
       - create
 

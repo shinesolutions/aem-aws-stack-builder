@@ -20,7 +20,7 @@
 
     - name: Delete AEM VPC Stack
       cloudformation:
-        stack_name: "{{ vpc.stack_name }}"
+        stack_name: "{{ ec2_vpc.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

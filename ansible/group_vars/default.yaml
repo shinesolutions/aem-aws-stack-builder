@@ -66,10 +66,35 @@ compute:
 
 security_groups:
   stack_name: aem-security-groups-stack
+  secure_shell:
+    inbound_cidr_ip: 10.0.0.0/24
+
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.0.0/24
+
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
+
+  author:
+    tag_name: AEM Author Security Group
+
+  author_elb:
+    tag_name: AEM Author ELB Security Group
+
+  author_dispatcher:
+    tag_name: AEM Author Dispatcher Security Group
+
+  author_dispatcher_elb:
+    tag_name: AEM Author Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.0.0/24
+
+  orchestrator:
+    tag_name: AEM Orchestrator Security Group
+
+  chaos_monkey:
+    tag_name: AEM Chaos Monkey Security Group
+
 
 
 dispatcher:

@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create Subnets, InternetGateway, and RouteTable for AEM Stack
+  Create Subnets, Internet Gateway, and Route Tables for AEM Stack
 
 Parameters:
   VpcIdParameter:
