@@ -38,6 +38,19 @@ Delete Network Stack:
 make delete-network-stack stack=network
 ```
 
+Create Security Groups Stack:
+```
+make create-compute-stack stack=security-groups
+```
+
+
+Create Security Groups Stack:
+```
+make create-compute-stack stack=security-groups
+```
+
+
+
 ### Compute Stack
 
 Create Security Groups Stack:
