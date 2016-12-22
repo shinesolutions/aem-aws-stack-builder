@@ -2,4 +2,263 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create compute resources for the AEM Publish Dispatcher
+  Create the Compute resources for the AEM Publish Dispatcher
+
+Parameters:
+  ComputeStackMonikerParameter:
+    Type: String
+    Default: default
+    Description: The AEM Stack Compute Resources Stack Moniker
+
+  SSLCertificateARNParameter:
+    Type: String
+    Default: arn:aws:iam::accountID:server-certificate/aem-stack-certificate
+    Description: The ARN for SSL Certificate
+
+  PublishDispatcherLoadBalancerHealthCheckTargetParameter:
+    Type: String
+    Default: HTTP:80/system/health
+    Description: AEM Publish Dispatcher ELB Health Check Target
+
+  PublishDispatcherELBSecurityGroupListParameter:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: sg-3e30c059
+    Description: The Publish Dispatcher ELB Security Group
+
+  PublishDispatcherSubnetAParameter:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-1f5ed07b
+    Description: The Publish Dispatcher Subnet in Availability Zone A
+
+  PublishDispatcherSubnetBParameter:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-68d2641e
+    Description: The Publish Dispatcher Subnet in Availability Zone B
+
+  PublishDispatcherImageParameter:
+    Type: AWS::EC2::Image::Id
+    Default: ami-429ea621
+    Description: The Publish Dispatcher Image Id
+
+  PublishDispatcherInstanceTypeParameter:
+    Type: String
+    Default: t2.micro
+    Description: The Publish Dispatcher Instance Type
+
+  ComputeKeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: aem-default-stack-key-pair
+    Description: The Compute Resources Key Pair Name
+
+  PublishDispatcherSecurityGroupParameter:
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: sg-3530c052
+    Description: The Publish Dispatcher Security Group
+
+  PublishDispatcherASGAvailabilityZoneListParameter:
+    Type: CommaDelimitedList
+    Default: ap-southeast-2a, ap-southeast-2b
+    Description: The Publish Dispatcher Security Group
+
+  PublishDispatcherASGSubnetListParameter:
+    Type: List<AWS::EC2::Subnet::Id>
+    Default: subnet-1f5ed07b, subnet-68d2641e
+    Description: The Publish Dispatcher Subnets
+
+  PublishDispatcherASGMaxSizeParameter:
+    Type: String
+    Default: 2
+    Description: The Publish Dispatcher Auto Scaling Group Maximum Size
+
+  PublishDispatcherASGMinSizeParameter:
+    Type: String
+    Default: 2
+    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
+
+  AEMAutoScalingGroupSNSTopicParameter:
+    Type: String
+    Default: arn:aws:sns:region:accountID:aem-stack-asg-topic
+    Description: The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic.
+
+  PublishDispatcherTagNameParameter:
+    Type: String
+    Default: AEM Publish Dispatcher
+    Description: The Publish Dispatcher Name Tag
+
+  ApplicationVersionParameter:
+    Type: String
+    Default: 1.0.0
+    Description: The Application Version Number
+
+  PublishDispatcherRoleNameParameter:
+    Type: String
+    Default: AEMStackPublishDispatcherRole
+    Description: The AEM Stack Publish Dispatcher Role Name
+
+  PublishDispatcherLoadBalancerTagNameParameter:
+    Type: String
+    Default: AEM Publish Dispatcher Load Balancer
+    Description: The Publish Dispatcher Load Balancer Name Tag
+
+
+Resources:
+
+  PublishDispatcherRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: PublishDispatcherRolePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:Describe*
+                  - ec2:CreateTags
+                  - autoscaling:CreateLaunchConfiguration
+                  - autoscaling:DescribeLaunchConfigurations
+                  - autoscaling:UpdateAutoScalingGroup
+                  - autoscaling:CreateOrUpdateTags
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:List*
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - arn:aws:logs:*:*:*
+      RoleName:
+        Ref: PublishDispatcherRoleNameParameter
+
+  PublishDispatcherInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - Ref: PublishDispatcherRole
+
+  PublishDispatcherLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      HealthCheck:
+        Target:
+          Ref: PublishDispatcherLoadBalancerHealthCheckTargetParameter
+        HealthyThreshold: "2"
+        UnhealthyThreshold: "2"
+        Interval: "30"
+        Timeout: "5"
+      Listeners:
+        - LoadBalancerPort: "80"
+          InstancePort: "80"
+          Protocol: HTTP
+        - LoadBalancerPort: "443"
+          Protocol: HTTPS
+          InstancePort: "443"
+          InstanceProtocol: HTTPS
+          SSLCertificateId:
+            Ref: SSLCertificateARNParameter
+      Scheme: internet-facing
+      SecurityGroups:
+        Ref: PublishDispatcherELBSecurityGroupListParameter
+      Subnets:
+        - Ref: PublishDispatcherSubnetAParameter
+        - Ref: PublishDispatcherSubnetBParameter
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherLoadBalancerTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+
+  PublishDispatcherLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      IamInstanceProfile:
+        Ref: PublishDispatcherInstanceProfile
+      ImageId:
+        Ref: PublishDispatcherImageParameter
+      InstanceMonitoring: false
+      InstanceType:
+        Ref: PublishDispatcherInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      SecurityGroups:
+        - Ref: PublishDispatcherSecurityGroupParameter
+  #TODO: Setup UserData
+  #    UserData:
+  #      Fn::Base64:
+  #        Fn:Sub:
+  #          #!/bin/bash -x
+  #          su - ec2-user -c /app/tools/install.sh
+
+  PublishDispatcherAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones:
+        Ref: PublishDispatcherASGAvailabilityZoneListParameter
+      HealthCheckGracePeriod: 900
+      HealthCheckType: ELB
+      LaunchConfigurationName:
+        Ref: PublishDispatcherLaunchConfiguration
+      LoadBalancerNames:
+        - Ref: PublishDispatcherLoadBalancer
+      MaxSize:
+        Ref: PublishDispatcherASGMaxSizeParameter
+      MinSize:
+        Ref: PublishDispatcherASGMinSizeParameter
+      NotificationConfigurations:
+        - NotificationTypes:
+            - autoscaling:EC2_INSTANCE_LAUNCH
+            - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+            - autoscaling:EC2_INSTANCE_TERMINATE
+            - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+          TopicARN:
+            Ref: AEMAutoScalingGroupSNSTopicParameter
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherTagNameParameter
+          PropagateAtLaunch: true
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+          PropagateAtLaunch: true
+        - Key: Component
+          Value: aem-publish-dispatcher
+          PropagateAtLaunch: true
+        - Key: Application Version
+          Value:
+            Ref: ApplicationVersionParameter
+          PropagateAtLaunch: true
+      VPCZoneIdentifier:
+        Ref: PublishDispatcherASGSubnetListParameter
