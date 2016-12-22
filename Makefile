@@ -2,7 +2,7 @@ validate:
 	./scripts/validate.sh
 
 shellcheck:
-	shellcheck scripts/validate.sh scripts/create-stack.sh scripts/delete-stack.sh
+	shellcheck scripts/*.sh
 
 create-network-stack:
 	./scripts/create-stack.sh aem-${stack}-stack templates/network/${stack}.yaml

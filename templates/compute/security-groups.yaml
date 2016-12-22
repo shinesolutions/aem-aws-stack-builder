@@ -5,6 +5,10 @@ Description:
   Create Security Groups for the AEM Stack
 
 Parameters:
+  ComputeStackMonikerParameter:
+    Type: String
+    Default: default
+    Description: The AEM Stack Compute Resources Stack Moniker
   VpcIdParameter:
     Type: AWS::EC2::VPC::Id
     Default: vpc-a59454c1
@@ -70,6 +74,9 @@ Resources:
         - Key: Name
           Value:
             Ref: PublishDispatcherELBSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -129,6 +136,9 @@ Resources:
         - Key: Name
           Value:
             Ref: PublishDispatcherSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -222,6 +232,9 @@ Resources:
         - Key: Name
           Value:
             Ref: PublishSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -315,6 +328,9 @@ Resources:
         - Key: Name
           Value:
             Ref: AuthorSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -476,6 +492,9 @@ Resources:
         - Key: Name
           Value:
             Ref: AuthorELBSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -534,6 +553,9 @@ Resources:
         - Key: Name
           Value:
             Ref: AuthorDispatcherSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -627,6 +649,9 @@ Resources:
         - Key: Name
           Value:
             Ref: AuthorDispatcherELBSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -686,6 +711,9 @@ Resources:
         - Key: Name
           Value:
             Ref: OrchestratorSecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -734,6 +762,9 @@ Resources:
         - Key: Name
           Value:
             Ref: ChaosMonkeySecurityGroupTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
       VpcId:
         Ref: VpcIdParameter
 

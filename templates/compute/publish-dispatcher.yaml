@@ -56,7 +56,7 @@ Parameters:
     Description: The Publish Dispatcher Security Group
 
   PublishDispatcherASGAvailabilityZoneListParameter:
-    Type: CommaDelimitedList
+    Type: List<AWS::EC2::AvailabilityZone::Name>
     Default: ap-southeast-2a, ap-southeast-2b
     Description: The Publish Dispatcher Security Group
 
@@ -103,6 +103,7 @@ Parameters:
 
 Resources:
 
+  # TODO: IAM Role can be shared across stacks. probably consider putting it at a higher level.
   PublishDispatcherRole:
     Type: AWS::IAM::Role
     Properties:

@@ -63,6 +63,18 @@ Delete Security Groups Stack:
 make delete-compute-stack stack=security-groups
 ```
 
+
+Create Publish Dispatcher Stack:
+```
+make create-compute-stack stack=publish-dispatcher
+```
+
+Delete Publish Dispatcher Stack:
+```
+make delete-compute-stack stack=publish-dispatcher
+```
+
+
 ## Ansible
 
 Requirements:
@@ -70,6 +82,8 @@ Requirements:
 * [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
 * [Boto](https://github.com/boto/boto)
 
+
+### Network Stack
 
 Create VPC Stack:
 ```
@@ -89,6 +103,28 @@ make ansible-create-stack stack=network inventory=default
 Delete Network Stack:
 ```
 make ansible-delete-stack stack=network inventory=default
+```
+
+### Compute Stack
+
+Create Security Groups Stack:
+```
+make ansible-create-stack stack=security-groups inventory=default
+```
+
+Delete Security Groups Stack:
+```
+make ansible-delete-stack stack=security-groups inventory=default
+```
+
+Create Publish Dispatcher Stack:
+```
+make ansible-create-stack stack=publish-dispatcher inventory=default
+```
+
+Delete Publish Dispatcher Stack:
+```
+make ansible-delete-stack stack=publish-dispatcher inventory=default
 ```
 
 
