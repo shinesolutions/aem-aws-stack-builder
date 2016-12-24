@@ -90,66 +90,17 @@ Parameters:
     Default: 1.0.0
     Description: The Application Version Number
 
-  PublishDispatcherRoleNameParameter:
-    Type: String
-    Default: AEMStackPublishDispatcherRole
-    Description: The AEM Stack Publish Dispatcher Role Name
-
   PublishDispatcherLoadBalancerTagNameParameter:
     Type: String
     Default: AEM Publish Dispatcher Load Balancer
     Description: The Publish Dispatcher Load Balancer Name Tag
 
+  PublishDispatcherInstanceProfileParameter:
+    Type: String
+    Default: aem-roles-stack-PublishDispatcherInstanceProfile-G5FB66OXFVHO
+    Description: The Publish Dispatcher IAM Instance Profile ARN
 
 Resources:
-
-  # TODO: IAM Role can be shared across stacks. probably consider putting it at a higher level.
-  PublishDispatcherRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-      Policies:
-        - PolicyName: PublishDispatcherRolePolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ec2:Describe*
-                  - ec2:CreateTags
-                  - autoscaling:CreateLaunchConfiguration
-                  - autoscaling:DescribeLaunchConfigurations
-                  - autoscaling:UpdateAutoScalingGroup
-                  - autoscaling:CreateOrUpdateTags
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - logs:*
-                Resource:
-                  - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: PublishDispatcherRoleNameParameter
-
-  PublishDispatcherInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: /
-      Roles:
-        - Ref: PublishDispatcherRole
 
   PublishDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
@@ -205,7 +156,7 @@ Resources:
             VolumeSize: 10
             VolumeType: gp2
       IamInstanceProfile:
-        Ref: PublishDispatcherInstanceProfile
+        Ref: PublishDispatcherInstanceProfileParameter
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false

@@ -1,0 +1,59 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create compute resources for the AEM Publish
+
+Parameters:
+
+
+Resources:
+
+
+  ChaosMonkeyLaunchCfg:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      IamInstanceProfile: !Ref InstPrfChaosMonkey
+      ImageId: !Ref AMIChaosMonkey
+      InstanceMonitoring: false
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref SecGrpChaosMonkey
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -x
+            su - ec2-user -c "FACTER_dispatcher_author_asg_name=${AuthorDispASG} FACTER_dispatcher_publisher_asg_name=${PublisherDispASG} FACTER_publisher_asg_name=${PublisherASG} /app/tools/install.sh"
+  ChaosMonkeyASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !Ref AvailZones
+      VPCZoneIdentifier: !Ref SubnetPrvAppToolASG
+      LaunchConfigurationName: !Ref ChaosMonkeyLaunchCfg
+      MinSize: "1"
+      MaxSize: "1"
+      Tags:
+        -
+          PropagateAtLaunch: true
+          Key: Name
+          Value: !Ref NameTagChaosMonkey
+        -
+          PropagateAtLaunch: true
+          Key: stack_name
+          Value: !Ref StackName
+        -
+          PropagateAtLaunch: true
+          Key: component
+          Value: chaosmonkey
+        -
+          PropagateAtLaunch: true
+          Key: app_version
+          Value: !Ref TagAppVersion

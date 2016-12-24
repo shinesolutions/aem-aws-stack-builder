@@ -1,0 +1,31 @@
+---
+- name: AEM Roles CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Create AEM Roles Stack
+      cloudformation:
+        stack_name: "{{ roles.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../cloudformation/specific/roles.yaml"
+        template_parameters:
+          PublishDispatcherRoleNameParameter: "{{ roles.publish_dispatcher }}"
+          PublishRoleNameParameter: "{{ roles.publish }}"
+          AuthorRoleNameParameter: "{{ roles.author }}"
+          AuthorDispatcherRoleNameParameter: "{{ roles.author_dispatcher }}"
+          OrchestratorRoleNameParameter: "{{ roles.orchestrator }}"
+          ChaosMonkeyRoleNameParameter: "{{ roles.chaos_monkey }}"
+      tags:
+      - create
+
+    - name: Delete AEM Roles Stack
+      cloudformation:
+        stack_name: "{{ roles.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

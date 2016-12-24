@@ -1,0 +1,119 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create compute resources for the AEM Author Dispatcher
+
+
+Parameters:
+
+
+Resources:
+
+
+
+  AuthorDispLaunchCfg:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      IamInstanceProfile: !Ref InstPrfAuthorDisp
+      ImageId: !Ref AMIDispatcher
+      InstanceMonitoring: false
+      InstanceType: t2.micro
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref SecGrpAuthorDisp
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        -
+          DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub
+          - |
+            #!/bin/bash -x
+            /bin/echo ${ELBAuthorDNSName} > /tmp/cloud-init-debug.log
+            su - ec2-user -c "FACTER_aem_author_host=${ELBAuthorDNSName} /app/tools/install.sh"
+          -
+            ELBAuthorDNSName: !GetAtt ELBAuthor.DNSName
+  AuthorDispASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !Ref AvailZones
+      VPCZoneIdentifier:
+        - !Ref SubnetPrvAppIntA
+        - !Ref SubnetPrvAppIntB
+      LaunchConfigurationName: !Ref AuthorDispLaunchCfg
+      LoadBalancerNames:
+        - !Ref ELBAuthorDisp
+      HealthCheckGracePeriod: 300
+      HealthCheckType: ELB
+      MinSize: !Ref ASGAuthorDispMinSize
+      MaxSize: !Ref ASGAuthorDispMaxSize
+      NotificationConfiguration:
+        NotificationTypes:
+          - autoscaling:EC2_INSTANCE_LAUNCH
+          - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+          - autoscaling:EC2_INSTANCE_TERMINATE
+          - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        TopicARN: !Ref AEMASGEventTopic
+      Tags:
+        -
+          PropagateAtLaunch: true
+          Key: Name
+          Value: !Ref NameTagAuthorDisp
+        -
+          PropagateAtLaunch: true
+          Key: stack_name
+          Value: !Ref StackName
+        -
+          PropagateAtLaunch: true
+          Key: component
+          Value: aem-dispatcher-author
+        -
+          PropagateAtLaunch: true
+          Key: app_version
+          Value: !Ref TagAppVersion
+  ELBAuthorDisp:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      Subnets:
+        - !Ref SubnetPrvAppIntA
+        - !Ref SubnetPrvAppIntB
+      SecurityGroups:
+        - !Ref SecGrpELBAuthorDisp
+      Listeners:
+        -
+          LoadBalancerPort: "80"
+          Protocol: HTTP
+          InstancePort: "8080"
+          InstanceProtocol: HTTP
+        -
+          LoadBalancerPort: "443"
+          Protocol: HTTPS
+          InstancePort: "443"
+          InstanceProtocol: HTTPS
+          SSLCertificateId: !Ref CertArn
+      HealthCheck:
+        Target: HTTP:8080/bin/health
+        HealthyThreshold: "2"
+        UnhealthyThreshold: "2"
+        Interval: "30"
+        Timeout: "5"
+      Scheme: internal
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      Tags:
+        -
+          Key: stack_name
+          Value: !Ref StackName

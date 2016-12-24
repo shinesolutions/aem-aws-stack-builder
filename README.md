@@ -12,66 +12,69 @@ Requirements
 
 ## Usage
 
-### Network Stack
+### Shared Stack
 
 Create VPC Stack:
 ```
-make create-network-stack stack=vpc
+make create-shared-stack stack=vpc
 ```
 
 
 Create Network Stack:
 ```
-make create-network-stack stack=network
+make create-shared-stack stack=network
 ```
 
 
 Delete VPC Stack:
 
 ```
-make delete-network-stack stack=vpc
+make delete-shared-stack stack=vpc
 ```
 
 
 Delete Network Stack:
 ```
-make delete-network-stack stack=network
+make delete-shared-stack stack=network
 ```
+
+### Roles Stack
+
+Roles can be shared or specific to an individual stack.
+
+```
+make create-roles-stack
+```
+
+
+```
+make delete-roles-stack
+```
+
+### Specific Stack
+
 
 Create Security Groups Stack:
 ```
-make create-compute-stack stack=security-groups
+make create-stack moniker=default stack=security-groups
 ```
 
 
 Create Security Groups Stack:
 ```
-make create-compute-stack stack=security-groups
+make create-stack moniker=default stack=security-groups
 ```
 
-
-
-### Compute Stack
-
-Create Security Groups Stack:
-```
-make create-compute-stack stack=security-groups
-```
-
-Delete Security Groups Stack:
-```
-make delete-compute-stack stack=security-groups
-```
 
 
 Create Publish Dispatcher Stack:
 ```
-make create-compute-stack stack=publish-dispatcher
+make create-stack moniker=default stack=publish-dispatcher
 ```
 
 Delete Publish Dispatcher Stack:
 ```
-make delete-compute-stack stack=publish-dispatcher
+make delete-stack moniker=default stack=publish-dispatcher
 ```
 
 
@@ -83,7 +86,7 @@ Requirements:
 * [Boto](https://github.com/boto/boto)
 
 
-### Network Stack
+### Shared Stack
 
 Create VPC Stack:
 ```
@@ -105,7 +108,22 @@ Delete Network Stack:
 make ansible-delete-stack stack=network inventory=default
 ```
 
-### Compute Stack
+
+### Roles Stack
+
+Create Roles Stack:
+```
+make ansible-create-stack stack=roles inventory=default
+```
+
+Delete Roles Stack:
+```
+make ansible-delete-stack stack=roles inventory=default
+```
+
+
+
+### Specific Stack
 
 Create Security Groups Stack:
 ```

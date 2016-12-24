@@ -5,6 +5,7 @@
   connection: local
 
   tasks:
+
     - name: Get AEM Stack IAM Server Certificate
       iam_server_certificate_facts:
         name: "{{ compute.certificate_name }}"
@@ -76,6 +77,8 @@
       tags:
       - create
 
+#TODO: the ASG SNS Topic will be shared across ASG. need to move to messaging yaml.
+#TODO: need a way to retrieve the topic
     - name: Create aem stack ASG SNS topic
       sns_topic:
         region: "{{ aws.region }}"
@@ -90,7 +93,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../templates/compute/publish-dispatcher.yaml"
+        template: "../cloudformation/specific/publish-dispatcher.yaml"
         template_parameters:
           ComputeStackMonikerParameter: "{{ compute.stack_moniker }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
@@ -109,7 +112,7 @@
           AEMAutoScalingGroupSNSTopicParameter: "{{ asg_sns_topic.sns_arn }}"
           PublishDispatcherTagNameParameter: "{{ publish_dispatcher.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
-          PublishDispatcherRoleNameParameter: "{{ publish_dispatcher.role_name }}"
+          PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.iam_instance_profile }}"
           PublishDispatcherLoadBalancerTagNameParameter: "{{ publish_dispatcher.load_balancer.tag_name }}"
       tags:
       - create

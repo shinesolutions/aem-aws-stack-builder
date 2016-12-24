@@ -1,0 +1,136 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create compute resources for the AEM Author
+
+
+
+Parameters:
+
+
+Resources:
+
+  EC2InstAuthor1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AMIAuthor
+      IamInstanceProfile: !Ref InstPrfAuthor
+      InstanceType: m3.large
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref SecGrpAuthor
+      SubnetId: !Ref SubnetPrvAppIntA
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        -
+          DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      Tags:
+        -
+          Key: Name
+          Value: !Ref NameTagAuthor
+        -
+          Key: stack_name
+          Value: !Ref StackName
+        -
+          Key: component
+          Value: aem-author-primary
+        -
+          Key: app_version
+          Value: !Ref TagAppVersion
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -x
+            su - ec2-user -c /app/tools/install.sh
+
+
+  EC2InstAuthor2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref AMIAuthor
+      IamInstanceProfile: !Ref InstPrfAuthor
+      InstanceType: m3.large
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref SecGrpAuthor
+      SubnetId: !Ref SubnetPrvAppIntB
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        -
+          DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      Tags:
+        -
+          Key: Name
+          Value: !Ref NameTagAuthor
+        -
+          Key: stack_name
+          Value: !Ref StackName
+        -
+          Key: component
+          Value: aem-author-standby
+        -
+          Key: app_version
+          Value: !Ref TagAppVersion
+      UserData:
+        Fn::Base64: !Sub
+          - |
+            #!/bin/bash -x
+            su - ec2-user -c "FACTER_aem_author_primary_host=${Author1PrivateDnsName} /app/tools/install.sh"
+          -
+            Author1PrivateDnsName: !GetAtt EC2InstAuthor1.PrivateDnsName
+  ELBAuthor:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      Subnets:
+        - !Ref SubnetPrvAppIntA
+        - !Ref SubnetPrvAppIntB
+      SecurityGroups:
+        - !Ref SecGrpELBAuthor
+      Listeners:
+        -
+          LoadBalancerPort: "4502"
+          InstancePort: "4502"
+          Protocol: HTTP
+        -
+          LoadBalancerPort: "5433"
+          Protocol: HTTPS
+          InstancePort: "5433"
+          InstanceProtocol: HTTPS
+          SSLCertificateId: !Ref CertArn
+      HealthCheck:
+        Target: HTTP:4502/bin/health
+        HealthyThreshold: "2"
+        UnhealthyThreshold: "2"
+        Interval: "30"
+        Timeout: "5"
+      Instances:
+        - !Ref EC2InstAuthor1
+        - !Ref EC2InstAuthor2
+      Scheme: internal
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      Tags:
+        -
+          Key: stack_name
+          Value: !Ref StackName
+

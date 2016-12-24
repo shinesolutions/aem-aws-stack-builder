@@ -72,7 +72,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../templates/compute/author-dispatcher.yaml"
+        template: "../cloudformation/specific/author-dispatcher.yaml"
         template_parameters:
           VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
       tags:

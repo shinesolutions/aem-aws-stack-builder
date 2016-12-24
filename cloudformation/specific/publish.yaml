@@ -1,0 +1,75 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create compute resources for the AEM Publish
+
+Parameters:
+
+
+Resources:
+
+
+  PublisherLaunchCfg:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      IamInstanceProfile: !Ref InstPrfPublisher
+      ImageId: !Ref AMIPublisher
+      InstanceMonitoring: false
+      InstanceType: m3.large
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref SecGrpPublisher
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        -
+          DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -x
+            su - ec2-user -c /app/tools/install.sh
+  PublisherASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !Ref AvailZones
+      VPCZoneIdentifier: !Ref SubnetPrvAppASG
+      LaunchConfigurationName: !Ref PublisherLaunchCfg
+      HealthCheckGracePeriod: 900
+      HealthCheckType: EC2
+      MinSize: !Ref ASGPublisherMinSize
+      MaxSize: !Ref ASGPublisherMaxSize
+      NotificationConfiguration:
+        NotificationTypes:
+          - autoscaling:EC2_INSTANCE_LAUNCH
+          - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+          - autoscaling:EC2_INSTANCE_TERMINATE
+          - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        TopicARN: !Ref AEMASGEventTopic
+      Tags:
+        -
+          PropagateAtLaunch: true
+          Key: Name
+          Value: !Ref NameTagPublisher
+        -
+          PropagateAtLaunch: true
+          Key: stack_name
+          Value: !Ref StackName
+        -
+          PropagateAtLaunch: true
+          Key: component
+          Value: aem-publisher
+        -
+          PropagateAtLaunch: true
+          Key: app_version
+          Value: !Ref TagAppVersion
+

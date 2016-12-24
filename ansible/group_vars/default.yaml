@@ -38,6 +38,14 @@ security_groups:
   chaos_monkey:
     tag_name: AEM Chaos Monkey Security Group
 
+roles:
+  stack_name: aem-roles-stack
+  publish_dispatcher: AEMStackPublishDispatcherRole
+  publish: AEMStackPublishRole
+  author: AEMStackAuthorRole
+  author_dispatcher: AEMStackAuthorDispatcherRole
+  orchestrator: AEMStackOrchestratorRole
+  chaos_monkey: AEMStackChaosMonkeyRole
 
 dispatcher:
   ami_version: 1.0.0
@@ -47,7 +55,8 @@ publish_dispatcher:
   instance_type: t2.micro
   min_size: 2
   max_size: 2
-  role_name: AEMStackPublishDispatcherRole
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-PublishDispatcherInstanceProfile-G5FB66OXFVHO
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher

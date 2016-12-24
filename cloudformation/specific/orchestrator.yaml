@@ -1,0 +1,64 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create compute resources for the AEM Publish
+
+Parameters:
+
+
+Resources:
+
+  OrchestratorLaunchCfg:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      IamInstanceProfile: !Ref InstPrfOrchestrator
+      ImageId: !Ref AMIOrchestrator
+      InstanceMonitoring: false
+      InstanceType: t2.small
+      KeyName: !Ref KeyName
+      SecurityGroups:
+        - !Ref SecGrpOrchestrator
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        -
+          DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      UserData:
+        Fn::Base64: !Sub |
+            #!/bin/bash -x
+            su - ec2-user -c /app/tools/install.sh
+  OrchestratorASG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !Ref AvailZones
+      VPCZoneIdentifier: !Ref SubnetPrvAppToolASG
+      LaunchConfigurationName: !Ref  OrchestratorLaunchCfg
+      MinSize: "1"
+      MaxSize: "1"
+      Tags:
+        -
+          PropagateAtLaunch: true
+          Key: Name
+          Value: !Ref NameTagOrchestrator
+        -
+          PropagateAtLaunch: true
+          Key: stack_name
+          Value: !Ref StackName
+        -
+          PropagateAtLaunch: true
+          Key: component
+          Value: orchestrator
+        -
+          PropagateAtLaunch: true
+          Key: app_version
+          Value: !Ref TagAppVersion
