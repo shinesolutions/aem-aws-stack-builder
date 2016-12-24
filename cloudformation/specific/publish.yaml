@@ -2,74 +2,145 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create compute resources for the AEM Publish
+  Create the Compute resources for the AEM Publish
 
 Parameters:
+  ComputeStackMonikerParameter:
+    Type: String
+    Default: default
+    Description: The AEM Stack Compute Resources Stack Moniker
 
+  PublishImageParameter:
+    Type: AWS::EC2::Image::Id
+    Default: ami-3794ac54
+    Description: The Publish Image Id
+
+  PublishInstanceTypeParameter:
+    Type: String
+    Default: m3.large
+    Description: The Publish Instance Type
+
+  ComputeKeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: aem-default-stack-key-pair
+    Description: The Compute Resources Key Pair Name
+
+  PublishSecurityGroupParameter:
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: sg-ea8e7c8d
+    Description: The Publish Security Group
+
+  PublishASGAvailabilityZoneListParameter:
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+    Default: ap-southeast-2a, ap-southeast-2b
+    Description: The Publish Availability Zone List
+
+  PublishASGSubnetListParameter:
+    Type: List<AWS::EC2::Subnet::Id>
+    Default: subnet-27b53c43, subnet-afec5dd9
+    Description: The Publish Subnets
+
+  PublishASGMaxSizeParameter:
+    Type: String
+    Default: 2
+    Description: The Publish Auto Scaling Group Maximum Size
+
+  PublishASGMinSizeParameter:
+    Type: String
+    Default: 2
+    Description: The Publish Auto Scaling Group Minimum Size
+
+  AEMAutoScalingGroupSNSTopicParameter:
+    Type: String
+    Default: arn:aws:sns:region:accountId:aem-stack-asg-topic
+    Description: The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic.
+
+  PublishTagNameParameter:
+    Type: String
+    Default: AEM Publish
+    Description: The Publish Name Tag
+
+  ApplicationVersionParameter:
+    Type: String
+    Default: 1.0.0
+    Description: The Application Version Number
+
+  PublishInstanceProfileParameter:
+    Type: String
+    Default: aem-roles-stack-PublishInstanceProfile-G4O8DIPE5F2L
+    Description: The Publish IAM Instance Profile ARN
 
 Resources:
 
-
-  PublisherLaunchCfg:
+  PublishLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: false
-      IamInstanceProfile: !Ref InstPrfPublisher
-      ImageId: !Ref AMIPublisher
-      InstanceMonitoring: false
-      InstanceType: m3.large
-      KeyName: !Ref KeyName
-      SecurityGroups:
-        - !Ref SecGrpPublisher
       BlockDeviceMappings:
-        -
-          DeviceName: /dev/sda1
+        - DeviceName: /dev/sda1
           Ebs:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-        -
-          DeviceName: /dev/sdb
+        - DeviceName: /dev/sdb
           Ebs:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-      UserData:
-        Fn::Base64: !Sub |
-            #!/bin/bash -x
-            su - ec2-user -c /app/tools/install.sh
-  PublisherASG:
+      IamInstanceProfile:
+        Ref: PublishInstanceProfileParameter
+      ImageId:
+        Ref: PublishImageParameter
+      InstanceMonitoring: false
+      InstanceType:
+        Ref: PublishInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      SecurityGroups:
+        - Ref: PublishSecurityGroupParameter
+  #TODO: Setup UserData
+  #    UserData:
+  #      Fn::Base64:
+  #        Fn:Sub:
+  #          #!/bin/bash -x
+  #          su - ec2-user -c /app/tools/install.sh
+
+  PublishAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      AvailabilityZones: !Ref AvailZones
-      VPCZoneIdentifier: !Ref SubnetPrvAppASG
-      LaunchConfigurationName: !Ref PublisherLaunchCfg
+      AvailabilityZones:
+        Ref: PublishASGAvailabilityZoneListParameter
       HealthCheckGracePeriod: 900
       HealthCheckType: EC2
-      MinSize: !Ref ASGPublisherMinSize
-      MaxSize: !Ref ASGPublisherMaxSize
-      NotificationConfiguration:
-        NotificationTypes:
-          - autoscaling:EC2_INSTANCE_LAUNCH
-          - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
-          - autoscaling:EC2_INSTANCE_TERMINATE
-          - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
-        TopicARN: !Ref AEMASGEventTopic
+      LaunchConfigurationName:
+        Ref: PublishLaunchConfiguration
+      MaxSize:
+        Ref: PublishASGMaxSizeParameter
+      MinSize:
+        Ref: PublishASGMinSizeParameter
+      NotificationConfigurations:
+        - NotificationTypes:
+            - autoscaling:EC2_INSTANCE_LAUNCH
+            - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+            - autoscaling:EC2_INSTANCE_TERMINATE
+            - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+          TopicARN:
+            Ref: AEMAutoScalingGroupSNSTopicParameter
       Tags:
-        -
+        - Key: Name
+          Value:
+            Ref: PublishTagNameParameter
           PropagateAtLaunch: true
-          Key: Name
-          Value: !Ref NameTagPublisher
-        -
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
           PropagateAtLaunch: true
-          Key: stack_name
-          Value: !Ref StackName
-        -
+        - Key: Component
+          Value: aem-publish
           PropagateAtLaunch: true
-          Key: component
-          Value: aem-publisher
-        -
+        - Key: Application Version
+          Value:
+            Ref: ApplicationVersionParameter
           PropagateAtLaunch: true
-          Key: app_version
-          Value: !Ref TagAppVersion
-
+      VPCZoneIdentifier:
+        Ref: PublishASGSubnetListParameter

@@ -82,7 +82,7 @@
     - name: Create aem stack ASG SNS topic
       sns_topic:
         region: "{{ aws.region }}"
-        name: "{{ compute.stack_moniker }}-{{ compute.asg_sns_topic_name }}"
+        name: "{{ compute.stack_moniker }}-{{ messaging.asg_sns_topic_name }}"
       register: asg_sns_topic
       tags:
       - create

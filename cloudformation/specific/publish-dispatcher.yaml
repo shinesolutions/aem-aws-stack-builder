@@ -58,7 +58,7 @@ Parameters:
   PublishDispatcherASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Default: ap-southeast-2a, ap-southeast-2b
-    Description: The Publish Dispatcher Security Group
+    Description: The Publish Dispatcher Availability Zone List
 
   PublishDispatcherASGSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>

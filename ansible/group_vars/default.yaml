@@ -5,6 +5,8 @@ compute:
   application_version: 1.0.0
   certificate_name: aem-stack-certificate
   load_balancer_health_check: HTTP:80/system/health
+
+messaging:
   asg_sns_topic_name: aem-stack-asg-topic
 
 security_groups:
@@ -18,6 +20,9 @@ security_groups:
 
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
+
+  publish:
+    tag_name: AEM Publish Security Group
 
   author:
     tag_name: AEM Author Security Group
@@ -67,6 +72,9 @@ publish:
   instance_type: m3.large
   min_size: 2
   max_size: 2
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-PublishInstanceProfile-G4O8DIPE5F2L
+  tag_name: AEM Publish
 
 author:
   stack_name: aem-author-stack
