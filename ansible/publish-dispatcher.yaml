@@ -97,7 +97,7 @@
         template_parameters:
           ComputeStackMonikerParameter: "{{ compute.stack_moniker }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
-          PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ compute.load_balancer_health_check }}"
+          PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
           PublishDispatcherELBSecurityGroupListParameter: "{{ publish_dispatcher_elb_security_group.security_groups.0.group_id }}"
           PublishDispatcherSubnetAParameter: "{{ publish_dispatcher_subnet_a.subnets.0.id }}"
           PublishDispatcherSubnetBParameter: "{{ publish_dispatcher_subnet_b.subnets.0.id }}"

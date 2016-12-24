@@ -4,10 +4,19 @@ compute:
   key_pair_name: aem-stack-key-pair
   application_version: 1.0.0
   certificate_name: aem-stack-certificate
-  load_balancer_health_check: HTTP:80/system/health
 
 messaging:
   asg_sns_topic_name: aem-stack-asg-topic
+
+#TODO: consider moving into own group_vars file, given the roles could be shared.
+roles:
+  stack_name: aem-roles-stack
+  publish_dispatcher: AEMStackPublishDispatcherRole
+  publish: AEMStackPublishRole
+  author: AEMStackAuthorRole
+  author_dispatcher: AEMStackAuthorDispatcherRole
+  orchestrator: AEMStackOrchestratorRole
+  chaos_monkey: AEMStackChaosMonkeyRole
 
 security_groups:
   stack_name: aem-security-groups-stack
@@ -43,14 +52,6 @@ security_groups:
   chaos_monkey:
     tag_name: AEM Chaos Monkey Security Group
 
-roles:
-  stack_name: aem-roles-stack
-  publish_dispatcher: AEMStackPublishDispatcherRole
-  publish: AEMStackPublishRole
-  author: AEMStackAuthorRole
-  author_dispatcher: AEMStackAuthorDispatcherRole
-  orchestrator: AEMStackOrchestratorRole
-  chaos_monkey: AEMStackChaosMonkeyRole
 
 dispatcher:
   ami_version: 1.0.0
@@ -65,6 +66,7 @@ publish_dispatcher:
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
+  elb_health_check: HTTP:80/system/health
 
 publish:
   stack_name: aem-publish-stack
@@ -80,6 +82,12 @@ author:
   stack_name: aem-author-stack
   ami_version: 1.0.0
   instance_type: m3.large
+  #  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-AuthorInstanceProfile-16V82GA23D2LP
+  load_balancer:
+    tag_name: AEM Author Load Balancer
+  tag_name: AEM Author
+  elb_health_check: HTTP:4502/system/health
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack

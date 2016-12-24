@@ -78,6 +78,31 @@ make delete-stack moniker=default stack=publish-dispatcher
 ```
 
 
+Create Publish Stack:
+```
+make create-stack moniker=default stack=publish
+```
+
+Delete Publish Stack:
+```
+make delete-stack moniker=default stack=publish
+```
+
+
+Create Author Stack:
+```
+make create-stack moniker=default stack=author
+```
+
+Delete Author Stack:
+```
+make delete-stack moniker=default stack=author
+```
+
+
+
+
+
 ## Ansible
 
 Requirements:
@@ -145,6 +170,25 @@ Delete Publish Dispatcher Stack:
 make ansible-delete-stack stack=publish-dispatcher inventory=default
 ```
 
+Create Publish Stack:
+```
+make ansible-create-stack stack=publish inventory=default
+```
+
+Delete Publish Stack:
+```
+make ansible-delete-stack stack=publish inventory=default
+```
+
+Create Author Stack:
+```
+make ansible-create-stack stack=author inventory=default
+```
+
+Delete Author Stack:
+```
+make ansible-delete-stack stack=author inventory=default
+```
 
 
 ## Configuration
