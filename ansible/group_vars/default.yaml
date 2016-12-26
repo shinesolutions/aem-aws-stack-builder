@@ -10,6 +10,7 @@ roles:
   orchestrator: AEMStackOrchestratorRole
   chaos_monkey: AEMStackChaosMonkeyRole
 
+
 security_groups:
   stack_name: aem-security-groups-stack
   secure_shell:
@@ -43,6 +44,7 @@ security_groups:
 
   chaos_monkey:
     tag_name: AEM Chaos Monkey Security Group
+
 
 messaging:
   stack_name: aem-messaging-stack
@@ -98,6 +100,12 @@ author_dispatcher:
   instance_type: t2.micro
   min_size: 2
   max_size: 2
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-AuthorDispatcherInstanceProfile-3G6RQTPHXY5F
+  load_balancer:
+    tag_name: AEM Author Dispatcher Load Balancer
+  tag_name: AEM Author Dispatcher
+  elb_health_check: HTTP:80/system/health
 
 orchestrator:
   ami_version: 1.0.0

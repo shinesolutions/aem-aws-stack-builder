@@ -1,6 +1,28 @@
 # aem-aws-stack-builder
 Cloudformation templates (yaml) for creating an AEM Stack
 
+Network (shared) Stacks:
+* vpc
+* network
+
+AEM Application (specific) Stacks:
+* roles (can be shared across stacks)
+* security-groups
+* messaging
+* publish-dispatcher
+* publish
+* author
+* author-dispatcher
+* orchestrator
+* chaos-monkey
+* route53
+
+Prerequisites:
+* ec2 key pair
+* ssl server certificate
+* ami images for publish-dispatcher, publish, author, author-dispatcher, orchestrator, chaos-monkey (with component and version tags)
+
+
 ## Installation
 
 Requirements
@@ -110,7 +132,15 @@ make delete-stack moniker=default stack=author
 ```
 
 
+Create Author Dispatcher Stack:
+```
+make create-stack moniker=default stack=author-dispatcher
+```
 
+Delete Author Dispatcher Stack:
+```
+make delete-stack moniker=default stack=author-dispatcher
+```
 
 
 ## Ansible
@@ -212,6 +242,15 @@ Delete Author Stack:
 make ansible-delete-stack stack=author inventory=default
 ```
 
+Create Author Dispatcher Stack:
+```
+make ansible-create-stack stack=author-dispatcher inventory=default
+```
+
+Delete Author Dispatcher Stack:
+```
+make ansible-delete-stack stack=author-dispatcher inventory=default
+```
 
 ## Configuration
 

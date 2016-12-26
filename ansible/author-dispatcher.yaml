@@ -5,6 +5,14 @@
   connection: local
 
   tasks:
+
+    - name: Get AEM Stack IAM Server Certificate
+      iam_server_certificate_facts:
+        name: "{{ compute.certificate_name }}"
+      register: aem_stack_certificate
+      tags:
+      - create
+
     - name: Get AEM Stack VPC
       ec2_vpc_net_facts:
         region: "{{ aws.region }}"
@@ -14,8 +22,51 @@
       tags:
       - create
 
+    - name: Get Author Dispatcher ELB Security Group
+      ec2_group_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ security_groups.author_dispatcher_elb.tag_name }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: author_dispatcher_elb_security_group
+      tags:
+      - create
+
+    - name: Get Author Dispatcher Subnet A
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.author_dispatcher.subnet_a.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: author_dispatcher_subnet_a
+      tags:
+      - create
+
+    - name: Get Author Dispatcher Subnet B
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.author_dispatcher.subnet_b.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: author_dispatcher_subnet_b
+      tags:
+      - create
+
+    - name: Get Author Dispatcher Security Group
+      ec2_group_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ security_groups.author_dispatcher.tag_name }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: author_dispatcher_security_group
+      tags:
+      - create
+
     - name: Get Dispatcher AMI
       ec2_ami_find:
+        region: "{{ aws.region }}"
         ami_tags:
           component: dispatcher
           version: "{{ dispatcher.ami_version }}"
@@ -26,63 +77,48 @@
       tags:
       - create
 
-    - name: Get Author Dispatcher ELB Security Group
-      ec2_group_facts:
+    - name: Get the AEM Stack ASG Event SNS topic
+      sns_topic:
         region: "{{ aws.region }}"
-        filters:
-          "tag:Name": AEM Author Dispatcher ELB Security Group
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: author_dispatcher_elb_security_group
-      tags:
-      - create
-
-    - name: Get Author Dispatcher Subnet A
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": AEM Author Dispatcher Subnet A
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: author_dispatcher_subnet_a
-      tags:
-      - create
-
-    - name: Get Author Dispatcher Subnet B
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": AEM Author Dispatcher Subnet B
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: author_dispatcher_subnet_b
-      tags:
-      - create
-
-    - name: Get Author Dispatcher Security Group
-      ec2_group_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": AEM Author Dispatcher Security Group
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: author_dispatcher_security_group
+        name: "{{ stack_moniker }}-{{ messaging.asg_event_sns_topic_name }}"
+      register: asg_event_sns_topic
       tags:
       - create
 
     - name: Create AEM Author Dispatcher Stack
       cloudformation:
-        stack_name: "{{ author_dispatcher.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ author_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/author-dispatcher.yaml"
         template_parameters:
-          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
+          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
+          AuthorDispatcherLoadBalancerHealthCheckTargetParameter: "{{ author_dispatcher.elb_health_check }}"
+          AuthorDispatcherELBSecurityGroupListParameter: "{{ author_dispatcher_elb_security_group.security_groups.0.group_id }}"
+          AuthorDispatcherSubnetAParameter: "{{ author_dispatcher_subnet_a.subnets.0.id }}"
+          AuthorDispatcherSubnetBParameter: "{{ author_dispatcher_subnet_b.subnets.0.id }}"
+          AuthorDispatcherImageParameter: "{{ dispatcher_ami.results[0].ami_id }}"
+          AuthorDispatcherInstanceTypeParameter: "{{ author_dispatcher.instance_type }}"
+          ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          AuthorDispatcherSecurityGroupParameter: "{{ author_dispatcher_security_group.security_groups.0.group_id }}"
+          AuthorDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          AuthorDispatcherASGSubnetListParameter: "{{ author_dispatcher_subnet_a.subnets.0.id }}, {{ author_dispatcher_subnet_b.subnets.0.id }}"
+          AuthorDispatcherASGMaxSizeParameter: "{{ author_dispatcher.max_size }}"
+          AuthorDispatcherASGMinSizeParameter: "{{ author_dispatcher.min_size }}"
+          AuthorDispatcherASGEventSNSTopicParameter: "{{ asg_event_sns_topic.sns_arn }}"
+          AuthorDispatcherTagNameParameter: "{{ author_dispatcher.tag_name }}"
+          ApplicationVersionParameter: "{{ compute.application_version }}"
+          AuthorDispatcherInstanceProfileParameter: "{{ author_dispatcher.iam_instance_profile }}"
+          AuthorDispatcherLoadBalancerTagNameParameter: "{{ author_dispatcher.load_balancer.tag_name }}"
       tags:
       - create
 
     - name: Delete AEM Author Dispatcher Stack
       cloudformation:
-        stack_name: "{{ author_dispatcher.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ author_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:
       - delete
-

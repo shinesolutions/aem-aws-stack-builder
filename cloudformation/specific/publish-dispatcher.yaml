@@ -60,6 +60,7 @@ Parameters:
     Default: ap-southeast-2a, ap-southeast-2b
     Description: The Publish Dispatcher Availability Zone List
 
+#TODO: Combine this parameter with PublishDispatcherSubnetAParameter and PublishDispatcherSubnetBParameter
   PublishDispatcherASGSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>
     Default: subnet-1f5ed07b, subnet-68d2641e
