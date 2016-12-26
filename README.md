@@ -152,6 +152,15 @@ Delete Orchestrator Stack:
 make delete-stack moniker=default stack=orchestrator
 ```
 
+Create Chaos Monkey Stack:
+```
+make create-stack moniker=default stack=chaos-monkey
+```
+
+Delete Chaos Monkey Stack:
+```
+make delete-stack moniker=default stack=chaos-monkey
+```
 
 ## Ansible
 
@@ -272,6 +281,16 @@ Delete Orchestrator Stack:
 make ansible-delete-stack stack=orchestrator inventory=default
 ```
 
+
+Create Chaos Monkey Stack:
+```
+make ansible-create-stack stack=chaos-monkey inventory=default
+```
+
+Delete Chaos Monkey Stack:
+```
+make ansible-delete-stack stack=chaos-monkey inventory=default
+```
 
 ## Configuration
 
