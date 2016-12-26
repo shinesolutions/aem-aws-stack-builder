@@ -107,14 +107,19 @@ author_dispatcher:
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTP:80/system/health
 
-orchestrator:
+java:
   ami_version: 1.0.0
+
+orchestrator:
+  stack_name: aem-orchestrator-stack
   instance_type: t2.small
-  min_size: 1
-  max_size: 1
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-OrchestratorInstanceProfile-YV2RUZFV743O
+  tag_name: AEM Orchestrator
 
 chaos_monkey:
-  ami_version: 1.0.0
+  stack_name: aem-chaos-monkey-stack
   instance_type: t2.micro
-  min_size: 1
-  max_size: 1
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1V5LOQ69PD4TJ
+  tag_name: AEM Chaos Monkey

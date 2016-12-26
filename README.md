@@ -142,6 +142,16 @@ Delete Author Dispatcher Stack:
 make delete-stack moniker=default stack=author-dispatcher
 ```
 
+Create Orchestrator Stack:
+```
+make create-stack moniker=default stack=orchestrator
+```
+
+Delete Orchestrator Stack:
+```
+make delete-stack moniker=default stack=orchestrator
+```
+
 
 ## Ansible
 
@@ -251,6 +261,17 @@ Delete Author Dispatcher Stack:
 ```
 make ansible-delete-stack stack=author-dispatcher inventory=default
 ```
+
+Create Orchestrator Stack:
+```
+make ansible-create-stack stack=orchestrator inventory=default
+```
+
+Delete Orchestrator Stack:
+```
+make ansible-delete-stack stack=orchestrator inventory=default
+```
+
 
 ## Configuration
 
