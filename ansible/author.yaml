@@ -27,7 +27,7 @@
         region: "{{ aws.region }}"
         filters:
           "tag:Name": "{{ security_groups.author_elb.tag_name }}"
-          "tag:Stack Moniker": "{{ compute.stack_moniker }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: author_elb_security_group
       tags:
@@ -58,7 +58,7 @@
         region: "{{ aws.region }}"
         filters:
           "tag:Name": "{{ security_groups.author.tag_name }}"
-          "tag:Stack Moniker": "{{ compute.stack_moniker }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: author_security_group
       tags:
@@ -79,13 +79,13 @@
 
     - name: Create AEM Author Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ author.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ author.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/author.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ compute.stack_moniker }}"
+          ComputeStackMonikerParameter: "{{ stack_moniker }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
           AuthorELBSecurityGroupListParameter: "{{ author_elb_security_group.security_groups.0.group_id }}"
@@ -104,7 +104,7 @@
 
     - name: Delete AEM Author Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ author.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ author.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

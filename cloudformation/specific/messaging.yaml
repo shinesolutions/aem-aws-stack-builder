@@ -2,46 +2,63 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create compute resources for the AEM Publish
+  Create Messaging resources for the AEM Stack Auto Scaling Group Events
 
 Parameters:
+
+  AEMASGEventQueueNameParameter:
+    Type: String
+    Default: default-aem-asg-event-queue
+    Description: The AEM Stack Auto Scaling Group Event Quene Name
+
+  AEMASGEventTopicDisplayNameParameter:
+    Type: String
+    Default: default - AEM ASG Event Topic
+    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
+
+  AEMASGEventTopicNameParameter:
+    Type: String
+    Default: default-aem-asg-event-topic
+    Description: The AEM Stack Auto Scaling Group Event Topic Name
 
 
 Resources:
 
-  AEMASGEventQueue:
+  AEMAutoScalingGroupEventQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: !Sub ${StackName}-ASGEvent
+      QueueName:
+        Ref: AEMASGEventQueueNameParameter
       VisibilityTimeout: 30
+
+  AEMASGEventTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Ref: AEMASGEventTopicDisplayNameParameter
+      Subscription:
+        - Endpoint:
+            Fn::GetAtt: [ AEMAutoScalingGroupEventQueue, Arn ]
+          Protocol: sqs
+      TopicName:
+        Ref: AEMASGEventTopicNameParameter
 
   AEMASGEventQueuePolicy:
     Type: AWS::SQS::QueuePolicy
     Properties:
       PolicyDocument:
+        Version: "2012-10-17"
         Statement:
-          -
-            Sid: SQS01
-            Effect: Allow
+          - Effect: Allow
             Principal:
-              AWS:
-                - "*"
+              AWS: "*"
             Action:
-              - SQS:SendMessage
+              - sqs:SendMessage
             Resource:
-              - !GetAtt AEMASGEventQueue.Arn
+              - Fn::GetAtt: [ AEMAutoScalingGroupEventQueue, Arn ]
             Condition:
               ArnEquals:
-                aws:SourceArn: !Ref AEMASGEventTopic
+                aws:SourceArn:
+                  Ref: AEMASGEventTopic
       Queues:
-        - !Ref AEMASGEventQueue
-
-  AEMASGEventTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      TopicName: !Sub ${StackName}-ASGEvent
-      DisplayName: !Sub ${StackName}-AEM AutoScaling Event
-      Subscription:
-        -
-          Endpoint: !GetAtt AEMASGEventQueue.Arn
-          Protocol: sqs
+        - Ref: AEMAutoScalingGroupEventQueue

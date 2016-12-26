@@ -27,7 +27,7 @@
         region: "{{ aws.region }}"
         filters:
           "tag:Name": "{{ security_groups.publish_dispatcher_elb.tag_name }}"
-          "tag:Stack Moniker": "{{ compute.stack_moniker }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_dispatcher_elb_security_group
       tags:
@@ -58,7 +58,7 @@
         region: "{{ aws.region }}"
         filters:
           "tag:Name": "{{ security_groups.publish_dispatcher.tag_name }}"
-          "tag:Stack Moniker": "{{ compute.stack_moniker }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_dispatcher_security_group
       tags:
@@ -82,20 +82,20 @@
     - name: Create aem stack ASG SNS topic
       sns_topic:
         region: "{{ aws.region }}"
-        name: "{{ compute.stack_moniker }}-{{ messaging.asg_sns_topic_name }}"
+        name: "{{ stack_moniker }}-{{ messaging.asg_sns_topic_name }}"
       register: asg_sns_topic
       tags:
       - create
 
     - name: Create AEM Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/publish-dispatcher.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ compute.stack_moniker }}"
+          ComputeStackMonikerParameter: "{{ stack_moniker }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
           PublishDispatcherELBSecurityGroupListParameter: "{{ publish_dispatcher_elb_security_group.security_groups.0.group_id }}"
@@ -119,7 +119,7 @@
 
     - name: Delete AEM Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

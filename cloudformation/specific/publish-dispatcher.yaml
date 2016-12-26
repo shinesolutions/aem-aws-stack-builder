@@ -77,7 +77,7 @@ Parameters:
 
   AEMAutoScalingGroupSNSTopicParameter:
     Type: String
-    Default: arn:aws:sns:region:accountID:aem-stack-asg-topic
+    Default: arn:aws:sns:region:accountID:default-aem-asg-event-topic
     Description: The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic.
 
   PublishDispatcherTagNameParameter:

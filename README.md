@@ -60,11 +60,21 @@ make create-stack moniker=default stack=security-groups
 ```
 
 
-Create Security Groups Stack:
+Delete Security Groups Stack:
 ```
-make create-stack moniker=default stack=security-groups
+make delete-stack moniker=default stack=security-groups
 ```
 
+
+Create Messaging Stack:
+```
+make create-stack moniker=default stack=messaging
+```
+
+Delete Messaging Stack:
+```
+make delete-stack moniker=default stack=messaging
+```
 
 
 Create Publish Dispatcher Stack:
@@ -159,6 +169,18 @@ Delete Security Groups Stack:
 ```
 make ansible-delete-stack stack=security-groups inventory=default
 ```
+
+Create Messaging Stack:
+```
+make ansible-create-stack stack=messaging inventory=default
+```
+
+Delete Messaging Stack:
+```
+make ansible-delete-stack stack=messaging inventory=default
+```
+
+
 
 Create Publish Dispatcher Stack:
 ```

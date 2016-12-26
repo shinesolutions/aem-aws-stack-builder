@@ -1,12 +1,4 @@
-
-compute:
-  stack_moniker: default
-  key_pair_name: aem-stack-key-pair
-  application_version: 1.0.0
-  certificate_name: aem-stack-certificate
-
-messaging:
-  asg_sns_topic_name: aem-stack-asg-topic
+stack_moniker: default
 
 #TODO: consider moving into own group_vars file, given the roles could be shared.
 roles:
@@ -51,6 +43,18 @@ security_groups:
 
   chaos_monkey:
     tag_name: AEM Chaos Monkey Security Group
+
+messaging:
+  stack_name: aem-messaging-stack
+  asg_event_sqs_queue_name: aem-asg-event-queue
+  asg_event_sns_topic_name: aem-asg-event-topic
+  asg_event_sns_topic_display_name: AEM ASG Event Topic
+
+
+compute:
+  key_pair_name: aem-stack-key-pair
+  application_version: 1.0.0
+  certificate_name: aem-stack-certificate
 
 
 dispatcher:

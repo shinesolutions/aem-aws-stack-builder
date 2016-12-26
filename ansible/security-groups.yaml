@@ -16,14 +16,14 @@
 
     - name: Create AEM Security Groups Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ security_groups.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ security_groups.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/security-groups.yaml"
         template_parameters:
           VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
-          ComputeStackMonikerParameter: "{{ compute.stack_moniker }}"
+          ComputeStackMonikerParameter: "{{ stack_moniker }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupTagNameParameter: "{{ security_groups.publish_dispatcher_elb.tag_name }}"
@@ -40,7 +40,7 @@
 
     - name: Delete AEM Security Groups Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ security_groups.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ security_groups.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

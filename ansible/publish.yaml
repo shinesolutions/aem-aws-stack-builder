@@ -40,7 +40,7 @@
         region: "{{ aws.region }}"
         filters:
           "tag:Name": "{{ security_groups.publish.tag_name }}"
-          "tag:Stack Moniker": "{{ compute.stack_moniker }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_security_group
       tags:
@@ -64,20 +64,20 @@
     - name: Create aem stack ASG SNS topic
       sns_topic:
         region: "{{ aws.region }}"
-        name: "{{ compute.stack_moniker }}-{{ messaging.asg_sns_topic_name }}"
+        name: "{{ stack_moniker }}-{{ messaging.asg_sns_topic_name }}"
       register: asg_sns_topic
       tags:
       - create
 
     - name: Create AEM Publish Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ publish.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ publish.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/publish.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ compute.stack_moniker }}"
+          ComputeStackMonikerParameter: "{{ stack_moniker }}"
           PublishImageParameter: "{{ publish_ami.results[0].ami_id }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
@@ -95,7 +95,7 @@
 
     - name: Delete AEM Publish Stack
       cloudformation:
-        stack_name: "{{ compute.stack_moniker }}-{{ publish.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ publish.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:
