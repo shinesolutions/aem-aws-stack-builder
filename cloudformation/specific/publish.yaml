@@ -50,7 +50,7 @@ Parameters:
     Default: 2
     Description: The Publish Auto Scaling Group Minimum Size
 
-  AEMAutoScalingGroupSNSTopicParameter:
+  PublishASGEventSNSTopicParameter:
     Type: String
     Default: arn:aws:sns:region:accountId:default-aem-asg-event-topic
     Description: The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic.
@@ -125,7 +125,7 @@ Resources:
             - autoscaling:EC2_INSTANCE_TERMINATE
             - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
           TopicARN:
-            Ref: AEMAutoScalingGroupSNSTopicParameter
+            Ref: PublishASGEventSNSTopicParameter
       Tags:
         - Key: Name
           Value:

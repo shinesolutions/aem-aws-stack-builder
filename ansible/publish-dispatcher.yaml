@@ -77,13 +77,11 @@
       tags:
       - create
 
-#TODO: the ASG SNS Topic will be shared across ASG. need to move to messaging yaml.
-#TODO: need a way to retrieve the topic
-    - name: Create aem stack ASG SNS topic
+    - name: Get the AEM Stack ASG Event SNS topic
       sns_topic:
         region: "{{ aws.region }}"
-        name: "{{ stack_moniker }}-{{ messaging.asg_sns_topic_name }}"
-      register: asg_sns_topic
+        name: "{{ stack_moniker }}-{{ messaging.asg_event_sns_topic_name }}"
+      register: asg_event_sns_topic
       tags:
       - create
 
@@ -109,7 +107,7 @@
           PublishDispatcherASGSubnetListParameter: "{{ publish_dispatcher_subnet_a.subnets.0.id }}, {{ publish_dispatcher_subnet_b.subnets.0.id }}"
           PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
           PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
-          AEMAutoScalingGroupSNSTopicParameter: "{{ asg_sns_topic.sns_arn }}"
+          PublishDispatcherASGEventSNSTopicParameter: "{{ asg_event_sns_topic.sns_arn }}"
           PublishDispatcherTagNameParameter: "{{ publish_dispatcher.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.iam_instance_profile }}"
