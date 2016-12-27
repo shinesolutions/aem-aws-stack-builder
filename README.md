@@ -292,6 +292,19 @@ Delete Chaos Monkey Stack:
 make ansible-delete-stack stack=chaos-monkey inventory=default
 ```
 
+### Full AEM Application Stack
+
+Create AEM Stack:
+```
+make create-aem-stack inventory=default
+```
+
+Delete AEM Stack:
+```
+make delete-aem-stack inventory=default
+```
+
+
 ## Configuration
 
 Work in Progress

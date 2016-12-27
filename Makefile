@@ -24,7 +24,11 @@ create-stack:
 delete-stack:
 	./shell/delete-stack.sh ${moniker}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
 
+create-aem-stack:
+	./shell/create-aem-stack.sh ${inventory}
 
+delete-aem-stack:
+	./shell/delete-aem-stack.sh ${inventory}
 
 ansible-create-stack:
 	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags create
