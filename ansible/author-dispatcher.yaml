@@ -112,6 +112,9 @@
           ApplicationVersionParameter: "{{ compute.application_version }}"
           AuthorDispatcherInstanceProfileParameter: "{{ author_dispatcher.iam_instance_profile }}"
           AuthorDispatcherLoadBalancerTagNameParameter: "{{ author_dispatcher.load_balancer.tag_name }}"
+          Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
+          AuthorDispatcherRoute53RecordSetNameParamter: "{{ author_dispatcher.route53_record_set_name }}"
+      tags:
       tags:
       - create
 

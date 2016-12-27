@@ -101,6 +101,16 @@ Parameters:
     Default: aem-roles-stack-AuthorDispatcherInstanceProfile-3G6RQTPHXY5F
     Description: The Author Dispatcher IAM Instance Profile ARN
 
+  Route53RecordSetHostedZoneNameParameter:
+    Type: String
+    Default: aem-stack.com.
+    Description: The Hosted Zone Name to be used by the AEM Stack
+
+  AuthorDispatcherRoute53RecordSetNameParamter:
+    Type: String
+    Default: default-author-dispatcher.aem-stack.com.
+    Description: The Author Dispatcher Route53 CNAME Record Set Name
+
 Resources:
 
   AuthorDispatcherLoadBalancer:
@@ -217,3 +227,16 @@ Resources:
           PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: AuthorDispatcherASGSubnetListParameter
+
+  AuthorDispatcherRoute53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName:
+        Ref: Route53RecordSetHostedZoneNameParameter
+      Name:
+        Ref: AuthorDispatcherRoute53RecordSetNameParamter
+      ResourceRecords:
+        - Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
+      TTL: 300
+      Type: CNAME
+

@@ -76,6 +76,16 @@ Parameters:
     Default: aem-roles-stack-AuthorInstanceProfile-16V82GA23D2LP
     Description: The Author IAM Instance Profile Physical ID (Name) or Reference
 
+  Route53RecordSetHostedZoneNameParameter:
+    Type: String
+    Default: aem-stack.com.
+    Description: The Hosted Zone Name to be used by the AEM Stack
+
+  AuthorRoute53RecordSetNameParamter:
+    Type: String
+    Default: default-author.aem-stack.com.
+    Description: The Author Route53 CNAME Record Set Name
+
 Resources:
 
   AuthorPrimaryInstance:
@@ -211,3 +221,15 @@ Resources:
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
+
+  AuthorRoute53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName:
+        Ref: Route53RecordSetHostedZoneNameParameter
+      Name:
+        Ref: AuthorRoute53RecordSetNameParamter
+      ResourceRecords:
+        - Fn::GetAtt: [AuthorLoadBalancer, DNSName]
+      TTL: 300
+      Type: CNAME

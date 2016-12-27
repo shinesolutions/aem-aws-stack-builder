@@ -15,12 +15,12 @@ AEM Application (specific) Stacks:
 * author-dispatcher
 * orchestrator
 * chaos-monkey
-* route53
 
 Prerequisites:
 * ec2 key pair
 * ssl server certificate
 * ami images for publish-dispatcher, publish, author, author-dispatcher, orchestrator, chaos-monkey (with component and version tags)
+* dns hosted zone
 
 
 ## Installation

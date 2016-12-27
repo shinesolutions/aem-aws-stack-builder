@@ -52,6 +52,8 @@ messaging:
   asg_event_sns_topic_name: aem-asg-event-topic
   asg_event_sns_topic_display_name: AEM ASG Event Topic
 
+route53:
+  hosted_zone_name: aem-stack.com.
 
 compute:
   key_pair_name: aem-stack-key-pair
@@ -73,6 +75,7 @@ publish_dispatcher:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
   elb_health_check: HTTP:80/system/health
+  route53_record_set_name: default-publish-dispatcher.aem-stack.com.
 
 publish:
   stack_name: aem-publish-stack
@@ -94,6 +97,7 @@ author:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
   elb_health_check: HTTP:4502/system/health
+  route53_record_set_name: default-author.aem-stack.com.
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
@@ -106,6 +110,7 @@ author_dispatcher:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTP:80/system/health
+  route53_record_set_name: default-author-dispatcher.aem-stack.com.
 
 java:
   ami_version: 1.0.0
