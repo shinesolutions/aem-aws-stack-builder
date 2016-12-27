@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create Subnets, InternetGateway, and RouteTable for AEM Stack
+  Create Subnets, Internet Gateway, and Route Tables for AEM Stack
 
 Parameters:
   VpcIdParameter:
@@ -11,12 +11,12 @@ Parameters:
     Description: The VPC to create the AEM Network in.
 
   AvailabilityZoneAParameter:
-    Type: String
+    Type: AWS::EC2::AvailabilityZone::Name
     Default: ap-southeast-2a
     Description: Availability Zone A
 
   AvailabilityZoneBParameter:
-    Type: String
+    Type: AWS::EC2::AvailabilityZone::Name
     Default: ap-southeast-2b
     Description: Availability Zone B
 

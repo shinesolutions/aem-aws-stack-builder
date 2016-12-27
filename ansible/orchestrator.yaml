@@ -1,0 +1,88 @@
+---
+- name: AEM Orchestrator CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Get AEM Stack VPC
+      ec2_vpc_net_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ ec2_vpc.tag_name }}"
+      register: aem_stack_vpc
+      tags:
+      - create
+
+    - name: Get Orchestrator Subnet A
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.tool.subnet_a.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: orchestrator_subnet_a
+      tags:
+      - create
+
+    - name: Get Orchestrator Subnet B
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.tool.subnet_b.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: orchestrator_subnet_b
+      tags:
+      - create
+
+    - name: Get Orchestrator Security Group
+      ec2_group_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ security_groups.orchestrator.tag_name }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: orchestrator_security_group
+      tags:
+      - create
+
+    - name: Get Orchestrator AMI
+      ec2_ami_find:
+        region: "{{ aws.region }}"
+        ami_tags:
+          component: java
+          version: "{{ java.ami_version }}"
+        sort: creationDate
+        sort_order: descending
+        sort_end: 1
+      register: orchestrator_ami
+      tags:
+      - create
+
+    - name: Create AEM Orchestrator Stack
+      cloudformation:
+        stack_name: "{{ stack_moniker }}-{{ orchestrator.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../cloudformation/specific/orchestrator.yaml"
+        template_parameters:
+          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          OrchestratorImageParameter: "{{ orchestrator_ami.results[0].ami_id }}"
+          OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
+          ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          OrchestratorSecurityGroupParameter: "{{ orchestrator_security_group.security_groups.0.group_id }}"
+          OrchestratorASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          OrchestratorASGSubnetListParameter: "{{ orchestrator_subnet_a.subnets.0.id }}, {{ orchestrator_subnet_b.subnets.0.id }}"
+          OrchestratorTagNameParameter: "{{ orchestrator.tag_name }}"
+          ApplicationVersionParameter: "{{ compute.application_version }}"
+          OrchestratorInstanceProfileParameter: "{{ orchestrator.iam_instance_profile }}"
+      tags:
+      - create
+
+    - name: Delete AEM Orchestrator Stack
+      cloudformation:
+        stack_name: "{{ stack_moniker }}-{{ orchestrator.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

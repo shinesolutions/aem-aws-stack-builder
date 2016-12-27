@@ -1,0 +1,242 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create the Compute resources for the AEM Author Dispatcher
+
+Parameters:
+  ComputeStackMonikerParameter:
+    Type: String
+    Default: default
+    Description: The AEM Stack Compute Resources Stack Moniker
+
+  SSLCertificateARNParameter:
+    Type: String
+    Default: arn:aws:iam::accountID:server-certificate/aem-stack-certificate
+    Description: The ARN for SSL Certificate
+
+  AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
+    Type: String
+    Default: HTTP:80/system/health
+    Description: AEM Author Dispatcher ELB Health Check Target
+
+  AuthorDispatcherELBSecurityGroupListParameter:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: sg-f58e7c92
+    Description: The Author Dispatcher ELB Security Group
+
+  AuthorDispatcherSubnetAParameter:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-20b53c44
+    Description: The Author Dispatcher Subnet in Availability Zone A
+
+  AuthorDispatcherSubnetBParameter:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-aeec5dd8
+    Description: The Author Dispatcher Subnet in Availability Zone B
+
+  AuthorDispatcherImageParameter:
+    Type: AWS::EC2::Image::Id
+    Default: ami-429ea621
+    Description: The Author Dispatcher Image Id
+
+  AuthorDispatcherInstanceTypeParameter:
+    Type: String
+    Default: t2.micro
+    Description: The Author Dispatcher Instance Type
+
+  ComputeKeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: aem-default-stack-key-pair
+    Description: The Compute Resources Key Pair Name
+
+  AuthorDispatcherSecurityGroupParameter:
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: sg-ee8e7c89
+    Description: The Author Dispatcher Security Group
+
+  AuthorDispatcherASGAvailabilityZoneListParameter:
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+    Default: ap-southeast-2a, ap-southeast-2b
+    Description: The Author Dispatcher Availability Zone List
+
+#TODO: Combine this parameter with AuthorDispatcherSubnetAParameter and AuthorDispatcherSubnetBParameter
+  AuthorDispatcherASGSubnetListParameter:
+    Type: List<AWS::EC2::Subnet::Id>
+    Default: subnet-20b53c44, subnet-aeec5dd8
+    Description: The Author Dispatcher Subnets
+
+  AuthorDispatcherASGMaxSizeParameter:
+    Type: String
+    Default: 2
+    Description: The Author Dispatcher Auto Scaling Group Maximum Size
+
+  AuthorDispatcherASGMinSizeParameter:
+    Type: String
+    Default: 2
+    Description: The Author Dispatcher Auto Scaling Group Minimum Size
+
+  AuthorDispatcherASGEventSNSTopicParameter:
+    Type: String
+    Default: arn:aws:sns:region:accountID:default-aem-asg-event-topic
+    Description: The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic.
+
+  AuthorDispatcherTagNameParameter:
+    Type: String
+    Default: AEM Author Dispatcher
+    Description: The Author Dispatcher Name Tag
+
+  ApplicationVersionParameter:
+    Type: String
+    Default: 1.0.0
+    Description: The Application Version Number
+
+  AuthorDispatcherLoadBalancerTagNameParameter:
+    Type: String
+    Default: AEM Author Dispatcher Load Balancer
+    Description: The Author Dispatcher Load Balancer Name Tag
+
+  AuthorDispatcherInstanceProfileParameter:
+    Type: String
+    Default: aem-roles-stack-AuthorDispatcherInstanceProfile-3G6RQTPHXY5F
+    Description: The Author Dispatcher IAM Instance Profile ARN
+
+  Route53RecordSetHostedZoneNameParameter:
+    Type: String
+    Default: aem-stack.com.
+    Description: The Hosted Zone Name to be used by the AEM Stack
+
+  AuthorDispatcherRoute53RecordSetNameParamter:
+    Type: String
+    Default: default-author-dispatcher.aem-stack.com.
+    Description: The Author Dispatcher Route53 CNAME Record Set Name
+
+Resources:
+
+  AuthorDispatcherLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      HealthCheck:
+        Target:
+          Ref: AuthorDispatcherLoadBalancerHealthCheckTargetParameter
+        HealthyThreshold: "2"
+        UnhealthyThreshold: "2"
+        Interval: "30"
+        Timeout: "5"
+      Listeners:
+        - LoadBalancerPort: "80"
+          InstancePort: "80"
+          Protocol: HTTP
+        - LoadBalancerPort: "443"
+          Protocol: HTTPS
+          InstancePort: "443"
+          InstanceProtocol: HTTPS
+          SSLCertificateId:
+            Ref: SSLCertificateARNParameter
+      Scheme: internal
+      SecurityGroups:
+        Ref: AuthorDispatcherELBSecurityGroupListParameter
+      Subnets:
+        - Ref: AuthorDispatcherSubnetAParameter
+        - Ref: AuthorDispatcherSubnetBParameter
+      Tags:
+        - Key: Name
+          Value:
+            Ref: AuthorDispatcherLoadBalancerTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+
+  AuthorDispatcherLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      IamInstanceProfile:
+        Ref: AuthorDispatcherInstanceProfileParameter
+      ImageId:
+        Ref: AuthorDispatcherImageParameter
+      InstanceMonitoring: false
+      InstanceType:
+        Ref: AuthorDispatcherInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      SecurityGroups:
+        - Ref: AuthorDispatcherSecurityGroupParameter
+  #TODO: Setup UserData
+  #    UserData:
+  #      Fn::Base64:
+  #        Fn:Sub:
+  #          #!/bin/bash -x
+  #          /bin/echo ${ELBAuthorDNSName} > /tmp/cloud-init-debug.log
+  #          su - ec2-user -c "FACTER_aem_author_host=${ELBAuthorDNSName} /app/tools/install.sh"
+  #        - ELBAuthorDNSName: !GetAtt ELBAuthor.DNSName
+
+  AuthorDispatcherAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones:
+        Ref: AuthorDispatcherASGAvailabilityZoneListParameter
+      HealthCheckGracePeriod: 300
+      HealthCheckType: ELB
+      LaunchConfigurationName:
+        Ref: AuthorDispatcherLaunchConfiguration
+      LoadBalancerNames:
+        - Ref: AuthorDispatcherLoadBalancer
+      MaxSize:
+        Ref: AuthorDispatcherASGMaxSizeParameter
+      MinSize:
+        Ref: AuthorDispatcherASGMinSizeParameter
+      NotificationConfigurations:
+        - NotificationTypes:
+            - autoscaling:EC2_INSTANCE_LAUNCH
+            - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+            - autoscaling:EC2_INSTANCE_TERMINATE
+            - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+          TopicARN:
+            Ref: AuthorDispatcherASGEventSNSTopicParameter
+      Tags:
+        - Key: Name
+          Value:
+            Ref: AuthorDispatcherTagNameParameter
+          PropagateAtLaunch: true
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+          PropagateAtLaunch: true
+        - Key: Component
+          Value: aem-author-dispatcher
+          PropagateAtLaunch: true
+        - Key: Application Version
+          Value:
+            Ref: ApplicationVersionParameter
+          PropagateAtLaunch: true
+      VPCZoneIdentifier:
+        Ref: AuthorDispatcherASGSubnetListParameter
+
+  AuthorDispatcherRoute53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName:
+        Ref: Route53RecordSetHostedZoneNameParameter
+      Name:
+        Ref: AuthorDispatcherRoute53RecordSetNameParamter
+      ResourceRecords:
+        - Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
+      TTL: 300
+      Type: CNAME
+

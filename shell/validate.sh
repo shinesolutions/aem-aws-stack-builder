@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CLOUDFORMATION_TEMPLATES="$PWD/templates/*/*.yaml"
+CLOUDFORMATION_TEMPLATES="$PWD/cloudformation/*/*.yaml"
 
 for template in $CLOUDFORMATION_TEMPLATES
 do

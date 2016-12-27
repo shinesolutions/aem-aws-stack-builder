@@ -1,0 +1,122 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create the Compute resources for the AEM Orchestrator
+
+Parameters:
+
+  ComputeStackMonikerParameter:
+    Type: String
+    Default: default
+    Description: The AEM Stack Compute Resources Stack Moniker
+
+  OrchestratorImageParameter:
+    Type: AWS::EC2::Image::Id
+    Default: ami-599fa73a
+    Description: The Orchestrator Image Id
+
+  OrchestratorInstanceTypeParameter:
+    Type: String
+    Default: t2.small
+    Description: The Orchestrator Instance Type
+
+  ComputeKeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: aem-stack-key-pair
+    Description: The Compute Resources Key Pair Name
+
+  OrchestratorSecurityGroupParameter:
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: sg-f78e7c90
+    Description: The Orchestrator Security Group
+
+  OrchestratorASGAvailabilityZoneListParameter:
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+    Default: ap-southeast-2a, ap-southeast-2b
+    Description: The Orchestrator Availability Zone List
+
+  OrchestratorASGSubnetListParameter:
+    Type: List<AWS::EC2::Subnet::Id>
+    Default: subnet-22b53c46, subnet-acec5dda
+    Description: The Orchestrator Subnets
+
+  OrchestratorTagNameParameter:
+    Type: String
+    Default: AEM Orchestrator
+    Description: The Orchestrator Name Tag
+
+  ApplicationVersionParameter:
+    Type: String
+    Default: 1.0.0
+    Description: The Application Version Number
+
+  OrchestratorInstanceProfileParameter:
+    Type: String
+    Default: aem-roles-stack-OrchestratorInstanceProfile-YV2RUZFV743O
+    Description: The Orchestrator IAM Instance Profile ARN
+
+
+Resources:
+
+  OrchestratorLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      IamInstanceProfile:
+        Ref: OrchestratorInstanceProfileParameter
+      ImageId:
+        Ref: OrchestratorImageParameter
+      InstanceMonitoring: false
+      InstanceType:
+        Ref: OrchestratorInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      SecurityGroups:
+        - Ref: OrchestratorSecurityGroupParameter
+  #TODO: Setup UserData
+  #    UserData:
+  #      Fn::Base64:
+  #        Fn:Sub:
+  #         #!/bin/bash -x
+  #         su - ec2-user -c /app/tools/install.sh
+
+
+  OrchestratorAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones:
+        Ref: OrchestratorASGAvailabilityZoneListParameter
+      LaunchConfigurationName:
+        Ref: OrchestratorLaunchConfiguration
+      MaxSize: 1
+      MinSize: 1
+      Tags:
+        - Key: Name
+          Value:
+            Ref: OrchestratorTagNameParameter
+          PropagateAtLaunch: true
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+          PropagateAtLaunch: true
+        - Key: Component
+          Value: aem-orchestrator
+          PropagateAtLaunch: true
+        - Key: Application Version
+          Value:
+            Ref: ApplicationVersionParameter
+          PropagateAtLaunch: true
+      VPCZoneIdentifier:
+        Ref: OrchestratorASGSubnetListParameter

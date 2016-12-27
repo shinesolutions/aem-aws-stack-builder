@@ -1,0 +1,235 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create the Compute resources for the AEM Author
+
+Parameters:
+
+  ComputeStackMonikerParameter:
+    Type: String
+    Default: default
+    Description: The AEM Stack Compute Resources Stack Moniker
+
+  SSLCertificateARNParameter:
+    Type: String
+    Default: arn:aws:iam::accountId:server-certificate/aem-stack-certificate
+    Description: The ARN for SSL Certificate
+
+  AuthorLoadBalancerHealthCheckTargetParameter:
+    Type: String
+    Default: HTTP:4502/system/health
+    Description: AEM Author ELB Health Check Target
+
+  AuthorELBSecurityGroupListParameter:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Default: sg-eb8e7c8c
+    Description: The Author ELB Security Group
+
+  AuthorSubnetAParameter:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-26b53c42
+    Description: The Author Subnet in Availability Zone A
+
+  AuthorSubnetBParameter:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-a1ec5dd7
+    Description: The Author Subnet in Availability Zone B
+
+  AuthorImageParameter:
+    Type: AWS::EC2::Image::Id
+    Default: ami-059fa766
+    Description: The Author Image Id
+
+  AuthorInstanceTypeParameter:
+    Type: String
+    Default: m3.large
+    Description: The Author Instance Type
+
+  ComputeKeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: aem-stack-key-pair
+    Description: The Compute Resources Key Pair Name
+
+  AuthorSecurityGroupParameter:
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: sg-e98e7c8e
+    Description: The Author Security Group
+
+  AuthorTagNameParameter:
+    Type: String
+    Default: AEM Author
+    Description: The Author Name Tag
+
+  ApplicationVersionParameter:
+    Type: String
+    Default: 1.0.0
+    Description: The Application Version Number
+
+  AuthorLoadBalancerTagNameParameter:
+    Type: String
+    Default: AEM Author Load Balancer
+    Description: The Author Load Balancer Name Tag
+
+  AuthorInstanceProfileParameter:
+    Type: String
+    Default: aem-roles-stack-AuthorInstanceProfile-16V82GA23D2LP
+    Description: The Author IAM Instance Profile Physical ID (Name) or Reference
+
+  Route53RecordSetHostedZoneNameParameter:
+    Type: String
+    Default: aem-stack.com.
+    Description: The Hosted Zone Name to be used by the AEM Stack
+
+  AuthorRoute53RecordSetNameParamter:
+    Type: String
+    Default: default-author.aem-stack.com.
+    Description: The Author Route53 CNAME Record Set Name
+
+Resources:
+
+  AuthorPrimaryInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      IamInstanceProfile:
+        Ref: AuthorInstanceProfileParameter
+      ImageId:
+        Ref: AuthorImageParameter
+      InstanceType:
+        Ref: AuthorInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      SecurityGroupIds:
+        - Ref: AuthorSecurityGroupParameter
+      SubnetId:
+        Ref: AuthorSubnetAParameter
+      Tags:
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+        - Key: Name
+          Value:
+            Ref: AuthorTagNameParameter
+        - Key: Component
+          Value: aem-author-primary
+        - Key: Application Version
+          Value:
+            Ref: ApplicationVersionParameter
+  #TODO: Setup UserData
+  #    UserData:
+  #      Fn::Base64:
+  #        Fn:Sub:
+  #          #!/bin/bash -x
+  #          su - ec2-user -c /app/tools/install.sh
+
+
+  AuthorStandbyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+        - DeviceName: /dev/sdb
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      IamInstanceProfile:
+        Ref: AuthorInstanceProfileParameter
+      ImageId:
+        Ref: AuthorImageParameter
+      InstanceType:
+        Ref: AuthorInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      SecurityGroupIds:
+        - Ref: AuthorSecurityGroupParameter
+      SubnetId:
+        Ref: AuthorSubnetBParameter
+      Tags:
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+        - Key: Name
+          Value:
+            Ref: AuthorTagNameParameter
+        - Key: Component
+          Value: aem-author-standby
+        - Key: Application Version
+          Value:
+            Ref: ApplicationVersionParameter
+  #TODO: Setup UserData
+  #    UserData:
+  #      Fn::Base64:
+  #        Fn:Sub:
+  #          #!/bin/bash -x
+  #          su - ec2-user -c "FACTER_aem_author_primary_host=${Author1PrivateDnsName} /app/tools/install.sh"
+  #          Author1PrivateDnsName: !GetAtt EC2InstAuthor1.PrivateDnsName
+
+
+  AuthorLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      HealthCheck:
+        Target:
+          Ref: AuthorLoadBalancerHealthCheckTargetParameter
+        HealthyThreshold: "2"
+        UnhealthyThreshold: "2"
+        Interval: "30"
+        Timeout: "5"
+      Instances:
+        - Ref: AuthorPrimaryInstance
+        - Ref: AuthorStandbyInstance
+      Listeners:
+        - LoadBalancerPort: "4502"
+          InstancePort: "4502"
+          Protocol: HTTP
+        - LoadBalancerPort: "5433"
+          Protocol: HTTPS
+          InstancePort: "5433"
+          InstanceProtocol: HTTPS
+          SSLCertificateId:
+            Ref: SSLCertificateARNParameter
+      Scheme: internal
+      SecurityGroups:
+        Ref: AuthorELBSecurityGroupListParameter
+      Subnets:
+        - Ref: AuthorSubnetAParameter
+        - Ref: AuthorSubnetBParameter
+      Tags:
+        - Key: Name
+          Value:
+            Ref: AuthorLoadBalancerTagNameParameter
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+
+  AuthorRoute53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName:
+        Ref: Route53RecordSetHostedZoneNameParameter
+      Name:
+        Ref: AuthorRoute53RecordSetNameParamter
+      ResourceRecords:
+        - Fn::GetAtt: [AuthorLoadBalancer, DNSName]
+      TTL: 300
+      Type: CNAME

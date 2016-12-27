@@ -1,0 +1,59 @@
+
+ec2_vpc:
+  stack_name: aem-vpc-stack
+  tag_name: AEM Stack VPC
+  cidr_block: 10.0.8.0/21
+
+network:
+  stack_name: aem-network-stack
+
+  internet_gateway:
+    tag_name: AEM VPC Internet Gateway
+
+  publish_dispatcher:
+    subnet_a:
+      cidr_block: 10.0.10.0/25
+      tag_name: AEM Publish Dispatcher Subnet A
+    subnet_b:
+      cidr_block: 10.0.10.128/25
+      tag_name: AEM Publish Dispatcher Subnet B
+
+  publish:
+    subnet_a:
+      cidr_block: 10.0.11.0/25
+      tag_name: AEM Publish Subnet A
+    subnet_b:
+      cidr_block: 10.0.11.128/25
+      tag_name: AEM Publish Subnet B
+
+  author:
+    subnet_a:
+      cidr_block: 10.0.12.0/25
+      tag_name: AEM Author Subnet A
+    subnet_b:
+      cidr_block: 10.0.12.128/25
+      tag_name: AEM Auhtor Subnet B
+
+  author_dispatcher:
+    subnet_a:
+      cidr_block: 10.0.13.0/25
+      tag_name: AEM Author Dispatcher Subnet A
+    subnet_b:
+      cidr_block: 10.0.13.128/25
+      tag_name: AEM Author Dispatcher Subnet B
+
+  tool:
+    subnet_a:
+      cidr_block: 10.0.14.0/25
+      tag_name: AEM Tool Subnet A
+    subnet_b:
+      cidr_block: 10.0.14.128/25
+      tag_name: AEM Tool Subnet B
+
+  public_route_table:
+    tag_name: AEM VPC Public Route Table
+
+  private_route_table:
+    tag_name: AEM VPC Private Route Table
+
+  hosted_zone: aem.

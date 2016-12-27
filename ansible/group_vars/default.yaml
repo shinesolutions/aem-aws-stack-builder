@@ -1,75 +1,64 @@
+stack_moniker: default
 
-ec2_vpc:
-  stack_name: aem-vpc-stack
-  tag_name: AEM Stack VPC
-  cidr_block: 10.0.8.0/21
+#TODO: consider moving into own group_vars file, given the roles could be shared.
+roles:
+  stack_name: aem-roles-stack
+  publish_dispatcher: AEMStackPublishDispatcherRole
+  publish: AEMStackPublishRole
+  author: AEMStackAuthorRole
+  author_dispatcher: AEMStackAuthorDispatcherRole
+  orchestrator: AEMStackOrchestratorRole
+  chaos_monkey: AEMStackChaosMonkeyRole
 
-network:
-  stack_name: aem-network-stack
-
-  internet_gateway:
-    tag_name: AEM VPC Internet Gateway
-
-  publish_dispatcher:
-    subnet_a:
-      cidr_block: 10.0.10.0/25
-      tag_name: AEM Publish Dispatcher Subnet A
-    subnet_b:
-      cidr_block: 10.0.10.128/25
-      tag_name: AEM Publish Dispatcher Subnet B
-
-  publish:
-    subnet_a:
-      cidr_block: 10.0.11.0/25
-      tag_name: AEM Publish Subnet A
-    subnet_b:
-      cidr_block: 10.0.11.128/25
-      tag_name: AEM Publish Subnet B
-
-  author:
-    subnet_a:
-      cidr_block: 10.0.12.0/25
-      tag_name: AEM Author Subnet A
-    subnet_b:
-      cidr_block: 10.0.12.128/25
-      tag_name: AEM Auhtor Subnet B
-
-  author_dispatcher:
-    subnet_a:
-      cidr_block: 10.0.13.0/25
-      tag_name: AEM Author Dispatcher Subnet A
-    subnet_b:
-      cidr_block: 10.0.13.128/25
-      tag_name: AEM Author Dispatcher Subnet B
-
-  tool:
-    subnet_a:
-      cidr_block: 10.0.14.0/25
-      tag_name: AEM Tool Subnet A
-    subnet_b:
-      cidr_block: 10.0.14.128/25
-      tag_name: AEM Tool Subnet B
-
-  public_route_table:
-    tag_name: AEM VPC Public Route Table
-
-  private_route_table:
-    tag_name: AEM VPC Private Route Table
-
-  hosted_zone: aem.
-
-
-compute:
-  stack_name: default
-  key_pair_name: aem-default-stack-key-pair
-  application_version: 1.0.0
 
 security_groups:
   stack_name: aem-security-groups-stack
+  secure_shell:
+    inbound_cidr_ip: 10.0.10.0/25
+
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.10.0/25
+
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
+
+  publish:
+    tag_name: AEM Publish Security Group
+
+  author:
+    tag_name: AEM Author Security Group
+
+  author_elb:
+    tag_name: AEM Author ELB Security Group
+
+  author_dispatcher:
+    tag_name: AEM Author Dispatcher Security Group
+
+  author_dispatcher_elb:
+    tag_name: AEM Author Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.10.0/25
+
+  orchestrator:
+    tag_name: AEM Orchestrator Security Group
+
+  chaos_monkey:
+    tag_name: AEM Chaos Monkey Security Group
+
+
+messaging:
+  stack_name: aem-messaging-stack
+  asg_event_sqs_queue_name: aem-asg-event-queue
+  asg_event_sns_topic_name: aem-asg-event-topic
+  asg_event_sns_topic_display_name: AEM ASG Event Topic
+
+route53:
+  hosted_zone_name: aem-stack.com.
+
+compute:
+  key_pair_name: aem-stack-key-pair
+  application_version: 1.0.0
+  certificate_name: aem-stack-certificate
 
 
 dispatcher:
@@ -80,6 +69,13 @@ publish_dispatcher:
   instance_type: t2.micro
   min_size: 2
   max_size: 2
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-PublishDispatcherInstanceProfile-G5FB66OXFVHO
+  load_balancer:
+    tag_name: AEM Publish Dispatcher Load Balancer
+  tag_name: AEM Publish Dispatcher
+  elb_health_check: HTTP:80/system/health
+  route53_record_set_name: default-publish-dispatcher.aem-stack.com.
 
 publish:
   stack_name: aem-publish-stack
@@ -87,27 +83,48 @@ publish:
   instance_type: m3.large
   min_size: 2
   max_size: 2
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-PublishInstanceProfile-G4O8DIPE5F2L
+  tag_name: AEM Publish
 
 author:
   stack_name: aem-author-stack
   ami_version: 1.0.0
   instance_type: m3.large
+  #  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-AuthorInstanceProfile-16V82GA23D2LP
+  load_balancer:
+    tag_name: AEM Author Load Balancer
+  tag_name: AEM Author
+  elb_health_check: HTTP:4502/system/health
+  route53_record_set_name: default-author.aem-stack.com.
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
   instance_type: t2.micro
   min_size: 2
   max_size: 2
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-AuthorDispatcherInstanceProfile-3G6RQTPHXY5F
+  load_balancer:
+    tag_name: AEM Author Dispatcher Load Balancer
+  tag_name: AEM Author Dispatcher
+  elb_health_check: HTTP:80/system/health
+  route53_record_set_name: default-author-dispatcher.aem-stack.com.
 
+java:
+  ami_version: 1.0.0
 
 orchestrator:
-  ami_version: 1.0.0
+  stack_name: aem-orchestrator-stack
   instance_type: t2.small
-  min_size: 1
-  max_size: 1
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-OrchestratorInstanceProfile-YV2RUZFV743O
+  tag_name: AEM Orchestrator
 
 chaos_monkey:
-  ami_version: 1.0.0
+  stack_name: aem-chaos-monkey-stack
   instance_type: t2.micro
-  min_size: 1
-  max_size: 1
+#  TODO: need a way to get the generated iam instance profile name.
+  iam_instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1V5LOQ69PD4TJ
+  tag_name: AEM Chaos Monkey

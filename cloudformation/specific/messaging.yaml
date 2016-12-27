@@ -1,0 +1,64 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create Messaging resources for the AEM Stack Auto Scaling Group Events
+
+Parameters:
+
+  AEMASGEventQueueNameParameter:
+    Type: String
+    Default: default-aem-asg-event-queue
+    Description: The AEM Stack Auto Scaling Group Event Quene Name
+
+  AEMASGEventTopicDisplayNameParameter:
+    Type: String
+    Default: default - AEM ASG Event Topic
+    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
+
+  AEMASGEventTopicNameParameter:
+    Type: String
+    Default: default-aem-asg-event-topic
+    Description: The AEM Stack Auto Scaling Group Event Topic Name
+
+
+Resources:
+
+  AEMAutoScalingGroupEventQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName:
+        Ref: AEMASGEventQueueNameParameter
+      VisibilityTimeout: 30
+
+  AEMASGEventTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Ref: AEMASGEventTopicDisplayNameParameter
+      Subscription:
+        - Endpoint:
+            Fn::GetAtt: [ AEMAutoScalingGroupEventQueue, Arn ]
+          Protocol: sqs
+      TopicName:
+        Ref: AEMASGEventTopicNameParameter
+
+  AEMASGEventQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: "*"
+            Action:
+              - sqs:SendMessage
+            Resource:
+              - Fn::GetAtt: [ AEMAutoScalingGroupEventQueue, Arn ]
+            Condition:
+              ArnEquals:
+                aws:SourceArn:
+                  Ref: AEMASGEventTopic
+      Queues:
+        - Ref: AEMAutoScalingGroupEventQueue

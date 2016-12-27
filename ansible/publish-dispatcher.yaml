@@ -5,6 +5,14 @@
   connection: local
 
   tasks:
+
+    - name: Get AEM Stack IAM Server Certificate
+      iam_server_certificate_facts:
+        name: "{{ compute.certificate_name }}"
+      register: aem_stack_certificate
+      tags:
+      - create
+
     - name: Get AEM Stack VPC
       ec2_vpc_net_facts:
         region: "{{ aws.region }}"
@@ -12,29 +20,18 @@
           "tag:Name": "{{ ec2_vpc.tag_name }}"
       register: aem_stack_vpc
       tags:
-       - create
-
-    - name: Get Dispatcher AMI
-      ec2_ami_find:
-        ami_tags:
-          component: dispatcher
-          version: "{{ dispatcher.ami_version }}"
-        sort: creationDate
-        sort_order: descending
-        sort_end: 1
-      register: dispatcher_ami
-      tags:
-       - create
+      - create
 
     - name: Get Publish Dispatcher ELB Security Group
       ec2_group_facts:
         region: "{{ aws.region }}"
         filters:
-          "tag:Name": AEM Publish Dispatcher ELB Security Group
+          "tag:Name": "{{ security_groups.publish_dispatcher_elb.tag_name }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_dispatcher_elb_security_group
       tags:
-       - create
+      - create
 
     - name: Get Publish Dispatcher Subnet A
       ec2_vpc_subnet_facts:
@@ -44,7 +41,7 @@
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_dispatcher_subnet_a
       tags:
-       - create
+      - create
 
     - name: Get Publish Dispatcher Subnet B
       ec2_vpc_subnet_facts:
@@ -54,33 +51,75 @@
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_dispatcher_subnet_b
       tags:
-       - create
+      - create
 
     - name: Get Publish Dispatcher Security Group
       ec2_group_facts:
         region: "{{ aws.region }}"
         filters:
-          "tag:Name": AEM Publish Dispatcher Security Group
+          "tag:Name": "{{ security_groups.publish_dispatcher.tag_name }}"
+          "tag:Stack Moniker": "{{ stack_moniker }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_dispatcher_security_group
       tags:
-       - create
+      - create
+
+    - name: Get Dispatcher AMI
+      ec2_ami_find:
+        region: "{{ aws.region }}"
+        ami_tags:
+          component: dispatcher
+          version: "{{ dispatcher.ami_version }}"
+        sort: creationDate
+        sort_order: descending
+        sort_end: 1
+      register: dispatcher_ami
+      tags:
+      - create
+
+    - name: Get the AEM Stack ASG Event SNS topic
+      sns_topic:
+        region: "{{ aws.region }}"
+        name: "{{ stack_moniker }}-{{ messaging.asg_event_sns_topic_name }}"
+      register: asg_event_sns_topic
+      tags:
+      - create
 
     - name: Create AEM Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../templates/compute/publish-dispatcher.yaml"
+        template: "../cloudformation/specific/publish-dispatcher.yaml"
         template_parameters:
-          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
+          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
+          PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
+          PublishDispatcherELBSecurityGroupListParameter: "{{ publish_dispatcher_elb_security_group.security_groups.0.group_id }}"
+          PublishDispatcherSubnetAParameter: "{{ publish_dispatcher_subnet_a.subnets.0.id }}"
+          PublishDispatcherSubnetBParameter: "{{ publish_dispatcher_subnet_b.subnets.0.id }}"
+          PublishDispatcherImageParameter: "{{ dispatcher_ami.results[0].ami_id }}"
+          PublishDispatcherInstanceTypeParameter: "{{ publish_dispatcher.instance_type }}"
+          ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          PublishDispatcherSecurityGroupParameter: "{{ publish_dispatcher_security_group.security_groups.0.group_id }}"
+          PublishDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          PublishDispatcherASGSubnetListParameter: "{{ publish_dispatcher_subnet_a.subnets.0.id }}, {{ publish_dispatcher_subnet_b.subnets.0.id }}"
+          PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
+          PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
+          PublishDispatcherASGEventSNSTopicParameter: "{{ asg_event_sns_topic.sns_arn }}"
+          PublishDispatcherTagNameParameter: "{{ publish_dispatcher.tag_name }}"
+          ApplicationVersionParameter: "{{ compute.application_version }}"
+          PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.iam_instance_profile }}"
+          PublishDispatcherLoadBalancerTagNameParameter: "{{ publish_dispatcher.load_balancer.tag_name }}"
+          Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
+          PublishDispatcherRoute53RecordSetNameParamter: "{{ publish_dispatcher.route53_record_set_name }}"
       tags:
       - create
 
     - name: Delete AEM Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_moniker }}-{{ publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

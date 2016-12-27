@@ -1,0 +1,116 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create the Compute resources for the AEM Chaos Monkey
+
+Parameters:
+
+  ComputeStackMonikerParameter:
+    Type: String
+    Default: default
+    Description: The AEM Stack Compute Resources Stack Moniker
+
+  ChaosMonkeyImageParameter:
+    Type: AWS::EC2::Image::Id
+    Default: ami-599fa73a
+    Description: The Chaos Monkey Image Id
+
+  ChaosMonkeyInstanceTypeParameter:
+    Type: String
+    Default: t2.micro
+    Description: The Chaos Monkey Instance Type
+
+  ComputeKeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: aem-stack-key-pair
+    Description: The Compute Resources Key Pair Name
+
+  ChaosMonkeySecurityGroupParameter:
+    Type: AWS::EC2::SecurityGroup::Id
+    Default: sg-ec8e7c8b
+    Description: The Chaos Monkey Security Group
+
+  ChaosMonkeyASGAvailabilityZoneListParameter:
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+    Default: ap-southeast-2a, ap-southeast-2b
+    Description: The Chaos Monkey Availability Zone List
+
+  ChaosMonkeyASGSubnetListParameter:
+    Type: List<AWS::EC2::Subnet::Id>
+    Default: subnet-22b53c46, subnet-acec5dda
+    Description: The Chaos Monkey Subnets
+
+  ChaosMonkeyTagNameParameter:
+    Type: String
+    Default: AEM Chaos Monkey
+    Description: The Chaos Monkey Name Tag
+
+  ApplicationVersionParameter:
+    Type: String
+    Default: 1.0.0
+    Description: The Application Version Number
+
+  ChaosMonkeyInstanceProfileParameter:
+    Type: String
+    Default: aem-roles-stack-ChaosMonkeyInstanceProfile-1V5LOQ69PD4TJ
+    Description: The Chaos Monkey IAM Instance Profile ARN
+
+
+Resources:
+
+  ChaosMonkeyLaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: false
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            DeleteOnTermination: true
+            VolumeSize: 10
+            VolumeType: gp2
+      IamInstanceProfile:
+        Ref: ChaosMonkeyInstanceProfileParameter
+      ImageId:
+        Ref: ChaosMonkeyImageParameter
+      InstanceMonitoring: false
+      InstanceType:
+        Ref: ChaosMonkeyInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      SecurityGroups:
+        - Ref: ChaosMonkeySecurityGroupParameter
+  #TODO: Setup UserData
+  #    UserData:
+  #      Fn::Base64:
+  #        Fn:Sub:
+  #          #!/bin/bash -x
+  #          su - ec2-user -c "FACTER_dispatcher_author_asg_name=${AuthorDispASG} FACTER_dispatcher_publisher_asg_name=${PublisherDispASG} FACTER_publisher_asg_name=${PublisherASG} /app/tools/install.sh"
+
+  ChaosMonkeyAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones:
+        Ref: ChaosMonkeyASGAvailabilityZoneListParameter
+      LaunchConfigurationName:
+        Ref: ChaosMonkeyLaunchConfiguration
+      MaxSize: 1
+      MinSize: 1
+      Tags:
+        - Key: Name
+          Value:
+            Ref: ChaosMonkeyTagNameParameter
+          PropagateAtLaunch: true
+        - Key: Stack Moniker
+          Value:
+            Ref: ComputeStackMonikerParameter
+          PropagateAtLaunch: true
+        - Key: Component
+          Value: aem-chaos-monkey
+          PropagateAtLaunch: true
+        - Key: Application Version
+          Value:
+            Ref: ApplicationVersionParameter
+          PropagateAtLaunch: true
+      VPCZoneIdentifier:
+        Ref: ChaosMonkeyASGSubnetListParameter

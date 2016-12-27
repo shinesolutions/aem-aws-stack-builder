@@ -1,22 +1,34 @@
 validate:
-	./scripts/validate.sh
+	./shell/validate.sh
 
 shellcheck:
-	shellcheck scripts/validate.sh scripts/create-stack.sh scripts/delete-stack.sh
+	shellcheck shell/*.sh
 
-create-network-stack:
-	./scripts/create-stack.sh aem-${stack}-stack templates/network/${stack}.yaml
+create-shared-stack:
+	./shell/create-stack.sh aem-${stack}-stack cloudformation/shared/${stack}.yaml
 
-delete-network-stack:
-	./scripts/delete-stack.sh aem-${stack}-stack templates/network/${stack}.yaml
-
-create-compute-stack:
-	./scripts/create-stack.sh aem-${stack}-stack templates/compute/${stack}.yaml
-
-delete-compute-stack:
-	./scripts/delete-stack.sh aem-${stack}-stack templates/compute/${stack}.yaml
+delete-shared-stack:
+	./shell/delete-stack.sh aem-${stack}-stack cloudformation/shared/${stack}.yaml
 
 
+create-shared-roles-stack:
+	./shell/create-stack.sh aem-roles-stack cloudformation/specific/roles.yaml
+
+delete-shared-roles-stack:
+	./shell/delete-stack.sh aem-roles-stack cloudformation/specific/roles.yaml
+
+
+create-stack:
+	./shell/create-stack.sh ${moniker}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
+
+delete-stack:
+	./shell/delete-stack.sh ${moniker}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
+
+create-aem-stack:
+	./shell/create-aem-stack.sh ${inventory}
+
+delete-aem-stack:
+	./shell/delete-aem-stack.sh ${inventory}
 
 ansible-create-stack:
 	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags create
