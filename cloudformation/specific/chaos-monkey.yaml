@@ -114,3 +114,15 @@ Resources:
           PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
+
+Outputs:
+
+  ChaosMonkeyLaunchConfiguration:
+    Value:
+      Ref: ChaosMonkeyLaunchConfiguration
+    Description: The Chaos Monkey Launch Configuration
+
+  ChaosMonkeyAutoScalingGroup:
+    Value:
+      Ref: ChaosMonkeyAutoScalingGroup
+    Description: The Chaos Monkey Auto Scaling Group

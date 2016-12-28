@@ -120,3 +120,15 @@ Resources:
           PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: OrchestratorASGSubnetListParameter
+
+Outputs:
+
+  OrchestratorLaunchConfiguration:
+    Value:
+      Ref: OrchestratorLaunchConfiguration
+    Description: The Orchestrator Launch Configuration
+
+  OrchestratorAutoScalingGroup:
+    Value:
+      Ref: OrchestratorAutoScalingGroup
+    Description: The Orchestrator Auto Scaling Group

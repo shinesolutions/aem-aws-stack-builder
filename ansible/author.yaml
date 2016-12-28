@@ -100,7 +100,7 @@
           AuthorInstanceProfileParameter: "{{ author.iam_instance_profile }}"
           AuthorLoadBalancerTagNameParameter: "{{ author.load_balancer.tag_name }}"
           Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
-          AuthorRoute53RecordSetNameParamter: "{{ author.route53_record_set_name }}"
+          AuthorRoute53RecordSetNameParamter: "{{ stack_moniker }}-{{ author.route53_record_set_name }}"
       tags:
       - create
 

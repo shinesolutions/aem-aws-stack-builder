@@ -5,6 +5,7 @@ Description:
   Create the Compute resources for the AEM Publish
 
 Parameters:
+
   ComputeStackMonikerParameter:
     Type: String
     Default: default
@@ -144,3 +145,17 @@ Resources:
           PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: PublishASGSubnetListParameter
+
+
+Outputs:
+
+  PublishLaunchConfiguration:
+    Value:
+      Ref: PublishLaunchConfiguration
+    Description: The Publish Launch Configuration
+
+  PublishAutoScalingGroup:
+    Value:
+      Ref: PublishAutoScalingGroup
+    Description: The Publish Auto Scaling Group
+

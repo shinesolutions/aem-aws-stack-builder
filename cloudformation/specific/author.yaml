@@ -233,3 +233,25 @@ Resources:
         - Fn::GetAtt: [AuthorLoadBalancer, DNSName]
       TTL: 300
       Type: CNAME
+
+Outputs:
+
+  AuthorPrimaryInstance:
+    Value:
+      Ref: AuthorPrimaryInstance
+    Description: The Author Primary Instance
+
+  AuthorStandbyInstance:
+    Value:
+      Ref: AuthorStandbyInstance
+    Description: The Author Standby Instance
+
+  AuthorLoadBalancer:
+    Value:
+      Ref: AuthorLoadBalancer
+    Description: The Author Load Balancer
+
+  AuthorRoute53RecordSet:
+    Value:
+      Ref: AuthorRoute53RecordSet
+    Description: The Author Route53 CNAME Record

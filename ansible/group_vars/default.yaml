@@ -70,12 +70,12 @@ publish_dispatcher:
   min_size: 2
   max_size: 2
 #  TODO: need a way to get the generated iam instance profile name.
-  iam_instance_profile: aem-roles-stack-PublishDispatcherInstanceProfile-G5FB66OXFVHO
+  iam_instance_profile: aem-roles-stack-PublishDispatcherInstanceProfile-TKPVNI26LA0W
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
   elb_health_check: HTTP:80/system/health
-  route53_record_set_name: default-publish-dispatcher.aem-stack.com.
+  route53_record_set_name: publish-dispatcher.aem-stack.com.
 
 publish:
   stack_name: aem-publish-stack
@@ -84,7 +84,7 @@ publish:
   min_size: 2
   max_size: 2
 #  TODO: need a way to get the generated iam instance profile name.
-  iam_instance_profile: aem-roles-stack-PublishInstanceProfile-G4O8DIPE5F2L
+  iam_instance_profile: aem-roles-stack-PublishInstanceProfile-SMWTMGHHS3H5
   tag_name: AEM Publish
 
 author:
@@ -92,12 +92,12 @@ author:
   ami_version: 1.0.0
   instance_type: m3.large
   #  TODO: need a way to get the generated iam instance profile name.
-  iam_instance_profile: aem-roles-stack-AuthorInstanceProfile-16V82GA23D2LP
+  iam_instance_profile: aem-roles-stack-AuthorInstanceProfile-1S64YEA2YXDB4
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
   elb_health_check: HTTP:4502/system/health
-  route53_record_set_name: default-author.aem-stack.com.
+  route53_record_set_name: author.aem-stack.com.
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
@@ -105,12 +105,12 @@ author_dispatcher:
   min_size: 2
   max_size: 2
 #  TODO: need a way to get the generated iam instance profile name.
-  iam_instance_profile: aem-roles-stack-AuthorDispatcherInstanceProfile-3G6RQTPHXY5F
+  iam_instance_profile: aem-roles-stack-AuthorDispatcherInstanceProfile-1SWCKKPJ6JP5I
   load_balancer:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTP:80/system/health
-  route53_record_set_name: default-author-dispatcher.aem-stack.com.
+  route53_record_set_name: author-dispatcher.aem-stack.com.
 
 java:
   ami_version: 1.0.0
@@ -119,12 +119,12 @@ orchestrator:
   stack_name: aem-orchestrator-stack
   instance_type: t2.small
 #  TODO: need a way to get the generated iam instance profile name.
-  iam_instance_profile: aem-roles-stack-OrchestratorInstanceProfile-YV2RUZFV743O
+  iam_instance_profile: aem-roles-stack-OrchestratorInstanceProfile-56H8OFHMMWHW
   tag_name: AEM Orchestrator
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
   instance_type: t2.micro
 #  TODO: need a way to get the generated iam instance profile name.
-  iam_instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1V5LOQ69PD4TJ
+  iam_instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1TD9WTYTN9CQR
   tag_name: AEM Chaos Monkey

@@ -355,3 +355,35 @@ Resources:
       Path: /
       Roles:
         - Ref: ChaosMonkeyRole
+
+Outputs:
+
+  PublishDispatcherInstanceProfile:
+    Value:
+      Ref: PublishDispatcherInstanceProfile
+    Description: The Publish Dispatcher Instance Profile
+
+  PublishInstanceProfile:
+    Value:
+      Ref: PublishInstanceProfile
+    Description: The Publish Instance Profile
+
+  AuthorInstanceProfile:
+    Value:
+      Ref: AuthorInstanceProfile
+    Description: The Author Instance Profile
+
+  AuthorDispatcherInstanceProfile:
+    Value:
+      Ref: AuthorDispatcherInstanceProfile
+    Description: The Author Dispatcher Instance Profile
+
+  OrchestratorInstanceProfile:
+    Value:
+      Ref: OrchestratorInstanceProfile
+    Description: The Orchestrator Instance Profile
+
+  ChaosMonkeyInstanceProfile:
+    Value:
+      Ref: ChaosMonkeyInstanceProfile
+    Description: The Chaos Monkey Instance Profile

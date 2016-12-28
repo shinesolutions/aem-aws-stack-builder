@@ -62,3 +62,16 @@ Resources:
                   Ref: AEMASGEventTopic
       Queues:
         - Ref: AEMAutoScalingGroupEventQueue
+
+Outputs:
+
+  AEMAutoScalingGroupEventQueue:
+    Value:
+      Ref: AEMAutoScalingGroupEventQueue
+    Description: The AEM ASG Event Queue
+
+  AEMASGEventTopic:
+    Value:
+      Ref: AEMASGEventTopic
+    Description: The AEM ASG Event Topic
+
