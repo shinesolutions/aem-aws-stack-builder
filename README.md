@@ -65,12 +65,12 @@ make delete-shared-stack stack=network
 Roles can be shared or specific to an individual stack.
 
 ```
-make create-roles-stack
+make create-shared-roles-stack
 ```
 
 
 ```
-make delete-roles-stack
+make delete-shared-roles-stack
 ```
 
 ### Specific Stack

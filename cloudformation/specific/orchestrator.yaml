@@ -26,11 +26,6 @@ Parameters:
     Default: aem-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
-  OrchestratorSecurityGroupParameter:
-    Type: AWS::EC2::SecurityGroup::Id
-    Default: sg-f78e7c90
-    Description: The Orchestrator Security Group
-
   OrchestratorASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Default: ap-southeast-2a, ap-southeast-2b
@@ -51,11 +46,15 @@ Parameters:
     Default: 1.0.0
     Description: The Application Version Number
 
-  OrchestratorInstanceProfileParameter:
+  RolesStackNameParameter:
     Type: String
-    Default: aem-roles-stack-OrchestratorInstanceProfile-YV2RUZFV743O
-    Description: The Orchestrator IAM Instance Profile ARN
+    Default: aem-roles-stack
+    Description: The AEM Roles Stack Name
 
+  SecurityGroupsStackNameParameter:
+    Type: String
+    Default: aem-security-groups-stack
+    Description: The AEM Security Groups Stack Name
 
 Resources:
 
@@ -75,7 +74,8 @@ Resources:
             VolumeSize: 10
             VolumeType: gp2
       IamInstanceProfile:
-        Ref: OrchestratorInstanceProfileParameter
+        Fn::ImportValue:
+          Fn::Sub: ${RolesStackNameParameter}-OrchestratorInstanceProfile
       ImageId:
         Ref: OrchestratorImageParameter
       InstanceMonitoring: false
@@ -84,7 +84,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Ref: OrchestratorSecurityGroupParameter
+        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
   #TODO: Setup UserData
   #    UserData:
   #      Fn::Base64:

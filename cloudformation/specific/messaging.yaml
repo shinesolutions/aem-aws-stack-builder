@@ -74,4 +74,6 @@ Outputs:
     Value:
       Ref: AEMASGEventTopic
     Description: The AEM ASG Event Topic
-
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AEMASGEventTopic

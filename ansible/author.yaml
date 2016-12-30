@@ -22,17 +22,6 @@
       tags:
       - create
 
-    - name: Get Author ELB Security Group
-      ec2_group_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ security_groups.author_elb.tag_name }}"
-          "tag:Stack Moniker": "{{ stack_moniker }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: author_elb_security_group
-      tags:
-      - create
-
     - name: Get Author Subnet A
       ec2_vpc_subnet_facts:
         region: "{{ aws.region }}"
@@ -50,17 +39,6 @@
           "tag:Name": "{{ network.author.subnet_b.tag_name }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: author_subnet_b
-      tags:
-      - create
-
-    - name: Get Author Security Group
-      ec2_group_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ security_groups.author.tag_name }}"
-          "tag:Stack Moniker": "{{ stack_moniker }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: author_security_group
       tags:
       - create
 
@@ -88,19 +66,18 @@
           ComputeStackMonikerParameter: "{{ stack_moniker }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
-          AuthorELBSecurityGroupListParameter: "{{ author_elb_security_group.security_groups.0.group_id }}"
           AuthorSubnetAParameter: "{{ author_subnet_a.subnets.0.id }}"
           AuthorSubnetBParameter: "{{ author_subnet_b.subnets.0.id }}"
           AuthorImageParameter: "{{ author_ami.results[0].ami_id }}"
           AuthorInstanceTypeParameter: "{{ author.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
-          AuthorSecurityGroupParameter: "{{ author_security_group.security_groups.0.group_id }}"
           AuthorTagNameParameter: "{{ author.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
-          AuthorInstanceProfileParameter: "{{ author.iam_instance_profile }}"
           AuthorLoadBalancerTagNameParameter: "{{ author.load_balancer.tag_name }}"
           Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
           AuthorRoute53RecordSetNameParamter: "{{ stack_moniker }}-{{ author.route53_record_set_name }}"
+          RolesStackNameParameter: "{{ roles.stack_name }}"
+          SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
       tags:
       - create
 

@@ -34,17 +34,6 @@
       tags:
       - create
 
-    - name: Get Chaos Monkey Security Group
-      ec2_group_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ security_groups.chaos_monkey.tag_name }}"
-          "tag:Stack Moniker": "{{ stack_moniker }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: chaos_monkey_security_group
-      tags:
-      - create
-
     - name: Get Chaos Monkey AMI
       ec2_ami_find:
         region: "{{ aws.region }}"
@@ -70,12 +59,12 @@
           ChaosMonkeyImageParameter: "{{ chaos_monkey_ami.results[0].ami_id }}"
           ChaosMonkeyInstanceTypeParameter: "{{ chaos_monkey.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
-          ChaosMonkeySecurityGroupParameter: "{{ chaos_monkey_security_group.security_groups.0.group_id }}"
           ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           ChaosMonkeyASGSubnetListParameter: "{{ chaos_monkey_subnet_a.subnets.0.id }}, {{ chaos_monkey_subnet_b.subnets.0.id }}"
           ChaosMonkeyTagNameParameter: "{{ chaos_monkey.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
-          ChaosMonkeyInstanceProfileParameter: "{{ chaos_monkey.iam_instance_profile }}"
+          RolesStackNameParameter: "{{ roles.stack_name }}"
+          SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
       tags:
       - create
 

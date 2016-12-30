@@ -26,11 +26,6 @@ Parameters:
     Default: aem-default-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
-  PublishSecurityGroupParameter:
-    Type: AWS::EC2::SecurityGroup::Id
-    Default: sg-ea8e7c8d
-    Description: The Publish Security Group
-
   PublishASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Default: ap-southeast-2a, ap-southeast-2b
@@ -51,11 +46,6 @@ Parameters:
     Default: 2
     Description: The Publish Auto Scaling Group Minimum Size
 
-  PublishASGEventSNSTopicParameter:
-    Type: String
-    Default: arn:aws:sns:region:accountId:default-aem-asg-event-topic
-    Description: The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic.
-
   PublishTagNameParameter:
     Type: String
     Default: AEM Publish
@@ -66,10 +56,20 @@ Parameters:
     Default: 1.0.0
     Description: The Application Version Number
 
-  PublishInstanceProfileParameter:
+  RolesStackNameParameter:
     Type: String
-    Default: aem-roles-stack-PublishInstanceProfile-G4O8DIPE5F2L
-    Description: The Publish IAM Instance Profile ARN
+    Default: aem-roles-stack
+    Description: The AEM Roles Stack Name
+
+  SecurityGroupsStackNameParameter:
+    Type: String
+    Default: aem-security-groups-stack
+    Description: The AEM Security Groups Stack Name
+
+  MessagingStackNameParameter:
+    Type: String
+    Default: aem-messaging-stack
+    Description: The AEM Messaging Stack Name
 
 Resources:
 
@@ -89,7 +89,8 @@ Resources:
             VolumeSize: 10
             VolumeType: gp2
       IamInstanceProfile:
-        Ref: PublishInstanceProfileParameter
+        Fn::ImportValue:
+          Fn::Sub: ${RolesStackNameParameter}-PublishInstanceProfile
       ImageId:
         Ref: PublishImageParameter
       InstanceMonitoring: false
@@ -98,7 +99,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Ref: PublishSecurityGroupParameter
+        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-PublishSecurityGroup
   #TODO: Setup UserData
   #    UserData:
   #      Fn::Base64:
@@ -126,7 +127,7 @@ Resources:
             - autoscaling:EC2_INSTANCE_TERMINATE
             - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
           TopicARN:
-            Ref: PublishASGEventSNSTopicParameter
+            Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
         - Key: Name
           Value:

@@ -26,11 +26,6 @@ Parameters:
     Default: aem-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
-  ChaosMonkeySecurityGroupParameter:
-    Type: AWS::EC2::SecurityGroup::Id
-    Default: sg-ec8e7c8b
-    Description: The Chaos Monkey Security Group
-
   ChaosMonkeyASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Default: ap-southeast-2a, ap-southeast-2b
@@ -51,10 +46,16 @@ Parameters:
     Default: 1.0.0
     Description: The Application Version Number
 
-  ChaosMonkeyInstanceProfileParameter:
+  RolesStackNameParameter:
     Type: String
-    Default: aem-roles-stack-ChaosMonkeyInstanceProfile-1V5LOQ69PD4TJ
-    Description: The Chaos Monkey IAM Instance Profile ARN
+    Default: aem-roles-stack
+    Description: The AEM Roles Stack Name
+
+  SecurityGroupsStackNameParameter:
+    Type: String
+    Default: aem-security-groups-stack
+    Description: The AEM Security Groups Stack Name
+
 
 
 Resources:
@@ -70,7 +71,8 @@ Resources:
             VolumeSize: 10
             VolumeType: gp2
       IamInstanceProfile:
-        Ref: ChaosMonkeyInstanceProfileParameter
+        Fn::ImportValue:
+          Fn::Sub: ${RolesStackNameParameter}-ChaosMonkeyInstanceProfile
       ImageId:
         Ref: ChaosMonkeyImageParameter
       InstanceMonitoring: false
@@ -79,7 +81,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Ref: ChaosMonkeySecurityGroupParameter
+        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
   #TODO: Setup UserData
   #    UserData:
   #      Fn::Base64:

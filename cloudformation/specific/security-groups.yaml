@@ -800,43 +800,70 @@ Outputs:
     Value:
       Ref: PublishDispatcherELBSecurityGroup
     Description: The Publish Dispatcher ELB Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublishDispatcherELBSecurityGroup
 
   PublishDispatcherSecurityGroup:
     Value:
       Ref: PublishDispatcherSecurityGroup
     Description: The Publish Dispatcher Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublishDispatcherSecurityGroup
 
   PublishSecurityGroup:
     Value:
       Ref: PublishSecurityGroup
     Description: The Publish Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublishSecurityGroup
 
   AuthorSecurityGroup:
     Value:
       Ref: AuthorSecurityGroup
     Description: The Author Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AuthorSecurityGroup
 
   AuthorELBSecurityGroup:
     Value:
       Ref: AuthorELBSecurityGroup
     Description: The Author ELB Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AuthorELBSecurityGroup
 
   AuthorDispatcherSecurityGroup:
     Value:
       Ref: AuthorDispatcherSecurityGroup
     Description: The Author Dispatcher Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AuthorDispatcherSecurityGroup
 
   AuthorDispatcherELBSecurityGroup:
     Value:
       Ref: AuthorDispatcherELBSecurityGroup
     Description: The Author Dispatcher ELB Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AuthorDispatcherELBSecurityGroup
 
   OrchestratorSecurityGroup:
     Value:
       Ref: OrchestratorSecurityGroup
     Description: The Orchestrator Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-OrchestratorSecurityGroup
 
   ChaosMonkeySecurityGroup:
     Value:
       Ref: ChaosMonkeySecurityGroup
     Description: The Chaos Monkey Security Group
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-ChaosMonkeySecurityGroup

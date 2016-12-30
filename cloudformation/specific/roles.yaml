@@ -362,28 +362,46 @@ Outputs:
     Value:
       Ref: PublishDispatcherInstanceProfile
     Description: The Publish Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublishDispatcherInstanceProfile
 
   PublishInstanceProfile:
     Value:
       Ref: PublishInstanceProfile
     Description: The Publish Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublishInstanceProfile
 
   AuthorInstanceProfile:
     Value:
       Ref: AuthorInstanceProfile
     Description: The Author Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AuthorInstanceProfile
 
   AuthorDispatcherInstanceProfile:
     Value:
       Ref: AuthorDispatcherInstanceProfile
     Description: The Author Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AuthorDispatcherInstanceProfile
 
   OrchestratorInstanceProfile:
     Value:
       Ref: OrchestratorInstanceProfile
     Description: The Orchestrator Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-OrchestratorInstanceProfile
 
   ChaosMonkeyInstanceProfile:
     Value:
       Ref: ChaosMonkeyInstanceProfile
     Description: The Chaos Monkey Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-ChaosMonkeyInstanceProfile

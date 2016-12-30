@@ -21,11 +21,6 @@ Parameters:
     Default: HTTP:4502/system/health
     Description: AEM Author ELB Health Check Target
 
-  AuthorELBSecurityGroupListParameter:
-    Type: List<AWS::EC2::SecurityGroup::Id>
-    Default: sg-eb8e7c8c
-    Description: The Author ELB Security Group
-
   AuthorSubnetAParameter:
     Type: AWS::EC2::Subnet::Id
     Default: subnet-26b53c42
@@ -51,11 +46,6 @@ Parameters:
     Default: aem-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
-  AuthorSecurityGroupParameter:
-    Type: AWS::EC2::SecurityGroup::Id
-    Default: sg-e98e7c8e
-    Description: The Author Security Group
-
   AuthorTagNameParameter:
     Type: String
     Default: AEM Author
@@ -71,11 +61,6 @@ Parameters:
     Default: AEM Author Load Balancer
     Description: The Author Load Balancer Name Tag
 
-  AuthorInstanceProfileParameter:
-    Type: String
-    Default: aem-roles-stack-AuthorInstanceProfile-16V82GA23D2LP
-    Description: The Author IAM Instance Profile Physical ID (Name) or Reference
-
   Route53RecordSetHostedZoneNameParameter:
     Type: String
     Default: aem-stack.com.
@@ -85,6 +70,16 @@ Parameters:
     Type: String
     Default: default-author.aem-stack.com.
     Description: The Author Route53 CNAME Record Set Name
+
+  RolesStackNameParameter:
+    Type: String
+    Default: aem-roles-stack
+    Description: The AEM Roles Stack Name
+
+  SecurityGroupsStackNameParameter:
+    Type: String
+    Default: aem-security-groups-stack
+    Description: The AEM Security Groups Stack Name
 
 Resources:
 
@@ -103,7 +98,7 @@ Resources:
             VolumeSize: 10
             VolumeType: gp2
       IamInstanceProfile:
-        Ref: AuthorInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -111,7 +106,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Ref: AuthorSecurityGroupParameter
+        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
       SubnetId:
         Ref: AuthorSubnetAParameter
       Tags:
@@ -149,7 +144,8 @@ Resources:
             VolumeSize: 10
             VolumeType: gp2
       IamInstanceProfile:
-        Ref: AuthorInstanceProfileParameter
+        Fn::ImportValue:
+          Fn::Sub: ${RolesStackNameParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -157,7 +153,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Ref: AuthorSecurityGroupParameter
+        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
       SubnetId:
         Ref: AuthorSubnetBParameter
       Tags:
@@ -210,7 +206,7 @@ Resources:
             Ref: SSLCertificateARNParameter
       Scheme: internal
       SecurityGroups:
-        Ref: AuthorELBSecurityGroupListParameter
+        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
       Subnets:
         - Ref: AuthorSubnetAParameter
         - Ref: AuthorSubnetBParameter

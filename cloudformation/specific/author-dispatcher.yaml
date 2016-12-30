@@ -21,11 +21,6 @@ Parameters:
     Default: HTTP:80/system/health
     Description: AEM Author Dispatcher ELB Health Check Target
 
-  AuthorDispatcherELBSecurityGroupListParameter:
-    Type: List<AWS::EC2::SecurityGroup::Id>
-    Default: sg-f58e7c92
-    Description: The Author Dispatcher ELB Security Group
-
   AuthorDispatcherSubnetAParameter:
     Type: AWS::EC2::Subnet::Id
     Default: subnet-20b53c44
@@ -51,11 +46,6 @@ Parameters:
     Default: aem-default-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
-  AuthorDispatcherSecurityGroupParameter:
-    Type: AWS::EC2::SecurityGroup::Id
-    Default: sg-ee8e7c89
-    Description: The Author Dispatcher Security Group
-
   AuthorDispatcherASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Default: ap-southeast-2a, ap-southeast-2b
@@ -77,11 +67,6 @@ Parameters:
     Default: 2
     Description: The Author Dispatcher Auto Scaling Group Minimum Size
 
-  AuthorDispatcherASGEventSNSTopicParameter:
-    Type: String
-    Default: arn:aws:sns:region:accountID:default-aem-asg-event-topic
-    Description: The Amazon Resource Name (ARN) of the Amazon Simple Notification Service (SNS) topic.
-
   AuthorDispatcherTagNameParameter:
     Type: String
     Default: AEM Author Dispatcher
@@ -97,11 +82,6 @@ Parameters:
     Default: AEM Author Dispatcher Load Balancer
     Description: The Author Dispatcher Load Balancer Name Tag
 
-  AuthorDispatcherInstanceProfileParameter:
-    Type: String
-    Default: aem-roles-stack-AuthorDispatcherInstanceProfile-3G6RQTPHXY5F
-    Description: The Author Dispatcher IAM Instance Profile ARN
-
   Route53RecordSetHostedZoneNameParameter:
     Type: String
     Default: aem-stack.com.
@@ -111,6 +91,22 @@ Parameters:
     Type: String
     Default: default-author-dispatcher.aem-stack.com.
     Description: The Author Dispatcher Route53 CNAME Record Set Name
+
+  RolesStackNameParameter:
+    Type: String
+    Default: aem-roles-stack
+    Description: The AEM Roles Stack Name
+
+  SecurityGroupsStackNameParameter:
+    Type: String
+    Default: aem-security-groups-stack
+    Description: The AEM Security Groups Stack Name
+
+  MessagingStackNameParameter:
+    Type: String
+    Default: aem-messaging-stack
+    Description: The AEM Messaging Stack Name
+
 
 Resources:
 
@@ -140,7 +136,7 @@ Resources:
             Ref: SSLCertificateARNParameter
       Scheme: internal
       SecurityGroups:
-        Ref: AuthorDispatcherELBSecurityGroupListParameter
+          - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorDispatcherELBSecurityGroup
       Subnets:
         - Ref: AuthorDispatcherSubnetAParameter
         - Ref: AuthorDispatcherSubnetBParameter
@@ -168,7 +164,8 @@ Resources:
             VolumeSize: 10
             VolumeType: gp2
       IamInstanceProfile:
-        Ref: AuthorDispatcherInstanceProfileParameter
+        Fn::ImportValue:
+          Fn::Sub: ${RolesStackNameParameter}-AuthorDispatcherInstanceProfile
       ImageId:
         Ref: AuthorDispatcherImageParameter
       InstanceMonitoring: false
@@ -177,7 +174,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Ref: AuthorDispatcherSecurityGroupParameter
+        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorDispatcherSecurityGroup
   #TODO: Setup UserData
   #    UserData:
   #      Fn::Base64:
@@ -209,7 +206,7 @@ Resources:
             - autoscaling:EC2_INSTANCE_TERMINATE
             - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
           TopicARN:
-            Ref: AuthorDispatcherASGEventSNSTopicParameter
+            Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
         - Key: Name
           Value:

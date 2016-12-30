@@ -34,17 +34,6 @@
       tags:
       - create
 
-    - name: Get Orchestrator Security Group
-      ec2_group_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ security_groups.orchestrator.tag_name }}"
-          "tag:Stack Moniker": "{{ stack_moniker }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: orchestrator_security_group
-      tags:
-      - create
-
     - name: Get Orchestrator AMI
       ec2_ami_find:
         region: "{{ aws.region }}"
@@ -70,12 +59,12 @@
           OrchestratorImageParameter: "{{ orchestrator_ami.results[0].ami_id }}"
           OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
-          OrchestratorSecurityGroupParameter: "{{ orchestrator_security_group.security_groups.0.group_id }}"
           OrchestratorASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           OrchestratorASGSubnetListParameter: "{{ orchestrator_subnet_a.subnets.0.id }}, {{ orchestrator_subnet_b.subnets.0.id }}"
           OrchestratorTagNameParameter: "{{ orchestrator.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
-          OrchestratorInstanceProfileParameter: "{{ orchestrator.iam_instance_profile }}"
+          RolesStackNameParameter: "{{ roles.stack_name }}"
+          SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
       tags:
       - create
 
