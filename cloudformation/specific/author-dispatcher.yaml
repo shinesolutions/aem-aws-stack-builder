@@ -143,7 +143,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: AuthorDispatcherLoadBalancerTagNameParameter
+            Fn::Sub: ${AuthorDispatcherLoadBalancerTagNameParameter}
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -175,14 +175,15 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorDispatcherSecurityGroup
-  #TODO: Setup UserData
-  #    UserData:
-  #      Fn::Base64:
-  #        Fn:Sub:
-  #          #!/bin/bash -x
-  #          /bin/echo ${ELBAuthorDNSName} > /tmp/cloud-init-debug.log
-  #          su - ec2-user -c "FACTER_aem_author_host=${ELBAuthorDNSName} /app/tools/install.sh"
-  #        - ELBAuthorDNSName: !GetAtt ELBAuthor.DNSName
+      # TODO: Setup UserData
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+            - ""
+            -
+              - "#!/bin/bash -x"
+              - "\n"
+              - "su - ec2-user -c \"echo TODO\""
 
   AuthorDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -210,7 +211,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: AuthorDispatcherTagNameParameter
+            Fn::Sub: ${AuthorDispatcherTagNameParameter} (${ComputeStackMonikerParameter})
           PropagateAtLaunch: true
         - Key: Stack Moniker
           Value:

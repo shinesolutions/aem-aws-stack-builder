@@ -143,7 +143,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: PublishDispatcherLoadBalancerTagNameParameter
+            Fn::Sub: ${PublishDispatcherLoadBalancerTagNameParameter}
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -175,12 +175,15 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
-  #TODO: Setup UserData
-  #    UserData:
-  #      Fn::Base64:
-  #        Fn:Sub:
-  #          #!/bin/bash -x
-  #          su - ec2-user -c /app/tools/install.sh
+      # TODO: Setup UserData
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+            - ""
+            -
+              - "#!/bin/bash -x"
+              - "\n"
+              - "su - ec2-user -c \"echo TODO\""
 
   PublishDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -208,7 +211,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: PublishDispatcherTagNameParameter
+            Fn::Sub: ${PublishDispatcherTagNameParameter} (${ComputeStackMonikerParameter})
           PropagateAtLaunch: true
         - Key: Stack Moniker
           Value:

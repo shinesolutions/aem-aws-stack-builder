@@ -87,7 +87,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: PublishDispatcherELBSecurityGroupTagNameParameter
+            Fn::Sub: ${PublishDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -149,7 +149,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: PublishDispatcherSecurityGroupTagNameParameter
+            Fn::Sub: ${PublishDispatcherSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -245,7 +245,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: PublishSecurityGroupTagNameParameter
+            Fn::Sub: ${PublishSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -341,7 +341,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: AuthorSecurityGroupTagNameParameter
+            Fn::Sub: ${AuthorSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -505,7 +505,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: AuthorELBSecurityGroupTagNameParameter
+            Fn::Sub: ${AuthorELBSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -566,7 +566,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: AuthorDispatcherSecurityGroupTagNameParameter
+            Fn::Sub: ${AuthorDispatcherSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -662,7 +662,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: AuthorDispatcherELBSecurityGroupTagNameParameter
+            Fn::Sub: ${AuthorDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -724,7 +724,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: OrchestratorSecurityGroupTagNameParameter
+            Fn::Sub: ${OrchestratorSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter
@@ -775,7 +775,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: ChaosMonkeySecurityGroupTagNameParameter
+            Fn::Sub: ${ChaosMonkeySecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
         - Key: Stack Moniker
           Value:
             Ref: ComputeStackMonikerParameter

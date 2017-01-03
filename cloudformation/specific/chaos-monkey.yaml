@@ -82,12 +82,15 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
-  #TODO: Setup UserData
-  #    UserData:
-  #      Fn::Base64:
-  #        Fn:Sub:
-  #          #!/bin/bash -x
-  #          su - ec2-user -c "FACTER_dispatcher_author_asg_name=${AuthorDispASG} FACTER_dispatcher_publisher_asg_name=${PublisherDispASG} FACTER_publisher_asg_name=${PublisherASG} /app/tools/install.sh"
+      # TODO: Setup UserData
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+            - ""
+            -
+              - "#!/bin/bash -x"
+              - "\n"
+              - "su - ec2-user -c \"echo TODO\""
 
   ChaosMonkeyAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -101,7 +104,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Ref: ChaosMonkeyTagNameParameter
+            Fn::Sub: ${ChaosMonkeyTagNameParameter} (${ComputeStackMonikerParameter})
           PropagateAtLaunch: true
         - Key: Stack Moniker
           Value:
