@@ -7,7 +7,7 @@ Description:
 Parameters:
   VpcIdParameter:
     Type: AWS::EC2::VPC::Id
-    Default: vpc-ddc001b9
+    Default: vpc-2fc3014b
     Description: The VPC to create the AEM Network in.
 
   AvailabilityZoneAParameter:
@@ -149,6 +149,8 @@ Resources:
         - Key: Name
           Value:
             Ref: Ec2InternetGatewayTagNameParameter
+
+# TODO: set/change the Main Route Table?
 
   Ec2VPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -317,6 +319,7 @@ Resources:
         - Key: Name
           Value:
             Ref: PublicRouteTableTagNameParameter
+# TODO: the RouteTable Name Tag is not being set?
 
   PublicInternetGatewayRoute:
     Type: AWS::EC2::Route
@@ -337,6 +340,7 @@ Resources:
         - Key: Name
           Value:
             Ref: PrivateRouteTableTagNameParameter
+# TODO: the RouteTable Name Tag is not being set?
 
   PublishDispatcherSubnetAPublicRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -420,6 +424,7 @@ Resources:
 
 
 Outputs:
+
   PublishDispatcherSubnetA:
     Value: 
       Ref: PublishDispatcherSubnetA
@@ -468,4 +473,20 @@ Outputs:
   ToolSubnetB:
     Value: 
       Ref: ToolSubnetB
-    Description: he Tool Subnet in Availability Zone B
+    Description: The Tool Subnet in Availability Zone B
+
+  PublicRouteTable:
+    Value:
+      Ref: PublicRouteTable
+    Description: The Public Route Table for AEM Stack VPC
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublicRouteTable
+
+  PrivateRouteTable:
+    Value:
+      Ref: PrivateRouteTable
+    Description: The Private Route Table for AEM Stack VPC
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PrivateRouteTable
