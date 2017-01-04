@@ -20,7 +20,7 @@
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
-        template: "../cloudformation/shared/shared.yaml"
+        template: "../cloudformation/shared/network.yaml"
         template_parameters:
           VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
           AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"

@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create Bastion Host for access to resources in private subnets
+  Create Bastion Host for access to resources in AEM Stack private subnets
 
 Parameters:
   VpcIdParameter:
