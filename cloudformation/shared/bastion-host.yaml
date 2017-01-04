@@ -50,10 +50,10 @@ Parameters:
     Default: Bastion Host Security Group
     Description: Bastion Host Security Group Name
 
-  AllAEMInstancesSecurityGroupTagNameParameter:
+  InboundFromBastionHostSecurityGroupTagNameParameter:
     Type: String
-    Default: All AEM Stack Instances Security Group
-    Description: All AEM Stack Instances Security Group Name
+    Default: Inbound From Bastion Host Security Group
+    Description: Inbound From Bastion Host Security Group Name
 
   SecureShellInboundCidrIpParameter:
     Type: String
@@ -75,6 +75,7 @@ Parameters:
     Default: aem-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
+  #TODO: Combine this parameter with AvailabilityZoneAParameter and AvailabilityZoneBParameter
   BastionHostASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Default: ap-southeast-2a, ap-southeast-2b
@@ -206,14 +207,14 @@ Resources:
       VpcId:
         Ref: VpcIdParameter
 
-  AllAEMInstancesSecurityGroup:
+  InboundFromBastionHostSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: All AEM Stack Instances Security Group
+      GroupDescription: Allow SSH Inbound from Bastion Host Security Group
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AllAEMInstancesSecurityGroupTagNameParameter}
+            Fn::Sub: ${InboundFromBastionHostSecurityGroupTagNameParameter}
       VpcId:
         Ref: VpcIdParameter
 
@@ -234,10 +235,22 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       DestinationSecurityGroupId:
-        Ref: AllAEMInstancesSecurityGroup
+        Ref: InboundFromBastionHostSecurityGroup
       FromPort: '22'
       GroupId:
         Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '22'
+
+  # Allow tcp inbound from Bastion Host Security Group on port 22
+  InboundFromBastionHostSecurityGroupIngress0:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      SourceSecurityGroupId:
+        Ref: BastionHostSecurityGroup
+      FromPort: '22'
+      GroupId:
+        Ref: InboundFromBastionHostSecurityGroup
       IpProtocol: tcp
       ToPort: '22'
 
@@ -316,10 +329,10 @@ Outputs:
       Ref: BastionHostSecurityGroup
     Description: The Bastion Host Security Group
 
-  AllAEMInstancesSecurityGroup:
+  InboundFromBastionHostSecurityGroup:
     Value:
-      Ref: AllAEMInstancesSecurityGroup
-    Description: The All AEM Instances Security Group
+      Ref: InboundFromBastionHostSecurityGroup
+    Description: The Inbound From Bastion Host Security Group
 
   BastionHostLaunchConfiguration:
     Value:

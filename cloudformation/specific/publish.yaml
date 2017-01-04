@@ -71,6 +71,11 @@ Parameters:
     Default: aem-messaging-stack
     Description: The AEM Messaging Stack Name
 
+  InboundFromBastionHostSecurityGroupParameter:
+    Type: String
+    Default: sg-b74580d0
+    Description: Inbound Bound from Bastion Host Security Group Id
+
 Resources:
 
   PublishLaunchConfiguration:
@@ -100,6 +105,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-PublishSecurityGroup
+        - Ref: InboundFromBastionHostSecurityGroupParameter
       # TODO: Setup UserData
       UserData:
         Fn::Base64:

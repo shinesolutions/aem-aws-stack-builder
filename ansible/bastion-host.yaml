@@ -31,7 +31,7 @@
           BastionHostSubnetBTagNameParameter: "{{ bastion_host.subnet_b.cidr_block }}"
           BastionHostRoleNameParameter: "{{ bastion_host.role_name }}"
           BastionHostSecurityGroupTagNameParameter: "{{ bastion_host.security_group_name }}"
-          AllAEMInstancesSecurityGroupTagNameParameter: "{{ bastion_host.all_instances_security_group_name }}"
+          InboundFromBastionHostSecurityGroupTagNameParameter: "{{ bastion_host.inbound_from_bastion_host_security_group_name }}"
           SecureShellInboundCidrIpParameter: "{{ bastion_host.inbound_cidr_ip }}"
           BastionHostImageParameter: "{{ bastion_host.image_id }}"
           BastionHostInstanceTypeParameter: "{{ bastion_host.instance_type }}"

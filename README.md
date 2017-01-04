@@ -60,6 +60,27 @@ Delete Network Stack:
 make delete-shared-stack stack=network
 ```
 
+### Bastion Host Stack
+
+
+Bastion Host can be optional, as you may already have an existing bastion host you would like to use instead
+
+
+Create Bastion Host Stack:
+```
+make create-shared-stack stack=bastion-host
+```
+
+
+Delete Bastion Host Stack:
+
+```
+make delete-shared-stack stack=bastion-host
+```
+
+
+
+
 ### Roles Stack
 
 Roles can be shared or specific to an individual stack.
@@ -190,6 +211,19 @@ make ansible-create-stack stack=network inventory=default
 Delete Network Stack:
 ```
 make ansible-delete-stack stack=network inventory=default
+```
+
+### Bastion Host Stack
+
+
+Create Bastion Host Stack:
+```
+make ansible-create-stack stack=bastion-host inventory=default
+```
+
+Delete Bastion Host Stack:
+```
+make ansible-delete-stack stack=bastion-host inventory=default
 ```
 
 

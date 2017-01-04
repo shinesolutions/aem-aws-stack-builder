@@ -81,6 +81,11 @@ Parameters:
     Default: aem-security-groups-stack
     Description: The AEM Security Groups Stack Name
 
+  InboundFromBastionHostSecurityGroupParameter:
+    Type: String
+    Default: sg-b74580d0
+    Description: Inbound Bound from Bastion Host Security Group Id
+
 Resources:
 
   AuthorPrimaryInstance:
@@ -107,6 +112,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+        - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetAParameter
       Tags:
@@ -157,6 +163,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+        - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetBParameter
       Tags:

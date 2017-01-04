@@ -83,6 +83,7 @@
           RolesStackNameParameter: "{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
           MessagingStackNameParameter: "{{ messaging.stack_name }}"
+          InboundFromBastionHostSecurityGroupParameter: "{{ inbound_from_bastion_host_security_group }}"
       tags:
       - create
 

@@ -107,6 +107,10 @@ Parameters:
     Default: aem-messaging-stack
     Description: The AEM Messaging Stack Name
 
+  InboundFromBastionHostSecurityGroupParameter:
+    Type: String
+    Default: sg-b74580d0
+    Description: Inbound Bound from Bastion Host Security Group Id
 
 Resources:
 
@@ -175,6 +179,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
+        - Ref: InboundFromBastionHostSecurityGroupParameter
       # TODO: Setup UserData
       UserData:
         Fn::Base64:
@@ -185,13 +190,14 @@ Resources:
               - "\n"
               - "su - ec2-user -c \"echo TODO\""
 
+#TODO: change to ELB Health Check Type once up and running
   PublishDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       AvailabilityZones:
         Ref: PublishDispatcherASGAvailabilityZoneListParameter
       HealthCheckGracePeriod: 900
-      HealthCheckType: ELB
+      HealthCheckType: EC2
       LaunchConfigurationName:
         Ref: PublishDispatcherLaunchConfiguration
       LoadBalancerNames:

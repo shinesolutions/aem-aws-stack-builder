@@ -71,7 +71,7 @@ bastion_host:
 
   role_name: AEMStackBastionHostRole
   security_group_name: Bastion Host Security Group
-  all_instances_security_group_name: All AEM Stack Instances Security Group
+  inbound_from_bastion_host_security_group_name: Inbound from Bastion Host Security Group
   inbound_cidr_ip: 10.0.10.0/25
   image_id: ami-28cff44b
   instance_type: t2.micro

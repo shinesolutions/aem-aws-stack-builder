@@ -56,6 +56,11 @@ Parameters:
     Default: aem-security-groups-stack
     Description: The AEM Security Groups Stack Name
 
+  InboundFromBastionHostSecurityGroupParameter:
+    Type: String
+    Default: sg-b74580d0
+    Description: Inbound Bound from Bastion Host Security Group Id
+
 Resources:
 
   OrchestratorLaunchConfiguration:
@@ -85,6 +90,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
+        - Ref: InboundFromBastionHostSecurityGroupParameter
       # TODO: Setup UserData
       UserData:
         Fn::Base64:
@@ -101,6 +107,8 @@ Resources:
     Properties:
       AvailabilityZones:
         Ref: OrchestratorASGAvailabilityZoneListParameter
+      HealthCheckGracePeriod: 300
+      HealthCheckType: EC2
       LaunchConfigurationName:
         Ref: OrchestratorLaunchConfiguration
       MaxSize: 1
