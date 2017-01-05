@@ -18,7 +18,7 @@ Parameters:
 
   PublishDispatcherLoadBalancerHealthCheckTargetParameter:
     Type: String
-    Default: HTTP:80/system/health
+    Default: HTTP:80/system/health?tags=devops
     Description: AEM Publish Dispatcher ELB Health Check Target
 
   PublishDispatcherSubnetAParameter:
@@ -190,7 +190,8 @@ Resources:
               - "\n"
               - "su - ec2-user -c \"echo TODO\""
 
-#TODO: change to ELB Health Check Type once up and running
+
+# TODO: change to ELB Health Check Type once up and running
   PublishDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:

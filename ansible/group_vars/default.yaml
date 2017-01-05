@@ -73,7 +73,7 @@ publish_dispatcher:
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
-  elb_health_check: HTTP:80/system/health
+  elb_health_check: HTTP:80/system/health?tags=devops
   route53_record_set_name: publish-dispatcher.aem-stack.com.
 
 publish:
@@ -91,7 +91,7 @@ author:
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
-  elb_health_check: HTTP:4502/system/health
+  elb_health_check: HTTP:4502/system/health?tags=devops
   route53_record_set_name: author.aem-stack.com.
 
 author_dispatcher:
@@ -102,7 +102,7 @@ author_dispatcher:
   load_balancer:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
-  elb_health_check: HTTP:80/system/health
+  elb_health_check: HTTP:80/system/health?tags=devops
   route53_record_set_name: author-dispatcher.aem-stack.com.
 
 java:

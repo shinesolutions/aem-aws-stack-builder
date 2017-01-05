@@ -18,7 +18,7 @@ Parameters:
 
   AuthorLoadBalancerHealthCheckTargetParameter:
     Type: String
-    Default: HTTP:4502/system/health
+    Default: HTTP:4502/system/health?tags=devops
     Description: AEM Author ELB Health Check Target
 
   AuthorSubnetAParameter:
@@ -127,7 +127,6 @@ Resources:
         - Key: Application Version
           Value:
             Ref: ApplicationVersionParameter
-      # TODO: Setup UserData
       UserData:
         Fn::Base64:
           Fn::Join:
@@ -136,7 +135,9 @@ Resources:
               - "#!/bin/bash -x"
               - "\n"
               - "su - ec2-user -c \"echo TODO\""
-
+# TODO: Setup UserData
+# Download (wget) init/provision script
+# Run script.
 
   AuthorStandbyInstance:
     Type: AWS::EC2::Instance

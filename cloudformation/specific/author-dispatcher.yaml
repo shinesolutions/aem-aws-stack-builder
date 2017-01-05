@@ -18,7 +18,7 @@ Parameters:
 
   AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
     Type: String
-    Default: HTTP:80/system/health
+    Default: HTTP:80/system/health?tags=devops
     Description: AEM Author Dispatcher ELB Health Check Target
 
   AuthorDispatcherSubnetAParameter:
@@ -190,7 +190,7 @@ Resources:
               - "\n"
               - "su - ec2-user -c \"echo TODO\""
 
-#TODO: change to ELB Health Check Type once up and running
+# TODO: change to ELB Health Check Type once up and running
   AuthorDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
