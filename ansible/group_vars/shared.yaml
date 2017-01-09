@@ -71,10 +71,10 @@ bastion_host:
   stack_name: aem-bastion-host-stack
 
   subnet_a:
-    cidr_block: 10.0.16.0/25
+    cidr_block: 10.0.8.0/25
     tag_name: Bastion Host Subnet A
   subnet_b:
-    cidr_block: 10.0.16.128/25
+    cidr_block: 10.0.8.128/25
     tag_name: Bastion Host Subnet B
 
   role_name: AEMStackBastionHostRole
