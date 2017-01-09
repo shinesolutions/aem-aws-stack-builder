@@ -76,6 +76,10 @@ Parameters:
     Default: AEM Chaos Monkey Security Group
     Description: AEM Chaos Monkey Security Group Name
 
+  PrivateSubnetInternetOutboundCidrIpParameter:
+    Type: String
+    Default: 0.0.0.0/0
+    Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
 
 Resources:
 
@@ -237,6 +241,29 @@ Resources:
       IpProtocol: tcp
       ToPort: '5433'
 
+  # Allow tcp outbound on port 80 and 443 (http and https) to specified cidr ip required to download user data init script
+  PublishDispatcherSecurityGroupEgress2:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '80'
+      GroupId:
+        Ref: PublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  PublishDispatcherSecurityGroupEgress3:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: PublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+
   # Publish Security Group
   PublishSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -327,6 +354,29 @@ Resources:
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishDispatcherSecurityGroup
+      FromPort: '443'
+      GroupId:
+        Ref: PublishSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+
+  # Allow tcp outbound on port 80 and 443 (http and https) to specified cidr ip required to download user data init script
+  PublishSecurityGroupEgress2:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '80'
+      GroupId:
+        Ref: PublishSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  PublishSecurityGroupEgress3:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
       FromPort: '443'
       GroupId:
         Ref: PublishSecurityGroup
@@ -497,6 +547,29 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
 
+  # Allow tcp outbound on port 80 and 443 (http and https) to specified cidr ip required to download user data init script
+  AuthorSecurityGroupEgress7:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '80'
+      GroupId:
+        Ref: AuthorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  AuthorSecurityGroupEgress8:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: AuthorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+
   # Author ELB Security Group
   AuthorELBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -654,6 +727,29 @@ Resources:
       IpProtocol: tcp
       ToPort: '5433'
 
+  # Allow tcp outbound on port 80 and 443 (http and https) to specified cidr ip required to download user data init script
+  AuthorDipatcherSecurityGroupEgress2:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '80'
+      GroupId:
+        Ref: AuthorDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  AuthorDipatcherSecurityGroupEgress3:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: AuthorDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+
   # Author Dispatcher ELB Security Group
   AuthorDispatcherELBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -766,6 +862,28 @@ Resources:
       IpProtocol: tcp
       ToPort: '5433'
 
+  # Allow tcp outbound on port 80 and 443 (http and https) to specified cidr ip required to download user data init script
+  OrchestratorSecurityGroupEgress3:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '80'
+      GroupId:
+        Ref: OrchestratorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  OrchestratorSecurityGroupEgress4:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: OrchestratorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
 
   # Chaos Monkey Security Group
   ChaosMonkeySecurityGroup:
@@ -793,6 +911,29 @@ Resources:
         Ref: ChaosMonkeySecurityGroup
       IpProtocol: tcp
       ToPort: '22'
+
+  # Allow tcp outbound on port 80 and 443 (http and https) to specified cidr ip required to download user data init script
+  ChaosSecurityGroupEgress0:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '80'
+      GroupId:
+        Ref: ChaosMonkeySecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  ChaosSecurityGroupEgress1:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: ChaosMonkeySecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
 
 Outputs:
 

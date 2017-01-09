@@ -21,6 +21,9 @@ Prerequisites:
 * ssl server certificate
 * ami images for publish-dispatcher, publish, author, author-dispatcher, orchestrator, chaos-monkey (with component and version tags)
 * dns hosted zone
+* provisioning init script accessible via s3 bucket
+* inbound_from_bastion_host_security_group
+* nat gateway / internet proxy
 
 
 ## Installation
@@ -58,6 +61,24 @@ make delete-shared-stack stack=vpc
 Delete Network Stack:
 ```
 make delete-shared-stack stack=network
+```
+
+
+### Nat-Gateway Stack
+
+Nat Gateway can be optional, as you may already have an existing Nat or Internet Proxy you would like to use instead
+
+
+Create Nat-Gateway Stack:
+```
+make create-shared-stack stack=nat-gateway
+```
+
+
+Delete Nat-Gateway Stack:
+
+```
+make delete-shared-stack stack=nat-gateway
 ```
 
 ### Bastion Host Stack

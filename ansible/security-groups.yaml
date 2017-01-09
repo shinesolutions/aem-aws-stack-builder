@@ -35,6 +35,7 @@
           AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
           OrchestratorSecurityGroupTagNameParameter: "{{ security_groups.orchestrator.tag_name }}"
           ChaosMonkeySecurityGroupTagNameParameter: "{{ security_groups.chaos_monkey.tag_name }}"
+          PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internent_outbound_cidr_ip }}"
       tags:
       - create
 

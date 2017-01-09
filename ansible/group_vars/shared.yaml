@@ -86,3 +86,7 @@ bastion_host:
   max_size: 1
   min_size: 1
   tag_name: AEM Bastion Host
+
+#TODO: create a new elastic ip option?
+nat_gateway:
+  elastic_ip_allocation_id: eipalloc-32711957

@@ -16,6 +16,8 @@ security_groups:
   secure_shell:
     inbound_cidr_ip: 10.0.10.0/25
 
+  private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
+
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.10.0/25
