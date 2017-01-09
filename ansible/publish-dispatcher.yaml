@@ -22,6 +22,26 @@
       tags:
       - create
 
+    - name: Get Publish Dispatcher ELB Subnet A
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.publish_dispatcher_elb.subnet_a.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_dispatcher_elb_subnet_a
+      tags:
+      - create
+
+    - name: Get Publish Dispatcher ELB Subnet B
+      ec2_vpc_subnet_facts:
+        region: "{{ aws.region }}"
+        filters:
+          "tag:Name": "{{ network.publish_dispatcher_elb.subnet_b.tag_name }}"
+          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
+      register: publish_dispatcher_elb_subnet_b
+      tags:
+      - create
+
     - name: Get Publish Dispatcher Subnet A
       ec2_vpc_subnet_facts:
         region: "{{ aws.region }}"
@@ -66,8 +86,8 @@
           ComputeStackMonikerParameter: "{{ stack_moniker }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
-          PublishDispatcherSubnetAParameter: "{{ publish_dispatcher_subnet_a.subnets.0.id }}"
-          PublishDispatcherSubnetBParameter: "{{ publish_dispatcher_subnet_b.subnets.0.id }}"
+          PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets.0.id }}"
+          PublishDispatcherELBSubnetBParameter: "{{ publish_dispatcher_elb_subnet_b.subnets.0.id }}"
           PublishDispatcherImageParameter: "{{ dispatcher_ami.results[0].ami_id }}"
           PublishDispatcherInstanceTypeParameter: "{{ publish_dispatcher.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

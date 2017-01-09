@@ -21,15 +21,15 @@ Parameters:
     Default: HTTP:80/system/health?tags=devops
     Description: AEM Publish Dispatcher ELB Health Check Target
 
-  PublishDispatcherSubnetAParameter:
+  PublishDispatcherELBSubnetAParameter:
     Type: AWS::EC2::Subnet::Id
-    Default: subnet-1f5ed07b
-    Description: The Publish Dispatcher Subnet in Availability Zone A
+    Default: subnet-8162f4e5
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
 
-  PublishDispatcherSubnetBParameter:
+  PublishDispatcherELBSubnetBParameter:
     Type: AWS::EC2::Subnet::Id
-    Default: subnet-68d2641e
-    Description: The Publish Dispatcher Subnet in Availability Zone B
+    Default: subnet-002f9176
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
   PublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
@@ -51,7 +51,6 @@ Parameters:
     Default: ap-southeast-2a, ap-southeast-2b
     Description: The Publish Dispatcher Availability Zone List
 
-#TODO: Combine this parameter with PublishDispatcherSubnetAParameter and PublishDispatcherSubnetBParameter
   PublishDispatcherASGSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>
     Default: subnet-1f5ed07b, subnet-68d2641e
@@ -142,8 +141,8 @@ Resources:
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
       Subnets:
-        - Ref: PublishDispatcherSubnetAParameter
-        - Ref: PublishDispatcherSubnetBParameter
+        - Ref: PublishDispatcherELBSubnetAParameter
+        - Ref: PublishDispatcherELBSubnetBParameter
       Tags:
         - Key: Name
           Value:
