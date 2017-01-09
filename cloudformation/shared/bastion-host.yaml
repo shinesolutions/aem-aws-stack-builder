@@ -22,7 +22,7 @@ Parameters:
 
   BastionHostSubnetACidrBlockParameter:
     Type: String
-    Default: 10.0.15.0/25
+    Default: 10.0.16.0/25
     Description: Bastion Host Subnet A Cidr Block
 
   BastionHostSubnetATagNameParameter:
@@ -32,7 +32,7 @@ Parameters:
 
   BastionHostSubnetBCidrBlockParameter:
     Type: String
-    Default: 10.0.15.128/25
+    Default: 10.0.16.128/25
     Description: Bastion Host Subnet B Cidr Block
 
   BastionHostSubnetBTagNameParameter:

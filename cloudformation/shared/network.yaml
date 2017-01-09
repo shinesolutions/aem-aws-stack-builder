@@ -25,9 +25,30 @@ Parameters:
     Default: AEM VPC Internet Gateway
     Description: AEM VPC Internet Gateway Name
 
-  PublishDispatcherSubnetACidrBlockParameter:
+  PublishDispatcherELBSubnetACidrBlockParameter:
     Type: String
     Default: 10.0.10.0/25
+    Description: AEM Publish Dispatcher ELB Subnet A Cidr Block
+
+  PublishDispatcherELBSubnetATagNameParameter:
+    Type: String
+    Default: AEM Publish Dispatcher ELB Subnet A
+    Description: AEM Publish Dispatcher ELB Subnet A Name
+
+  PublishDispatcherELBSubnetBCidrBlockParameter:
+    Type: String
+    Default: 10.0.10.128/25
+    Description: AEM Publish Dispatcher ELB Subnet B Cidr Block
+
+  PublishDispatcherELBSubnetBTagNameParameter:
+    Type: String
+    Default: AEM Publish Dispatcher ELB Subnet B
+    Description: AEM Publish Dispatcher ELB Subnet B Name
+
+
+  PublishDispatcherSubnetACidrBlockParameter:
+    Type: String
+    Default: 10.0.11.0/25
     Description: AEM Publish Dispatcher Subnet A Cidr Block
 
   PublishDispatcherSubnetATagNameParameter:
@@ -37,7 +58,7 @@ Parameters:
 
   PublishDispatcherSubnetBCidrBlockParameter:
     Type: String
-    Default: 10.0.10.128/25
+    Default: 10.0.11.128/25
     Description: AEM Publish Dispatcher Subnet B Cidr Block
 
   PublishDispatcherSubnetBTagNameParameter:
@@ -48,7 +69,7 @@ Parameters:
 
   PublishSubnetACidrBlockParameter:
     Type: String
-    Default: 10.0.11.0/25
+    Default: 10.0.12.0/25
     Description: AEM Publish Subnet A Cidr Block
 
   PublishSubnetATagNameParameter:
@@ -58,7 +79,7 @@ Parameters:
 
   PublishSubnetBCidrBlockParameter:
     Type: String
-    Default: 10.0.11.128/25
+    Default: 10.0.12.128/25
     Description: AEM Publish Subnet B Cidr Block
 
   PublishSubnetBTagNameParameter:
@@ -69,7 +90,7 @@ Parameters:
 
   AuthorSubnetACidrBlockParameter:
     Type: String
-    Default: 10.0.12.0/25
+    Default: 10.0.13.0/25
     Description: AEM Author Subnet A Cidr Block
 
   AuthorSubnetATagNameParameter:
@@ -79,7 +100,7 @@ Parameters:
 
   AuthorSubnetBCidrBlockParameter:
     Type: String
-    Default: 10.0.12.128/25
+    Default: 10.0.13.128/25
     Description: AEM Author Subnet B Cidr Block
 
   AuthorSubnetBTagNameParameter:
@@ -90,7 +111,7 @@ Parameters:
 
   AuthorDispatcherSubnetACidrBlockParameter:
     Type: String
-    Default: 10.0.13.0/25
+    Default: 10.0.14.0/25
     Description: AEM Author Dispatcher Subnet A Cidr Block
 
   AuthorDispatcherSubnetATagNameParameter:
@@ -100,7 +121,7 @@ Parameters:
 
   AuthorDispatcherSubnetBCidrBlockParameter:
     Type: String
-    Default: 10.0.13.128/25
+    Default: 10.0.14.128/25
     Description: AEM Author Dispatcher Subnet B Cidr Block
 
   AuthorDispatcherSubnetBTagNameParameter:
@@ -111,7 +132,7 @@ Parameters:
 
   ToolSubnetACidrBlockParameter:
     Type: String
-    Default: 10.0.14.0/25
+    Default: 10.0.15.0/25
     Description: Tool Subnet A Cidr Block
 
   ToolSubnetATagNameParameter:
@@ -121,7 +142,7 @@ Parameters:
 
   ToolSubnetBCidrBlockParameter:
     Type: String
-    Default: 10.0.14.128/25
+    Default: 10.0.15.128/25
     Description: Tool Subnet B Cidr Block
 
   ToolSubnetBTagNameParameter:
@@ -157,6 +178,37 @@ Resources:
     Properties:
       InternetGatewayId:
         Ref: Ec2InternetGateway
+      VpcId:
+        Ref: VpcIdParameter
+
+
+  PublishDispatcherELBSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: PublishDispatcherELBSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherELBSubnetATagNameParameter
+      VpcId:
+        Ref: VpcIdParameter
+
+  PublishDispatcherELBSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: PublishDispatcherELBSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherELBSubnetBTagNameParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -342,19 +394,35 @@ Resources:
             Ref: PrivateRouteTableTagNameParameter
 # TODO: the RouteTable Name Tag is not being set?
 
-  PublishDispatcherSubnetAPublicRouteTableAssociation:
+  PublishDispatcherELBSubnetAPublicRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId:
         Ref: PublicRouteTable
       SubnetId:
-        Ref: PublishDispatcherSubnetA
+        Ref: PublishDispatcherELBSubnetA
 
-  PublishDispatcherSubnetBPublicRouteTableAssociation:
+  PublishDispatcherELBSubnetBPublicRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId:
         Ref: PublicRouteTable
+      SubnetId:
+        Ref: PublishDispatcherELBSubnetB
+
+  PublishDispatcherSubnetAPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PublishDispatcherSubnetA
+
+  PublishDispatcherSubnetBPrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
       SubnetId:
         Ref: PublishDispatcherSubnetB
 
@@ -424,6 +492,16 @@ Resources:
 
 
 Outputs:
+
+  PublishDispatcherELBSubnetA:
+    Value:
+      Ref: PublishDispatcherELBSubnetA
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
+
+  PublishDispatcherELBSubnetB:
+    Value:
+      Ref: PublishDispatcherELBSubnetB
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
   PublishDispatcherSubnetA:
     Value: 

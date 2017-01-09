@@ -26,6 +26,8 @@
           AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"
           AvailabilityZoneBParameter: "{{ aws.availability_zone_b }}"
           Ec2InternetGatewayTagNameParameter: "{{ network.internet_gateway.tag_name }}"
+          PublishDispatcherELBSubnetACidrBlockParameter: "{{ network.publish_dispatcher_elb.subnet_a.cidr_block }}"
+          PublishDispatcherELBSubnetATagNameParameter: "{{ network.publish_dispatcher_elb.subnet_a.tag_name }}"
           PublishDispatcherSubnetACidrBlockParameter: "{{ network.publish_dispatcher.subnet_a.cidr_block }}"
           PublishDispatcherSubnetATagNameParameter: "{{ network.publish_dispatcher.subnet_a.tag_name }}"
           PublishDispatcherSubnetBCidrBlockParameter: "{{ network.publish_dispatcher.subnet_b.cidr_block }}"
