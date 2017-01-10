@@ -19,10 +19,10 @@ delete-shared-roles-stack:
 
 
 create-stack:
-	./shell/create-stack.sh ${moniker}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
+	./shell/create-stack.sh ${prefix}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
 
 delete-stack:
-	./shell/delete-stack.sh ${moniker}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
+	./shell/delete-stack.sh ${prefix}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
 
 create-aem-stack:
 	./shell/create-aem-stack.sh ${inventory}

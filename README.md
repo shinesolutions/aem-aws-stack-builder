@@ -120,88 +120,88 @@ make delete-shared-roles-stack
 
 Create Security Groups Stack:
 ```
-make create-stack moniker=default stack=security-groups
+make create-stack prefix=default stack=security-groups
 ```
 
 
 Delete Security Groups Stack:
 ```
-make delete-stack moniker=default stack=security-groups
+make delete-stack prefix=default stack=security-groups
 ```
 
 
 Create Messaging Stack:
 ```
-make create-stack moniker=default stack=messaging
+make create-stack prefix=default stack=messaging
 ```
 
 Delete Messaging Stack:
 ```
-make delete-stack moniker=default stack=messaging
+make delete-stack prefix=default stack=messaging
 ```
 
 
 Create Publish Dispatcher Stack:
 ```
-make create-stack moniker=default stack=publish-dispatcher
+make create-stack prefix=default stack=publish-dispatcher
 ```
 
 Delete Publish Dispatcher Stack:
 ```
-make delete-stack moniker=default stack=publish-dispatcher
+make delete-stack prefix=default stack=publish-dispatcher
 ```
 
 
 Create Publish Stack:
 ```
-make create-stack moniker=default stack=publish
+make create-stack prefix=default stack=publish
 ```
 
 Delete Publish Stack:
 ```
-make delete-stack moniker=default stack=publish
+make delete-stack prefix=default stack=publish
 ```
 
 
 Create Author Stack:
 ```
-make create-stack moniker=default stack=author
+make create-stack prefix=default stack=author
 ```
 
 Delete Author Stack:
 ```
-make delete-stack moniker=default stack=author
+make delete-stack prefix=default stack=author
 ```
 
 
 Create Author Dispatcher Stack:
 ```
-make create-stack moniker=default stack=author-dispatcher
+make create-stack prefix=default stack=author-dispatcher
 ```
 
 Delete Author Dispatcher Stack:
 ```
-make delete-stack moniker=default stack=author-dispatcher
+make delete-stack prefix=default stack=author-dispatcher
 ```
 
 Create Orchestrator Stack:
 ```
-make create-stack moniker=default stack=orchestrator
+make create-stack prefix=default stack=orchestrator
 ```
 
 Delete Orchestrator Stack:
 ```
-make delete-stack moniker=default stack=orchestrator
+make delete-stack prefix=default stack=orchestrator
 ```
 
 Create Chaos Monkey Stack:
 ```
-make create-stack moniker=default stack=chaos-monkey
+make create-stack prefix=default stack=chaos-monkey
 ```
 
 Delete Chaos Monkey Stack:
 ```
-make delete-stack moniker=default stack=chaos-monkey
+make delete-stack prefix=default stack=chaos-monkey
 ```
 
 ## Ansible
@@ -382,5 +382,3 @@ make shellcheck
 
 
 https://github.com/k1LoW/awspec
-
-

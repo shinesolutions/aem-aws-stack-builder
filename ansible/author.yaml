@@ -57,13 +57,13 @@
 
     - name: Create AEM Author Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ author.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ author.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/author.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
           AuthorSubnetAParameter: "{{ author_subnet_a.subnets.0.id }}"
@@ -75,7 +75,7 @@
           ApplicationVersionParameter: "{{ compute.application_version }}"
           AuthorLoadBalancerTagNameParameter: "{{ author.load_balancer.tag_name }}"
           Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
-          AuthorRoute53RecordSetNameParamter: "{{ stack_moniker }}-{{ author.route53_record_set_name }}"
+          AuthorRoute53RecordSetNameParamter: "{{ stack_prefix }}-{{ author.route53_record_set_name }}"
           RolesStackNameParameter: "{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ inbound_from_bastion_host_security_group }}"
@@ -84,7 +84,7 @@
 
     - name: Delete AEM Author Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ author.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ author.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

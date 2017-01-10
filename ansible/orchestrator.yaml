@@ -49,13 +49,13 @@
 
     - name: Create AEM Orchestrator Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ orchestrator.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ orchestrator.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/orchestrator.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
           OrchestratorImageParameter: "{{ orchestrator_ami.results[0].ami_id }}"
           OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
@@ -71,7 +71,7 @@
 
     - name: Delete AEM Orchestrator Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ orchestrator.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ orchestrator.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

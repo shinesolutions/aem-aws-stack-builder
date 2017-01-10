@@ -7,21 +7,21 @@
   tasks:
     - name: Create AEM Messaging Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ messaging.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ messaging.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/messaging.yaml"
         template_parameters:
-          AEMASGEventQueueNameParameter: "{{ stack_moniker }}-{{ messaging.asg_event_sqs_queue_name }}"
-          AEMASGEventTopicDisplayNameParameter: "{{ stack_moniker }} - {{ messaging.asg_event_sns_topic_display_name }}"
-          AEMASGEventTopicNameParameter: "{{ stack_moniker }}-{{ messaging.asg_event_sns_topic_name }}"
+          AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
+          AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
+          AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
       tags:
       - create
 
     - name: Delete AEM Messaging Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ messaging.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ messaging.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

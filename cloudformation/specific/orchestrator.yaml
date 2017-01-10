@@ -6,10 +6,10 @@ Description:
 
 Parameters:
 
-  ComputeStackMonikerParameter:
+  ComputeStackPrefixParameter:
     Type: String
     Default: default
-    Description: The AEM Stack Compute Resources Stack Moniker
+    Description: The AEM Stack Compute Resources Stack Prefix
 
   OrchestratorImageParameter:
     Type: AWS::EC2::Image::Id
@@ -89,7 +89,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
+        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
       # TODO: Setup UserData
       UserData:
@@ -116,11 +116,11 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${OrchestratorTagNameParameter} (${ComputeStackMonikerParameter})
+            Fn::Sub: ${OrchestratorTagNameParameter} (${ComputeStackPrefixParameter})
           PropagateAtLaunch: true
-        - Key: Stack Moniker
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
           PropagateAtLaunch: true
         - Key: Component
           Value: aem-orchestrator

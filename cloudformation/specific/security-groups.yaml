@@ -6,10 +6,10 @@ Description:
 
 Parameters:
 
-  ComputeStackMonikerParameter:
+  ComputeStackPrefixParameter:
     Type: String
     Default: default
-    Description: The AEM Stack Compute Resources Stack Moniker
+    Description: The AEM Stack Compute Resources Stack Prefix
 
   VpcIdParameter:
     Type: AWS::EC2::VPC::Id
@@ -91,10 +91,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${PublishDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${PublishDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -153,10 +153,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${PublishDispatcherSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${PublishDispatcherSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -272,10 +272,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${PublishSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${PublishSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -391,10 +391,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${AuthorSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -578,10 +578,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorELBSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${AuthorELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -639,10 +639,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorDispatcherSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${AuthorDispatcherSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -758,10 +758,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${AuthorDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -820,10 +820,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${OrchestratorSecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${OrchestratorSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 
@@ -893,10 +893,10 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${ChaosMonkeySecurityGroupTagNameParameter} (${ComputeStackMonikerParameter})
-        - Key: Stack Moniker
+            Fn::Sub: ${ChaosMonkeySecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VpcIdParameter
 

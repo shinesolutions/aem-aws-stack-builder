@@ -49,13 +49,13 @@
 
     - name: Create AEM Chaos Monkey Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ chaos_monkey.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ chaos_monkey.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/chaos-monkey.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
           ChaosMonkeyImageParameter: "{{ chaos_monkey_ami.results[0].ami_id }}"
           ChaosMonkeyInstanceTypeParameter: "{{ chaos_monkey.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
@@ -71,7 +71,7 @@
 
     - name: Delete AEM Chaos Monkey Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ chaos_monkey.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ chaos_monkey.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

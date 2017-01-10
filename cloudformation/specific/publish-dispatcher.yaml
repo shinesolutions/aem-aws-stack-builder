@@ -6,10 +6,10 @@ Description:
 
 Parameters:
 
-  ComputeStackMonikerParameter:
+  ComputeStackPrefixParameter:
     Type: String
     Default: default
-    Description: The AEM Stack Compute Resources Stack Moniker
+    Description: The AEM Stack Compute Resources Stack Prefix
 
   SSLCertificateARNParameter:
     Type: String
@@ -139,7 +139,7 @@ Resources:
             Ref: SSLCertificateARNParameter
       Scheme: internet-facing
       SecurityGroups:
-        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
+        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
       Subnets:
         - Ref: PublishDispatcherELBSubnetAParameter
         - Ref: PublishDispatcherELBSubnetBParameter
@@ -147,9 +147,9 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${PublishDispatcherLoadBalancerTagNameParameter}
-        - Key: Stack Moniker
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
 
   PublishDispatcherLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -177,7 +177,7 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
+        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
       # TODO: Setup UserData
       UserData:
@@ -213,15 +213,15 @@ Resources:
             - autoscaling:EC2_INSTANCE_TERMINATE
             - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
           TopicARN:
-            Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${PublishDispatcherTagNameParameter} (${ComputeStackMonikerParameter})
+            Fn::Sub: ${PublishDispatcherTagNameParameter} (${ComputeStackPrefixParameter})
           PropagateAtLaunch: true
-        - Key: Stack Moniker
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
           PropagateAtLaunch: true
         - Key: Component
           Value: aem-publish-dispatcher

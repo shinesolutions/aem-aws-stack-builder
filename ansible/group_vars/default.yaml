@@ -1,4 +1,4 @@
-stack_moniker: default
+stack_prefix: default
 
 #TODO: consider moving into own group_vars file, given the roles could be shared.
 roles:

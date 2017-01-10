@@ -77,13 +77,13 @@
 
     - name: Create AEM Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/publish-dispatcher.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
           PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets.0.id }}"
@@ -99,7 +99,7 @@
           ApplicationVersionParameter: "{{ compute.application_version }}"
           PublishDispatcherLoadBalancerTagNameParameter: "{{ publish_dispatcher.load_balancer.tag_name }}"
           Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
-          PublishDispatcherRoute53RecordSetNameParamter: "{{ stack_moniker }}-{{ publish_dispatcher.route53_record_set_name }}"
+          PublishDispatcherRoute53RecordSetNameParamter: "{{ stack_prefix }}-{{ publish_dispatcher.route53_record_set_name }}"
           RolesStackNameParameter: "{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
           MessagingStackNameParameter: "{{ messaging.stack_name }}"
@@ -109,7 +109,7 @@
 
     - name: Delete AEM Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

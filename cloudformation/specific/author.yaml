@@ -6,10 +6,10 @@ Description:
 
 Parameters:
 
-  ComputeStackMonikerParameter:
+  ComputeStackPrefixParameter:
     Type: String
     Default: default
-    Description: The AEM Stack Compute Resources Stack Moniker
+    Description: The AEM Stack Compute Resources Stack Prefix
 
   SSLCertificateARNParameter:
     Type: String
@@ -111,17 +111,17 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetAParameter
       Tags:
-        - Key: Stack Moniker
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorTagNameParameter} Primary (${ComputeStackMonikerParameter})
+            Fn::Sub: ${AuthorTagNameParameter} Primary (${ComputeStackPrefixParameter})
         - Key: Component
           Value: aem-author-primary
         - Key: Application Version
@@ -163,17 +163,17 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetBParameter
       Tags:
-        - Key: Stack Moniker
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorTagNameParameter} Standby (${ComputeStackMonikerParameter})
+            Fn::Sub: ${AuthorTagNameParameter} Standby (${ComputeStackPrefixParameter})
         - Key: Component
           Value: aem-author-standby
         - Key: Application Version
@@ -219,7 +219,7 @@ Resources:
             Ref: SSLCertificateARNParameter
       Scheme: internal
       SecurityGroups:
-        - Fn::ImportValue: !Sub ${ComputeStackMonikerParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
+        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
       Subnets:
         - Ref: AuthorSubnetAParameter
         - Ref: AuthorSubnetBParameter
@@ -227,9 +227,9 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${AuthorLoadBalancerTagNameParameter}
-        - Key: Stack Moniker
+        - Key: Stack Prefix
           Value:
-            Ref: ComputeStackMonikerParameter
+            Ref: ComputeStackPrefixParameter
 
   AuthorRoute53RecordSet:
     Type: AWS::Route53::RecordSet

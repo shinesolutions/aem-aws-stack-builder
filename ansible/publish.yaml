@@ -50,13 +50,13 @@
 
     - name: Create AEM Publish Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ publish.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ publish.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../cloudformation/specific/publish.yaml"
         template_parameters:
-          ComputeStackMonikerParameter: "{{ stack_moniker }}"
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
           PublishImageParameter: "{{ publish_ami.results[0].ami_id }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
@@ -75,7 +75,7 @@
 
     - name: Delete AEM Publish Stack
       cloudformation:
-        stack_name: "{{ stack_moniker }}-{{ publish.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ publish.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:
