@@ -31,7 +31,7 @@ Prerequisites:
 Requirements:
 
 * Install [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration) it
-* Install [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
+* Install [Ansible](http://docs.ansible.com/ansible/intro_installation.html) v2.2.x or newer
 * Install [GNU Make](https://www.gnu.org/software/make/) (optional, see Makefile to use commands directly)
 
 ## Usage
@@ -182,13 +182,6 @@ Delete Chaos Monkey Stack:
 ```
 make delete-stack prefix=default stack=chaos-monkey
 ```
-
-## Ansible
-
-Requirements:
-
-* [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
-* [Boto](https://github.com/boto/boto)
 
 
 ### Shared Stack
