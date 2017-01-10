@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -o nounset
+set -o errexit
 
 STACK_NAME=$1
 TEMPLATE=$2

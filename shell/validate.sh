@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -o nounset
+set -o errexit
 
 CLOUDFORMATION_TEMPLATES="$PWD/cloudformation/*/*.yaml"
 

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -o nounset
+set -o errexit
 
 aws iam upload-server-certificate \
     --server-certificate-name aem-stack-certificate \
