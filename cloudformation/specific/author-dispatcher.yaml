@@ -112,6 +112,11 @@ Parameters:
     Default: sg-b74580d0
     Description: Inbound Bound from Bastion Host Security Group Id
 
+  InitScriptS3UriParameter:
+    Type: String
+    Default: s3://shinesolutions-aem-stack-builder/init.sh
+    Description: Initialization Script executed via the User Data
+
 Resources:
 
   AuthorDispatcherLoadBalancer:
@@ -167,6 +172,7 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
+# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
         Fn::ImportValue:
           Fn::Sub: ${RolesStackNameParameter}-AuthorDispatcherInstanceProfile
@@ -180,15 +186,15 @@ Resources:
       SecurityGroups:
         - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorDispatcherSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
-      # TODO: Setup UserData
+# TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Join:
-            - ""
-            -
-              - "#!/bin/bash -x"
-              - "\n"
-              - "su - ec2-user -c \"echo TODO\""
+          !Sub |
+            #!/bin/bash -x
+            mkdir /tmp/aem-stack-builder
+            aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
+            chmod 755 /tmp/aem-stack-builder/init.sh
+            su - ec2-user -c "/tmp/aem-stack-builder/init.sh"
 
 # TODO: change to ELB Health Check Type once up and running
   AuthorDispatcherAutoScalingGroup:
