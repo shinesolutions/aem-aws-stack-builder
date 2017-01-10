@@ -28,12 +28,11 @@ Prerequisites:
 
 ## Installation
 
-Requirements
-* [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
-* [GNU Make](https://www.gnu.org/software/make/) (optional, see Makefile to use commands instead)
+Requirements:
 
-
-
+* Install [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration) it
+* Install [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
+* Install [GNU Make](https://www.gnu.org/software/make/) (optional, see Makefile to use commands directly)
 
 ## Usage
 
