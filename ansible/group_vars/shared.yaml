@@ -66,27 +66,6 @@ network:
 
   hosted_zone: aem.
 
-# TODO: consider separating out bastion properties into own group_vars as bastion host is optional if you don't already have an existing bastion host.
-bastion_host:
-  stack_name: aem-bastion-host-stack
-
-  subnet_a:
-    cidr_block: 10.0.8.0/25
-    tag_name: Bastion Host Subnet A
-  subnet_b:
-    cidr_block: 10.0.8.128/25
-    tag_name: Bastion Host Subnet B
-
-  role_name: AEMStackBastionHostRole
-  security_group_name: Bastion Host Security Group
-  inbound_from_bastion_host_security_group_name: Inbound from Bastion Host Security Group
-  inbound_cidr_ip: 10.0.10.0/25
-  image_id: ami-28cff44b
-  instance_type: t2.micro
-  max_size: 1
-  min_size: 1
-  tag_name: AEM Bastion Host
-
 #TODO: create a new elastic ip option?
 nat_gateway:
   elastic_ip_allocation_id: eipalloc-32711957
