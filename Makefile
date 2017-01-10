@@ -1,8 +1,5 @@
-validate:
-	./scripts/validate.sh
-
-shellcheck:
-	shellcheck scripts/*.sh
+lint:
+	./scripts/lint.sh
 
 create-shared-stack:
 	./scripts/create-stack.sh aem-${stack}-stack cloudformation/shared/${stack}.yaml
@@ -35,3 +32,5 @@ ansible-create-stack:
 
 ansible-delete-stack:
 	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags delete
+
+.PHONY: lint
