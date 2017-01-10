@@ -334,7 +334,8 @@ Work in Progress
 ## Development
 
 Requirements:
-* [ShellCheck](https://github.com/koalaman/shellcheck)
+
+* Install [ShellCheck](https://github.com/koalaman/shellcheck#user-content-installing)
 
 Validate Cloudformation templates:
 ```
