@@ -44,7 +44,7 @@ create-cert:
 	    -days 365 \
 	    -nodes \
 	    -x509 \
-	    -subj "/C=AU/ST=Victoria/L=Melbourne/O=Shine Solutions/CN=$(CERT_NAME)" \
+	    -subj "/C=AU/ST=Victoria/L=Melbourne/O=Sample Organisation/CN=$(CERT_NAME)" \
 	    -keyout $(CERT_NAME).key \
 	    -out $(CERT_NAME).cert
 
