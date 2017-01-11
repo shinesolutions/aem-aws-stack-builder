@@ -2,23 +2,25 @@
 set -o nounset
 set -o errexit
 
-INVENTORY=ansible/inventory/hosts
-
-# TODO: should log the output for investigation and debugging if required.
+mkdir -p logs
+run_id=${run_id:-`date +%Y-%m-%d:%H:%M:%S`}
+delete_stack() {
+  ANSIBLE_LOG_PATH=logs/$run_id-delete-$1.log ansible-playbook ansible/playbooks/apps/$1.yaml -i ansible/inventory/hosts --tags delete
+}
 
 echo "Deleting AEM stack..."
 
-ansible-playbook -vvv ansible/playbooks/apps/chaos-monkey.yaml -i "$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/playbooks/apps/orchestrator.yaml -i "$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/playbooks/apps/author-dispatcher.yaml -i "$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/playbooks/apps/author.yaml -i "$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/playbooks/apps/publish.yaml -i "$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/playbooks/apps/publish-dispatcher.yaml -i "$INVENTORY" --tags delete &
+delete_stack chaos-monkey &
+delete_stack orchestrator &
+delete_stack author-dispatcher &
+delete_stack publish-dispatcher &
+delete_stack publish &
+delete_stack author &
 
 wait
 
-ansible-playbook -vvv ansible/playbooks/apps/messaging.yaml -i "$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/playbooks/apps/security-groups.yaml -i "$INVENTORY" --tags delete &
+delete_stack messaging &
+delete_stack security-groups &
 
 wait
 

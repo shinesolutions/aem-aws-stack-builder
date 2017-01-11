@@ -3,3 +3,4 @@ aem-aws-stack-builder.iml
 *.retry
 *.cert
 *.key
+logs/

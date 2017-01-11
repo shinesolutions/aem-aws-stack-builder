@@ -2,11 +2,11 @@
 set -o nounset
 set -o errexit
 
+mkdir -p logs
+run_id=${run_id:-`date +%Y-%m-%d:%H:%M:%S`}
 create_stack() {
-  ansible-playbook ansible/playbooks/apps/$1.yaml -i "ansible/inventory/hosts" --tags create
+  ANSIBLE_LOG_PATH=logs/$run_id-create-$1.log ansible-playbook ansible/playbooks/apps/$1.yaml -i ansible/inventory/hosts --tags create
 }
-
-# TODO: should log the output for investigation and debugging if required.
 
 echo "Creating AEM stack..."
 
