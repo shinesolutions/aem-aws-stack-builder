@@ -10,7 +10,7 @@ delete_stack() {
   ANSIBLE_LOG_PATH=logs/$run_id-delete-$1.log ansible-playbook ansible/playbooks/apps/$1.yaml -i ansible/inventory/hosts --tags delete --extra-vars "stack_prefix=$stack_prefix"
 }
 
-echo "Deleting $stack_prefix AEM stack..."
+echo "Deleting $stack_prefix AEM stacks..."
 
 delete_stack chaos-monkey &
 delete_stack orchestrator &
@@ -26,4 +26,4 @@ delete_stack security-groups &
 
 wait
 
-echo "Finished deleting $stack_prefix AEM stack"
+echo "Finished deleting $stack_prefix AEM stacks"

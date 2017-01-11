@@ -37,7 +37,8 @@ Requirements:
 
 Requirements:
 
-* Set up certificate in [AWS IAM](https://aws.amazon.com/iam), check out `create-cert`, `upload-cert`, and `delete-cert` targets in the Makefile
+* Set up SSL certificate in [AWS IAM](https://aws.amazon.com/iam), check out `create-cert`, `upload-cert`, and `delete-cert` targets in the Makefile for examples.
+* Set up [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html). The key pair name should be configured in `ansible/inventory/group_vars/apps.yaml` at `compute.key_pair_name` field.
 
 ### Shared Stack
 

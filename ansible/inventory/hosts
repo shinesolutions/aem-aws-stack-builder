@@ -1,5 +1,5 @@
-[shared]
+[apps]
 127.0.0.1 ansible_python_interpreter=python
 
-[default]
+[network]
 127.0.0.1 ansible_python_interpreter=python

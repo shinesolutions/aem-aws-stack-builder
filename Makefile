@@ -1,3 +1,9 @@
+create-aem:
+	./scripts/create-aem-stacks.sh
+
+delete-aem:
+	./scripts/delete-aem-stacks.sh
+
 deps:
 	pip install -r requirements.txt
 
@@ -24,12 +30,6 @@ create-stack:
 delete-stack:
 	./scripts/delete-stack.sh ${prefix}-aem-${stack}-stack cloudformation/apps/${stack}.yaml
 
-create-aem-stack:
-	./scripts/create-aem-stack.sh ${inventory}
-
-delete-aem-stack:
-	./scripts/delete-aem-stack.sh ${inventory}
-
 ansible-create-stack:
 	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags create
 
@@ -38,7 +38,7 @@ ansible-delete-stack:
 
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
-CERT_NAME = "sample-aem-cert"
+CERT_NAME = "aem-stack-certificate"
 
 create-cert:
 	openssl req \
@@ -61,4 +61,4 @@ delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
 
-.PHONY: deps lint create-cert upload-cert delete-cert
+.PHONY: create-aem delete-aem deps lint create-cert upload-cert delete-cert
