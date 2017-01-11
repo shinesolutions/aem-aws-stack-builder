@@ -11,7 +11,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../cloudformation/specific/roles.yaml"
+        template: "../cloudformation/apps/roles.yaml"
         template_parameters:
           PublishDispatcherRoleNameParameter: "{{ roles.publish_dispatcher }}"
           PublishRoleNameParameter: "{{ roles.publish }}"

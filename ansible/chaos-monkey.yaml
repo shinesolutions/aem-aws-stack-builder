@@ -53,7 +53,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../cloudformation/specific/chaos-monkey.yaml"
+        template: "../cloudformation/apps/chaos-monkey.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           ChaosMonkeyImageParameter: "{{ chaos_monkey_ami.results[0].ami_id }}"

@@ -9,17 +9,17 @@ delete-shared-stack:
 
 
 create-shared-roles-stack:
-	./scripts/create-stack.sh aem-roles-stack cloudformation/specific/roles.yaml
+	./scripts/create-stack.sh aem-roles-stack cloudformation/apps/roles.yaml
 
 delete-shared-roles-stack:
-	./scripts/delete-stack.sh aem-roles-stack cloudformation/specific/roles.yaml
+	./scripts/delete-stack.sh aem-roles-stack cloudformation/apps/roles.yaml
 
 
 create-stack:
-	./scripts/create-stack.sh ${prefix}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
+	./scripts/create-stack.sh ${prefix}-aem-${stack}-stack cloudformation/apps/${stack}.yaml
 
 delete-stack:
-	./scripts/delete-stack.sh ${prefix}-aem-${stack}-stack cloudformation/specific/${stack}.yaml
+	./scripts/delete-stack.sh ${prefix}-aem-${stack}-stack cloudformation/apps/${stack}.yaml
 
 create-aem-stack:
 	./scripts/create-aem-stack.sh ${inventory}

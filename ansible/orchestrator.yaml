@@ -53,7 +53,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../cloudformation/specific/orchestrator.yaml"
+        template: "../cloudformation/apps/orchestrator.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           OrchestratorImageParameter: "{{ orchestrator_ami.results[0].ami_id }}"
