@@ -4,6 +4,11 @@ create-aem:
 delete-aem:
 	./scripts/delete-aem-stacks.sh
 
+clean:
+	rm -rf logs
+	rm -f *.cert *.key
+	rm -f ansible/playbooks/apps/*.retry
+
 deps:
 	pip install -r requirements.txt
 
@@ -61,4 +66,4 @@ delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
 
-.PHONY: create-aem delete-aem deps lint create-cert upload-cert delete-cert
+.PHONY: create-aem delete-aem clean deps lint create-cert upload-cert delete-cert
