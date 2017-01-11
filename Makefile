@@ -1,3 +1,6 @@
+deps:
+	pip install -r requirements.txt
+
 lint:
 	./scripts/lint.sh
 
@@ -58,4 +61,4 @@ delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
 
-.PHONY: lint
+.PHONY: deps lint create-cert upload-cert delete-cert
