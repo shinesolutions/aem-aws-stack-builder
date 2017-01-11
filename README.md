@@ -36,6 +36,10 @@ Requirements:
 
 ## Usage
 
+Requirements:
+
+* Set up certificate in [AWS IAM](https://aws.amazon.com/iam), check out `create-cert`, `upload-cert`, and `delete-cert` targets in the Makefile
+
 ### Shared Stack
 
 Create VPC Stack:
