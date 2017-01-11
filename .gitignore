@@ -1,3 +1,5 @@
 .idea/
 aem-aws-stack-builder.iml
 ansible/*.retry
+*.cert
+*.key

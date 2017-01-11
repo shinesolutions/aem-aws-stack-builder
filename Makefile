@@ -33,4 +33,29 @@ ansible-create-stack:
 ansible-delete-stack:
 	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags delete
 
+
+# convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
+CERT_NAME = "sample-aem-cert"
+
+create-cert:
+	openssl req \
+	    -new \
+	    -newkey rsa:4096 \
+	    -days 365 \
+	    -nodes \
+	    -x509 \
+	    -subj "/C=AU/ST=Victoria/L=Melbourne/O=Shine Solutions/CN=$(CERT_NAME)" \
+	    -keyout $(CERT_NAME).key \
+	    -out $(CERT_NAME).cert
+
+upload-cert:
+	aws iam upload-server-certificate \
+	    --server-certificate-name $(CERT_NAME) \
+	    --certificate-body "file://$(CERT_NAME).cert" \
+	    --private-key "file://$(CERT_NAME).key"
+
+delete-cert:
+	aws iam delete-server-certificate \
+	    --server-certificate-name $(CERT_NAME)
+
 .PHONY: lint
