@@ -1,6 +1,5 @@
 stack_prefix: default
 
-#TODO: consider moving into own group_vars file, given the roles could be shared.
 roles:
   stack_name: aem-roles-stack
   publish_dispatcher: AEMStackPublishDispatcherRole
