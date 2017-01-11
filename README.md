@@ -330,15 +330,7 @@ Requirements:
 
 * Install [ShellCheck](https://github.com/koalaman/shellcheck#user-content-installing)
 
-Validate Cloudformation templates:
+Check shell scripts, validate CloudFormation templates, check Ansible playbooks syntax:
 ```
-make validate
+make lint
 ```
-
-Check Shell Scripts
-```
-make shellcheck
-```
-
-
-https://github.com/k1LoW/awspec
