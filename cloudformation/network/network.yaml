@@ -504,52 +504,52 @@ Outputs:
     Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
   PublishDispatcherSubnetA:
-    Value: 
+    Value:
       Ref: PublishDispatcherSubnetA
     Description: The Publish Dispatcher Subnet in Availability Zone A
 
   PublishDispatcherSubnetB:
-    Value: 
+    Value:
       Ref: PublishDispatcherSubnetB
     Description: The Publish Dispatcher Subnet in Availability Zone B
 
   PublishSubnetA:
-    Value: 
+    Value:
       Ref: PublishSubnetA
     Description: The Publish Subnet in Availability Zone A
 
   PublishSubnetB:
-    Value: 
+    Value:
       Ref: PublishSubnetB
     Description: The Publish Subnet in Availability Zone B
 
   AuthorSubnetA:
-    Value: 
+    Value:
       Ref: AuthorSubnetA
     Description: The Author Subnet in Availability Zone A
 
   AuthorSubnetB:
-    Value: 
+    Value:
       Ref: AuthorSubnetB
     Description: The Author Subnet in Availability Zone B
 
   AuthorDispatcherSubnetA:
-    Value: 
+    Value:
       Ref: AuthorDispatcherSubnetA
     Description: The Author Dispatcher Subnet in Availability Zone A
 
   AuthorDispatcherSubnetB:
-    Value: 
+    Value:
       Ref: AuthorDispatcherSubnetB
     Description: The Author Dispatcher Subnet in Availability Zone B
 
   ToolSubnetA:
-    Value: 
+    Value:
       Ref: ToolSubnetA
     Description: The Tool Subnet in Availability Zone A
 
   ToolSubnetB:
-    Value: 
+    Value:
       Ref: ToolSubnetB
     Description: The Tool Subnet in Availability Zone B
 

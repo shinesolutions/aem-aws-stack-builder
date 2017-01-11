@@ -2,10 +2,10 @@ lint:
 	./scripts/lint.sh
 
 create-shared-stack:
-	./scripts/create-stack.sh aem-${stack}-stack cloudformation/shared/${stack}.yaml
+	./scripts/create-stack.sh aem-${stack}-stack cloudformation/network/${stack}.yaml
 
 delete-shared-stack:
-	./scripts/delete-stack.sh aem-${stack}-stack cloudformation/shared/${stack}.yaml
+	./scripts/delete-stack.sh aem-${stack}-stack cloudformation/network/${stack}.yaml
 
 
 create-shared-roles-stack:

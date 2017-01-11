@@ -31,7 +31,7 @@
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
-        template: "../cloudformation/shared/nat-gateway.yaml"
+        template: "../cloudformation/network/nat-gateway.yaml"
         template_parameters:
           Ec2NatGatewayElasticIpAllocationIdParameter: "{{ nat_gateway.elastic_ip_allocation_id }}"
           PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets.0.id }}"
