@@ -2,21 +2,26 @@
 set -o nounset
 set -o errexit
 
-INVENTORY=$1
+create_stack() {
+  ansible-playbook ansible/playbooks/apps/$1.yaml -i "ansible/inventory/hosts" --tags create
+}
 
 # TODO: should log the output for investigation and debugging if required.
 
-ansible-playbook -vvv ansible/security-groups.yaml -i "ansible/$INVENTORY" --tags create &
-ansible-playbook -vvv ansible/messaging.yaml -i "ansible/$INVENTORY" --tags create &
+echo "Creating AEM stack..."
+
+create_stack security-groups &
+create_stack messaging &
 
 wait
 
-ansible-playbook -vvv ansible/publish-dispatcher.yaml -i "ansible/$INVENTORY" --tags create &
-ansible-playbook -vvv ansible/publish.yaml -i "ansible/$INVENTORY" --tags create &
-ansible-playbook -vvv ansible/author.yaml -i "ansible/$INVENTORY" --tags create &
-ansible-playbook -vvv ansible/author-dispatcher.yaml -i "ansible/$INVENTORY" --tags create &
-ansible-playbook -vvv ansible/orchestrator.yaml -i "ansible/$INVENTORY" --tags create &
-ansible-playbook -vvv ansible/chaos-monkey.yaml -i "ansible/$INVENTORY" --tags create &
+create_stack author &
+create_stack publish &
+create_stack publish-dispatcher &
+create_stack author-dispatcher &
+create_stack orchestrator &
+create_stack chaos-monkey &
 
 wait
-echo Finished Creating AEM Stack
+
+echo "Finished creating AEM stack"

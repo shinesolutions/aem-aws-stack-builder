@@ -54,7 +54,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../cloudformation/apps/publish.yaml"
+        template: "../../../cloudformation/apps/publish.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           PublishImageParameter: "{{ publish_ami.results[0].ami_id }}"

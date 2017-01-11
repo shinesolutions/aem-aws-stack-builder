@@ -11,7 +11,7 @@ do
 	aws cloudformation validate-template --template-body "file:///$template"
 done
 
-ANSIBLE_PLAYBOOKS="$PWD/ansible/*.yaml"
+ANSIBLE_PLAYBOOKS="$PWD/ansible/*/*/*.yaml"
 for playbook in $ANSIBLE_PLAYBOOKS
 do
 	echo "Checking Ansible Playbook syntax - $playbook ..."

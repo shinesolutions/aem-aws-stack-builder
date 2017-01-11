@@ -20,7 +20,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../cloudformation/apps/security-groups.yaml"
+        template: "../../../cloudformation/apps/security-groups.yaml"
         template_parameters:
           VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
           ComputeStackPrefixParameter: "{{ stack_prefix }}"

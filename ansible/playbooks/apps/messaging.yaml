@@ -11,7 +11,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../cloudformation/apps/messaging.yaml"
+        template: "../../../cloudformation/apps/messaging.yaml"
         template_parameters:
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"

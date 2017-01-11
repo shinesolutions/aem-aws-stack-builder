@@ -2,21 +2,24 @@
 set -o nounset
 set -o errexit
 
-INVENTORY=$1
+INVENTORY=ansible/inventory/hosts
 
 # TODO: should log the output for investigation and debugging if required.
 
-ansible-playbook -vvv ansible/chaos-monkey.yaml -i "ansible/$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/orchestrator.yaml -i "ansible/$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/author-dispatcher.yaml -i "ansible/$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/author.yaml -i "ansible/$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/publish.yaml -i "ansible/$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/publish-dispatcher.yaml -i "ansible/$INVENTORY" --tags delete &
+echo "Deleting AEM stack..."
+
+ansible-playbook -vvv ansible/playbooks/apps/chaos-monkey.yaml -i "$INVENTORY" --tags delete &
+ansible-playbook -vvv ansible/playbooks/apps/orchestrator.yaml -i "$INVENTORY" --tags delete &
+ansible-playbook -vvv ansible/playbooks/apps/author-dispatcher.yaml -i "$INVENTORY" --tags delete &
+ansible-playbook -vvv ansible/playbooks/apps/author.yaml -i "$INVENTORY" --tags delete &
+ansible-playbook -vvv ansible/playbooks/apps/publish.yaml -i "$INVENTORY" --tags delete &
+ansible-playbook -vvv ansible/playbooks/apps/publish-dispatcher.yaml -i "$INVENTORY" --tags delete &
 
 wait
 
-ansible-playbook -vvv ansible/messaging.yaml -i "ansible/$INVENTORY" --tags delete &
-ansible-playbook -vvv ansible/security-groups.yaml -i "ansible/$INVENTORY" --tags delete &
+ansible-playbook -vvv ansible/playbooks/apps/messaging.yaml -i "$INVENTORY" --tags delete &
+ansible-playbook -vvv ansible/playbooks/apps/security-groups.yaml -i "$INVENTORY" --tags delete &
 
 wait
-echo Finished Deleting AEM Stack
+
+echo "Finished deleting AEM stack"

@@ -61,7 +61,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../cloudformation/apps/author.yaml"
+        template: "../../../cloudformation/apps/author.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
