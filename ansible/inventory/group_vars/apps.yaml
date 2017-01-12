@@ -62,7 +62,7 @@ compute:
   init_script_s3_uri: s3://shinesolutions-aem-stack-builder/init.sh
 
 dispatcher:
-  ami_version: 1.0.0
+  ami_id: ami-429ea621
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
@@ -78,7 +78,7 @@ publish_dispatcher:
 
 publish:
   stack_name: aem-publish-stack
-  ami_version: 1.0.0
+  ami_id: ami-3794ac54
   instance_profile: aem-roles-stack-PublishInstanceProfile-MHV78N8CCU6O
   instance_type: m3.large
   min_size: 2
@@ -87,7 +87,7 @@ publish:
 
 author:
   stack_name: aem-author-stack
-  ami_version: 1.0.0
+  ami_id: ami-059fa766
   instance_profile: aem-roles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
   instance_type: m3.large
   load_balancer:
@@ -108,17 +108,16 @@ author_dispatcher:
   elb_health_check: HTTP:80/system/health?tags=devops
   route53_record_set_name: author-dispatcher.aem-stack.com.
 
-java:
-  ami_version: 1.0.0
-
 orchestrator:
   stack_name: aem-orchestrator-stack
+  ami_id: ami-599fa73a
   instance_profile: aem-roles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
   instance_type: t2.small
   tag_name: AEM Orchestrator
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
+  ami_id: ami-599fa73a
   instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
   instance_type: t2.micro
   tag_name: AEM Chaos Monkey

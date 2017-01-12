@@ -62,19 +62,6 @@
       tags:
       - create
 
-    - name: Get Dispatcher AMI
-      ec2_ami_find:
-        region: "{{ aws.region }}"
-        ami_tags:
-          component: dispatcher
-          version: "{{ dispatcher.ami_version }}"
-        sort: creationDate
-        sort_order: descending
-        sort_end: 1
-      register: dispatcher_ami
-      tags:
-      - create
-
     - name: Create AEM Publish Dispatcher Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ publish_dispatcher.stack_name }}"
@@ -89,7 +76,7 @@
           PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets.0.id }}"
           PublishDispatcherELBSubnetBParameter: "{{ publish_dispatcher_elb_subnet_b.subnets.0.id }}"
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
-          PublishDispatcherImageParameter: "{{ dispatcher_ami.results[0].ami_id }}"
+          PublishDispatcherImageParameter: "{{ dispatcher.ami_id }}"
           PublishDispatcherInstanceTypeParameter: "{{ publish_dispatcher.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           PublishDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"

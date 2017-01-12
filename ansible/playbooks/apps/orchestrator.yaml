@@ -34,19 +34,6 @@
       tags:
       - create
 
-    - name: Get Orchestrator AMI
-      ec2_ami_find:
-        region: "{{ aws.region }}"
-        ami_tags:
-          component: java
-          version: "{{ java.ami_version }}"
-        sort: creationDate
-        sort_order: descending
-        sort_end: 1
-      register: orchestrator_ami
-      tags:
-      - create
-
     - name: Create AEM Orchestrator Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ orchestrator.stack_name }}"
@@ -57,7 +44,7 @@
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
-          OrchestratorImageParameter: "{{ orchestrator_ami.results[0].ami_id }}"
+          OrchestratorImageParameter: "{{ orchestrator.ami_id }}"
           OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           OrchestratorASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"

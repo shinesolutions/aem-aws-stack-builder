@@ -42,19 +42,6 @@
       tags:
       - create
 
-    - name: Get Author AMI
-      ec2_ami_find:
-        region: "{{ aws.region }}"
-        ami_tags:
-          component: author
-          version: "{{ author.ami_version }}"
-        sort: creationDate
-        sort_order: descending
-        sort_end: 1
-      register: author_ami
-      tags:
-      - create
-
     - name: Create AEM Author Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ author.stack_name }}"
@@ -69,7 +56,7 @@
           AuthorSubnetAParameter: "{{ author_subnet_a.subnets.0.id }}"
           AuthorSubnetBParameter: "{{ author_subnet_b.subnets.0.id }}"
           AuthorInstanceProfileParameter: "{{ author.instance_profile }}"
-          AuthorImageParameter: "{{ author_ami.results[0].ami_id }}"
+          AuthorImageParameter: "{{ author.ami_id }}"
           AuthorInstanceTypeParameter: "{{ author.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           AuthorTagNameParameter: "{{ author.tag_name }}"
