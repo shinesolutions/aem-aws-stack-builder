@@ -8,107 +8,86 @@ Parameters:
 
   ComputeStackPrefixParameter:
     Type: String
-    Default: default
     Description: The AEM Stack Compute Resources Stack Prefix
 
   SSLCertificateARNParameter:
     Type: String
-    Default: arn:aws:iam::accountID:server-certificate/aem-stack-certificate
     Description: The ARN for SSL Certificate
 
   PublishDispatcherLoadBalancerHealthCheckTargetParameter:
     Type: String
-    Default: HTTP:80/system/health?tags=devops
     Description: AEM Publish Dispatcher ELB Health Check Target
 
   PublishDispatcherELBSubnetAParameter:
     Type: AWS::EC2::Subnet::Id
-    Default: subnet-8162f4e5
     Description: The Publish Dispatcher ELB Subnet in Availability Zone A
 
   PublishDispatcherELBSubnetBParameter:
     Type: AWS::EC2::Subnet::Id
-    Default: subnet-002f9176
     Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
   PublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
-    Default: ami-429ea621
     Description: The Publish Dispatcher Image Id
 
   PublishDispatcherInstanceTypeParameter:
     Type: String
-    Default: t2.micro
     Description: The Publish Dispatcher Instance Type
 
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
-    Default: aem-default-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
   PublishDispatcherASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
-    Default: ap-southeast-2a, ap-southeast-2b
     Description: The Publish Dispatcher Availability Zone List
 
   PublishDispatcherASGSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>
-    Default: subnet-1f5ed07b, subnet-68d2641e
     Description: The Publish Dispatcher Subnets
 
   PublishDispatcherASGMaxSizeParameter:
     Type: String
-    Default: 2
     Description: The Publish Dispatcher Auto Scaling Group Maximum Size
 
   PublishDispatcherASGMinSizeParameter:
     Type: String
-    Default: 2
     Description: The Publish Dispatcher Auto Scaling Group Minimum Size
 
   PublishDispatcherTagNameParameter:
     Type: String
-    Default: AEM Publish Dispatcher
     Description: The Publish Dispatcher Name Tag
 
   ApplicationVersionParameter:
     Type: String
-    Default: 1.0.0
     Description: The Application Version Number
 
   PublishDispatcherLoadBalancerTagNameParameter:
     Type: String
-    Default: AEM Publish Dispatcher Load Balancer
     Description: The Publish Dispatcher Load Balancer Name Tag
 
   Route53RecordSetHostedZoneNameParameter:
     Type: String
-    Default: aem-stack.com.
     Description: The Hosted Zone Name to be used by the AEM Stack
 
   PublishDispatcherRoute53RecordSetNameParamter:
     Type: String
-    Default: default-publish-dispatcher.aem-stack.com.
     Description: The Publish Dispatcher Route53 CNAME Record Set Name
 
   RolesStackNameParameter:
     Type: String
-    Default: aem-roles-stack
     Description: The AEM Roles Stack Name
 
   SecurityGroupsStackNameParameter:
     Type: String
-    Default: aem-security-groups-stack
     Description: The AEM Security Groups Stack Name
 
   MessagingStackNameParameter:
     Type: String
-    Default: aem-messaging-stack
     Description: The AEM Messaging Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
-    Default: sg-b74580d0
     Description: Inbound Bound from Bastion Host Security Group Id
 
   InitScriptS3UriParameter:

@@ -8,57 +8,46 @@ Parameters:
 
   ComputeStackPrefixParameter:
     Type: String
-    Default: default
     Description: The AEM Stack Compute Resources Stack Prefix
 
   OrchestratorImageParameter:
     Type: AWS::EC2::Image::Id
-    Default: ami-599fa73a
     Description: The Orchestrator Image Id
 
   OrchestratorInstanceTypeParameter:
     Type: String
-    Default: t2.small
     Description: The Orchestrator Instance Type
 
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
-    Default: aem-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
   OrchestratorASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
-    Default: ap-southeast-2a, ap-southeast-2b
     Description: The Orchestrator Availability Zone List
 
   OrchestratorASGSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>
-    Default: subnet-22b53c46, subnet-acec5dda
     Description: The Orchestrator Subnets
 
   OrchestratorTagNameParameter:
     Type: String
-    Default: AEM Orchestrator
     Description: The Orchestrator Name Tag
 
   ApplicationVersionParameter:
     Type: String
-    Default: 1.0.0
     Description: The Application Version Number
 
   RolesStackNameParameter:
     Type: String
-    Default: aem-roles-stack
     Description: The AEM Roles Stack Name
 
   SecurityGroupsStackNameParameter:
     Type: String
-    Default: aem-security-groups-stack
     Description: The AEM Security Groups Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
-    Default: sg-b74580d0
     Description: Inbound Bound from Bastion Host Security Group Id
 
   InitScriptS3UriParameter:

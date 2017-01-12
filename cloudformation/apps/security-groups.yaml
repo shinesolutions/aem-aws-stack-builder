@@ -8,77 +8,62 @@ Parameters:
 
   ComputeStackPrefixParameter:
     Type: String
-    Default: default
     Description: The AEM Stack Compute Resources Stack Prefix
 
   VpcIdParameter:
     Type: AWS::EC2::VPC::Id
-    Default: vpc-a59454c1
     Description: The VPC to create the AEM Stack Security Groups in.
 
   PublishDispatcherELBSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Publish Dispatcher ELB Security Group
     Description: AEM Publish Dispatcher ELB Security Group Name
 
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Type: String
-    Default: 10.0.0.0/24
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
 
   PublishDispatcherSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Publish Dispatcher Security Group
     Description: AEM Publish Dispatcher Security Group Name
 
   PublishSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Publish Security Group
     Description: AEM Publish Security Group Name
 
   AuthorSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Author Security Group
     Description: AEM Author Security Group Name
 
   AuthorELBSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Author ELB Security Group
     Description: AEM Author ELB Security Group Name
 
   AuthorDispatcherSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Author Dispatcher Security Group
     Description: AEM Author Dispatcher Security Group Name
 
   AuthorDispatcherELBSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Author Dispatcher ELB Security Group
     Description: AEM Author Dispatcher ELB Security Group Name
 
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Type: String
-    Default: 10.0.0.0/24
     Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
 
   SecureShellInboundCidrIpParameter:
     Type: String
-    Default: 10.0.0.0/24
     Description: AEM Stack Secure Shell Inbound Cidr Ip
 
   OrchestratorSecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Orchestrator Security Group
     Description: AEM Orchestrator Security Group Name
 
   ChaosMonkeySecurityGroupTagNameParameter:
     Type: String
-    Default: AEM Chaos Monkey Security Group
     Description: AEM Chaos Monkey Security Group Name
 
   PrivateSubnetInternetOutboundCidrIpParameter:
     Type: String
-    Default: 0.0.0.0/0
     Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
 
 Resources:

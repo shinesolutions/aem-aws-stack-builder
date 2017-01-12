@@ -8,57 +8,46 @@ Parameters:
 
   ComputeStackPrefixParameter:
     Type: String
-    Default: default
     Description: The AEM Stack Compute Resources Stack Prefix
 
   ChaosMonkeyImageParameter:
     Type: AWS::EC2::Image::Id
-    Default: ami-599fa73a
     Description: The Chaos Monkey Image Id
 
   ChaosMonkeyInstanceTypeParameter:
     Type: String
-    Default: t2.micro
     Description: The Chaos Monkey Instance Type
 
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
-    Default: aem-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
   ChaosMonkeyASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
-    Default: ap-southeast-2a, ap-southeast-2b
     Description: The Chaos Monkey Availability Zone List
 
   ChaosMonkeyASGSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>
-    Default: subnet-22b53c46, subnet-acec5dda
     Description: The Chaos Monkey Subnets
 
   ChaosMonkeyTagNameParameter:
     Type: String
-    Default: AEM Chaos Monkey
     Description: The Chaos Monkey Name Tag
 
   ApplicationVersionParameter:
     Type: String
-    Default: 1.0.0
     Description: The Application Version Number
 
   RolesStackNameParameter:
     Type: String
-    Default: aem-roles-stack
     Description: The AEM Roles Stack Name
 
   SecurityGroupsStackNameParameter:
     Type: String
-    Default: aem-security-groups-stack
     Description: The AEM Security Groups Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
-    Default: sg-b74580d0
     Description: Inbound Bound from Bastion Host Security Group Id
 
   InitScriptS3UriParameter:

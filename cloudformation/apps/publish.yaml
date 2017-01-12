@@ -8,72 +8,58 @@ Parameters:
 
   ComputeStackPrefixParameter:
     Type: String
-    Default: default
     Description: The AEM Stack Compute Resources Stack Prefix
 
   PublishImageParameter:
     Type: AWS::EC2::Image::Id
-    Default: ami-3794ac54
     Description: The Publish Image Id
 
   PublishInstanceTypeParameter:
     Type: String
-    Default: m3.large
     Description: The Publish Instance Type
 
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
-    Default: aem-default-stack-key-pair
     Description: The Compute Resources Key Pair Name
 
   PublishASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
-    Default: ap-southeast-2a, ap-southeast-2b
     Description: The Publish Availability Zone List
 
   PublishASGSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>
-    Default: subnet-27b53c43, subnet-afec5dd9
     Description: The Publish Subnets
 
   PublishASGMaxSizeParameter:
     Type: String
-    Default: 2
     Description: The Publish Auto Scaling Group Maximum Size
 
   PublishASGMinSizeParameter:
     Type: String
-    Default: 2
     Description: The Publish Auto Scaling Group Minimum Size
 
   PublishTagNameParameter:
     Type: String
-    Default: AEM Publish
     Description: The Publish Name Tag
 
   ApplicationVersionParameter:
     Type: String
-    Default: 1.0.0
     Description: The Application Version Number
 
   RolesStackNameParameter:
     Type: String
-    Default: aem-roles-stack
     Description: The AEM Roles Stack Name
 
   SecurityGroupsStackNameParameter:
     Type: String
-    Default: aem-security-groups-stack
     Description: The AEM Security Groups Stack Name
 
   MessagingStackNameParameter:
     Type: String
-    Default: aem-messaging-stack
     Description: The AEM Messaging Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
-    Default: sg-b74580d0
     Description: Inbound Bound from Bastion Host Security Group Id
 
   InitScriptS3UriParameter:

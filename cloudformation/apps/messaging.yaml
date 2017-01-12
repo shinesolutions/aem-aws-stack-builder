@@ -8,17 +8,14 @@ Parameters:
 
   AEMASGEventQueueNameParameter:
     Type: String
-    Default: default-aem-asg-event-queue
     Description: The AEM Stack Auto Scaling Group Event Quene Name
 
   AEMASGEventTopicDisplayNameParameter:
     Type: String
-    Default: default - AEM ASG Event Topic
     Description: The AEM Stack Auto Scaling Group Event Topic Display Name
 
   AEMASGEventTopicNameParameter:
     Type: String
-    Default: default-aem-asg-event-topic
     Description: The AEM Stack Auto Scaling Group Event Topic Name
 
 
