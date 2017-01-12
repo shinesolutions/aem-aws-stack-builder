@@ -7,8 +7,8 @@ stack_prefix=${STACK_PREFIX:-default}
 
 echo "Start creating $stack_prefix network stacks..."
 
-./scripts/create-stack.sh vpc
-./scripts/create-stack.sh network
-./scripts/create-stack.sh nat-gateway
+./scripts/create-stack.sh network/vpc
+./scripts/create-stack.sh network/network
+./scripts/create-stack.sh network/nat-gateway
 
 echo "Finished creating $stack_prefix network stacks"

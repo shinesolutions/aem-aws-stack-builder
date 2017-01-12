@@ -7,8 +7,8 @@ stack_prefix=${STACK_PREFIX:-default}
 
 echo "Start deleting $stack_prefix network stacks..."
 
-./scripts/delete-stack.sh nat-gateway
-./scripts/delete-stack.sh network
-./scripts/delete-stack.sh vpc
+./scripts/delete-stack.sh network/nat-gateway
+./scripts/delete-stack.sh network/network
+./scripts/delete-stack.sh network/vpc
 
 echo "Finished deleting $stack_prefix network stacks"

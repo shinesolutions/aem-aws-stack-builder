@@ -15,10 +15,10 @@ delete-network:
 # single stack management targets
 
 create-security-groups:
-	./scripts/create-stack.sh security-groups
+	./scripts/create-stack.sh apps/security-groups
 
 delete-security-groups:
-	./scripts/delete-stack.sh security-groups
+	./scripts/delete-stack.sh apps/security-groups
 
 # development targets
 
