@@ -7,7 +7,7 @@
   tasks:
     - name: Create AEM VPC Stack
       cloudformation:
-        stack_name: "{{ ec2_vpc.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ ec2_vpc.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -20,7 +20,7 @@
 
     - name: Delete AEM VPC Stack
       cloudformation:
-        stack_name: "{{ ec2_vpc.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ ec2_vpc.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

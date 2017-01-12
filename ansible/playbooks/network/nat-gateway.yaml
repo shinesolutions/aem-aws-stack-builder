@@ -27,7 +27,7 @@
 
     - name: Create Nat Gateway Stack
       cloudformation:
-        stack_name: "{{ nat_gateway.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ nat_gateway.stack_name }}"
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
@@ -41,7 +41,7 @@
 
     - name: Delete Nat Gateway Stack
       cloudformation:
-        stack_name: "{{ nat_gateway.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ nat_gateway.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

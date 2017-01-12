@@ -16,7 +16,7 @@
 
     - name: Create AEM Network Stack
       cloudformation:
-        stack_name: "{{ network.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ network.stack_name }}"
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
@@ -55,7 +55,7 @@
 
     - name: Delete AEM Network Stack
       cloudformation:
-        stack_name: "{{ network.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ network.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:

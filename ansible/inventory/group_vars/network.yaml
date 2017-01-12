@@ -1,3 +1,4 @@
+stack_prefix: default
 
 ec2_vpc:
   stack_name: aem-vpc-stack

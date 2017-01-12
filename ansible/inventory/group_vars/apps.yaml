@@ -9,7 +9,6 @@ roles:
   orchestrator: AEMStackOrchestratorRole
   chaos_monkey: AEMStackChaosMonkeyRole
 
-
 security_groups:
   stack_name: aem-security-groups-stack
   secure_shell:
@@ -45,7 +44,6 @@ security_groups:
 
   chaos_monkey:
     tag_name: AEM Chaos Monkey Security Group
-
 
 messaging:
   stack_name: aem-messaging-stack
