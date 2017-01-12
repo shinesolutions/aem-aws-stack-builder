@@ -6,6 +6,12 @@ create-aem:
 delete-aem:
 	./scripts/delete-aem-stacks.sh
 
+create-network:
+	./scripts/create-network-stacks.sh
+
+delete-network:
+	./scripts/delete-network-stacks.sh
+
 # single stack management targets
 
 create-security-groups:
@@ -80,4 +86,4 @@ ansible-delete-stack:
 	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags delete
 
 
-.PHONY: create-aem delete-aem clean deps lint create-cert upload-cert delete-cert
+.PHONY: create-aem delete-aem create-network delete-network clean deps lint create-cert upload-cert delete-cert
