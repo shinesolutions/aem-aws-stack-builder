@@ -5,25 +5,20 @@ set -o errexit
 run_id=${run_id:-`date +%Y-%m-%d:%H:%M:%S`}
 stack_prefix=${STACK_PREFIX:-default}
 
-mkdir -p logs
-create_stack() {
-  ANSIBLE_LOG_PATH=logs/$run_id-create-$1.log ansible-playbook ansible/playbooks/apps/$1.yaml -i ansible/inventory/hosts --tags create --extra-vars "stack_prefix=$stack_prefix"
-}
+echo "Start creating $stack_prefix AEM stacks..."
 
-echo "Creating $stack_prefix AEM stacks..."
-
-create_stack security-groups &
-create_stack messaging &
+./scripts/create-stack.sh security-groups &
+./scripts/create-stack.sh messaging &
 
 wait
 
-create_stack author &
-create_stack publish &
-create_stack publish-dispatcher &
-create_stack author-dispatcher &
-create_stack orchestrator &
-create_stack chaos-monkey &
+./scripts/create-stack.sh author &
+./scripts/create-stack.sh publish &
+./scripts/create-stack.sh publish-dispatcher &
+./scripts/create-stack.sh author-dispatcher &
+./scripts/create-stack.sh orchestrator &
+./scripts/create-stack.sh chaos-monkey &
 
 wait
 
-echo "Finished $stack_prefix creating AEM stacks"
+echo "Finished creating $stack_prefix AEM stacks"
