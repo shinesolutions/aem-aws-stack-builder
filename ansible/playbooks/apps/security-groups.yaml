@@ -28,6 +28,7 @@
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupTagNameParameter: "{{ security_groups.publish_dispatcher_elb.tag_name }}"
           PublishDispatcherSecurityGroupTagNameParameter: "{{ security_groups.publish_dispatcher.tag_name }}"
+          PublishSecurityGroupTagNameParameter: "{{ security_groups.publish.tag_name }}"
           AuthorSecurityGroupTagNameParameter: "{{ security_groups.author.tag_name }}"
           AuthorELBSecurityGroupTagNameParameter: "{{ security_groups.author_elb.tag_name }}"
           AuthorDispatcherSecurityGroupTagNameParameter: "{{ security_groups.author_dispatcher.tag_name }}"
