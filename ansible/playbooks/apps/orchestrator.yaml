@@ -56,6 +56,7 @@
         template: "../../../cloudformation/apps/orchestrator.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
           OrchestratorImageParameter: "{{ orchestrator_ami.results[0].ami_id }}"
           OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

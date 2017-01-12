@@ -88,6 +88,7 @@
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
           PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets.0.id }}"
           PublishDispatcherELBSubnetBParameter: "{{ publish_dispatcher_elb_subnet_b.subnets.0.id }}"
+          PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
           PublishDispatcherImageParameter: "{{ dispatcher_ami.results[0].ami_id }}"
           PublishDispatcherInstanceTypeParameter: "{{ publish_dispatcher.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

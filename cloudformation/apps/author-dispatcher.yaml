@@ -26,6 +26,10 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
     Description: The Author Dispatcher Subnet in Availability Zone B
 
+  AuthorDispatcherInstanceProfileParameter:
+    Type: String
+    Description: The Author Dispatcher Instance Profile
+
   AuthorDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Author Dispatcher Image Id
@@ -150,10 +154,8 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${RolesStackNameParameter}-AuthorDispatcherInstanceProfile
+        Ref: AuthorDispatcherInstanceProfileParameter
       ImageId:
         Ref: AuthorDispatcherImageParameter
       InstanceMonitoring: false

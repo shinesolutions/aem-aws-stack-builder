@@ -10,6 +10,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  PublishInstanceProfileParameter:
+    Type: String
+    Description: The Publish Instance Profile
+
   PublishImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Publish Image Id
@@ -83,10 +87,8 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${RolesStackNameParameter}-PublishInstanceProfile
+        Ref: PublishInstanceProfileParameter
       ImageId:
         Ref: PublishImageParameter
       InstanceMonitoring: false

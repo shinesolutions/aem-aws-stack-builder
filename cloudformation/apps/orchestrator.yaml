@@ -10,6 +10,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  OrchestratorInstanceProfileParameter:
+    Type: String
+    Description: The Orchestrator Instance Profile
+
   OrchestratorImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Orchestrator Image Id
@@ -71,10 +75,8 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${RolesStackNameParameter}-OrchestratorInstanceProfile
+        Ref: OrchestratorInstanceProfileParameter
       ImageId:
         Ref: OrchestratorImageParameter
       InstanceMonitoring: false

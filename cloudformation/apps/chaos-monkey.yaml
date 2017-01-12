@@ -10,6 +10,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  ChaosMonkeyInstanceProfileParameter:
+    Type: String
+    Description: The Chaos Monkey Instance Profile
+
   ChaosMonkeyImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Chaos Monkey Image Id
@@ -66,10 +70,8 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${RolesStackNameParameter}-ChaosMonkeyInstanceProfile
+        Ref: ChaosMonkeyInstanceProfileParameter
       ImageId:
         Ref: ChaosMonkeyImageParameter
       InstanceMonitoring: false

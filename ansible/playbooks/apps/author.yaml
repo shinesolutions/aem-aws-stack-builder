@@ -68,6 +68,7 @@
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
           AuthorSubnetAParameter: "{{ author_subnet_a.subnets.0.id }}"
           AuthorSubnetBParameter: "{{ author_subnet_b.subnets.0.id }}"
+          AuthorInstanceProfileParameter: "{{ author.instance_profile }}"
           AuthorImageParameter: "{{ author_ami.results[0].ami_id }}"
           AuthorInstanceTypeParameter: "{{ author.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

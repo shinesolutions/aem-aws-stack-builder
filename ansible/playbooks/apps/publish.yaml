@@ -57,6 +57,7 @@
         template: "../../../cloudformation/apps/publish.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
           PublishImageParameter: "{{ publish_ami.results[0].ami_id }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

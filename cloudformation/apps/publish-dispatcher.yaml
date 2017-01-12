@@ -26,6 +26,10 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
     Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
+  PublishDispatcherInstanceProfileParameter:
+    Type: String
+    Description: The Publish Dispatcher Instance Profile
+
   PublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Publish Dispatcher Image Id
@@ -149,10 +153,8 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${RolesStackNameParameter}-PublishDispatcherInstanceProfile
+        Ref: PublishDispatcherInstanceProfileParameter
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false

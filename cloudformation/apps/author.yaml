@@ -26,6 +26,10 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
     Description: The Author Subnet in Availability Zone B
 
+  AuthorInstanceProfileParameter:
+    Type: String
+    Description: The Author Instance Profile
+
   AuthorImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Author Image Id
@@ -90,9 +94,8 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${RolesStackNameParameter}-AuthorInstanceProfile
+        Ref: AuthorInstanceProfileParameter
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -140,10 +143,8 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 10
             VolumeType: gp2
-# TODO: Can not import IAM Instance Profile as it may already exist/be provided. Need to passed in as config or retrieved using iam.py if possible.
       IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${RolesStackNameParameter}-AuthorInstanceProfile
+        Ref: AuthorInstanceProfileParameter
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
