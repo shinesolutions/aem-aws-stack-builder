@@ -114,7 +114,6 @@ Parameters:
 
   InitScriptS3UriParameter:
     Type: String
-    Default: s3://shinesolutions-aem-stack-builder/init.sh
     Description: Initialization Script executed via the User Data
 
 Resources:
