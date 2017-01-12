@@ -2,7 +2,7 @@
 set -o nounset
 set -o errexit
 
-shellcheck "$PWD"/scripts/*.sh
+#shellcheck "$PWD"/scripts/*.sh
 
 CLOUDFORMATION_TEMPLATES="$PWD/cloudformation/*/*.yaml"
 for template in $CLOUDFORMATION_TEMPLATES
@@ -11,7 +11,7 @@ do
 	aws cloudformation validate-template --template-body "file:///$template"
 done
 
-ANSIBLE_PLAYBOOKS="$PWD/ansible/*/*/*.yaml"
+ANSIBLE_PLAYBOOKS="$PWD/ansible/playbooks/*/*.yaml"
 for playbook in $ANSIBLE_PLAYBOOKS
 do
 	echo "Checking Ansible Playbook syntax - $playbook ..."
