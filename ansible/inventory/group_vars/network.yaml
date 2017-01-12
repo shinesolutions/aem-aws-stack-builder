@@ -69,4 +69,5 @@ network:
 
 #TODO: create a new elastic ip option?
 nat_gateway:
+  stack_name: aem-nat-gateway-stack
   elastic_ip_allocation_id: eipalloc-32711957
