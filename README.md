@@ -42,19 +42,21 @@ Requirements:
 
 To create the network setup (VPC, subnets, etc):
 
-    make create-network
+    STACK_PREFIX=mynetwork make create-network
 
 To delete the network setup:
 
-    make delete-network
+    STACK_PREFIX=mynetwork make delete-network
 
 To create AEM infrastructure:
 
-    make create-aem
+    STACK_PREFIX=myaem make create-aem
 
 To delete AEM infrastructure:
 
-    make delete-aem
+    STACK_PREFIX=myaem make delete-aem
+
+`STACK_PREFIX` environment variable is used to prefix the CloudFormation stack names.
 
 It is also possible to create specific components without the complete set. Check out the Makefile for the complete list of targets.
 
