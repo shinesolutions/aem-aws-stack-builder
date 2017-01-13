@@ -1,3 +1,16 @@
+# development targets
+
+clean:
+	rm -rf logs
+	rm -f *.cert *.key
+	rm -f ansible/playbooks/apps/*.retry
+
+deps:
+	pip install -r requirements.txt
+
+lint:
+	./scripts/lint.sh
+
 # stack group management targets
 
 create-aem:
@@ -12,26 +25,81 @@ create-network:
 delete-network:
 	./scripts/delete-network-stacks.sh
 
-# single stack management targets
+# single network stack management targets
+
+create-vpc:
+	./scripts/create-stack.sh apps/vpc
+
+delete-vpc:
+	./scripts/delete-stack.sh apps/vpc
+
+create-network:
+	./scripts/create-stack.sh apps/network
+
+delete-network:
+	./scripts/delete-stack.sh apps/network
+
+create-nat-gateway:
+	./scripts/create-stack.sh apps/nat-gateway
+
+delete-nat-gateway:
+	./scripts/delete-stack.sh apps/nat-gateway
+
+# single apps stack management targets
+
+create-author-dispatcher:
+	./scripts/create-stack.sh apps/author-dispatcher
+
+delete-author-dispatcher:
+	./scripts/delete-stack.sh apps/author-dispatcher
+
+create-author:
+	./scripts/create-stack.sh apps/author
+
+delete-author:
+	./scripts/delete-stack.sh apps/author
+
+create-chaos-monkey:
+	./scripts/create-stack.sh apps/chaos-monkey
+
+delete-chaos-monkey:
+	./scripts/delete-stack.sh apps/chaos-monkey
+
+create-messaging:
+	./scripts/create-stack.sh apps/messaging
+
+delete-messaging:
+	./scripts/delete-stack.sh apps/messaging
+
+create-orchestrator:
+	./scripts/create-stack.sh apps/orchestrator
+
+delete-orchestrator:
+	./scripts/delete-stack.sh apps/orchestrator
+
+create-publish-dispatcher:
+	./scripts/create-stack.sh apps/publish-dispatcher
+
+delete-publish-dispatcher:
+	./scripts/delete-stack.sh apps/publish-dispatcher
+
+create-publish:
+	./scripts/create-stack.sh apps/publish
+
+delete-publish:
+	./scripts/delete-stack.sh apps/publish
+
+create-roles:
+	./scripts/create-stack.sh apps/roles
+
+delete-roles:
+	./scripts/delete-stack.sh apps/roles
 
 create-security-groups:
 	./scripts/create-stack.sh apps/security-groups
 
 delete-security-groups:
 	./scripts/delete-stack.sh apps/security-groups
-
-# development targets
-
-clean:
-	rm -rf logs
-	rm -f *.cert *.key
-	rm -f ansible/playbooks/apps/*.retry
-
-deps:
-	pip install -r requirements.txt
-
-lint:
-	./scripts/lint.sh
 
 # utility targets
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
@@ -57,33 +125,5 @@ upload-cert:
 delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
-
-# TODO:
-create-shared-stack:
-	./scripts/create-stack.sh aem-${stack}-stack cloudformation/network/${stack}.yaml
-
-delete-shared-stack:
-	./scripts/delete-stack.sh aem-${stack}-stack cloudformation/network/${stack}.yaml
-
-
-create-shared-roles-stack:
-	./scripts/create-stack.sh aem-roles-stack cloudformation/apps/roles.yaml
-
-delete-shared-roles-stack:
-	./scripts/delete-stack.sh aem-roles-stack cloudformation/apps/roles.yaml
-
-
-create-stack:
-	./scripts/create-stack.sh ${prefix}-aem-${stack}-stack cloudformation/apps/${stack}.yaml
-
-delete-stack:
-	./scripts/delete-stack.sh ${prefix}-aem-${stack}-stack cloudformation/apps/${stack}.yaml
-
-ansible-create-stack:
-	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags create
-
-ansible-delete-stack:
-	ansible-playbook -vvv ansible/${stack}.yaml -i ansible/${inventory} --tags delete
-
 
 .PHONY: create-aem delete-aem create-network delete-network clean deps lint create-cert upload-cert delete-cert
