@@ -28,22 +28,22 @@ delete-network:
 # single network stack management targets
 
 create-vpc:
-	./scripts/create-stack.sh apps/vpc
+	./scripts/create-stack.sh network/vpc
 
 delete-vpc:
-	./scripts/delete-stack.sh apps/vpc
+	./scripts/delete-stack.sh network/vpc
 
 create-network:
-	./scripts/create-stack.sh apps/network
+	./scripts/create-stack.sh network/network
 
 delete-network:
-	./scripts/delete-stack.sh apps/network
+	./scripts/delete-stack.sh network/network
 
 create-nat-gateway:
-	./scripts/create-stack.sh apps/nat-gateway
+	./scripts/create-stack.sh network/nat-gateway
 
 delete-nat-gateway:
-	./scripts/delete-stack.sh apps/nat-gateway
+	./scripts/delete-stack.sh network/nat-gateway
 
 # single apps stack management targets
 
