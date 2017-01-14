@@ -2,7 +2,6 @@
 set -o nounset
 set -o errexit
 
-run_id=${run_id:-`date +%Y-%m-%d:%H:%M:%S`}
 stack_prefix=${STACK_PREFIX:-default}
 
 echo "Deleting $stack_prefix AEM stacks..."

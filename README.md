@@ -52,18 +52,43 @@ To create AEM infrastructure:
 
     STACK_PREFIX=myaem make create-aem
 
+It is also possible to specify custom configuration files:
+
+    STACK_PREFIX=myaem CONFIG_PATH=/path/to/myconf make create-aem
+
 To delete AEM infrastructure:
 
     STACK_PREFIX=myaem make delete-aem
 
-`STACK_PREFIX` environment variable is used to prefix the CloudFormation stack names.
+Environment variables:
+
+| Name         | Description                                      |
+|--------------|--------------------------------------------------|
+| STACK_PREFIX | Prefix string added to all stack names           |
+| CONFIG_PATH  | Path to directory containing configuration files |
 
 It is also possible to create specific components without the complete set. Check out the Makefile for the complete list of targets.
 
 ## Configuration
 
-Work in Progress
-
+|--------------------------------------------|------|
+| Name                                       | Description | Default value |
+|--------------------------------------------|------|
+| publish_dispatcher.stack_name              | TODO |
+| publish_dispatcher.instance_profile        | TODO |
+| publish_dispatcher.instance_type           | TODO |
+| publish_dispatcher.min_size                | TODO |
+| publish_dispatcher.max_size                | TODO |
+| publish_dispatcher.load_balancer.tag_name  | TODO |
+| publish_dispatcher.tag_name                | TODO |
+| publish_dispatcher.elb_health_check        | TODO |
+| publish_dispatcher.route53_record_set_name | TODO |
+| chaos_monkey.stack_name                    | TODO |
+| chaos_monkey.ami_id                        | TODO |
+| chaos_monkey.instance_profile              | TODO |
+| chaos_monkey.instance_type                 | TODO |
+| chaos_monkey.tag_name                      | TODO |
+|--------------------------------------------|------|
 
 ## Development
 
