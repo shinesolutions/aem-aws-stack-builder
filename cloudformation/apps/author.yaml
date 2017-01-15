@@ -103,7 +103,8 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+        - Fn::ImportValue:
+            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetAParameter
@@ -122,7 +123,8 @@ Resources:
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          !Sub |
+          Fn::Sub:
+            >
             #!/bin/bash -x
             mkdir /tmp/aem-stack-builder
             aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
@@ -152,7 +154,8 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+        - Fn::ImportValue:
+            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetBParameter
@@ -171,7 +174,8 @@ Resources:
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          !Sub |
+          Fn::Sub:
+            >
             #!/bin/bash -x
             mkdir /tmp/aem-stack-builder
             aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
@@ -208,7 +212,8 @@ Resources:
             Ref: SSLCertificateARNParameter
       Scheme: internal
       SecurityGroups:
-        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
+        - Fn::ImportValue:
+            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
       Subnets:
         - Ref: AuthorSubnetAParameter
         - Ref: AuthorSubnetBParameter

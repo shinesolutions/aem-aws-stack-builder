@@ -80,12 +80,14 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
+        - Fn::ImportValue:
+            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          !Sub |
+          Fn::Sub:
+            >
             #!/bin/bash -x
             mkdir /tmp/aem-stack-builder
             aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
