@@ -1,11 +1,10 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 
-Description:
-  Create the Compute resources for the AEM Author
+Description: Create the Compute resources for the AEM Author
 
 Parameters:
 
+  
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -80,20 +79,21 @@ Parameters:
 
 Resources:
 
+  
   AuthorPrimaryInstance:
     Type: AWS::EC2::Instance
     Properties:
       BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
-        - DeviceName: /dev/sdb
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
+      - DeviceName: /dev/sdb
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter
       ImageId:
@@ -103,48 +103,43 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
-        - Ref: InboundFromBastionHostSecurityGroupParameter
+      - Fn::ImportValue:
+          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetAParameter
       Tags:
-        - Key: Stack Prefix
-          Value:
-            Ref: ComputeStackPrefixParameter
-        - Key: Name
-          Value:
-            Fn::Sub: ${AuthorTagNameParameter} Primary (${ComputeStackPrefixParameter})
-        - Key: Component
-          Value: aem-author-primary
-        - Key: Application Version
-          Value:
-            Ref: ApplicationVersionParameter
+      - Key: Stack Prefix
+        Value:
+          Ref: ComputeStackPrefixParameter
+      - Key: Name
+        Value:
+          Fn::Sub: ${AuthorTagNameParameter} Primary (${ComputeStackPrefixParameter})
+      - Key: Component
+        Value: aem-author-primary
+      - Key: Application Version
+        Value:
+          Ref: ApplicationVersionParameter
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Sub:
-            >
-            #!/bin/bash -x
-            mkdir /tmp/aem-stack-builder
-            aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
-            chmod 755 /tmp/aem-stack-builder/init.sh
-            su - ec2-user -c "/tmp/aem-stack-builder/init.sh"
-
+          Fn::Sub: "#!/bin/bash -x mkdir /tmp/aem-stack-builder aws s3 cp ${InitScriptS3UriParameter}\
+            \ /tmp/aem-stack-builder/init.sh chmod 755 /tmp/aem-stack-builder/init.sh\
+            \ su - ec2-user -c \"/tmp/aem-stack-builder/init.sh\"\n"
   AuthorStandbyInstance:
     Type: AWS::EC2::Instance
     Properties:
       BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
-        - DeviceName: /dev/sdb
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
+      - DeviceName: /dev/sdb
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter
       ImageId:
@@ -154,34 +149,29 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
-        - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
-        - Ref: InboundFromBastionHostSecurityGroupParameter
+      - Fn::ImportValue:
+          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetBParameter
       Tags:
-        - Key: Stack Prefix
-          Value:
-            Ref: ComputeStackPrefixParameter
-        - Key: Name
-          Value:
-            Fn::Sub: ${AuthorTagNameParameter} Standby (${ComputeStackPrefixParameter})
-        - Key: Component
-          Value: aem-author-standby
-        - Key: Application Version
-          Value:
-            Ref: ApplicationVersionParameter
+      - Key: Stack Prefix
+        Value:
+          Ref: ComputeStackPrefixParameter
+      - Key: Name
+        Value:
+          Fn::Sub: ${AuthorTagNameParameter} Standby (${ComputeStackPrefixParameter})
+      - Key: Component
+        Value: aem-author-standby
+      - Key: Application Version
+        Value:
+          Ref: ApplicationVersionParameter
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Sub:
-            >
-            #!/bin/bash -x
-            mkdir /tmp/aem-stack-builder
-            aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
-            chmod 755 /tmp/aem-stack-builder/init.sh
-            su - ec2-user -c "/tmp/aem-stack-builder/init.sh"
-
+          Fn::Sub: "#!/bin/bash -x mkdir /tmp/aem-stack-builder aws s3 cp ${InitScriptS3UriParameter}\
+            \ /tmp/aem-stack-builder/init.sh chmod 755 /tmp/aem-stack-builder/init.sh\
+            \ su - ec2-user -c \"/tmp/aem-stack-builder/init.sh\"\n"
 
   AuthorLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
@@ -193,37 +183,37 @@ Resources:
       HealthCheck:
         Target:
           Ref: AuthorLoadBalancerHealthCheckTargetParameter
-        HealthyThreshold: "2"
-        UnhealthyThreshold: "2"
-        Interval: "30"
-        Timeout: "5"
+        HealthyThreshold: '2'
+        UnhealthyThreshold: '2'
+        Interval: '30'
+        Timeout: '5'
       Instances:
-        - Ref: AuthorPrimaryInstance
-        - Ref: AuthorStandbyInstance
+      - Ref: AuthorPrimaryInstance
+      - Ref: AuthorStandbyInstance
       Listeners:
-        - LoadBalancerPort: "4502"
-          InstancePort: "4502"
-          Protocol: HTTP
-        - LoadBalancerPort: "5433"
-          Protocol: HTTPS
-          InstancePort: "5433"
-          InstanceProtocol: HTTPS
-          SSLCertificateId:
-            Ref: SSLCertificateARNParameter
+      - LoadBalancerPort: '4502'
+        InstancePort: '4502'
+        Protocol: HTTP
+      - LoadBalancerPort: '5433'
+        Protocol: HTTPS
+        InstancePort: '5433'
+        InstanceProtocol: HTTPS
+        SSLCertificateId:
+          Ref: SSLCertificateARNParameter
       Scheme: internal
       SecurityGroups:
-        - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
+      - Fn::ImportValue:
+          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
       Subnets:
-        - Ref: AuthorSubnetAParameter
-        - Ref: AuthorSubnetBParameter
+      - Ref: AuthorSubnetAParameter
+      - Ref: AuthorSubnetBParameter
       Tags:
-        - Key: Name
-          Value:
-            Fn::Sub: ${AuthorLoadBalancerTagNameParameter}
-        - Key: Stack Prefix
-          Value:
-            Ref: ComputeStackPrefixParameter
+      - Key: Name
+        Value:
+          Fn::Sub: ${AuthorLoadBalancerTagNameParameter}
+      - Key: Stack Prefix
+        Value:
+          Ref: ComputeStackPrefixParameter
 
   AuthorRoute53RecordSet:
     Type: AWS::Route53::RecordSet
@@ -233,12 +223,13 @@ Resources:
       Name:
         Ref: AuthorRoute53RecordSetNameParamter
       ResourceRecords:
-        - Fn::GetAtt: [AuthorLoadBalancer, DNSName]
+      - Fn::GetAtt: [AuthorLoadBalancer, DNSName]
       TTL: 300
       Type: CNAME
 
 Outputs:
 
+  
   AuthorPrimaryInstance:
     Value:
       Ref: AuthorPrimaryInstance

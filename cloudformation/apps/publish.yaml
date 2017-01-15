@@ -1,11 +1,10 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 
-Description:
-  Create the Compute resources for the AEM Publish
+Description: Create the Compute resources for the AEM Publish
 
 Parameters:
 
+  
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -72,21 +71,22 @@ Parameters:
 
 Resources:
 
+  
   PublishLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
-        - DeviceName: /dev/sdb
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
+      - DeviceName: /dev/sdb
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
       IamInstanceProfile:
         Ref: PublishInstanceProfileParameter
       ImageId:
@@ -97,20 +97,15 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishSecurityGroup
-        - Ref: InboundFromBastionHostSecurityGroupParameter
+      - Fn::ImportValue:
+          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Sub:
-            >
-            #!/bin/bash -x
-            mkdir /tmp/aem-stack-builder
-            aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
-            chmod 755 /tmp/aem-stack-builder/init.sh
-            su - ec2-user -c "/tmp/aem-stack-builder/init.sh"
-
+          Fn::Sub: "#!/bin/bash -x mkdir /tmp/aem-stack-builder aws s3 cp ${InitScriptS3UriParameter}\
+            \ /tmp/aem-stack-builder/init.sh chmod 755 /tmp/aem-stack-builder/init.sh\
+            \ su - ec2-user -c \"/tmp/aem-stack-builder/init.sh\"\n"
   PublishAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -125,36 +120,37 @@ Resources:
       MinSize:
         Ref: PublishASGMinSizeParameter
       NotificationConfigurations:
-        - NotificationTypes:
-            - autoscaling:EC2_INSTANCE_LAUNCH
-            - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
-            - autoscaling:EC2_INSTANCE_TERMINATE
-            - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
-          TopicARN:
-            Fn::ImportValue:
-              Fn::Sub: ${ComputeStackPrefixParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
+      - NotificationTypes:
+        - autoscaling:EC2_INSTANCE_LAUNCH
+        - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+        - autoscaling:EC2_INSTANCE_TERMINATE
+        - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        TopicARN:
+          Fn::ImportValue:
+            Fn::Sub: ${ComputeStackPrefixParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
-        - Key: Name
-          Value:
-            Fn::Sub: ${PublishTagNameParameter} (${ComputeStackPrefixParameter})
-          PropagateAtLaunch: true
-        - Key: Stack Prefix
-          Value:
-            Ref: ComputeStackPrefixParameter
-          PropagateAtLaunch: true
-        - Key: Component
-          Value: aem-publish
-          PropagateAtLaunch: true
-        - Key: Application Version
-          Value:
-            Ref: ApplicationVersionParameter
-          PropagateAtLaunch: true
+      - Key: Name
+        Value:
+          Fn::Sub: ${PublishTagNameParameter} (${ComputeStackPrefixParameter})
+        PropagateAtLaunch: true
+      - Key: Stack Prefix
+        Value:
+          Ref: ComputeStackPrefixParameter
+        PropagateAtLaunch: true
+      - Key: Component
+        Value: aem-publish
+        PropagateAtLaunch: true
+      - Key: Application Version
+        Value:
+          Ref: ApplicationVersionParameter
+        PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: PublishASGSubnetListParameter
 
 
 Outputs:
 
+  
   PublishLaunchConfiguration:
     Value:
       Ref: PublishLaunchConfiguration

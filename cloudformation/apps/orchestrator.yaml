@@ -1,11 +1,10 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 
-Description:
-  Create the Compute resources for the AEM Orchestrator
+Description: Create the Compute resources for the AEM Orchestrator
 
 Parameters:
 
+  
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -60,21 +59,22 @@ Parameters:
 
 Resources:
 
+  
   OrchestratorLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
-        - DeviceName: /dev/sdb
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
+      - DeviceName: /dev/sdb
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
       IamInstanceProfile:
         Ref: OrchestratorInstanceProfileParameter
       ImageId:
@@ -85,20 +85,15 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
-        - Ref: InboundFromBastionHostSecurityGroupParameter
+      - Fn::ImportValue:
+          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Sub:
-            >
-            #!/bin/bash -x
-            mkdir /tmp/aem-stack-builder
-            aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
-            chmod 755 /tmp/aem-stack-builder/init.sh
-            su - ec2-user -c "/tmp/aem-stack-builder/init.sh"
-
+          Fn::Sub: "#!/bin/bash -x mkdir /tmp/aem-stack-builder aws s3 cp ${InitScriptS3UriParameter}\
+            \ /tmp/aem-stack-builder/init.sh chmod 755 /tmp/aem-stack-builder/init.sh\
+            \ su - ec2-user -c \"/tmp/aem-stack-builder/init.sh\"\n"
 
   OrchestratorAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -112,26 +107,27 @@ Resources:
       MaxSize: 1
       MinSize: 1
       Tags:
-        - Key: Name
-          Value:
-            Fn::Sub: ${OrchestratorTagNameParameter} (${ComputeStackPrefixParameter})
-          PropagateAtLaunch: true
-        - Key: Stack Prefix
-          Value:
-            Ref: ComputeStackPrefixParameter
-          PropagateAtLaunch: true
-        - Key: Component
-          Value: aem-orchestrator
-          PropagateAtLaunch: true
-        - Key: Application Version
-          Value:
-            Ref: ApplicationVersionParameter
-          PropagateAtLaunch: true
+      - Key: Name
+        Value:
+          Fn::Sub: ${OrchestratorTagNameParameter} (${ComputeStackPrefixParameter})
+        PropagateAtLaunch: true
+      - Key: Stack Prefix
+        Value:
+          Ref: ComputeStackPrefixParameter
+        PropagateAtLaunch: true
+      - Key: Component
+        Value: aem-orchestrator
+        PropagateAtLaunch: true
+      - Key: Application Version
+        Value:
+          Ref: ApplicationVersionParameter
+        PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: OrchestratorASGSubnetListParameter
 
 Outputs:
 
+  
   OrchestratorLaunchConfiguration:
     Value:
       Ref: OrchestratorLaunchConfiguration

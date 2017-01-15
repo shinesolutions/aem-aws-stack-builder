@@ -1,11 +1,10 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 
-Description:
-  Create the Compute resources for the AEM Chaos Monkey
+Description: Create the Compute resources for the AEM Chaos Monkey
 
 Parameters:
 
+  
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -60,16 +59,17 @@ Parameters:
 
 Resources:
 
+  
   ChaosMonkeyLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-        - DeviceName: /dev/sda1
-          Ebs:
-            DeleteOnTermination: true
-            VolumeSize: 10
-            VolumeType: gp2
+      - DeviceName: /dev/sda1
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize: 10
+          VolumeType: gp2
       IamInstanceProfile:
         Ref: ChaosMonkeyInstanceProfileParameter
       ImageId:
@@ -80,20 +80,15 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
-        - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
-        - Ref: InboundFromBastionHostSecurityGroupParameter
+      - Fn::ImportValue:
+          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
 # TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Sub:
-            >
-            #!/bin/bash -x
-            mkdir /tmp/aem-stack-builder
-            aws s3 cp ${InitScriptS3UriParameter} /tmp/aem-stack-builder/init.sh
-            chmod 755 /tmp/aem-stack-builder/init.sh
-            su - ec2-user -c "/tmp/aem-stack-builder/init.sh"
-
+          Fn::Sub: "#!/bin/bash -x mkdir /tmp/aem-stack-builder aws s3 cp ${InitScriptS3UriParameter}\
+            \ /tmp/aem-stack-builder/init.sh chmod 755 /tmp/aem-stack-builder/init.sh\
+            \ su - ec2-user -c \"/tmp/aem-stack-builder/init.sh\"\n"
   ChaosMonkeyAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -106,26 +101,27 @@ Resources:
       MaxSize: 1
       MinSize: 1
       Tags:
-        - Key: Name
-          Value:
-            Fn::Sub: ${ChaosMonkeyTagNameParameter} (${ComputeStackPrefixParameter})
-          PropagateAtLaunch: true
-        - Key: Stack Prefix
-          Value:
-            Ref: ComputeStackPrefixParameter
-          PropagateAtLaunch: true
-        - Key: Component
-          Value: aem-chaos-monkey
-          PropagateAtLaunch: true
-        - Key: Application Version
-          Value:
-            Ref: ApplicationVersionParameter
-          PropagateAtLaunch: true
+      - Key: Name
+        Value:
+          Fn::Sub: ${ChaosMonkeyTagNameParameter} (${ComputeStackPrefixParameter})
+        PropagateAtLaunch: true
+      - Key: Stack Prefix
+        Value:
+          Ref: ComputeStackPrefixParameter
+        PropagateAtLaunch: true
+      - Key: Component
+        Value: aem-chaos-monkey
+        PropagateAtLaunch: true
+      - Key: Application Version
+        Value:
+          Ref: ApplicationVersionParameter
+        PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
 
 Outputs:
 
+  
   ChaosMonkeyLaunchConfiguration:
     Value:
       Ref: ChaosMonkeyLaunchConfiguration
