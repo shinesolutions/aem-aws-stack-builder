@@ -53,8 +53,7 @@ apps = {
 }
 
 def read_template(file_name):
-    file = open(file_name, 'r')
-    ruamel.yaml.RoundTripLoader.add_constructor('!Sub', preserve_tag_constructor)
+    file = open(file_name, 'r')    
     template = ruamel.yaml.load(file, Loader=ruamel.yaml.RoundTripLoader, preserve_quotes=False)
     file.close()
     return template
