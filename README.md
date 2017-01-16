@@ -42,23 +42,23 @@ Requirements:
 
 To create the network setup (VPC, subnets, etc):
 
-    STACK_PREFIX=mynetwork make create-network
+    STACK_PREFIX=mynetwork make create-network-stacks
 
 To delete the network setup:
 
-    STACK_PREFIX=mynetwork make delete-network
+    STACK_PREFIX=mynetwork make delete-network-stacks
 
 To create AEM infrastructure:
 
-    STACK_PREFIX=myaem make create-aem
+    STACK_PREFIX=myaem make create-aem-stacks
 
 It is also possible to specify custom configuration files:
 
-    STACK_PREFIX=myaem CONFIG_PATH=/path/to/myconf make create-aem
+    STACK_PREFIX=myaem CONFIG_PATH=/path/to/myconf make create-aem-stacks
 
 To delete AEM infrastructure:
 
-    STACK_PREFIX=myaem make delete-aem
+    STACK_PREFIX=myaem make delete-aem-stacks
 
 Environment variables:
 
