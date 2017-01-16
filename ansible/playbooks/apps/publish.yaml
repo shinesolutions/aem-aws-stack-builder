@@ -45,7 +45,7 @@
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
-          PublishImageParameter: "{{ publish.ami_id }}"
+          PublishImageParameter: "{{ ami_ids.publish }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"

@@ -56,7 +56,7 @@
           AuthorDispatcherSubnetAParameter: "{{ author_dispatcher_subnet_a.subnets.0.id }}"
           AuthorDispatcherSubnetBParameter: "{{ author_dispatcher_subnet_b.subnets.0.id }}"
           AuthorDispatcherInstanceProfileParameter: "{{ author_dispatcher.instance_profile }}"
-          AuthorDispatcherImageParameter: "{{ dispatcher.ami_id }}"
+          AuthorDispatcherImageParameter: "{{ ami_ids.author_dispatcher }}"
           AuthorDispatcherInstanceTypeParameter: "{{ author_dispatcher.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           AuthorDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
