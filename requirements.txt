@@ -1,3 +1,4 @@
 awscli>=1.11.36
 boto3>=1.4.3
 ansible>=2.2.0.0
+ruamel.yaml=>0.13.7
