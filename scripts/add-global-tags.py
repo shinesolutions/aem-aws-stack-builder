@@ -16,14 +16,16 @@ apps = {
   'author_dispatcher': {
     'file_name': './cloudformation/apps/author-dispatcher.yaml',
     'resource_keys': [
-      'AuthorDispatcherAutoScalingGroup'
+      'AuthorDispatcherAutoScalingGroup',
+      'AuthorDispatcherLoadBalancer'
     ]
   },
   'author': {
     'file_name': './cloudformation/apps/author.yaml',
     'resource_keys': [
       'AuthorPrimaryInstance',
-      'AuthorStandbyInstance'
+      'AuthorStandbyInstance',
+      'AuthorLoadBalancer'
     ]
   },
   'chaos_monkey': {
@@ -41,7 +43,8 @@ apps = {
   'publish_dispatcher': {
     'file_name': './cloudformation/apps/publish-dispatcher.yaml',
     'resource_keys': [
-      'PublishDispatcherAutoScalingGroup'
+      'PublishDispatcherAutoScalingGroup',
+      'PublishDispatcherLoadBalancer'
     ]
   },
   'publish': {
@@ -53,7 +56,7 @@ apps = {
 }
 
 def read_template(file_name):
-    file = open(file_name, 'r')    
+    file = open(file_name, 'r')
     template = ruamel.yaml.load(file, Loader=ruamel.yaml.RoundTripLoader, preserve_quotes=False)
     file.close()
     return template
