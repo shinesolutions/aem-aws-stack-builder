@@ -1,0 +1,10 @@
+sudo: required
+language: python
+addons:
+  apt:
+    sources:
+    - debian-sid
+    packages:
+    - shellcheck
+script:
+  - make ci
