@@ -1,5 +1,7 @@
 # development targets
 
+ci: clean deps lint
+
 clean:
 	rm -rf logs
 	rm -f *.cert *.key
@@ -134,4 +136,4 @@ delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
 
-.PHONY: create-aem delete-aem create-network delete-network clean deps lint validate create-cert upload-cert delete-cert
+.PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert
