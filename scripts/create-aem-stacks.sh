@@ -2,21 +2,31 @@
 set -o nounset
 set -o errexit
 
-stack_prefix=${STACK_PREFIX:-default}
+if [ "$#" -le 1 -o "$#" -gt 2 ]; then
+  echo 'Usage: ./create-aem-stacks.sh <stack_prefix> [config_path]'
+  exit 1
+fi
+
+stack_prefix=$1
+config_path=$2
+
+create_stack() {
+  ./scripts/create-stack.sh $1 "$stack_prefix" "$config_path"
+}
 
 echo "Start creating $stack_prefix AEM stacks..."
 
-./scripts/create-stack.sh apps/security-groups &
-./scripts/create-stack.sh apps/messaging &
+create_stack apps/security-groups &
+create_stack apps/messaging &
 
 wait
 
-./scripts/create-stack.sh apps/author &
-./scripts/create-stack.sh apps/publish &
-./scripts/create-stack.sh apps/publish-dispatcher &
-./scripts/create-stack.sh apps/author-dispatcher &
-./scripts/create-stack.sh apps/orchestrator &
-./scripts/create-stack.sh apps/chaos-monkey &
+create_stack apps/author &
+create_stack apps/publish &
+create_stack apps/publish-dispatcher &
+create_stack apps/author-dispatcher &
+create_stack apps/orchestrator &
+create_stack apps/chaos-monkey &
 
 wait
 

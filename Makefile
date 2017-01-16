@@ -24,92 +24,92 @@ validate:
 # stack group management targets
 
 create-aem-stacks:
-	./scripts/create-aem-stacks.sh
+	./scripts/create-aem-stacks.sh "$(stack_prefix)" "$(config_path)"
 
 delete-aem-stacks:
-	./scripts/delete-aem-stacks.sh
+	./scripts/delete-aem-stacks.sh "$(stack_prefix)"
 
 create-network-stacks:
-	./scripts/create-network-stacks.sh
+	./scripts/create-network-stacks.sh "$(stack_prefix)" "$(config_path)"
 
 delete-network-stacks:
-	./scripts/delete-network-stacks.sh
+	./scripts/delete-network-stacks.sh "$(stack_prefix)"
 
 # single network stack management targets
 
 create-vpc:
-	./scripts/create-stack.sh network/vpc
+	./scripts/create-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
 
 delete-vpc:
-	./scripts/delete-stack.sh network/vpc
+	./scripts/delete-stack.sh network/vpc "$(stack_prefix)"
 
 create-network:
-	./scripts/create-stack.sh network/network
+	./scripts/create-stack.sh network/network "$(stack_prefix)" "$(config_path)"
 
 delete-network:
-	./scripts/delete-stack.sh network/network
+	./scripts/delete-stack.sh network/network "$(stack_prefix)"
 
 create-nat-gateway:
-	./scripts/create-stack.sh network/nat-gateway
+	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
 
 delete-nat-gateway:
-	./scripts/delete-stack.sh network/nat-gateway
+	./scripts/delete-stack.sh network/nat-gateway "$(stack_prefix)"
 
 # single apps stack management targets
 
 create-author-dispatcher:
-	./scripts/create-stack.sh apps/author-dispatcher
+	./scripts/create-stack.sh apps/author-dispatcher "$(stack_prefix)" "$(config_path)"
 
 delete-author-dispatcher:
-	./scripts/delete-stack.sh apps/author-dispatcher
+	./scripts/delete-stack.sh apps/author-dispatcher "$(stack_prefix)"
 
 create-author:
-	./scripts/create-stack.sh apps/author
+	./scripts/create-stack.sh apps/author "$(stack_prefix)" "$(config_path)"
 
 delete-author:
-	./scripts/delete-stack.sh apps/author
+	./scripts/delete-stack.sh apps/author "$(stack_prefix)"
 
 create-chaos-monkey:
-	./scripts/create-stack.sh apps/chaos-monkey
+	./scripts/create-stack.sh apps/chaos-monkey "$(stack_prefix)" "$(config_path)"
 
 delete-chaos-monkey:
 	./scripts/delete-stack.sh apps/chaos-monkey
 
 create-messaging:
-	./scripts/create-stack.sh apps/messaging
+	./scripts/create-stack.sh apps/messaging "$(stack_prefix)" "$(config_path)"
 
 delete-messaging:
-	./scripts/delete-stack.sh apps/messaging
+	./scripts/delete-stack.sh apps/messaging "$(stack_prefix)"
 
 create-orchestrator:
-	./scripts/create-stack.sh apps/orchestrator
+	./scripts/create-stack.sh apps/orchestrator "$(stack_prefix)" "$(config_path)"
 
 delete-orchestrator:
-	./scripts/delete-stack.sh apps/orchestrator
+	./scripts/delete-stack.sh apps/orchestrator "$(stack_prefix)"
 
 create-publish-dispatcher:
-	./scripts/create-stack.sh apps/publish-dispatcher
+	./scripts/create-stack.sh apps/publish-dispatcher "$(stack_prefix)" "$(config_path)"
 
 delete-publish-dispatcher:
-	./scripts/delete-stack.sh apps/publish-dispatcher
+	./scripts/delete-stack.sh apps/publish-dispatcher "$(stack_prefix)"
 
 create-publish:
-	./scripts/create-stack.sh apps/publish
+	./scripts/create-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
 
 delete-publish:
-	./scripts/delete-stack.sh apps/publish
+	./scripts/delete-stack.sh apps/publish "$(stack_prefix)"
 
 create-roles:
-	./scripts/create-stack.sh apps/roles
+	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
 
 delete-roles:
-	./scripts/delete-stack.sh apps/roles
+	./scripts/delete-stack.sh apps/roles "$(stack_prefix)"
 
 create-security-groups:
-	./scripts/create-stack.sh apps/security-groups
+	./scripts/create-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
 
 delete-security-groups:
-	./scripts/delete-stack.sh apps/security-groups
+	./scripts/delete-stack.sh apps/security-groups "$(stack_prefix)"
 
 # utility targets
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM

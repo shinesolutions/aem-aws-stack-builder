@@ -2,7 +2,16 @@
 set -o nounset
 set -o errexit
 
-stack_prefix=${STACK_PREFIX:-default}
+if [ "$#" -ne 1 ]; then
+  echo 'Usage: ./delete-network-stacks.sh <stack_prefix>'
+  exit 1
+fi
+
+stack_prefix=$1
+
+delete_stack() {
+  ./scripts/delete-stack.sh $1 "$stack_prefix"
+}
 
 echo "Start deleting $stack_prefix network stacks..."
 

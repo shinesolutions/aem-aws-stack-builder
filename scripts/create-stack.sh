@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 set -o nounset
 set -o errexit
-set -x
 
-config_path=${CONFIG_PATH:-}
-run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
-stack_prefix=${STACK_PREFIX:-default}
+if [ "$#" -le 2 -o "$#" -gt 3 ]; then
+  echo 'Usage: ./create-stack.sh <stack_type> <stack_prefix> [config_path]'
+  exit 1
+fi
+
 stack_type=$1
+stack_prefix=$2
+config_path=$3
+
+run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
 log_path=logs/$run_id-create-$(echo "$stack_type" | sed 's/\//-/g').log
 
 # Construct Ansible extra_vars flags.

@@ -42,30 +42,30 @@ Requirements:
 
 To create the network setup (VPC, subnets, etc):
 
-    STACK_PREFIX=mynetwork make create-network-stacks
+    make create-network-stacks stack_prefix=mynetwork
 
 To delete the network setup:
 
-    STACK_PREFIX=mynetwork make delete-network-stacks
+    make delete-network-stacks stack_prefix=mynetwork
 
 To create AEM infrastructure:
 
-    STACK_PREFIX=myaem make create-aem-stacks
+    make create-aem-stacks stack_prefix=myaem
 
 It is also possible to specify custom configuration files:
 
-    STACK_PREFIX=myaem CONFIG_PATH=/path/to/myconf make create-aem-stacks
+    make create-aem-stacks stack_prefix=myaem config_path=/path/to/myconf
 
 To delete AEM infrastructure:
 
-    STACK_PREFIX=myaem make delete-aem-stacks
+    make delete-aem-stacks stack_prefix=myaem
 
-Environment variables:
+Makefile variables:
 
 | Name         | Description                                      |
 |--------------|--------------------------------------------------|
-| STACK_PREFIX | Prefix string added to all stack names           |
-| CONFIG_PATH  | Path to directory containing configuration files |
+| stack_prefix | Prefix string added to all stack names           |
+| config_path  | Path to directory containing configuration files |
 
 It is also possible to create specific components without the complete set. Check out the Makefile for the complete list of targets.
 

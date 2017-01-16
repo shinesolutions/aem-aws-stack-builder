@@ -2,21 +2,30 @@
 set -o nounset
 set -o errexit
 
-stack_prefix=${STACK_PREFIX:-default}
+if [ "$#" -ne 1 ]; then
+  echo 'Usage: ./delete-aem-stacks.sh <stack_prefix>'
+  exit 1
+fi
+
+stack_prefix=$1
+
+delete_stack() {
+  ./scripts/delete-stack.sh $1 "$stack_prefix"
+}
 
 echo "Deleting $stack_prefix AEM stacks..."
 
-./scripts/delete-stack.sh apps/chaos-monkey &
-./scripts/delete-stack.sh apps/orchestrator &
-./scripts/delete-stack.sh apps/author-dispatcher &
-./scripts/delete-stack.sh apps/publish-dispatcher &
-./scripts/delete-stack.sh apps/publish &
-./scripts/delete-stack.sh apps/author &
+delete_stack apps/chaos-monkey &
+delete_stack apps/orchestrator &
+delete_stack apps/author-dispatcher &
+delete_stack apps/publish-dispatcher &
+delete_stack apps/publish &
+delete_stack apps/author &
 
 wait
 
-./scripts/delete-stack.sh apps/messaging &
-./scripts/delete-stack.sh apps/security-groups &
+delete_stack apps/messaging &
+delete_stack apps/security-groups &
 
 wait
 

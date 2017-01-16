@@ -2,9 +2,15 @@
 set -o nounset
 set -o errexit
 
-run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
-stack_prefix=${STACK_PREFIX:-default}
+if [ "$#" -ne 2 ]; then
+  echo 'Usage: ./delete-stack.sh <stack_type> <stack_prefix>'
+  exit 1
+fi
+
 stack_type=$1
+stack_prefix=$2
+
+run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
 log_path=logs/$run_id-create-$(echo "$stack_type" | sed 's/\//-/g').log
 
 mkdir -p logs
