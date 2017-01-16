@@ -9,7 +9,7 @@ deps:
 	pip install -r requirements.txt
 
 lint:
-	# shellcheck scripts/*.sh
+	shellcheck scripts/*.sh
 	for playbook in ansible/playbooks/*/*.yaml; do \
 		ansible-playbook -vvv $$playbook --syntax-check; \
 	done
@@ -21,16 +21,16 @@ validate:
 
 # stack group management targets
 
-create-aem:
+create-aem-stacks:
 	./scripts/create-aem-stacks.sh
 
-delete-aem:
+delete-aem-stacks:
 	./scripts/delete-aem-stacks.sh
 
-create-network:
+create-network-stacks:
 	./scripts/create-network-stacks.sh
 
-delete-network:
+delete-network-stacks:
 	./scripts/delete-network-stacks.sh
 
 # single network stack management targets
