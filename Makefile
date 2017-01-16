@@ -9,7 +9,15 @@ deps:
 	pip install -r requirements.txt
 
 lint:
-	./scripts/lint.sh
+	# shellcheck scripts/*.sh
+	for playbook in ansible/playbooks/*/*.yaml; do \
+		ansible-playbook -vvv $$playbook --syntax-check; \
+	done
+
+validate:
+	for template in cloudformation/*/*.yaml; do \
+		aws cloudformation validate-template --template-body "file://$$template"; \
+	done
 
 # stack group management targets
 
@@ -126,4 +134,4 @@ delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
 
-.PHONY: create-aem delete-aem create-network delete-network clean deps lint create-cert upload-cert delete-cert
+.PHONY: create-aem delete-aem create-network delete-network clean deps lint validate create-cert upload-cert delete-cert
