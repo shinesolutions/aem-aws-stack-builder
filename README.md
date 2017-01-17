@@ -1,30 +1,9 @@
-# aem-aws-stack-builder
-Cloudformation templates (yaml) for creating an AEM Stack
+# AEM AWS Stack Builder
+A set of [Ansible](https://www.ansible.com/) playbooks for building [Adobe Experience Manager (AEM)](http://www.adobe.com/au/marketing-cloud/enterprise-content-management.html) on [AWS](https://aws.amazon.com/) using CloudFormation stacks.
 
-Network (shared) Stacks:
-* vpc
-* network
+Stack Builder has been designed with a focus on modularity, allowing the separation between network set up (VPC, subnets, etc) and applications set up (AEM Author, Publish, and Dispatcher).
 
-AEM Application (specific) Stacks:
-* roles (can be shared across stacks)
-* security-groups
-* messaging
-* publish-dispatcher
-* publish
-* author
-* author-dispatcher
-* orchestrator
-* chaos-monkey
-
-Prerequisites:
-* ec2 key pair
-* ssl server certificate
-* ami images for publish-dispatcher, publish, author, author-dispatcher, orchestrator, chaos-monkey (with component and version tags)
-* dns hosted zone
-* provisioning init script accessible via s3 bucket
-* inbound_from_bastion_host_security_group
-* nat gateway / internet proxy
-
+TODO: note on Orchestrator and Chaos Monkey.
 
 ## Installation
 
@@ -39,6 +18,15 @@ Requirements:
 
 * Set up SSL certificate in [AWS IAM](https://aws.amazon.com/iam), check out `create-cert`, `upload-cert`, and `delete-cert` targets in the Makefile for examples.
 * Set up [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html). The key pair name should be configured in `ansible/inventory/group_vars/apps.yaml` at `compute.key_pair_name` field.
+
+TODO:
+* ec2 key pair
+* ssl server certificate
+* ami images for publish-dispatcher, publish, author, author-dispatcher, orchestrator, chaos-monkey (with component and version tags)
+* dns hosted zone
+* provisioning init script accessible via s3 bucket
+* inbound_from_bastion_host_security_group
+* nat gateway / internet proxy
 
 To create the network setup (VPC, subnets, etc):
 
