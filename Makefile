@@ -21,18 +21,18 @@ validate:
 		aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 
-# stack group management targets
+# stacks set management targets
 
-create-aem-stacks:
+create-set-aem:
 	./scripts/create-aem-stacks.sh "$(stack_prefix)" "$(config_path)"
 
-delete-aem-stacks:
+delete-set-aem:
 	./scripts/delete-aem-stacks.sh "$(stack_prefix)"
 
-create-network-stacks:
+create-set-network:
 	./scripts/create-network-stacks.sh "$(stack_prefix)" "$(config_path)"
 
-delete-network-stacks:
+delete-set-network:
 	./scripts/delete-network-stacks.sh "$(stack_prefix)"
 
 # single network stack management targets

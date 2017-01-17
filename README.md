@@ -30,23 +30,23 @@ TODO:
 
 To create the network setup (VPC, subnets, etc):
 
-    make create-network-stacks stack_prefix=mynetwork
+    make create-set-network stack_prefix=mynetwork
 
 To delete the network setup:
 
-    make delete-network-stacks stack_prefix=mynetwork
+    make delete-set-network stack_prefix=mynetwork
 
 To create AEM infrastructure:
 
-    make create-aem-stacks stack_prefix=myaem
+    make create-set-aem stack_prefix=myaem
 
 It is also possible to specify custom configuration files:
 
-    make create-aem-stacks stack_prefix=myaem config_path=/path/to/myconf
+    make create-set-aem stack_prefix=myaem config_path=/path/to/myconf
 
 To delete AEM infrastructure:
 
-    make delete-aem-stacks stack_prefix=myaem
+    make delete-set-aem stack_prefix=myaem
 
 Makefile variables:
 
