@@ -10,7 +10,7 @@ fi
 stack_prefix=$1
 
 delete_stack() {
-  ./scripts/delete-stack.sh $1 "$stack_prefix"
+  ./scripts/delete-stack.sh "$1" "$stack_prefix"
 }
 
 echo "Start deleting $stack_prefix network stacks..."

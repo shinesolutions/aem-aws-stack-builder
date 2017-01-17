@@ -2,7 +2,7 @@
 set -o nounset
 set -o errexit
 
-if [ "$#" -le 2 -o "$#" -gt 3 ]; then
+if [ "$#" -le 2 ] || [ "$#" -gt 3 ]; then
   echo 'Usage: ./create-stack.sh <stack_type> <stack_prefix> [config_path]'
   exit 1
 fi
