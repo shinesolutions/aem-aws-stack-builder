@@ -13,55 +13,6 @@
       tags:
       - create
 
-    - name: Get AEM Stack VPC
-      ec2_vpc_net_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ ec2_vpc.tag_name }}"
-      register: aem_stack_vpc
-      tags:
-      - create
-
-    - name: Get Publish Dispatcher ELB Subnet A
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.publish_dispatcher_elb.subnet_a.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: publish_dispatcher_elb_subnet_a
-      tags:
-      - create
-
-    - name: Get Publish Dispatcher ELB Subnet B
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.publish_dispatcher_elb.subnet_b.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: publish_dispatcher_elb_subnet_b
-      tags:
-      - create
-
-    - name: Get Publish Dispatcher Subnet A
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.publish_dispatcher.subnet_a.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: publish_dispatcher_subnet_a
-      tags:
-      - create
-
-    - name: Get Publish Dispatcher Subnet B
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.publish_dispatcher.subnet_b.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: publish_dispatcher_subnet_b
-      tags:
-      - create
-
     - name: Create AEM Publish Dispatcher Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ publish_dispatcher.stack_name }}"
@@ -73,19 +24,19 @@
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
-          PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets.0.id }}"
-          PublishDispatcherELBSubnetBParameter: "{{ publish_dispatcher_elb_subnet_b.subnets.0.id }}"
+          PublishDispatcherELBSubnetAParameter: "{{ aem_vpc.publish_dispatcher_elb_subnet_a_id }}"
+          PublishDispatcherELBSubnetBParameter: "{{ aem_vpc.publish_dispatcher_elb_subnet_b_id }}"
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
           PublishDispatcherImageParameter: "{{ ami_ids.publish_dispatcher }}"
           PublishDispatcherInstanceTypeParameter: "{{ publish_dispatcher.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           PublishDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
-          PublishDispatcherASGSubnetListParameter: "{{ publish_dispatcher_subnet_a.subnets.0.id }}, {{ publish_dispatcher_subnet_b.subnets.0.id }}"
+          PublishDispatcherASGSubnetListParameter: "{{ aem_vpc.publish_dispatcher_subnet_a_id }}, {{ aem_vpc.publish_dispatcher_subnet_b_id}}"
           PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
           PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
-          PublishDispatcherTagNameParameter: "{{ publish_dispatcher.tag_name }}"
+          PublishDispatcherTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
-          PublishDispatcherLoadBalancerTagNameParameter: "{{ publish_dispatcher.load_balancer.tag_name }}"
+          PublishDispatcherLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.load_balancer.tag_name }}"
           Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
           PublishDispatcherRoute53RecordSetNameParamter: "{{ stack_prefix }}-{{ publish_dispatcher.route53_record_set_name }}"
           RolesStackNameParameter: "{{ roles.stack_name }}"

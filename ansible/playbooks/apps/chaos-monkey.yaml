@@ -5,35 +5,6 @@
   connection: local
 
   tasks:
-    - name: Get AEM Stack VPC
-      ec2_vpc_net_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ ec2_vpc.tag_name }}"
-      register: aem_stack_vpc
-      tags:
-      - create
-
-    - name: Get Chaos Monkey Subnet A
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.tool.subnet_a.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: chaos_monkey_subnet_a
-      tags:
-      - create
-
-    - name: Get Chaos Monkey Subnet B
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.tool.subnet_b.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: chaos_monkey_subnet_b
-      tags:
-      - create
-
     - name: Create AEM Chaos Monkey Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ chaos_monkey.stack_name }}"
@@ -48,8 +19,8 @@
           ChaosMonkeyInstanceTypeParameter: "{{ chaos_monkey.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
-          ChaosMonkeyASGSubnetListParameter: "{{ chaos_monkey_subnet_a.subnets.0.id }}, {{ chaos_monkey_subnet_b.subnets.0.id }}"
-          ChaosMonkeyTagNameParameter: "{{ chaos_monkey.tag_name }}"
+          ChaosMonkeyASGSubnetListParameter: "{{ aem_vpc.chaos_monkey_subnet_a_id }}, {{ aem_vpc.chaos_monkey_subnet_b_id }}"
+          ChaosMonkeyTagNameParameter: "{{ stack_prefix }}-{{ chaos_monkey.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           RolesStackNameParameter: "{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"

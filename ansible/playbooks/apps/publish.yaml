@@ -5,36 +5,6 @@
   connection: local
 
   tasks:
-
-    - name: Get AEM Stack VPC
-      ec2_vpc_net_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ ec2_vpc.tag_name }}"
-      register: aem_stack_vpc
-      tags:
-      - create
-
-    - name: Get Publish Subnet A
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.publish.subnet_a.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: publish_subnet_a
-      tags:
-      - create
-
-    - name: Get Publish Subnet B
-      ec2_vpc_subnet_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ network.publish.subnet_b.tag_name }}"
-          vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
-      register: publish_subnet_b
-      tags:
-      - create
-
     - name: Create AEM Publish Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ publish.stack_name }}"
@@ -49,10 +19,10 @@
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
-          PublishASGSubnetListParameter: "{{ publish_subnet_a.subnets.0.id }}, {{ publish_subnet_b.subnets.0.id }}"
+          PublishASGSubnetListParameter: "{{ aem_vpc.publish_subnet_a_id }}, {{ aem_vpc.publish_subnet_b_id }}"
           PublishASGMaxSizeParameter: "{{ publish.max_size }}"
           PublishASGMinSizeParameter: "{{ publish.min_size }}"
-          PublishTagNameParameter: "{{ publish.tag_name }}"
+          PublishTagNameParameter: "{{ stack_prefix }}-{{ publish.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           RolesStackNameParameter: "{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
