@@ -24,11 +24,11 @@ Parameters:
 
 Resources:
 
-# TODO: need to reference or use GetAtt for the EIP AllocationId
   Ec2NatGateway:
     Type: AWS::EC2::NatGateway
     Properties:
-      AllocationId: eipalloc-32711957
+      AllocationId:
+        Ref: Ec2NatGatewayElasticIpAllocationIdParameter
       SubnetId:
         Ref: PublishDispatcherELBSubnetAParameter
 
