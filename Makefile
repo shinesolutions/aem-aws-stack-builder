@@ -27,13 +27,13 @@ create-set-aem:
 	./scripts/create-aem-stacks.sh "$(stack_prefix)" "$(config_path)"
 
 delete-set-aem:
-	./scripts/delete-aem-stacks.sh "$(stack_prefix)"
+	./scripts/delete-aem-stacks.sh "$(stack_prefix)" "$(config_path)"
 
 create-set-network:
 	./scripts/create-network-stacks.sh "$(stack_prefix)" "$(config_path)"
 
 delete-set-network:
-	./scripts/delete-network-stacks.sh "$(stack_prefix)"
+	./scripts/delete-network-stacks.sh "$(stack_prefix)" "$(config_path)"
 
 # single network stack management targets
 
@@ -41,19 +41,19 @@ create-vpc:
 	./scripts/create-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
 
 delete-vpc:
-	./scripts/delete-stack.sh network/vpc "$(stack_prefix)"
+	./scripts/delete-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
 
 create-network:
 	./scripts/create-stack.sh network/network "$(stack_prefix)" "$(config_path)"
 
 delete-network:
-	./scripts/delete-stack.sh network/network "$(stack_prefix)"
+	./scripts/delete-stack.sh network/network "$(stack_prefix)" "$(config_path)"
 
 create-nat-gateway:
 	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
 
 delete-nat-gateway:
-	./scripts/delete-stack.sh network/nat-gateway "$(stack_prefix)"
+	./scripts/delete-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
 
 # single apps stack management targets
 
@@ -61,61 +61,61 @@ create-author-dispatcher:
 	./scripts/create-stack.sh apps/author-dispatcher "$(stack_prefix)" "$(config_path)"
 
 delete-author-dispatcher:
-	./scripts/delete-stack.sh apps/author-dispatcher "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/author-dispatcher "$(stack_prefix)" "$(config_path)"
 
 create-author:
 	./scripts/create-stack.sh apps/author "$(stack_prefix)" "$(config_path)"
 
 delete-author:
-	./scripts/delete-stack.sh apps/author "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/author "$(stack_prefix)" "$(config_path)"
 
 create-chaos-monkey:
 	./scripts/create-stack.sh apps/chaos-monkey "$(stack_prefix)" "$(config_path)"
 
 delete-chaos-monkey:
-	./scripts/delete-stack.sh apps/chaos-monkey
+	./scripts/delete-stack.sh apps/chaos-monkey "$(stack_prefix)" "$(config_path)"
 
 create-messaging:
 	./scripts/create-stack.sh apps/messaging "$(stack_prefix)" "$(config_path)"
 
 delete-messaging:
-	./scripts/delete-stack.sh apps/messaging "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/messaging "$(stack_prefix)" "$(config_path)"
 
 create-orchestrator:
 	./scripts/create-stack.sh apps/orchestrator "$(stack_prefix)" "$(config_path)"
 
 delete-orchestrator:
-	./scripts/delete-stack.sh apps/orchestrator "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/orchestrator "$(stack_prefix)" "$(config_path)"
 
 create-publish-dispatcher:
 	./scripts/create-stack.sh apps/publish-dispatcher "$(stack_prefix)" "$(config_path)"
 
 delete-publish-dispatcher:
-	./scripts/delete-stack.sh apps/publish-dispatcher "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/publish-dispatcher "$(stack_prefix)" "$(config_path)"
 
 create-publish:
 	./scripts/create-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
 
 delete-publish:
-	./scripts/delete-stack.sh apps/publish "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
 
 create-roles:
 	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
 
 delete-roles:
-	./scripts/delete-stack.sh apps/roles "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
 
 create-security-groups:
 	./scripts/create-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
 
 delete-security-groups:
-	./scripts/delete-stack.sh apps/security-groups "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
 
 create-dns-records:
 	./scripts/create-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
 
 delete-dns-records:
-	./scripts/delete-stack.sh apps/dns-records "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
 
 # utility targets
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM

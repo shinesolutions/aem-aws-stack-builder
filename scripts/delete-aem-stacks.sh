@@ -2,15 +2,16 @@
 set -o nounset
 set -o errexit
 
-if [ "$#" -ne 1 ]; then
-  echo 'Usage: ./delete-aem-stacks.sh <stack_prefix>'
+if [ "$#" -le 1 ] || [ "$#" -gt 2 ]; then
+  echo 'Usage: ./delete-aem-stacks.sh <stack_prefix> [config_path]'
   exit 1
 fi
 
 stack_prefix=$1
+config_path=$2
 
 delete_stack() {
-  ./scripts/delete-stack.sh "$1" "$stack_prefix"
+  ./scripts/delete-stack.sh "$1" "$stack_prefix" "$config_path"
 }
 
 echo "Deleting $stack_prefix AEM stacks..."

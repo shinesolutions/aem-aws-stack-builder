@@ -9,9 +9,20 @@ fi
 
 stack_type=$1
 stack_prefix=$2
+config_path=$3
 
 run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
 log_path=logs/$run_id-create-$(echo "$stack_type" | sed 's/\//-/g').log
+
+# Construct Ansible extra_vars flags.
+# If CONFIG_PATH is set, all files under the directory will be added.
+extra_vars=(--extra-vars "stack_prefix=$stack_prefix")
+if [ ! -z "$config_path" ]; then
+  for config_file in "$config_path"/*
+  do
+    extra_vars+=(--extra-vars "@$config_file")
+  done
+fi
 
 mkdir -p logs
 echo "Start deleting $stack_prefix $stack_type stack"
@@ -19,5 +30,5 @@ ANSIBLE_LOG_PATH=$log_path \
   ansible-playbook ansible/playbooks/"$stack_type".yaml \
   -i ansible/inventory/hosts \
   --tags delete \
-  --extra-vars "stack_prefix=$stack_prefix"
+  "${extra_vars[@]}"
 echo "Finished deleting $stack_prefix $stack_type stack"
