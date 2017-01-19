@@ -4,7 +4,6 @@ Description: Create the Compute resources for the AEM Author
 
 Parameters:
 
-  
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -53,14 +52,6 @@ Parameters:
     Type: String
     Description: The Author Load Balancer Name Tag
 
-  Route53RecordSetHostedZoneNameParameter:
-    Type: String
-    Description: The Hosted Zone Name to be used by the AEM Stack
-
-  AuthorRoute53RecordSetNameParamter:
-    Type: String
-    Description: The Author Route53 CNAME Record Set Name
-
   RolesStackNameParameter:
     Type: String
     Description: The AEM Roles Stack Name
@@ -79,7 +70,6 @@ Parameters:
 
 Resources:
 
-  
   AuthorPrimaryInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -215,21 +205,8 @@ Resources:
         Value:
           Ref: ComputeStackPrefixParameter
 
-  AuthorRoute53RecordSet:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneName:
-        Ref: Route53RecordSetHostedZoneNameParameter
-      Name:
-        Ref: AuthorRoute53RecordSetNameParamter
-      ResourceRecords:
-      - Fn::GetAtt: [AuthorLoadBalancer, DNSName]
-      TTL: 300
-      Type: CNAME
-
 Outputs:
 
-  
   AuthorPrimaryInstance:
     Value:
       Ref: AuthorPrimaryInstance
@@ -245,7 +222,10 @@ Outputs:
       Ref: AuthorLoadBalancer
     Description: The Author Load Balancer
 
-  AuthorRoute53RecordSet:
+  AuthorLoadBalancerDNSName:
     Value:
-      Ref: AuthorRoute53RecordSet
-    Description: The Author Route53 CNAME Record
+      Fn::GetAtt: [AuthorLoadBalancer, DNSName]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
+    Description: The Author Load Balancer

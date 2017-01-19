@@ -4,7 +4,6 @@ Description: Create the Compute resources for the AEM Author Dispatcher
 
 Parameters:
 
-  
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -70,14 +69,6 @@ Parameters:
     Type: String
     Description: The Author Dispatcher Load Balancer Name Tag
 
-  Route53RecordSetHostedZoneNameParameter:
-    Type: String
-    Description: The Hosted Zone Name to be used by the AEM Stack
-
-  AuthorDispatcherRoute53RecordSetNameParamter:
-    Type: String
-    Description: The Author Dispatcher Route53 CNAME Record Set Name
-
   RolesStackNameParameter:
     Type: String
     Description: The AEM Roles Stack Name
@@ -100,7 +91,6 @@ Parameters:
 
 Resources:
 
-  
   AuthorDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
@@ -217,24 +207,19 @@ Resources:
       VPCZoneIdentifier:
         Ref: AuthorDispatcherASGSubnetListParameter
 
-  AuthorDispatcherRoute53RecordSet:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneName:
-        Ref: Route53RecordSetHostedZoneNameParameter
-      Name:
-        Ref: AuthorDispatcherRoute53RecordSetNameParamter
-      ResourceRecords:
-      - Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
-      TTL: 300
-      Type: CNAME
-
 Outputs:
 
-  
   AuthorDispatcherLoadBalancer:
     Value:
       Ref: AuthorDispatcherLoadBalancer
+    Description: The Author Dispatcher Load Balancer
+
+  AuthorDispatcherLoadBalancerDNSName:
+    Value:
+      Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
     Description: The Author Dispatcher Load Balancer
 
   AuthorDispatcherLaunchConfiguration:
@@ -246,8 +231,3 @@ Outputs:
     Value:
       Ref: AuthorDispatcherAutoScalingGroup
     Description: The Author Dispatcher Auto Scaling Group
-
-  AuthorDispatcherRoute53RecordSet:
-    Value:
-      Ref: AuthorDispatcherRoute53RecordSet
-    Description: The Author Dispatcher Route53 CNAME Record

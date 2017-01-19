@@ -37,8 +37,6 @@
           PublishDispatcherTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           PublishDispatcherLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.load_balancer.tag_name }}"
-          Route53RecordSetHostedZoneNameParameter: "{{ route53.hosted_zone_name }}"
-          PublishDispatcherRoute53RecordSetNameParamter: "{{ stack_prefix }}-{{ publish_dispatcher.route53_record_set_name }}"
           RolesStackNameParameter: "{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
           MessagingStackNameParameter: "{{ messaging.stack_name }}"
