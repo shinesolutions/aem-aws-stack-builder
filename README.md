@@ -38,6 +38,8 @@ To delete the network setup:
 
     make delete-set-network stack_prefix=mynetwork
 
+Before creating AEM infrastructure, make sure the network resources Id's are captured in app.yaml file. This is to decouple the network stacks and AEM stacks, as we may not always have control over the underlying network infrastructure.
+
 To create AEM infrastructure:
 
     make create-set-aem stack_prefix=myaem

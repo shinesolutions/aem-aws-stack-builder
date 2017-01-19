@@ -1,4 +1,21 @@
-stack_prefix: default
+---
+
+aem_vpc:
+  id: vpc-2fc3014b
+  author_dispatcher_subnet_a_id: subnet-8562f4e1
+  author_dispatcher_subnet_b_id: subnet-0e2f9178
+  author_subnet_a_id: subnet-8462f4e0
+  author_subnet_b_id: subnet-022f9174
+  chaos_monkey_subnet_a_id: subnet-8662f4e2
+  chaos_monkey_subnet_b_id: subnet-052f9173
+  orchestrator_subnet_a_id: subnet-8662f4e2
+  orchestrator_subnet_b_id: subnet-052f9173
+  publish_dispatcher_elb_subnet_a_id: subnet-8162f4e5
+  publish_dispatcher_elb_subnet_b_id: subnet-002f9176
+  publish_dispatcher_subnet_a_id: subnet-8762f4e3
+  publish_dispatcher_subnet_b_id: subnet-012f9177
+  publish_subnet_a_id: subnet-8062f4e4
+  publish_subnet_b_id: subnet-032f9175
 
 roles:
   stack_name: aem-roles-stack
