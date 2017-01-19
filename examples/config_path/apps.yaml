@@ -76,9 +76,6 @@ messaging:
   asg_event_sns_topic_name: aem-asg-event-topic
   asg_event_sns_topic_display_name: AEM ASG Event Topic
 
-route53:
-  hosted_zone_name: aem-stack.com.
-
 compute:
   key_pair_name: nletts-sandpit
   application_version: 1.0.0
@@ -96,7 +93,6 @@ publish_dispatcher:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
   elb_health_check: HTTP:80/system/health?tags=devops
-  route53_record_set_name: publish-dispatcher.aem-stack.com.
 
 publish:
   stack_name: aem-publish-stack
@@ -114,7 +110,6 @@ author:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
   elb_health_check: HTTP:4502/system/health?tags=devops
-  route53_record_set_name: author.aem-stack.com.
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
@@ -126,7 +121,6 @@ author_dispatcher:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTP:80/system/health?tags=devops
-  route53_record_set_name: author-dispatcher.aem-stack.com.
 
 orchestrator:
   stack_name: aem-orchestrator-stack
@@ -139,3 +133,13 @@ chaos_monkey:
   instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
   instance_type: t2.micro
   tag_name: AEM Chaos Monkey
+
+  dns_records:
+    stack_name: aem-dns-records
+    route53_hosted_zone_name: aem-stack.com.
+    author:
+      record_set_name: author
+    author_dispatcher:
+      record_set_name: author-dispatcher
+    publish_dispatcher:
+      record_set_name: publish-dispatcher

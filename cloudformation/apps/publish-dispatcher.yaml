@@ -4,7 +4,6 @@ Description: Create the Compute resources for the AEM Publish Dispatcher
 
 Parameters:
 
-  
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -69,14 +68,6 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Load Balancer Name Tag
 
-  Route53RecordSetHostedZoneNameParameter:
-    Type: String
-    Description: The Hosted Zone Name to be used by the AEM Stack
-
-  PublishDispatcherRoute53RecordSetNameParamter:
-    Type: String
-    Description: The Publish Dispatcher Route53 CNAME Record Set Name
-
   RolesStackNameParameter:
     Type: String
     Description: The AEM Roles Stack Name
@@ -99,7 +90,7 @@ Parameters:
 
 Resources:
 
-  
+
   PublishDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
@@ -216,25 +207,20 @@ Resources:
       VPCZoneIdentifier:
         Ref: PublishDispatcherASGSubnetListParameter
 
-  PublishDispatcherRoute53RecordSet:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneName:
-        Ref: Route53RecordSetHostedZoneNameParameter
-      Name:
-        Ref: PublishDispatcherRoute53RecordSetNameParamter
-      ResourceRecords:
-      - Fn::GetAtt: [PublishDispatcherLoadBalancer, DNSName]
-      TTL: 300
-      Type: CNAME
-
 Outputs:
 
-  
   PublishDispatcherLoadBalancer:
     Value:
       Ref: PublishDispatcherLoadBalancer
     Description: The Publish Dispatcher Load Balancer
+
+  PublishDispatcherLoadBalancerDNSName:
+    Value:
+      Fn::GetAtt: [PublishDispatcherLoadBalancer, DNSName]
+    Export:
+      Name:
+        Fn::Sub : ${AWS::StackName}-LoadBalancerDNSName
+    Description: The Publish Dispatcher Load Balancer DNSName
 
   PublishDispatcherLaunchConfiguration:
     Value:
@@ -245,8 +231,3 @@ Outputs:
     Value:
       Ref: PublishDispatcherAutoScalingGroup
     Description: The Publish Dispatcher Auto Scaling Group
-
-  PublishDispatcherRoute53RecordSet:
-    Value:
-      Ref: PublishDispatcherRoute53RecordSet
-    Description: The Publish Dispatcher Route53 CNAME Record

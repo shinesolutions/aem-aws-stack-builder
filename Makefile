@@ -111,6 +111,12 @@ create-security-groups:
 delete-security-groups:
 	./scripts/delete-stack.sh apps/security-groups "$(stack_prefix)"
 
+create-dns-records:
+	./scripts/create-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
+
+delete-dns-records:
+	./scripts/delete-stack.sh apps/dns-records "$(stack_prefix)"
+
 # utility targets
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME = "aem-stack-certificate"
