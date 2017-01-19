@@ -73,7 +73,10 @@ nat_gateway:
   stack_name: aem-nat-gateway-stack
   elastic_ip_allocation_id: eipalloc-c0fc03a5
 
+#TODO: Optional bastion stack parameters.
 bastion:
+  stack_name: aem-bastion
   ami: ami-28cff44b
-  security_groups:
-  key_pair_name:
+  security_groups: sg-ba61aadd
+  key_pair_name: ea-andy
+  subnet: subnet-fb831e9f

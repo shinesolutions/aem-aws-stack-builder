@@ -1,0 +1,43 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Create a Bastion Host inside AEM VPC
+
+Parameters:
+  BastionImageId:
+    Type: AWS::EC2::Image::Id
+    Description: AMI Id used for Bastion Host
+
+  BastionKeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Key Pair Name for the Bastion Host
+
+  BastionSubnet:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet Ids the Bastion Host Will be Launched into
+
+  BastionSecruityGroups:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: The Set of Security Groups Attached to the Bastion Host
+
+Resources:
+  Bastion:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId:
+        Ref: BastionImageId
+      InstanceType: t2.micro
+      KeyName:
+        Ref: BastionKeyPairName
+      NetworkInterfaces:
+        -
+          AssociatePublicIpAddress: true
+          DeviceIndex: "0"
+          GroupSet:
+            Ref: BastionSecruityGroups
+          SubnetId:
+            Ref: BastionSubnet
+      Tags:
+        -
+          Key: Name
+          Value: bastion
