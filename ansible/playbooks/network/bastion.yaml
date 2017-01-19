@@ -1,0 +1,29 @@
+---
+- name: AEM Bastion Host CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Create Bastion Host
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ bastion.stack_name }}"
+        state: present
+        region: "{{ aws.region }}"
+        disable_rollback: true
+        template: "../../../cloudformation/network/bastion.yaml"
+        template_parameters:
+          BastionImageId: "{{ bastion.ami }}"
+          BastionKeyPairName: "{{ bastion.key_pair_name}}"
+          BastionSubnet: "{{bastion.subnet}}"
+          BastionSecruityGroups: "{{bastion.security_groups}}"
+      tags:
+      - create
+
+    - name: Delete Bastion Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ bastion.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+      - delete

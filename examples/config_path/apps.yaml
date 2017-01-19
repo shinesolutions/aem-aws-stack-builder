@@ -1,21 +1,21 @@
 ---
 
 aem_vpc:
-  id: vpc-2fc3014b
-  author_dispatcher_subnet_a_id: subnet-8562f4e1
-  author_dispatcher_subnet_b_id: subnet-0e2f9178
-  author_subnet_a_id: subnet-8462f4e0
-  author_subnet_b_id: subnet-022f9174
-  chaos_monkey_subnet_a_id: subnet-8662f4e2
-  chaos_monkey_subnet_b_id: subnet-052f9173
-  orchestrator_subnet_a_id: subnet-8662f4e2
-  orchestrator_subnet_b_id: subnet-052f9173
-  publish_dispatcher_elb_subnet_a_id: subnet-8162f4e5
-  publish_dispatcher_elb_subnet_b_id: subnet-002f9176
-  publish_dispatcher_subnet_a_id: subnet-8762f4e3
-  publish_dispatcher_subnet_b_id: subnet-012f9177
-  publish_subnet_a_id: subnet-8062f4e4
-  publish_subnet_b_id: subnet-032f9175
+  id: vpc-b12bfdd5
+  author_dispatcher_subnet_a_id: subnet-c0831ea4
+  author_dispatcher_subnet_b_id: subnet-54058022
+  author_subnet_a_id: subnet-f9831e9d
+  author_subnet_b_id: subnet-6805801e
+  chaos_monkey_subnet_a_id: subnet-c5831ea1
+  chaos_monkey_subnet_b_id: subnet-6b05801d
+  orchestrator_subnet_a_id: subnet-c5831ea1
+  orchestrator_subnet_b_id: subnet-6b05801d
+  publish_dispatcher_elb_subnet_a_id: subnet-fb831e9f
+  publish_dispatcher_elb_subnet_b_id: subnet-57058021
+  publish_dispatcher_subnet_a_id: subnet-c6831ea2
+  publish_dispatcher_subnet_b_id: subnet-6905801f
+  publish_subnet_a_id: subnet-fa831e9e
+  publish_subnet_b_id: subnet-56058020
 
 roles:
   stack_name: aem-roles-stack
@@ -37,13 +37,13 @@ ami_ids:
 security_groups:
   stack_name: aem-security-groups-stack
   secure_shell:
-    inbound_cidr_ip: 10.0.10.0/25
+    inbound_cidr_ip: 10.0.0.0/25
 
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
 
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
-    inbound_cidr_ip: 10.0.10.0/25
+    inbound_cidr_ip: 10.0.0.0/25
 
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
@@ -62,7 +62,7 @@ security_groups:
 
   author_dispatcher_elb:
     tag_name: AEM Author Dispatcher ELB Security Group
-    inbound_cidr_ip: 10.0.10.0/25
+    inbound_cidr_ip: 10.0.0.0/25
 
   orchestrator:
     tag_name: AEM Orchestrator Security Group
@@ -80,10 +80,10 @@ route53:
   hosted_zone_name: aem-stack.com.
 
 compute:
-  key_pair_name: aem-stack-key-pair
+  key_pair_name: nletts-sandpit
   application_version: 1.0.0
   certificate_name: aem-stack-certificate
-  inbound_from_bastion_host_security_group: sg-a5ac6cc2
+  inbound_from_bastion_host_security_group: sg-b260abd5
   init_script_s3_uri: s3://aem-stack-builder/init.sh
 
 publish_dispatcher:

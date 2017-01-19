@@ -10,7 +10,7 @@
       ec2_vpc_net_facts:
         region: "{{ aws.region }}"
         filters:
-          "tag:Name": "{{ ec2_vpc.tag_name }}"
+          "tag:Name": "{{ stack_prefix }}-{{ ec2_vpc.tag_name }}"
       register: aem_stack_vpc
       tags:
       - create
@@ -19,7 +19,7 @@
       ec2_vpc_subnet_facts:
         region: "{{ aws.region }}"
         filters:
-          "tag:Name": "{{ network.publish_dispatcher_elb.subnet_a.tag_name }}"
+          "tag:Name": "{{ stack_prefix }}-{{ network.publish_dispatcher_elb.subnet_a.tag_name }}"
           vpc-id: "{{ aem_stack_vpc.vpcs.0.id }}"
       register: publish_dispatcher_elb_subnet_a
       tags:
@@ -34,8 +34,8 @@
         template: "../../../cloudformation/network/nat-gateway.yaml"
         template_parameters:
           Ec2NatGatewayElasticIpAllocationIdParameter: "{{ nat_gateway.elastic_ip_allocation_id }}"
-          PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets.0.id }}"
-          NetworkStackNameParameter: "{{ network.stack_name }}"
+          PublishDispatcherELBSubnetAParameter: "{{ publish_dispatcher_elb_subnet_a.subnets[0].id }}"
+          NetworkStackNameParameter: "{{ stack_prefix }}-{{ network.stack_name }}"
       tags:
       - create
 

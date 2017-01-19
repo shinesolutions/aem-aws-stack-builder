@@ -14,7 +14,7 @@
         template: "../../../cloudformation/network/vpc.yaml"
         template_parameters:
           Ec2VpcCidrBlockParameter: "{{ ec2_vpc.cidr_block }}"
-          Ec2VpcTagNameParameter: "{{ ec2_vpc.tag_name }}"
+          Ec2VpcTagNameParameter: "{{ stack_prefix }}-{{ ec2_vpc.tag_name }}"
       tags:
       - create
 
