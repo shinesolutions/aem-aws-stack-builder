@@ -2,8 +2,8 @@
 set -o nounset
 set -o errexit
 
-if [ "$#" -ne 2 ]; then
-  echo 'Usage: ./delete-stack.sh <stack_type> <stack_prefix>'
+if [ "$#" -le 2 ] || [ "$#" -gt 3 ]; then
+  echo 'Usage: ./delete-stack.sh <stack_type> <stack_prefix> [config_path]'
   exit 1
 fi
 
