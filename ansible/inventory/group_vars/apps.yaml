@@ -140,6 +140,6 @@ dns_records:
   author:
     record_set_name: author
   author_dispatcher:
-    record_set_name: author_dispatcher
+    record_set_name: author-dispatcher
   publish_dispatcher:
-    record_set_name: publish_dispatcher
+    record_set_name: publish-dispatcher
