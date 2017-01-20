@@ -10,24 +10,20 @@ fi
 stack_prefix=$1
 config_path=$2
 
-delete_stack() {
+delete_single_stack() {
   ./scripts/delete-stack.sh "$1" "$stack_prefix" "$config_path"
 }
 
+delete_multi_stacks() {
+  for stack in $1
+  do
+    delete_single_stack "$stack" &
+  done
+  wait
+}
+
 echo "Deleting $stack_prefix AEM stacks..."
-
-delete_stack apps/chaos-monkey &
-delete_stack apps/orchestrator &
-delete_stack apps/author-dispatcher &
-delete_stack apps/publish-dispatcher &
-delete_stack apps/publish &
-delete_stack apps/author &
-
-wait
-
-delete_stack apps/messaging &
-delete_stack apps/security-groups &
-
-wait
-
+delete_multi_stacks "apps/dns-records"
+delete_multi_stacks "apps/chaos-monkey apps/orchestrator apps/author-dispatcher apps/publish-dispatcher apps/publish apps/author"
+delete_multi_stacks "apps/messaging apps/security-groups"
 echo "Finished deleting $stack_prefix AEM stacks"
