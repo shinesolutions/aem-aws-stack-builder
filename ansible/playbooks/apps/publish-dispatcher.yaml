@@ -24,6 +24,7 @@
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
+          PublishDispatcherLoadBalancerSchemeParameter: "{{ publish_dispatcher.elb_scheme }}"
           PublishDispatcherELBSubnetAParameter: "{{ aem_vpc.publish_dispatcher_elb_subnet_a_id }}"
           PublishDispatcherELBSubnetBParameter: "{{ aem_vpc.publish_dispatcher_elb_subnet_b_id }}"
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"

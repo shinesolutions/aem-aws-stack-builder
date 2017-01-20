@@ -93,6 +93,7 @@ publish_dispatcher:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
   elb_health_check: HTTP:80/system/health?tags=devops
+  elb_scheme: internet-facing
 
 publish:
   stack_name: aem-publish-stack

@@ -16,6 +16,10 @@ Parameters:
     Type: String
     Description: AEM Publish Dispatcher ELB Health Check Target
 
+  PublishDispatcherLoadBalancerSchemeParameter:
+    Type: String
+    Description: AEM Publish Dispatcher ELB Scheme
+
   PublishDispatcherELBSubnetAParameter:
     Type: AWS::EC2::Subnet::Id
     Description: The Publish Dispatcher ELB Subnet in Availability Zone A
@@ -115,7 +119,8 @@ Resources:
         InstanceProtocol: HTTPS
         SSLCertificateId:
           Ref: SSLCertificateARNParameter
-      Scheme: internet-facing
+      Scheme:
+        Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
       - Fn::ImportValue:
           Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
