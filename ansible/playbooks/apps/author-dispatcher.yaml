@@ -41,7 +41,7 @@
           SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
           MessagingStackNameParameter: "{{ messaging.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
-          InitScriptS3UriParameter: "{{ compute.init_script_s3_uri }}"
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
       tags:
       - create
 

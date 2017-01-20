@@ -29,6 +29,7 @@ echo "Start deleting $stack_prefix $stack_type stack"
 ANSIBLE_LOG_PATH=$log_path \
   ansible-playbook ansible/playbooks/"$stack_type".yaml \
   -i ansible/inventory/hosts \
+  --module-path ansible/library/ \
   --tags delete \
   "${extra_vars[@]}"
 echo "Finished deleting $stack_prefix $stack_type stack"

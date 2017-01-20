@@ -1,0 +1,29 @@
+---
+- name: AEM Author CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: Create random credentials for system users
+      system_users_credentials:
+      register: credentials
+      tags:
+      - create
+
+    - name: Ensure data bucket exists
+      s3_bucket:
+        name: "{{ s3.data_bucket_name }}"
+        state: present
+      tags:
+      - create
+
+    - name: Upload Stack init script
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/stack-init.sh"
+        src: ../../../scripts/stack-init.sh
+        mode: put
+      tags:
+      - create

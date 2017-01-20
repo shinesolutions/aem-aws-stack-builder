@@ -18,12 +18,13 @@ Requirements:
 
 Requirements:
 
+The following resources need to be provisioned separate from AEM AWS Stack Builder due to various security policies at various organisations.
+
 * Set up SSL certificate in [AWS IAM](https://aws.amazon.com/iam), check out `create-cert`, `upload-cert`, and `delete-cert` targets in the Makefile for examples.
-* Set up [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html). The key pair name should be configured in `ansible/inventory/group_vars/apps.yaml` at `compute.key_pair_name` field.
+* Set up [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html). The key pair name is configured in `compute.key_pair_name` field.
+* Set up an S3 bucket to store stack state information. The bucket name is configured in  `s3.data_bucket_name` field.
 
 TODO:
-* ec2 key pair
-* ssl server certificate
 * ami images for publish-dispatcher, publish, author, author-dispatcher, orchestrator, chaos-monkey (with component and version tags)
 * dns hosted zone
 * provisioning init script accessible via s3 bucket

@@ -64,9 +64,9 @@ Parameters:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
 
-  InitScriptS3UriParameter:
+  DataBucketNameParameter:
     Type: String
-    Description: Initialization Script executed via the User Data
+    Description: Bucket name that stores Stack data files
 
 Resources:
 
@@ -110,12 +110,11 @@ Resources:
       - Key: Application Version
         Value:
           Ref: ApplicationVersionParameter
-# TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x mkdir /tmp/aem-stack-builder aws s3 cp ${InitScriptS3UriParameter}\
-            \ /tmp/aem-stack-builder/init.sh chmod 755 /tmp/aem-stack-builder/init.sh\
-            \ su - ec2-user -c \"/tmp/aem-stack-builder/init.sh\"\n"
+          Fn::Sub: "#!/bin/bash -x; mkdir -p /tmp/aem-stack-builder/; aws s3 cp s3://${DataBucketNameParameter}/{ComputeStackPrefixParameter}/stack-init.sh\
+            \ /tmp/aem-stack-builder/stack-init.sh; chmod 755 /tmp/aem-stack-builder/stack-init.sh;\
+            \ su - ec2-user -c \"/tmp/aem-stack-builder/stack-init.sh\"\n"
   AuthorStandbyInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -156,12 +155,11 @@ Resources:
       - Key: Application Version
         Value:
           Ref: ApplicationVersionParameter
-# TODO: Implement versioning for init.sh e.g. .../aem-stack-builder/init/${initVersion}/init-${initVersion}.sh
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x mkdir /tmp/aem-stack-builder aws s3 cp ${InitScriptS3UriParameter}\
-            \ /tmp/aem-stack-builder/init.sh chmod 755 /tmp/aem-stack-builder/init.sh\
-            \ su - ec2-user -c \"/tmp/aem-stack-builder/init.sh\"\n"
+          Fn::Sub: "#!/bin/bash -x; mkdir -p /tmp/aem-stack-builder/; aws s3 cp s3://${DataBucketNameParameter}/{ComputeStackPrefixParameter}/stack-init.sh\
+            \ /tmp/aem-stack-builder/stack-init.sh; chmod 755 /tmp/aem-stack-builder/stack-init.sh;\
+            \ su - ec2-user -c \"/tmp/aem-stack-builder/stack-init.sh\"\n"
 
   AuthorLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
