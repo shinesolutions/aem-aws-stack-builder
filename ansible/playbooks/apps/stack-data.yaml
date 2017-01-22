@@ -27,3 +27,11 @@
         mode: put
       tags:
       - create
+
+    - name: Delete stack data
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}"
+        mode: delobj
+      tags:
+      - delete
