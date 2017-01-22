@@ -23,7 +23,8 @@ delete_multi_stacks() {
 }
 
 echo "Deleting $stack_prefix AEM stacks..."
-delete_multi_stacks "apps/dns-records"
+delete_single_stack "apps/dns-records"
 delete_multi_stacks "apps/chaos-monkey apps/orchestrator apps/author-dispatcher apps/publish-dispatcher apps/publish apps/author"
-delete_multi_stacks "apps/roles apps/messaging apps/security-groups"
+delete_multi_stacks "apps/messaging apps/security-groups"
+delete_single_stack "apps/stack-data"
 echo "Finished deleting $stack_prefix AEM stacks"
