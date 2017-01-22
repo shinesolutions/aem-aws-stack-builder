@@ -7,7 +7,7 @@
   tasks:
     - name: Create AEM Roles Stack
       cloudformation:
-        stack_name: "{{ roles.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ roles.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -24,7 +24,7 @@
 
     - name: Delete AEM Roles Stack
       cloudformation:
-        stack_name: "{{ roles.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ roles.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       tags:
