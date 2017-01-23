@@ -88,7 +88,7 @@ Resources:
             \ mkdir -p /tmp/aem-stack-builder/\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /tmp/aem-stack-builder/stack-init.sh\n\
             \ chmod 755 /tmp/aem-stack-builder/stack-init.sh\n\
-            \ su - ec2-user -c \"/tmp/aem-stack-builder/stack-init.sh\"\n"
+            \ /tmp/aem-stack-builder/stack-init.sh\n"
   ChaosMonkeyAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
