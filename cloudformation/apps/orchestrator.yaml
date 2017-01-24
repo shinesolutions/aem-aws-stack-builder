@@ -116,7 +116,7 @@ Resources:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
-        Value: aem-orchestrator
+        Value: orchestrator
         PropagateAtLaunch: true
       - Key: Application Version
         Value:

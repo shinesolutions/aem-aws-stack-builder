@@ -110,7 +110,7 @@ Resources:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
-        Value: aem-chaos-monkey
+        Value: chaos-monkey
         PropagateAtLaunch: true
       - Key: Application Version
         Value:

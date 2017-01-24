@@ -204,7 +204,7 @@ Resources:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
-        Value: aem-publish-dispatcher
+        Value: publish-dispatcher
         PropagateAtLaunch: true
       - Key: Application Version
         Value:
