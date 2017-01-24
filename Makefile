@@ -118,6 +118,7 @@ delete-dns-records:
 	./scripts/delete-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
 
 # utility targets
+
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME = "aem-stack-certificate"
 
@@ -141,5 +142,14 @@ upload-cert:
 delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
+
+# download public release of AEM AWS Stack Provisioner
+# to be uploaded to S3 as part of stack-data playbook
+download-stack-provisioner:
+	mkdir -p stage
+	curl \
+    -L \
+	  --output stage/aem-aws-stack-provisioner.tar.gz \
+          https://github.com/shinesolutions/aem-aws-stack-provisioner/tarball/$(aem_aws_stack_provisioner_version)/
 
 .PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert

@@ -5,3 +5,4 @@ aem-aws-stack-builder.iml
 *.cert
 *.key
 logs/
+stage
