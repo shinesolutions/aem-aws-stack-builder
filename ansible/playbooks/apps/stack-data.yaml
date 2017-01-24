@@ -19,11 +19,20 @@
       tags:
       - create
 
-    - name: Upload Stack init script
+    - name: Upload stack init script
       s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/stack-init.sh"
         src: ../../../scripts/stack-init.sh
+        mode: put
+      tags:
+      - create
+
+    - name: Upload stack provisioner
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/aem-aws-stack-provisioner.tar.gz"
+        src: ../../../stage/aem-aws-stack-provisioner.tar.gz
         mode: put
       tags:
       - create
