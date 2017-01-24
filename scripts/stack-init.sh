@@ -20,7 +20,7 @@ ruby --version
 
 echo "Downloading AEM Stack Provisioner..."
 mkdir -p /tmp/aem-aws-stack-provisioner/
-aws s3 cp s3://${bucket_name}/${stack_prefix}/aem-aws-stack-provisioner.tar.gz /tmp/aem-aws-stack-provisioner/aem-aws-stack-provisioner.tar.gz
+aws s3 cp "s3://${bucket_name}/${stack_prefix}/aem-aws-stack-provisioner.tar.gz" /tmp/aem-aws-stack-provisioner/aem-aws-stack-provisioner.tar.gz
 cd /tmp/aem-aws-stack-provisioner/
 gunzip aem-aws-stack-provisioner.tar.gz
 tar -xvf aem-aws-stack-provisioner.tar
@@ -31,7 +31,7 @@ puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/commo
 
 echo "Setting EC2 tags as Facter facts..."
 /opt/aws-tools/ec2tags-facts.sh
-component=`facter component`
+component=$(facter component)
 
 echo "Applying Puppet manifest for ${component} component..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
