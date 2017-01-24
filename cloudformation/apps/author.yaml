@@ -113,10 +113,10 @@ Resources:
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n\
-            \ mkdir -p /tmp/aem-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /tmp/aem-stack-builder/stack-init.sh\n\
-            \ chmod 755 /tmp/aem-stack-builder/stack-init.sh\n\
-            \ /tmp/aem-stack-builder/stack-init.sh\n" # TODO: change to ELB Health Check Type once up and running
+            \ mkdir -p /tmp/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /tmp/aem-aws-stack-builder/stack-init.sh\n\
+            \ chmod 755 /tmp/aem-aws-stack-builder/stack-init.sh\n\
+            \ /tmp/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter}\n"
   AuthorStandbyInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -160,10 +160,10 @@ Resources:
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n\
-            \ mkdir -p /tmp/aem-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /tmp/aem-stack-builder/stack-init.sh\n\
-            \ chmod 755 /tmp/aem-stack-builder/stack-init.sh\n\
-            \ /tmp/aem-stack-builder/stack-init.sh\n" # TODO: change to ELB Health Check Type once up and running
+            \ mkdir -p /tmp/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /tmp/aem-aws-stack-builder/stack-init.sh\n\
+            \ chmod 755 /tmp/aem-aws-stack-builder/stack-init.sh\n\
+            \ /tmp/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter}\n"
 
   AuthorLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
