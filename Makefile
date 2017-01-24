@@ -35,6 +35,7 @@ create-set-network:
 delete-set-network:
 	./scripts/delete-network-stacks.sh "$(stack_prefix)" "$(config_path)"
 
+
 # single network stack management targets
 
 create-vpc:
@@ -54,6 +55,13 @@ create-nat-gateway:
 
 delete-nat-gateway:
 	./scripts/delete-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
+
+create-bastion:
+	./scripts/create-stack.sh network/bastion "$(stack_prefix)" "$(config_path)"
+
+delete-bastion:
+	./scripts/delete-stack.sh network/bastion "$(stack_prefix)" "$(config_path)"
+
 
 # single apps stack management targets
 
