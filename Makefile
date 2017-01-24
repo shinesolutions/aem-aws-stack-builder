@@ -117,6 +117,12 @@ create-dns-records:
 delete-dns-records:
 	./scripts/delete-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
 
+create-stack-data:
+	./scripts/create-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
+
+delete-stack-data:
+	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
+
 # utility targets
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
