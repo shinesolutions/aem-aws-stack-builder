@@ -157,6 +157,9 @@ Resources:
       - Key: Application Version
         Value:
           Ref: ApplicationVersionParameter
+      - Key: AuthorPrimaryHost
+        Value:
+          Fn::GetAtt: [ AuthorPrimaryInstance, PrivateIp ]
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n\
