@@ -77,12 +77,12 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 10
+          VolumeSize: 20
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 10
+          VolumeSize: 20
           VolumeType: gp2
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter
@@ -124,12 +124,12 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 10
+          VolumeSize: 20
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 10
+          VolumeSize: 20
           VolumeType: gp2
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter
