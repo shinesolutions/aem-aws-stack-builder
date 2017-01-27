@@ -126,7 +126,7 @@ Resources:
       - Key: Name
         Value:
           Fn::Sub: ${AuthorDispatcherLoadBalancerTagNameParameter}
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
 
@@ -194,7 +194,7 @@ Resources:
         Value:
           Fn::Sub: ${AuthorDispatcherTagNameParameter} (${ComputeStackPrefixParameter})
         PropagateAtLaunch: true
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true

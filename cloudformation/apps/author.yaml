@@ -99,7 +99,7 @@ Resources:
       SubnetId:
         Ref: AuthorSubnetAParameter
       Tags:
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
       - Key: Name
@@ -107,7 +107,7 @@ Resources:
           Fn::Sub: ${AuthorTagNameParameter} Primary (${ComputeStackPrefixParameter})
       - Key: Component
         Value: author-primary
-      - Key: Application Version
+      - Key: ApplicationVersion
         Value:
           Ref: ApplicationVersionParameter
       UserData:
@@ -146,7 +146,7 @@ Resources:
       SubnetId:
         Ref: AuthorSubnetBParameter
       Tags:
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
       - Key: Name
@@ -154,7 +154,7 @@ Resources:
           Fn::Sub: ${AuthorTagNameParameter} Standby (${ComputeStackPrefixParameter})
       - Key: Component
         Value: author-standby
-      - Key: Application Version
+      - Key: ApplicationVersion
         Value:
           Ref: ApplicationVersionParameter
       - Key: AuthorPrimaryHost
@@ -206,7 +206,7 @@ Resources:
       - Key: Name
         Value:
           Fn::Sub: ${AuthorLoadBalancerTagNameParameter}
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
 

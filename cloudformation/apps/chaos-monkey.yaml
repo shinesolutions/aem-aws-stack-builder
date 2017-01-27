@@ -105,14 +105,14 @@ Resources:
         Value:
           Fn::Sub: ${ChaosMonkeyTagNameParameter} (${ComputeStackPrefixParameter})
         PropagateAtLaunch: true
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
         Value: chaos-monkey
         PropagateAtLaunch: true
-      - Key: Application Version
+      - Key: ApplicationVersion
         Value:
           Ref: ApplicationVersionParameter
         PropagateAtLaunch: true

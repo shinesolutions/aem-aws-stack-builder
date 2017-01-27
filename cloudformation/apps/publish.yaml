@@ -133,14 +133,14 @@ Resources:
         Value:
           Fn::Sub: ${PublishTagNameParameter} (${ComputeStackPrefixParameter})
         PropagateAtLaunch: true
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
         Value: publish
         PropagateAtLaunch: true
-      - Key: Application Version
+      - Key: ApplicationVersion
         Value:
           Ref: ApplicationVersionParameter
         PropagateAtLaunch: true

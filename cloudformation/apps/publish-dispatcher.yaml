@@ -131,7 +131,7 @@ Resources:
       - Key: Name
         Value:
           Fn::Sub: ${PublishDispatcherLoadBalancerTagNameParameter}
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
 
@@ -199,14 +199,14 @@ Resources:
         Value:
           Fn::Sub: ${PublishDispatcherTagNameParameter} (${ComputeStackPrefixParameter})
         PropagateAtLaunch: true
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
         Value: publish-dispatcher
         PropagateAtLaunch: true
-      - Key: Application Version
+      - Key: ApplicationVersion
         Value:
           Ref: ApplicationVersionParameter
         PropagateAtLaunch: true

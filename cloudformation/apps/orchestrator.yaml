@@ -111,14 +111,14 @@ Resources:
         Value:
           Fn::Sub: ${OrchestratorTagNameParameter} (${ComputeStackPrefixParameter})
         PropagateAtLaunch: true
-      - Key: Stack Prefix
+      - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
         Value: orchestrator
         PropagateAtLaunch: true
-      - Key: Application Version
+      - Key: ApplicationVersion
         Value:
           Ref: ApplicationVersionParameter
         PropagateAtLaunch: true

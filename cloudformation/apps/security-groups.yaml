@@ -77,7 +77,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${PublishDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -139,7 +139,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${PublishDispatcherSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -258,7 +258,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${PublishSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -377,7 +377,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${AuthorSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -564,7 +564,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${AuthorELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -625,7 +625,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${AuthorDispatcherSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -744,7 +744,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${AuthorDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -806,7 +806,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${OrchestratorSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
@@ -879,7 +879,7 @@ Resources:
         - Key: Name
           Value:
             Fn::Sub: ${ChaosMonkeySecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
-        - Key: Stack Prefix
+        - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
