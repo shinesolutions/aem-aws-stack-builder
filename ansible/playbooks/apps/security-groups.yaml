@@ -18,7 +18,7 @@
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.publish_dispatcher_elb.tag_name }}"
-          PublishDispatcherSecurityGroupTagNameParameter: "{{ security_groups.publish_dispatcher.tag_name }}"
+          PublishDispatcherSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.publish_dispatcher.tag_name }}"
           PublishSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.publish.tag_name }}"
           AuthorSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.author.tag_name }}"
           AuthorELBSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.author_elb.tag_name }}"

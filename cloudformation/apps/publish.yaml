@@ -97,7 +97,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -127,11 +127,11 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
       - Key: Name
         Value:
-          Fn::Sub: ${PublishTagNameParameter} (${ComputeStackPrefixParameter})
+          Fn::Sub: ${PublishTagNameParameter}
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:

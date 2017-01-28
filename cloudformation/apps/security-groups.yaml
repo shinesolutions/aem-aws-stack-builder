@@ -76,7 +76,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${PublishDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${PublishDispatcherELBSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -138,7 +138,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${PublishDispatcherSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${PublishDispatcherSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -257,7 +257,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${PublishSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${PublishSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -376,7 +376,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${AuthorSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -563,7 +563,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${AuthorELBSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -624,7 +624,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorDispatcherSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${AuthorDispatcherSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -743,7 +743,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AuthorDispatcherELBSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${AuthorDispatcherELBSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -805,7 +805,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${OrchestratorSecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${OrchestratorSecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
@@ -878,7 +878,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${ChaosMonkeySecurityGroupTagNameParameter} (${ComputeStackPrefixParameter})
+            Fn::Sub: ${ChaosMonkeySecurityGroupTagNameParameter}
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter

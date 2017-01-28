@@ -37,9 +37,9 @@
           AuthorDispatcherTagNameParameter: "{{ stack_prefix }}-{{ author_dispatcher.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           AuthorDispatcherLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ author_dispatcher.load_balancer.tag_name }}"
-          RolesStackNameParameter: "{{ roles.stack_name }}"
-          SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
-          MessagingStackNameParameter: "{{ messaging.stack_name }}"
+          RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
+          SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
+          MessagingStackNameParameter: "{{ stack_prefix }}-{{ messaging.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
       tags:

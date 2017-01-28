@@ -123,7 +123,7 @@ Resources:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
       Subnets:
       - Ref: PublishDispatcherELBSubnetAParameter
       - Ref: PublishDispatcherELBSubnetBParameter
@@ -161,7 +161,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -193,11 +193,11 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
       - Key: Name
         Value:
-          Fn::Sub: ${PublishDispatcherTagNameParameter} (${ComputeStackPrefixParameter})
+          Fn::Sub: ${PublishDispatcherTagNameParameter}
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:

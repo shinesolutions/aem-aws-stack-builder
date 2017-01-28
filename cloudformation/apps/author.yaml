@@ -94,7 +94,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetAParameter
@@ -104,7 +104,7 @@ Resources:
           Ref: ComputeStackPrefixParameter
       - Key: Name
         Value:
-          Fn::Sub: ${AuthorTagNameParameter} Primary (${ComputeStackPrefixParameter})
+          Fn::Sub: ${AuthorTagNameParameter}-Primary
       - Key: Component
         Value: author-primary
       - Key: ApplicationVersion
@@ -141,7 +141,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Ref: AuthorSubnetBParameter
@@ -151,7 +151,7 @@ Resources:
           Ref: ComputeStackPrefixParameter
       - Key: Name
         Value:
-          Fn::Sub: ${AuthorTagNameParameter} Standby (${ComputeStackPrefixParameter})
+          Fn::Sub: ${AuthorTagNameParameter}-Standby
       - Key: Component
         Value: author-standby
       - Key: ApplicationVersion
@@ -198,7 +198,7 @@ Resources:
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
       Subnets:
       - Ref: AuthorSubnetAParameter
       - Ref: AuthorSubnetBParameter

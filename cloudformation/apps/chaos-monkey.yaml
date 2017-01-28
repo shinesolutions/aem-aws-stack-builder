@@ -80,7 +80,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -103,7 +103,7 @@ Resources:
       Tags:
       - Key: Name
         Value:
-          Fn::Sub: ${ChaosMonkeyTagNameParameter} (${ComputeStackPrefixParameter})
+          Fn::Sub: ${ChaosMonkeyTagNameParameter}
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:

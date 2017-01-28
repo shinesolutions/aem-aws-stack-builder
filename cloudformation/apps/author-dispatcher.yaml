@@ -118,7 +118,7 @@ Resources:
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorDispatcherELBSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorDispatcherELBSecurityGroup
       Subnets:
       - Ref: AuthorDispatcherSubnetAParameter
       - Ref: AuthorDispatcherSubnetBParameter
@@ -156,7 +156,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-${SecurityGroupsStackNameParameter}-AuthorDispatcherSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -188,11 +188,11 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
       - Key: Name
         Value:
-          Fn::Sub: ${AuthorDispatcherTagNameParameter} (${ComputeStackPrefixParameter})
+          Fn::Sub: ${AuthorDispatcherTagNameParameter}
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:

@@ -22,8 +22,8 @@
           OrchestratorASGSubnetListParameter: "{{ aem_vpc.orchestrator_subnet_a_id }}, {{ aem_vpc.orchestrator_subnet_b_id }}"
           OrchestratorTagNameParameter: "{{ stack_prefix }}-{{ orchestrator.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
-          RolesStackNameParameter: "{{ roles.stack_name }}"
-          SecurityGroupsStackNameParameter: "{{ security_groups.stack_name }}"
+          RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
+          SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
       tags:
