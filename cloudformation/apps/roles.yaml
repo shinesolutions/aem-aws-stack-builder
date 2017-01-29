@@ -337,8 +337,7 @@ Resources:
                 Action:
                   - s3:Get*
                   - s3:List*
-                Resource:
-                  - arn:aws:logs:*:*:*
+                Resource: "*"
       RoleName:
         Ref: ChaosMonkeyRoleNameParameter
 
