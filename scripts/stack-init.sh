@@ -19,9 +19,9 @@ python --version
 ruby --version
 
 echo "Downloading AEM Stack Provisioner..."
-mkdir -p /tmp/aem-aws-stack-provisioner/
-aws s3 cp "s3://${bucket_name}/${stack_prefix}/aem-aws-stack-provisioner.tar.gz" /tmp/aem-aws-stack-provisioner/aem-aws-stack-provisioner.tar.gz
-cd /tmp/aem-aws-stack-provisioner/
+mkdir -p /opt/shinesolutions/aem-aws-stack-provisioner/
+aws s3 cp "s3://${bucket_name}/${stack_prefix}/aem-aws-stack-provisioner.tar.gz" /opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner.tar.gz
+cd /opt/shinesolutions/aem-aws-stack-provisioner/
 gunzip aem-aws-stack-provisioner.tar.gz
 tar -xvf aem-aws-stack-provisioner.tar
 rm aem-aws-stack-provisioner.tar
@@ -30,7 +30,7 @@ echo "Applying common Puppet manifest for all components..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/common.pp
 
 echo "Setting EC2 tags as Facter facts..."
-/opt/aws-tools/ec2tags-facts.sh
+/opt/shinesolutions/aws-tools/ec2tags-facts.sh
 component=$(facter component)
 
 echo "Applying Puppet manifest for ${component} component..."
