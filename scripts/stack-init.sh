@@ -37,4 +37,4 @@ echo "Applying Puppet manifest for ${component} component..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
 
 echo "Testing ${component} component using Serverspec..."
-rake spec "SPEC=serverspec/${component}_spec.rb"
+cd test/serverspec && rake spec "SPEC=spec/${component}_spec.rb"
