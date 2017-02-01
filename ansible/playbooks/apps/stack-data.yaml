@@ -6,9 +6,24 @@
 
   tasks:
 
-    - name: Create random credentials for system users
+    - name: Generate random credentials for system users
       system_users_credentials:
       register: credentials
+      tags:
+      - create
+
+    - name: Ensure stage directory exists
+      file:
+        path: ../../../stage
+        state: directory
+        mode: 0755
+      tags:
+      - create
+
+    - name: Create temporary file containing generated credentials
+      copy:
+        content: "{{ credentials.meta }}"
+        dest: ../../../stage/system_users_credentials.json
       tags:
       - create
 
@@ -34,6 +49,16 @@
         object: "{{ stack_prefix }}/aem-aws-stack-provisioner.tar.gz"
         src: ../../../stage/aem-aws-stack-provisioner.tar.gz
         mode: put
+      tags:
+      - create
+
+    - name: Upload system user credentials
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/system-users-credentials.json"
+        src: ../../../stage/system-users-credentials.json
+        mode: put
+        encrypt: yes
       tags:
       - create
 
