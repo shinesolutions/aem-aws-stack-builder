@@ -322,6 +322,29 @@ Resources:
       IpProtocol: tcp
       ToPort: '22'
 
+  # Allow tcp inbound from Orchestrator Security Group on 4502 and 5433
+  PublishSecurityGroupIngress5:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      SourceSecurityGroupId:
+        Ref: OrchestratorSecurityGroup
+      FromPort: '4502'
+      GroupId:
+        Ref: PublishSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4502'
+
+  PublishSecurityGroupIngress6:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      SourceSecurityGroupId:
+        Ref: OrchestratorSecurityGroup
+      FromPort: '5433'
+      GroupId:
+        Ref: PublishSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+
   # Allow tcp outbound on 80 and 443 to Publish Dispatcher Security Group
   PublishSecurityGroupEgress0:
     Type: AWS::EC2::SecurityGroupEgress
@@ -587,6 +610,29 @@ Resources:
     Properties:
       SourceSecurityGroupId:
         Ref: AuthorDispatcherSecurityGroup
+      FromPort: '5433'
+      GroupId:
+        Ref: AuthorELBSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+
+  # Allow tcp inbound from Orchestrator Security Group on 4502 and 5433
+  AuthorELBSecurityGroupIngress2:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      SourceSecurityGroupId:
+        Ref: OrchestratorSecurityGroup
+      FromPort: '4502'
+      GroupId:
+        Ref: AuthorELBSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4502'
+
+  AuthorELBSecurityGroupIngress3:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      SourceSecurityGroupId:
+        Ref: OrchestratorSecurityGroup
       FromPort: '5433'
       GroupId:
         Ref: AuthorELBSecurityGroup
@@ -869,6 +915,29 @@ Resources:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
       ToPort: '443'
+
+  # Allow tcp outbound to Author ELB Security Group on 4502 and 5433
+  OrchestratorSecurityGroupEgress5:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      DestinationSecurityGroupId:
+        Ref: PublishSecurityGroup
+      FromPort: '4502'
+      GroupId:
+        Ref: OrchestratorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4502'
+
+  OrchestratorSecurityGroupEgress6:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      DestinationSecurityGroupId:
+        Ref: PublishSecurityGroup
+      FromPort: '5433'
+      GroupId:
+        Ref: OrchestratorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
 
   # Chaos Monkey Security Group
   ChaosMonkeySecurityGroup:
