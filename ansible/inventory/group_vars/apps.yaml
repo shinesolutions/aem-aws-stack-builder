@@ -27,12 +27,12 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-7a919619
-  publish: ami-b29f98d1
-  author_dispatcher: ami-4a6b6c29
-  publish_dispatcher: ami-4a6b6c29
-  orchestrator: ami-8f5e59ec
-  chaos_monkey: ami-8f5e59ec
+  author: ami-1d61677e
+  publish: ami-556f6936
+  author_dispatcher: ami-f55f5996
+  publish_dispatcher: ami-f55f5996
+  orchestrator: ami-a05c5ac3
+  chaos_monkey: ami-a05c5ac3
 
 security_groups:
   stack_name: aem-security-groups-stack
@@ -77,7 +77,7 @@ messaging:
   asg_event_sns_topic_display_name: AEM ASG Event Topic
 
 compute:
-  key_pair_name: aem-stack-key-pair
+  key_pair_name: cliffs-sandpit
   application_version: 1.0.0
   certificate_name: aem-stack-certificate
   inbound_from_bastion_host_security_group: sg-a5ac6cc2
@@ -87,7 +87,7 @@ s3:
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
-  instance_profile: dev-aem-roles-stack-PublishDispatcherInstanceProfile-1C734PWW4OXRI
+  instance_profile: cliffs-aem-roles-stack-PublishInstanceProfile-DNZJ49E17ZK4
   instance_type: t2.micro
   min_size: 2
   max_size: 2
@@ -101,7 +101,7 @@ publish_dispatcher:
 
 publish:
   stack_name: aem-publish-stack
-  instance_profile: dev-aem-roles-stack-PublishInstanceProfile-1PSP3B9IOXJA
+  instance_profile: cliffs-aem-roles-stack-PublishDispatcherInstanceProfile-121ECAZK2TPY0
   instance_type: m3.large
   min_size: 2
   max_size: 2
@@ -109,7 +109,7 @@ publish:
 
 author:
   stack_name: aem-author-stack
-  instance_profile: dev-aem-roles-stack-AuthorInstanceProfile-QGX57VU425ZP
+  instance_profile: cliffs-aem-roles-stack-AuthorInstanceProfile-1KIV5LHVC4WF3
   instance_type: m3.large
   load_balancer:
     tag_name: AEM Author Load Balancer
@@ -120,7 +120,7 @@ author:
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
-  instance_profile: dev-aem-roles-stack-AuthorDispatcherInstanceProfile-1UNLV46X6Y44T
+  instance_profile: cliffs-aem-roles-stack-AuthorDispatcherInstanceProfile-1185QRCTDDPQ
   instance_type: t2.micro
   min_size: 2
   max_size: 2
@@ -133,13 +133,13 @@ author_dispatcher:
 
 orchestrator:
   stack_name: aem-orchestrator-stack
-  instance_profile: dev-aem-roles-stack-OrchestratorInstanceProfile-1MRHW3DNIN3I4
+  instance_profile: cliffs-aem-roles-stack-OrchestratorInstanceProfile-N42J44423JGR
   instance_type: t2.small
   tag_name: AEM Orchestrator
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
-  instance_profile: dev-aem-roles-stack-ChaosMonkeyInstanceProfile-16L8WLSPYCNT1
+  instance_profile: cliffs-aem-roles-stack-ChaosMonkeyInstanceProfile-901SCI66LQGO
   instance_type: t2.micro
   tag_name: AEM Chaos Monkey
 
