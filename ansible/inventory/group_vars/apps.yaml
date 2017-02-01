@@ -94,9 +94,7 @@ publish_dispatcher:
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
-  # TODO: revert ELB health check back to /system/health after https://github.com/shinesolutions/aem-healthcheck/issues/7 is fixed
-  # elb_health_check: HTTP:80/system/health?tags=devops
-  elb_health_check: HTTP:80/libs/granite/core/content/login.html
+  elb_health_check: HTTP:80/system/health?tags=devops
   elb_scheme: internet-facing
 
 publish:
@@ -114,9 +112,7 @@ author:
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
-  # TODO: revert ELB health check back to /system/health after https://github.com/shinesolutions/aem-healthcheck/issues/7 is fixed
-  # elb_health_check: HTTP:4502/system/health?tags=devops
-  elb_health_check: HTTP:4502/libs/granite/core/content/login.html
+  elb_health_check: HTTP:4502/system/health?tags=devops
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
@@ -127,9 +123,7 @@ author_dispatcher:
   load_balancer:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
-  # TODO: revert ELB health check back to /system/health after https://github.com/shinesolutions/aem-healthcheck/issues/7 is fixed
-  # elb_health_check: HTTP:80/system/health?tags=devops
-  elb_health_check: HTTP:80/libs/granite/core/content/login.html
+  elb_health_check: HTTP:80/system/health?tags=devops
 
 orchestrator:
   stack_name: aem-orchestrator-stack
