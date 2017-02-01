@@ -3,11 +3,11 @@ set -o nounset
 set -o errexit
 
 if [ "$#" -ne 2 ]; then
-  echo 'Usage: ./stack-init.sh <bucket_name> <stack_prefix>'
+  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix>'
   exit 1
 fi
 
-bucket_name=$1
+data_bucket_name=$1
 stack_prefix=$2
 PATH=$PATH:/opt/puppetlabs/bin
 
@@ -20,7 +20,7 @@ ruby --version
 
 echo "Downloading AEM Stack Provisioner..."
 mkdir -p /opt/shinesolutions/aem-aws-stack-provisioner/
-aws s3 cp "s3://${bucket_name}/${stack_prefix}/aem-aws-stack-provisioner.tar.gz" /opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner.tar.gz
+aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-aws-stack-provisioner.tar.gz" /opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner.tar.gz
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 gunzip aem-aws-stack-provisioner.tar.gz
 tar -xvf aem-aws-stack-provisioner.tar
