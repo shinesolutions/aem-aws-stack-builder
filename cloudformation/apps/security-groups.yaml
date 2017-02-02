@@ -324,7 +324,7 @@ Resources:
 
   # Allow tcp inbound from Orchestrator Security Group on 4502 and 5433
   PublishSecurityGroupIngress5:
-    Type: AWS::EC2::SecurityGroupEgress
+    Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: OrchestratorSecurityGroup
@@ -335,7 +335,7 @@ Resources:
       ToPort: '4502'
 
   PublishSecurityGroupIngress6:
-    Type: AWS::EC2::SecurityGroupEgress
+    Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: OrchestratorSecurityGroup
@@ -618,7 +618,7 @@ Resources:
 
   # Allow tcp inbound from Orchestrator Security Group on 4502 and 5433
   AuthorELBSecurityGroupIngress2:
-    Type: AWS::EC2::SecurityGroupEgress
+    Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: OrchestratorSecurityGroup
@@ -629,7 +629,7 @@ Resources:
       ToPort: '4502'
 
   AuthorELBSecurityGroupIngress3:
-    Type: AWS::EC2::SecurityGroupEgress
+    Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: OrchestratorSecurityGroup
