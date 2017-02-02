@@ -33,6 +33,12 @@ echo "Setting EC2 tags as Facter facts..."
 /opt/shinesolutions/aws-tools/ec2tags-facts.sh
 component=$(facter component)
 
+echo "Checking orchestration tags for ${component} component..."
+pip install boto3
+pip install requests
+pip install retrying
+/opt/shinesolutions/aws-tools/wait_for_ec2tag.py "$component"
+
 echo "Applying Puppet manifest for ${component} component..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
 
