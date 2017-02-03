@@ -60,6 +60,14 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Minimum Size
 
+  PublishDispatcherRootVolSizeParameter:
+    Type: Number
+    Description: PublishDispatcher Instances Root EBS Volume Size
+
+  PublishDispatcherDataVolSizeParameter:
+    Type: Number
+    Description: PublishDispatcher Instances Root EBS Volume Size
+
   PublishDispatcherTagNameParameter:
     Type: String
     Description: The Publish Dispatcher Name Tag
@@ -143,12 +151,14 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: PublishDispatcherRootVolSizeParameter
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
         Ref: PublishDispatcherInstanceProfileParameter

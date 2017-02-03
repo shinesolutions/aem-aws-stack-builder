@@ -30,6 +30,8 @@
           AuthorImageParameter: "{{ ami_ids.author }}"
           AuthorInstanceTypeParameter: "{{ author.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          AuthorRootVolSizeParameter: "{{ author.root_vol_size }}"
+          AuthorDataVolSizeParameter: "{{ author.data_vol_size }}"
           AuthorTagNameParameter: "{{ stack_prefix }}-{{ author.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           AuthorLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ author.load_balancer.tag_name }}"
@@ -61,6 +63,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"        
+        "stack_query.rc == 0"
       tags:
       - delete

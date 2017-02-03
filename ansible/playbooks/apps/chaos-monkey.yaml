@@ -20,6 +20,7 @@
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           ChaosMonkeyASGSubnetListParameter: "{{ aem_vpc.chaos_monkey_subnet_a_id }}, {{ aem_vpc.chaos_monkey_subnet_b_id }}"
+          ChaosMonkeyRootVolSizeParameter: {{ chaos_monkey.root_vol_size }}
           ChaosMonkeyTagNameParameter: "{{ stack_prefix }}-{{ chaos_monkey.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
@@ -50,6 +51,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"           
+        "stack_query.rc == 0"
       tags:
       - delete

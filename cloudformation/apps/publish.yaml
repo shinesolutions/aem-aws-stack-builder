@@ -40,6 +40,14 @@ Parameters:
     Type: String
     Description: The Publish Auto Scaling Group Minimum Size
 
+  PublishRootVolSizeParameter:
+    Type: Number
+    Description: Publish Instances Root EBS Volume Size
+
+  PublishDataVolSizeParameter:
+    Type: Number
+    Description: The Publish Instances Data EBS Volume Size
+
   PublishTagNameParameter:
     Type: String
     Description: The Publish Name Tag
@@ -79,12 +87,14 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: PublishRootVolSizeParameter
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: PublishDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
         Ref: PublishInstanceProfileParameter
@@ -149,7 +159,6 @@ Resources:
 
 
 Outputs:
-
 
   PublishLaunchConfiguration:
     Value:

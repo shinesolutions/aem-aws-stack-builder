@@ -35,6 +35,8 @@
           PublishDispatcherASGSubnetListParameter: "{{ aem_vpc.publish_dispatcher_subnet_a_id }}, {{ aem_vpc.publish_dispatcher_subnet_b_id}}"
           PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
           PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
+          PublishDispatcherRootVolSizeParameter: "{{ publish_dispatcher.root_vol_size }}"
+          PublishDispatcherDataVolSizeParameter: "{{ publish_dispatcher.data_vol_size }}"
           PublishDispatcherTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.tag_name }}"
           ApplicationVersionParameter: "{{ compute.application_version }}"
           PublishDispatcherLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.load_balancer.tag_name }}"
@@ -67,6 +69,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"           
+        "stack_query.rc == 0"
       tags:
       - delete
