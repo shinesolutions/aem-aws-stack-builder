@@ -13,7 +13,7 @@ Requirements:
 
 * Run `make deps` to install [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html), [Ansible](http://docs.ansible.com/ansible/intro_installation.html), and [Boto 3](https://boto3.readthedocs.io/en/latest/).
 * [Configure](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration) AWS CLI.
-* Optional - Install GNU parallel used in creating multiple stacks simultaneously.
+* Install [GNU Parallel](https://www.gnu.org/software/parallel/).
 
 ## Usage
 
