@@ -16,6 +16,8 @@ delete_single_stack() {
 
 delete_multi_stacks() {
   export -f delete_single_stack
+  # intentional word split for passing multiple stack types
+  # shellcheck disable=2086
   parallel delete_single_stack ::: $1
 }
 

@@ -16,6 +16,8 @@ create_single_stack() {
 
 create_multi_stacks() {
   export -f create_single_stack
+  # intentional word split for passing multiple stack types
+  # shellcheck disable=2086
   parallel create_single_stack ::: $1
 }
 
