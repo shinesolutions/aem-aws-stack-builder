@@ -15,15 +15,12 @@ delete_single_stack() {
 }
 
 delete_multi_stacks() {
-  for stack in $1
-  do
-    delete_single_stack "$stack" &
-  done
-  wait
+  export -f delete_single_stack
+  parallel delete_single_stack ::: $1
 }
 
 echo "Deleting $stack_prefix AEM stacks..."
-delete_single_stack "apps/dns-records" &
+delete_single_stack "apps/dns-records"
 delete_multi_stacks "apps/chaos-monkey apps/orchestrator apps/author-dispatcher apps/publish-dispatcher apps/publish apps/author"
 delete_multi_stacks "apps/messaging apps/security-groups"
 delete_single_stack "apps/stack-data"
