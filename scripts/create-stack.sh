@@ -12,7 +12,7 @@ stack_prefix=$2
 config_path=$3
 
 run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
-log_path=logs/$run_id-create-$(echo "$stack_type" | sed 's/\//-/g').log
+log_path=logs/$stack_prefix/$run_id-create-$(echo "$stack_type" | sed 's/\//-/g').log
 
 # Construct Ansible extra_vars flags.
 # If CONFIG_PATH is set, all files under the directory will be added.
@@ -24,7 +24,7 @@ if [ ! -z "$config_path" ]; then
   done
 fi
 
-mkdir -p logs
+mkdir -p "logs/$stack_prefix"
 echo "Start creating $stack_prefix $stack_type stack"
 ANSIBLE_LOG_PATH=$log_path \
   ansible-playbook ansible/playbooks/"$stack_type".yaml \
