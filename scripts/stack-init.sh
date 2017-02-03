@@ -34,9 +34,6 @@ echo "Setting EC2 tags as Facter facts..."
 component=$(facter component)
 
 echo "Checking orchestration tags for ${component} component..."
-pip install boto3
-pip install requests
-pip install retrying
 /opt/shinesolutions/aws-tools/wait_for_ec2tag.py "$component"
 
 echo "Applying Puppet manifest for ${component} component..."
