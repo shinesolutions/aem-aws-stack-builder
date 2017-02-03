@@ -22,10 +22,27 @@
       tags:
       - create
 
+    - name: Check if a Stack Exists
+      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ roles.stack_name }}" --query 'Stacks[].StackName'
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ roles.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
     - name: Delete AEM Roles Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ roles.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
+      when:
+        "stack_query.rc == 0"           
       tags:
       - delete
