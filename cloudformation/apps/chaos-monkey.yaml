@@ -36,6 +36,10 @@ Parameters:
     Type: String
     Description: The Chaos Monkey Name Tag
 
+  ChaosMonkeyRootVolSizeParameter:
+    Type: Number
+    Description: Chaos Monkey Instances Root EBS Volum Size
+
   ApplicationVersionParameter:
     Type: String
     Description: The Application Version Number
@@ -67,7 +71,8 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: ChaosMonkeyRootVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
         Ref: ChaosMonkeyInstanceProfileParameter

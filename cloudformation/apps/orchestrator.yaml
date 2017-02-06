@@ -32,6 +32,14 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
     Description: The Orchestrator Subnets
 
+  OrchestratorRootVolSizeParameter:
+    Type: Number
+    Description: Orchestrator Instances Root EBS Volume Size
+
+  OrchestratorDataVolSizeParameter:
+    Type: Number
+    Description: Orchestrator Instances Data EBS Volume Size
+
   OrchestratorTagNameParameter:
     Type: String
     Description: The Orchestrator Name Tag
@@ -67,12 +75,14 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: OrchestratorRootVolSizeParameter
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: OrchestratorDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
         Ref: OrchestratorInstanceProfileParameter

@@ -40,6 +40,14 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
     Description: The Compute Resources Key Pair Name
 
+  AuthorRootVolSizeParameter:
+    Type: Number
+    Description: Author Instances Root EBS Volume Size
+
+  AuthorDataVolSizeParameter:
+    Type: Number
+    Description: Author Instances Data EBS Volume Size
+
   AuthorTagNameParameter:
     Type: String
     Description: The Author Name Tag
@@ -77,12 +85,14 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: AuthorDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter
@@ -124,12 +134,14 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: AuthorDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter

@@ -52,12 +52,16 @@ security_groups:
     tag_name: AEM Publish Security Group
 
   author:
+    root_vol_size: 20
+    data_vol_size: 20
     tag_name: AEM Author Security Group
 
   author_elb:
     tag_name: AEM Author ELB Security Group
 
   author_dispatcher:
+    root_vol_size: 20
+    data_vol_size: 20
     tag_name: AEM Author Dispatcher Security Group
 
   author_dispatcher_elb:
@@ -91,6 +95,8 @@ publish_dispatcher:
   instance_type: t2.micro
   min_size: 2
   max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
@@ -103,6 +109,8 @@ publish:
   instance_type: m3.large
   min_size: 2
   max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20  
   tag_name: AEM Publish
 
 author:
@@ -129,12 +137,15 @@ orchestrator:
   stack_name: aem-orchestrator-stack
   instance_profile: cliffs-aem-roles-stack-OrchestratorInstanceProfile-N42J44423JGR
   instance_type: t2.small
+  root_vol_size: 20
+  data_vol_size: 20
   tag_name: AEM Orchestrator
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
   instance_profile: cliffs-aem-roles-stack-ChaosMonkeyInstanceProfile-901SCI66LQGO
   instance_type: t2.micro
+  root_vol_size: 20
   tag_name: AEM Chaos Monkey
 
 dns_records:

@@ -57,6 +57,14 @@ Parameters:
     Type: String
     Description: The Author Dispatcher Auto Scaling Group Minimum Size
 
+  AuthorDispatcherRootVolSizeParameter:
+    Type: Number
+    Description: Author Dispatcher Instances Root EBS Volume Size
+
+  AuthorDispatcherDataVolSizeParameter:
+    Type: Number
+    Description: Author Dispatcher Instances Data EBS Volume Size
+
   AuthorDispatcherTagNameParameter:
     Type: String
     Description: The Author Dispatcher Name Tag
@@ -138,12 +146,14 @@ Resources:
       - DeviceName: /dev/sda1
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: AuthorDispatcherRootVolSizeParameter
           VolumeType: gp2
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
-          VolumeSize: 20
+          VolumeSize:
+            Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
         Ref: AuthorDispatcherInstanceProfileParameter
