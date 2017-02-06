@@ -29,8 +29,8 @@ rm aem-aws-stack-provisioner.tar
 echo "Applying common Puppet manifest for all components..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/common.pp
 
-echo "Setting EC2 tags as Facter facts..."
-/opt/shinesolutions/aws-tools/ec2tags-facts.sh
+echo "Setting AWS resources as Facter facts..."
+/opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}"
 component=$(facter component)
 
 echo "Checking orchestration tags for ${component} component..."
