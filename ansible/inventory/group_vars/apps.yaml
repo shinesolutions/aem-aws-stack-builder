@@ -28,7 +28,7 @@ roles:
 
 ami_ids:
   author: ami-e12a2c82
-  publish: ami-d6080eb5
+  publish: ami-3834325b
   author_dispatcher: ami-c3282ea0
   publish_dispatcher: ami-c3282ea0
   orchestrator: ami-4c2b2d2f

@@ -13,7 +13,7 @@ deps:
 lint:
 	shellcheck scripts/*.sh
 	for playbook in ansible/playbooks/*/*.yaml; do \
-		ansible-playbook -vvv $$playbook --syntax-check; \
+		ANSIBLE_LIBRARY=ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
 
 validate:
