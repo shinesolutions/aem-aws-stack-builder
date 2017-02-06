@@ -37,7 +37,7 @@ multi_stack_simple() {
 
 multi_stack_parallel() {
   export -f create_single_stack
-  parallel --joblog logs/"create-aem-stacks-$(date +%Y%m%d%H%M%S)" create_single_stack ::: "$1"
+  parallel --joblog logs/"create-aem-stacks-$(date +%Y%m%d%H%M%S)" create_single_stack ::: $1
 }
 
 create_multi_stacks() {
