@@ -52,16 +52,12 @@ security_groups:
     tag_name: AEM Publish Security Group
 
   author:
-    root_vol_size: 20
-    data_vol_size: 20
     tag_name: AEM Author Security Group
 
   author_elb:
     tag_name: AEM Author ELB Security Group
 
   author_dispatcher:
-    root_vol_size: 20
-    data_vol_size: 20
     tag_name: AEM Author Dispatcher Security Group
 
   author_dispatcher_elb:
@@ -110,13 +106,15 @@ publish:
   min_size: 2
   max_size: 2
   root_vol_size: 20
-  data_vol_size: 20  
+  data_vol_size: 20
   tag_name: AEM Publish
 
 author:
   stack_name: aem-author-stack
   instance_profile: cliffs-aem-roles-stack-AuthorInstanceProfile-1KIV5LHVC4WF3
   instance_type: m3.large
+  root_vol_size: 20
+  data_vol_size: 20
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
@@ -128,6 +126,8 @@ author_dispatcher:
   instance_type: t2.micro
   min_size: 2
   max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
   load_balancer:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
