@@ -81,10 +81,9 @@ compute:
   application_version: 1.0.0
   certificate_name: aem-stack-certificate
   inbound_from_bastion_host_security_group: sg-b260abd5
-  init_script_s3_uri: s3://aem-stack-builder/init.sh
 
 s3:
-  bucket_name: aem-stack-builder
+  data_bucket_name: aem-stack-builder
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
