@@ -870,28 +870,28 @@ Resources:
       IpProtocol: tcp
       ToPort: '22'
 
-  # Allow tcp outbound to Author ELB Security Group on 4502 and 5433
+  # Allow tcp outbound to Author ELB Security Group on 80 and 443
   OrchestratorSecurityGroupEgress1:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorELBSecurityGroup
-      FromPort: '4502'
+      FromPort: '80'
       GroupId:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
-      ToPort: '4502'
+      ToPort: '80'
 
   OrchestratorSecurityGroupEgress2:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorELBSecurityGroup
-      FromPort: '5433'
+      FromPort: '443'
       GroupId:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
-      ToPort: '5433'
+      ToPort: '443'
 
   # Allow tcp outbound on port 80 and 443 (http and https) to specified cidr ip required to download user data init script
   OrchestratorSecurityGroupEgress3:
@@ -922,22 +922,22 @@ Resources:
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishSecurityGroup
-      FromPort: '80'
+      FromPort: '4502'
       GroupId:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
-      ToPort: '80'
+      ToPort: '4502'
 
   OrchestratorSecurityGroupEgress6:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishSecurityGroup
-      FromPort: '443'
+      FromPort: '5433'
       GroupId:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
-      ToPort: '443'
+      ToPort: '5433'
 
   # Chaos Monkey Security Group
   ChaosMonkeySecurityGroup:
