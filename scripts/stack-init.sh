@@ -2,13 +2,14 @@
 set -o nounset
 set -o errexit
 
-if [ "$#" -ne 2 ]; then
-  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix>'
+if [ "$#" -ne 3 ]; then
+  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix> <component>'
   exit 1
 fi
 
 data_bucket_name=$1
 stack_prefix=$2
+component=$3
 PATH=$PATH:/opt/puppetlabs/bin
 
 echo "Initialising AEM Stack Builder provisioning..."
@@ -29,12 +30,11 @@ rm aem-aws-stack-provisioner.tar
 echo "Applying common Puppet manifest for all components..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/common.pp
 
-echo "Setting AWS resources as Facter facts..."
-/opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}"
-component=$(facter component)
-
 echo "Checking orchestration tags for ${component} component..."
 /opt/shinesolutions/aws-tools/wait_for_ec2tag.py "$component"
+
+echo "Setting AWS resources as Facter facts..."
+/opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}"
 
 echo "Applying Puppet manifest for ${component} component..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
