@@ -188,10 +188,10 @@ Resources:
       - Ref: AuthorPrimaryInstance
       - Ref: AuthorStandbyInstance
       Listeners:
-      - LoadBalancerPort: '4502'
+      - LoadBalancerPort: '80'
         InstancePort: '4502'
         Protocol: HTTP
-      - LoadBalancerPort: '5433'
+      - LoadBalancerPort: '443'
         Protocol: HTTPS
         InstancePort: '5433'
         InstanceProtocol: HTTPS
