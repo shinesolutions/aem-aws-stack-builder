@@ -164,6 +164,6 @@ download-stack-provisioner:
 	curl \
     -L \
 	  --output stage/aem-aws-stack-provisioner.tar.gz \
-          https://github.com/shinesolutions/aem-aws-stack-provisioner/tarball/$(aem_aws_stack_provisioner_version)/
+	  https://s3-ap-southeast-2.amazonaws.com/aem-stack-builder/aem-aws-stack-provisioner.tar.gz
 
 .PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert
