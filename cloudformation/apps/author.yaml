@@ -159,9 +159,6 @@ Resources:
           Fn::Sub: ${AuthorTagNameParameter}-Standby
       - Key: Component
         Value: author-standby
-      - Key: ApplicationVersion
-        Value:
-          Ref: ApplicationVersionParameter
       - Key: AuthorPrimaryHost
         Value:
           Fn::GetAtt: [ AuthorPrimaryInstance, PrivateIp ]

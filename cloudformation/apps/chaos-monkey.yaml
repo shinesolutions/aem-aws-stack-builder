@@ -40,10 +40,6 @@ Parameters:
     Type: Number
     Description: Chaos Monkey Instances Root EBS Volum Size
 
-  ApplicationVersionParameter:
-    Type: String
-    Description: The Application Version Number
-
   RolesStackNameParameter:
     Type: String
     Description: The AEM Roles Stack Name
