@@ -69,10 +69,6 @@ Parameters:
     Type: String
     Description: The Author Dispatcher Name Tag
 
-  ApplicationVersionParameter:
-    Type: String
-    Description: The Application Version Number
-
   AuthorDispatcherLoadBalancerTagNameParameter:
     Type: String
     Description: The Author Dispatcher Load Balancer Name Tag
@@ -210,10 +206,6 @@ Resources:
         PropagateAtLaunch: true
       - Key: Component
         Value: author-dispatcher
-        PropagateAtLaunch: true
-      - Key: Application Version
-        Value:
-          Ref: ApplicationVersionParameter
         PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: AuthorDispatcherASGSubnetListParameter

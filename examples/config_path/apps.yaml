@@ -78,7 +78,6 @@ messaging:
 
 compute:
   key_pair_name: nletts-sandpit
-  application_version: 1.0.0
   certificate_name: aem-stack-certificate
   inbound_from_bastion_host_security_group: sg-b260abd5
 

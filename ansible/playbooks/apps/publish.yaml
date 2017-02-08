@@ -25,7 +25,6 @@
           PublishRootVolSizeParameter: "{{ publish.root_vol_size }}"
           PublishDataVolSizeParameter: "{{ publish.data_vol_size }}"
           PublishTagNameParameter: "{{ stack_prefix }}-{{ publish.tag_name }}"
-          ApplicationVersionParameter: "{{ compute.application_version }}"
           RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
           MessagingStackNameParameter: "{{ stack_prefix }}-{{ messaging.stack_name }}"

@@ -38,7 +38,6 @@
           PublishDispatcherRootVolSizeParameter: "{{ publish_dispatcher.root_vol_size }}"
           PublishDispatcherDataVolSizeParameter: "{{ publish_dispatcher.data_vol_size }}"
           PublishDispatcherTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.tag_name }}"
-          ApplicationVersionParameter: "{{ compute.application_version }}"
           PublishDispatcherLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.load_balancer.tag_name }}"
           RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"

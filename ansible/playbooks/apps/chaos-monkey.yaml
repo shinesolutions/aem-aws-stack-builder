@@ -22,7 +22,6 @@
           ChaosMonkeyASGSubnetListParameter: "{{ aem_vpc.chaos_monkey_subnet_a_id }}, {{ aem_vpc.chaos_monkey_subnet_b_id }}"
           ChaosMonkeyRootVolSizeParameter: "{{ chaos_monkey.root_vol_size }}"
           ChaosMonkeyTagNameParameter: "{{ stack_prefix }}-{{ chaos_monkey.tag_name }}"
-          ApplicationVersionParameter: "{{ compute.application_version }}"
           RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"

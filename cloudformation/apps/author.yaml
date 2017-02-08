@@ -52,10 +52,6 @@ Parameters:
     Type: String
     Description: The Author Name Tag
 
-  ApplicationVersionParameter:
-    Type: String
-    Description: The Application Version Number
-
   AuthorLoadBalancerTagNameParameter:
     Type: String
     Description: The Author Load Balancer Name Tag
@@ -117,9 +113,6 @@ Resources:
           Fn::Sub: ${AuthorTagNameParameter}-Primary
       - Key: Component
         Value: author-primary
-      - Key: ApplicationVersion
-        Value:
-          Ref: ApplicationVersionParameter
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n\

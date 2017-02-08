@@ -37,7 +37,6 @@
           AuthorDispatcherRootVolSizeParameter: "{{ author_dispatcher.root_vol_size }}"
           AuthorDispatcherDataVolSizeParameter: "{{ author_dispatcher.data_vol_size }}"
           AuthorDispatcherTagNameParameter: "{{ stack_prefix }}-{{ author_dispatcher.tag_name }}"
-          ApplicationVersionParameter: "{{ compute.application_version }}"
           AuthorDispatcherLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ author_dispatcher.load_balancer.tag_name }}"
           RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"

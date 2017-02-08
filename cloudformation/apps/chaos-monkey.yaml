@@ -117,10 +117,6 @@ Resources:
       - Key: Component
         Value: chaos-monkey
         PropagateAtLaunch: true
-      - Key: ApplicationVersion
-        Value:
-          Ref: ApplicationVersionParameter
-        PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
 

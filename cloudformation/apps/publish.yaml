@@ -52,10 +52,6 @@ Parameters:
     Type: String
     Description: The Publish Name Tag
 
-  ApplicationVersionParameter:
-    Type: String
-    Description: The Application Version Number
-
   RolesStackNameParameter:
     Type: String
     Description: The AEM Roles Stack Name
@@ -149,10 +145,6 @@ Resources:
         PropagateAtLaunch: true
       - Key: Component
         Value: publish
-        PropagateAtLaunch: true
-      - Key: ApplicationVersion
-        Value:
-          Ref: ApplicationVersionParameter
         PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: PublishASGSubnetListParameter

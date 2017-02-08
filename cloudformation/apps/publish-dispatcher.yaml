@@ -72,10 +72,6 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Name Tag
 
-  ApplicationVersionParameter:
-    Type: String
-    Description: The Application Version Number
-
   PublishDispatcherLoadBalancerTagNameParameter:
     Type: String
     Description: The Publish Dispatcher Load Balancer Name Tag
@@ -216,9 +212,8 @@ Resources:
       - Key: Component
         Value: publish-dispatcher
         PropagateAtLaunch: true
-      - Key: ApplicationVersion
-        Value:
-          Ref: ApplicationVersionParameter
+      - Key: ApplicationDescriptorUrl
+        Value: PLACEHOLDER
         PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: PublishDispatcherASGSubnetListParameter

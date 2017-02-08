@@ -23,7 +23,6 @@
           OrchestratorRootVolSizeParameter: "{{ orchestrator.root_vol_size }}"
           OrchestratorDataVolSizeParameter: "{{ orchestrator.data_vol_size }}"
           OrchestratorTagNameParameter: "{{ stack_prefix }}-{{ orchestrator.tag_name }}"
-          ApplicationVersionParameter: "{{ compute.application_version }}"
           RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"

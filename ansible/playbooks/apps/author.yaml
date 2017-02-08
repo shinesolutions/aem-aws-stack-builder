@@ -33,7 +33,6 @@
           AuthorRootVolSizeParameter: "{{ author.root_vol_size }}"
           AuthorDataVolSizeParameter: "{{ author.data_vol_size }}"
           AuthorTagNameParameter: "{{ stack_prefix }}-{{ author.tag_name }}"
-          ApplicationVersionParameter: "{{ compute.application_version }}"
           AuthorLoadBalancerTagNameParameter: "{{ stack_prefix }}-{{ author.load_balancer.tag_name }}"
           RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
           SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
