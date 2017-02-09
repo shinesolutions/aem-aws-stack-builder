@@ -157,13 +157,4 @@ delete-cert:
 	aws iam delete-server-certificate \
 	    --server-certificate-name $(CERT_NAME)
 
-# download public release of AEM AWS Stack Provisioner
-# to be uploaded to S3 as part of stack-data playbook
-download-stack-provisioner:
-	mkdir -p stage
-	curl \
-    -L \
-	  --output stage/aem-aws-stack-provisioner.tar.gz \
-	  https://s3-ap-southeast-2.amazonaws.com/aem-stack-builder/aem-aws-stack-provisioner.tar.gz
-
 .PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert

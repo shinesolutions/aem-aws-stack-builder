@@ -84,6 +84,14 @@ compute:
 s3:
   data_bucket_name: aem-stack-builder
 
+stack_provisioner:
+  source_bucket_name: aem-stack-builder
+  source: aem-aws-stack-provisioner-1.0.0.tar.gz
+
+stack_orchestrator:
+  source_bucket_name: aem-stack-builder
+  source: aem-orchestrator-1.0.0.jar
+
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
   instance_profile: aem-roles-stack-PublishDispatcherInstanceProfile-FSFBXO7Q2ESY

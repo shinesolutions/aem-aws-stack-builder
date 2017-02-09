@@ -43,6 +43,23 @@
       tags:
       - create
 
+    - name: Check that the aem-aws-stack-provisioner.tar.gz exists
+      stat:
+        path: ../../../stage/aem-aws-stack-provisioner.tar.gz
+      register: provisioner_stat_result
+      tags:
+      - create
+
+    - name: Download stack provisioner
+      s3:
+        bucket: "{{ stack_provisioner.source_bucket_name }}"
+        object: "{{ stack_provisioner.source }}"
+        dest: ../../../stage/aem-aws-stack-provisioner.tar.gz
+        mode: get
+      when: provisioner_stat_result.stat.exists == False
+      tags:
+      - create
+
     - name: Upload stack provisioner
       s3:
         bucket: "{{ s3.data_bucket_name }}"
@@ -51,6 +68,33 @@
         mode: put
       tags:
       - create
+
+    - name: Check that the aem-orchestrator.jar exists
+      stat:
+        path: ../../../stage/aem-orchestrator.jar
+      register: orchestrator_stat_result
+      tags:
+      - create
+
+    - name: Download stack orchestrator
+      s3:
+        bucket: "{{ stack_orchestrator.source_bucket_name }}"
+        object: "{{ stack_orchestrator.source }}"
+        dest: ../../../stage/aem-orchestrator.jar
+        mode: get
+      when: orchestrator_stat_result.stat.exists == False
+      tags:
+      - create
+
+    - name: Upload stack orchestrator
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/aem-orchestrator.jar"
+        src: ../../../stage/aem-orchestrator.jar
+        mode: put
+      tags:
+      - create
+
 
     - name: Upload system user credentials
       s3:
