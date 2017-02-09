@@ -177,7 +177,7 @@ Resources:
       AvailabilityZones:
         Ref: AuthorDispatcherASGAvailabilityZoneListParameter
       HealthCheckGracePeriod: 900
-      HealthCheckType: EC2
+      HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: AuthorDispatcherLaunchConfiguration
       LoadBalancerNames:
