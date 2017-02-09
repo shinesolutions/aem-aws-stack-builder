@@ -90,7 +90,7 @@ stack_provisioner:
 
 stack_orchestrator:
   source_bucket_name: aem-stack-builder
-  source: aem-orchestrator-1.0.0.jar
+  source: aem-orchestrator-0.9.0.jar
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack

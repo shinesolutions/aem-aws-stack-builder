@@ -23,7 +23,7 @@
     - name: Create temporary file containing generated credentials
       copy:
         content: "{{ credentials.meta }}"
-        dest: ../../../stage/system_users_credentials.json
+        dest: ../../../stage/system-users-credentials.json
       tags:
       - create
 
