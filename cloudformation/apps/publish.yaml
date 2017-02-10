@@ -118,7 +118,7 @@ Resources:
       AvailabilityZones:
         Ref: PublishASGAvailabilityZoneListParameter
       HealthCheckGracePeriod: 900
-      HealthCheckType: EC2
+      HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: PublishLaunchConfiguration
       MaxSize:
