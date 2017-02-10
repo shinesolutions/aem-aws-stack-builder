@@ -41,13 +41,15 @@ tar -xvf aem-aws-stack-provisioner.tar
 rm aem-aws-stack-provisioner.tar
 
 
-if -d "/opt/shinesolutions/aem-aws-stack-provisioner/" && -f "/opt/shinesolutions/aem-aws-stack-provisioner/custom-common.sh"; then
+if [ -d /opt/shinesolutions/aem-stack-custom-provisioner ] && [ -f /opt/shinesolutions/aem-aws-stack-provisioner/custom-common.sh ]; then
 
     echo "Execute the custom provisioning script..."
-    cd /opt/shinesolutions/aem-aws-stack-provisioner/ && ./custom-common.sh
+    cd /opt/shinesolutions/aem-stack-custom-provisioner && ./custom-common.sh
 
 fi
 
+
+cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
 echo "Applying common Puppet manifest for all components..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/common.pp
