@@ -19,16 +19,16 @@ puppet --version
 python --version
 ruby --version
 
-if aws s3 ls "s3://${data_bucket_name}/${stack_prefix}/" | grep aem-aws-stack-custom-provisioner.tar.gz
+if aws s3 ls "s3://${data_bucket_name}/${stack_prefix}/" | grep aem-stack-custom-provisioner.tar.gz
 then
 
     echo "Downloading AEM Stack Custom Provisioner..."
-    mkdir -p /opt/shinesolutions/aem-aws-stack-custom-provisioner/
-    aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-aws-stack-custom-provisioner.tar.gz" /opt/shinesolutions/aem-aws-stack-custom-provisioner/aem-aws-stack-custom-provisioner.tar.gz
-    cd /opt/shinesolutions/aem-aws-stack-custom-provisioner/
-    gunzip aem-aws-stack-custom-provisioner.tar.gz
-    tar -xvf aem-aws-stack-custom-provisioner.tar
-    rm aem-aws-stack-custom-provisioner.tar
+    mkdir -p /opt/shinesolutions/aem-stack-custom-provisioner/
+    aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-stack-custom-provisioner.tar.gz" /opt/shinesolutions/aem-stack-custom-provisioner/aem-stack-custom-provisioner.tar.gz
+    cd /opt/shinesolutions/aem-stack-custom-provisioner/
+    gunzip aem-stack-custom-provisioner.tar.gz
+    tar -xvf aem-stack-custom-provisioner.tar
+    rm aem-stack-custom-provisioner.tar
 
 fi
 
