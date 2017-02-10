@@ -83,14 +83,9 @@ compute:
 
 s3:
   data_bucket_name: aem-stack-builder
-
-stack_provisioner:
-  source_bucket_name: aem-stack-builder
-  source: aem-aws-stack-provisioner-1.0.0.tar.gz
-
-stack_orchestrator:
-  source_bucket_name: aem-stack-builder
-  source: aem-orchestrator-0.9.0.jar
+  library:
+    stack_provisioner_source: library/aem-aws-stack-provisioner-master-cliffs.tar.gz
+    stack_orchestrator_source: library/aem-orchestrator-0.9.0.jar
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack

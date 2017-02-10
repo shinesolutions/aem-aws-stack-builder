@@ -52,8 +52,8 @@
 
     - name: Download stack provisioner
       s3:
-        bucket: "{{ stack_provisioner.source_bucket_name }}"
-        object: "{{ stack_provisioner.source }}"
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ s3.library.stack_provisioner_source }}"
         dest: ../../../stage/aem-aws-stack-provisioner.tar.gz
         mode: get
       when: provisioner_stat_result.stat.exists == False
@@ -95,8 +95,8 @@
 
     - name: Download stack orchestrator
       s3:
-        bucket: "{{ stack_orchestrator.source_bucket_name }}"
-        object: "{{ stack_orchestrator.source }}"
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ s3.library.stack_orchestrator_source }}"
         dest: ../../../stage/aem-orchestrator.jar
         mode: get
       when: orchestrator_stat_result.stat.exists == False

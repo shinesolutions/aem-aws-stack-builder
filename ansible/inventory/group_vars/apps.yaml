@@ -27,12 +27,12 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-9b7170f8
-  publish: ami-176e6f74
-  author_dispatcher: ami-0d6e6f6e
-  publish_dispatcher: ami-0d6e6f6e
-  orchestrator: ami-927170f1
-  chaos_monkey: ami-927170f1
+  author: ami-01151462
+  publish: ami-6b151408
+  author_dispatcher: ami-a51716c6
+  publish_dispatcher: ami-a51716c6
+  orchestrator: ami-961716f5
+  chaos_monkey: ami-961716f5
 
 security_groups:
   stack_name: aem-security-groups-stack
@@ -83,14 +83,9 @@ compute:
 
 s3:
   data_bucket_name: aem-stack-builder
-
-stack_provisioner:
-  source_bucket_name: aem-stack-builder
-  source: aem-aws-stack-provisioner-1.0.0.tar.gz
-
-stack_orchestrator:
-  source_bucket_name: aem-stack-builder
-  source: aem-orchestrator-0.9.0.jar
+  library:
+    stack_provisioner_source: library/aem-aws-stack-provisioner-master-cliffs.tar.gz
+    stack_orchestrator_source: library/aem-orchestrator-0.9.0.jar
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
