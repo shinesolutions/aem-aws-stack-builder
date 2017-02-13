@@ -123,6 +123,7 @@ Resources:
       SecurityGroups:
       - Fn::ImportValue:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorDispatcherELBSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
       - Ref: AuthorDispatcherSubnetAParameter
       - Ref: AuthorDispatcherSubnetBParameter
