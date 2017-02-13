@@ -1,0 +1,29 @@
+#!/usr/bin/python
+
+from ansible.module_utils.basic import *
+import boto3
+
+def copy_object(src_bucket, src_key, dest_bucket, dest_key):
+    s3 = boto3.resource('s3')
+    src_config = {
+      'Bucket': src_bucket,
+      'Key': src_key
+    }
+    s3.meta.client.copy(src_config, dest_bucket, dest_key)
+
+def main():
+
+    module = AnsibleModule(
+      argument_spec = dict(
+        src_bucket  = dict(required=True, type='str'),
+        src_key     = dict(required=True, type='str'),
+        dest_bucket = dict(required=True, type='str'),
+        dest_key    = dict(required=True, type='str')
+      )
+    )
+    copy_object(module.params['src_bucket'], module.params['src_key'], module.params['dest_bucket'], module.params['dest_key'])
+    message = 'Successfully copied {0}/{1} to {2}/{3}' % [module.params['src_bucket'], module.params['src_key'], module.params['dest_bucket'], module.params['dest_key']]
+    module.exit_json(changed = False, msg = message)
+
+if __name__ == '__main__':
+    main()

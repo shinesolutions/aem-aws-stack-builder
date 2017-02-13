@@ -43,75 +43,23 @@
       tags:
       - create
 
-    - name: Check that the aem-aws-stack-provisioner.tar.gz exists
-      stat:
-        path: ../../../stage/aem-aws-stack-provisioner.tar.gz
-      register: provisioner_stat_result
+    - name: Copy AEM Stack Provisioner from library to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/aem-aws-stack-provisioner-{{ s3.library.aem_aws_stack_provisioner_version }}.tar.gz"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/aem-aws-stack-provisioner-{{ s3.library.aem_aws_stack_provisioner_version }}.tar.gz"
       tags:
       - create
 
-    - name: Download stack provisioner
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ s3.library.stack_provisioner_source }}"
-        dest: ../../../stage/aem-aws-stack-provisioner.tar.gz
-        mode: get
-      when: provisioner_stat_result.stat.exists == False
+    - name: Copy AEM Orchestrator from library to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/aem-orchestrator-{{ s3.library.aem_orchestrator_version }}.jar"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/aem-orchestrator-{{ s3.library.aem_orchestrator_version }}.jar"
       tags:
       - create
-
-    - name: Upload stack provisioner
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/aem-aws-stack-provisioner.tar.gz"
-        src: ../../../stage/aem-aws-stack-provisioner.tar.gz
-        mode: put
-      tags:
-      - create
-
-    - name: Check that the aem-stack-custom-provisioner.tar.gz exists
-      stat:
-        path: ../../../stage/aem-stack-custom-provisioner.tar.gz
-      register: custom_provisioner_stat_result
-      tags:
-      - create
-
-    - name: Upload custom stack provisioner
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/aem-stack-custom-provisioner.tar.gz"
-        src: ../../../stage/aem-stack-custom-provisioner.tar.gz
-        mode: put
-      when: custom_provisioner_stat_result.stat.exists == True
-      tags:
-      - create
-
-    - name: Check that the aem-orchestrator.jar exists
-      stat:
-        path: ../../../stage/aem-orchestrator.jar
-      register: orchestrator_stat_result
-      tags:
-      - create
-
-    - name: Download stack orchestrator
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ s3.library.stack_orchestrator_source }}"
-        dest: ../../../stage/aem-orchestrator.jar
-        mode: get
-      when: orchestrator_stat_result.stat.exists == False
-      tags:
-      - create
-
-    - name: Upload stack orchestrator
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/aem-orchestrator.jar"
-        src: ../../../stage/aem-orchestrator.jar
-        mode: put
-      tags:
-      - create
-
 
     - name: Upload system user credentials
       s3:
