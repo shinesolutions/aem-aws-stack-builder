@@ -44,7 +44,7 @@ rm aem-aws-stack-provisioner.tar
 if [ -d /opt/shinesolutions/aem-stack-custom-provisioner ] && [ -f /opt/shinesolutions/aem-stack-custom-provisioner/custom-common.sh ]; then
 
     echo "Execute the custom provisioning script..."
-    cd /opt/shinesolutions/aem-stack-custom-provisioner && ./custom-common.sh
+    cd /opt/shinesolutions/aem-stack-custom-provisioner && ./custom-common.sh ${stack_prefix} ${component}
 
 fi
 
