@@ -203,6 +203,7 @@ Resources:
       SecurityGroups:
       - Fn::ImportValue:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
       - Ref: AuthorSubnetAParameter
       - Ref: AuthorSubnetBParameter
