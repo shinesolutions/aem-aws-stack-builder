@@ -86,7 +86,7 @@
         src_bucket: "{{ s3.data_bucket_name }}"
         src_key: "library/aem-aws-stack-provisioner-{{ s3.library.aem_aws_stack_provisioner_version }}.tar.gz"
         dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/aem-aws-stack-provisioner.tar.gz"
+        dest_key: "{{ stack_prefix }}/aem-aws-stack-provisioner-{{ s3.library.aem_aws_stack_provisioner_version }}.tar.gz"
       tags:
       - create
 

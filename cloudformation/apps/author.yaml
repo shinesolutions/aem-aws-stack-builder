@@ -72,6 +72,10 @@ Parameters:
     Type: String
     Description: Bucket name that stores Stack data files
 
+  AemAwsStackProvisionerVersionParameter:
+    Type: String
+    Description: AEM AWS Stack Provisioner version number
+
 Resources:
 
   AuthorPrimaryInstance:
@@ -120,7 +124,7 @@ Resources:
             \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-primary\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-primary ${AemAwsStackProvisionerVersionParameter}\n"
   AuthorStandbyInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -170,7 +174,7 @@ Resources:
             \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-standby\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-standby ${AemAwsStackProvisionerVersionParameter}\n"
 
   AuthorLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer

@@ -18,7 +18,6 @@ Parameters:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Topic Name
 
-
 Resources:
 
   AEMAutoScalingGroupEventQueue:

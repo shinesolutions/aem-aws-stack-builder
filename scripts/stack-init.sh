@@ -2,14 +2,15 @@
 set -o nounset
 set -o errexit
 
-if [ "$#" -ne 3 ]; then
-  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix> <component>'
+if [ "$#" -ne 4 ]; then
+  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix> <component> <aem_aws_stack_provisioner_version>'
   exit 1
 fi
 
 data_bucket_name=$1
 stack_prefix=$2
 component=$3
+aem_aws_stack_provisioner_version=$4
 PATH=$PATH:/opt/puppetlabs/bin
 
 echo "Initialising AEM Stack Builder provisioning..."
@@ -34,12 +35,11 @@ fi
 
 echo "Downloading AEM Stack Provisioner..."
 mkdir -p /opt/shinesolutions/aem-aws-stack-provisioner/
-aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-aws-stack-provisioner.tar.gz" /opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner.tar.gz
+aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz" /opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
-gunzip aem-aws-stack-provisioner.tar.gz
-tar -xvf aem-aws-stack-provisioner.tar
-rm aem-aws-stack-provisioner.tar
-
+gunzip "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
+tar -xvf "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
+rm "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
 
 if [ -d /opt/shinesolutions/aem-stack-custom-provisioner ] && [ -f /opt/shinesolutions/aem-stack-custom-provisioner/custom-common.sh ]; then
 
