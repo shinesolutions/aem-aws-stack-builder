@@ -6,12 +6,6 @@
 
   tasks:
 
-    - name: Generate random credentials for system users
-      system_users_credentials:
-      register: credentials
-      tags:
-      - create
-
     - name: Ensure stage directory exists
       file:
         path: ../../../stage
@@ -20,10 +14,34 @@
       tags:
       - create
 
+    - name: Generate random credentials for system users
+      system_users_credentials:
+      register: system_users_credentials
+      tags:
+      - create
+
     - name: Create temporary file containing generated credentials
       copy:
-        content: "{{ credentials.meta }}"
+        content: "{{ system_users_credentials.meta }}"
         dest: ../../../stage/system-users-credentials.json
+      tags:
+      - create
+
+    - name: Generate stack Facter facts
+      stack_facter_facts:
+        proxy_enabled: "{{ proxy.enabled }}"
+        proxy_protocol: "{{ proxy.protocol }}"
+        proxy_host: "{{ proxy.host }}"
+        proxy_port: "{{ proxy.port }}"
+        aem_orchestrator_version: "{{ s3.library.aem_orchestrator_version }}"
+      register: stack_facter_facts
+      tags:
+      - create
+
+    - name: Create custom file containing generated stack Facter facts
+      copy:
+        content: "{{ stack_facter_facts.meta }}"
+        dest: ../../../stage/stack-facts.txt
       tags:
       - create
 
@@ -40,6 +58,26 @@
         object: "{{ stack_prefix }}/stack-init.sh"
         src: ../../../scripts/stack-init.sh
         mode: put
+      tags:
+      - create
+
+    - name: Upload system user credentials
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/system-users-credentials.json"
+        src: ../../../stage/system-users-credentials.json
+        mode: put
+        encrypt: yes
+      tags:
+      - create
+
+    - name: Upload stack Facter facts
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/stack-facts.txt"
+        src: ../../../stage/stack-facts.txt
+        mode: put
+        encrypt: yes
       tags:
       - create
 
@@ -75,16 +113,6 @@
         src: ../../../stage/aem-stack-custom-provisioner.tar.gz
         mode: put
       when: custom_provisioner_stat_result.stat.exists == True
-      tags:
-      - create
-
-    - name: Upload system user credentials
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/system-users-credentials.json"
-        src: ../../../stage/system-users-credentials.json
-        mode: put
-        encrypt: yes
       tags:
       - create
 

@@ -55,14 +55,13 @@ echo "Applying common Puppet manifest for all components..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/common.pp
 
 echo "Checking orchestration tags for ${component} component..."
-/opt/shinesolutions/aws-tools/wait_for_ec2tag.py "$component"
+/opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
 
 echo "Setting AWS resources as Facter facts..."
-/opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}"
+/opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
 
 echo "Applying Puppet manifest for ${component} component..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
 
 echo "Testing ${component} component using Serverspec..."
 cd test/serverspec && rake spec "SPEC=spec/${component}_spec.rb"
-
