@@ -35,7 +35,7 @@ fi
 
 echo "Downloading AEM Stack Provisioner..."
 mkdir -p /opt/shinesolutions/aem-aws-stack-provisioner/
-aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz" /opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz
+aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz" "/opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 gunzip "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 tar -xvf "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
