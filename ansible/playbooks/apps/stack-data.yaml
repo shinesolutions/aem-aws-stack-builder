@@ -101,7 +101,7 @@
 
     - name: Check that custom AEM Stack Provisioner exists
       stat:
-        path: ../../../stage/aem-stack-custom-provisioner.tar.gz
+        path: ../../../stage/aem-custom-stack-provisioner.tar.gz
       register: custom_provisioner_stat_result
       tags:
       - create
@@ -109,8 +109,8 @@
     - name: Upload custom AEM Stack Provisioner
       s3:
         bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/aem-stack-custom-provisioner.tar.gz"
-        src: ../../../stage/aem-stack-custom-provisioner.tar.gz
+        object: "{{ stack_prefix }}/aem-custom-stack-provisioner.tar.gz"
+        src: ../../../stage/aem-custom-stack-provisioner.tar.gz
         mode: put
       when: custom_provisioner_stat_result.stat.exists == True
       tags:
