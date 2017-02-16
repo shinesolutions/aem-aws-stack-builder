@@ -41,6 +41,9 @@ gunzip "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 tar -xvf "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
 rm "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
 
+echo "Checking orchestration tags for ${component} component..."
+/opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
+
 if [ -d /opt/shinesolutions/aem-stack-custom-provisioner ] && [ -f /opt/shinesolutions/aem-stack-custom-provisioner/custom-common.sh ]; then
 
     echo "Execute the custom provisioning script..."
@@ -48,14 +51,11 @@ if [ -d /opt/shinesolutions/aem-stack-custom-provisioner ] && [ -f /opt/shinesol
 
 fi
 
-
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
 echo "Applying common Puppet manifest for all components..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/common.pp
 
-echo "Checking orchestration tags for ${component} component..."
-/opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
 
 echo "Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
