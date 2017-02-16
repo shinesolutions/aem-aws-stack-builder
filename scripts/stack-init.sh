@@ -41,13 +41,13 @@ gunzip "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 tar -xvf "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
 rm "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
 
-if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesolutions/aem-custom-stack-provisioner/custom-common.sh ]; then
 
-    echo "Execute the custom provisioning script..."
-    cd /opt/shinesolutions/aem-custom-stack-provisioner && ./custom-common.sh "${stack_prefix}" "${component}"
+if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesolutions/aem-custom-stack-provisioner/pre-common.sh ]; then
+
+    echo "Execute the pre-common custom provisioning script..."
+    cd /opt/shinesolutions/aem-custom-stack-provisioner && ./pre-common.sh "${stack_prefix}" "${component}"
 
 fi
-
 
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
@@ -62,6 +62,13 @@ echo "Setting AWS resources as Facter facts..."
 
 echo "Applying Puppet manifest for ${component} component..."
 puppet apply --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
+
+if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesolutions/aem-custom-stack-provisioner/post-common.sh ]; then
+
+    echo "Execute the post-common custom provisioning script..."
+    cd /opt/shinesolutions/aem-custom-stack-provisioner && ./post-common.sh "${stack_prefix}" "${component}"
+
+fi
 
 echo "Testing ${component} component using Serverspec..."
 cd test/serverspec && rake spec "SPEC=spec/${component}_spec.rb"
