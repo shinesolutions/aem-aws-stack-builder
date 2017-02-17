@@ -70,5 +70,7 @@ if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesol
 
 fi
 
+cd /opt/shinesolutions/aem-aws-stack-provisioner/
+
 echo "Testing ${component} component using Serverspec..."
 cd test/serverspec && rake spec "SPEC=spec/${component}_spec.rb"
