@@ -27,7 +27,7 @@
           SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
-          AemAwsStackProvisionerVersionParameter: "{{ s3.library.aem_aws_stack_provisioner_version }}"
+          AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
       tags:
       - create
 
