@@ -13,12 +13,12 @@
         disable_rollback: true
         template: "../../../cloudformation/apps/roles.yaml"
         template_parameters:
-          PublishDispatcherRoleNameParameter: "{{ roles.publish_dispatcher }}"
-          PublishRoleNameParameter: "{{ roles.publish }}"
-          AuthorRoleNameParameter: "{{ roles.author }}"
-          AuthorDispatcherRoleNameParameter: "{{ roles.author_dispatcher }}"
-          OrchestratorRoleNameParameter: "{{ roles.orchestrator }}"
-          ChaosMonkeyRoleNameParameter: "{{ roles.chaos_monkey }}"
+          PublishDispatcherRoleNameParameter: "{{ stack_prefix }}-{{ roles.publish_dispatcher }}"
+          PublishRoleNameParameter: "{{ stack_prefix }}-{{ roles.publish }}"
+          AuthorRoleNameParameter: "{{ stack_prefix }}-{{ roles.author }}"
+          AuthorDispatcherRoleNameParameter: "{{ stack_prefix }}-{{ roles.author_dispatcher }}"
+          OrchestratorRoleNameParameter: "{{ stack_prefix }}-{{ roles.orchestrator }}"
+          ChaosMonkeyRoleNameParameter: "{{ stack_prefix }}-{{ roles.chaos_monkey }}"
       tags:
       - create
 
@@ -43,6 +43,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"           
+        "stack_query.rc == 0"
       tags:
       - delete
