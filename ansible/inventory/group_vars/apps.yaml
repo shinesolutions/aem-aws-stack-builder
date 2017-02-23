@@ -90,7 +90,7 @@ library:
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
-  instance_profile: cliffs-aem-roles-stack-PublishInstanceProfile-DNZJ49E17ZK4
+  instance_profile: sandpit-aem-roles-stack-PublishDispatcherInstanceProfile-BZ3EQ0XVWY4T
   instance_type: t2.micro
   min_size: 2
   max_size: 2
@@ -104,7 +104,7 @@ publish_dispatcher:
 
 publish:
   stack_name: aem-publish-stack
-  instance_profile: cliffs-aem-roles-stack-PublishDispatcherInstanceProfile-121ECAZK2TPY0
+  instance_profile: sandpit-aem-roles-stack-PublishInstanceProfile-WWMQNWNOAMYO
   instance_type: m3.large
   min_size: 2
   max_size: 2
@@ -114,7 +114,7 @@ publish:
 
 author:
   stack_name: aem-author-stack
-  instance_profile: cliffs-aem-roles-stack-AuthorInstanceProfile-1KIV5LHVC4WF3
+  instance_profile: sandpit-aem-roles-stack-AuthorInstanceProfile-NJMGT3AKZJ87
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 20
@@ -125,7 +125,7 @@ author:
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
-  instance_profile: cliffs-aem-roles-stack-AuthorDispatcherInstanceProfile-1185QRCTDDPQ
+  instance_profile: sandpit-aem-roles-stack-AuthorDispatcherInstanceProfile-ZPN2F88YDSNX
   instance_type: t2.micro
   min_size: 2
   max_size: 2
@@ -138,7 +138,7 @@ author_dispatcher:
 
 orchestrator:
   stack_name: aem-orchestrator-stack
-  instance_profile: cliffs-aem-roles-stack-OrchestratorInstanceProfile-N42J44423JGR
+  instance_profile: sandpit-aem-roles-stack-OrchestratorInstanceProfile-3AP3UCAUP5A4
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
@@ -146,7 +146,7 @@ orchestrator:
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
-  instance_profile: cliffs-aem-roles-stack-ChaosMonkeyInstanceProfile-901SCI66LQGO
+  instance_profile: sandpit-aem-roles-stack-ChaosMonkeyInstanceProfile-1NVOO0EDQG6GY
   instance_type: t2.micro
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
