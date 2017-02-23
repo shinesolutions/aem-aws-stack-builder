@@ -110,6 +110,7 @@ Resources:
                 Action:
                   - s3:Get*
                   - s3:List*
+                  - s3:Put*
                 Resource: "*"
               - Effect: Allow
                 Action:
