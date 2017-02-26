@@ -149,6 +149,10 @@ Resources:
                 Action:
                   - ec2:Describe*
                   - ec2:CreateTags
+                  - ec2:AttachVolume
+                  - ec2:CreateVolume
+                  - ec2:DetachVolume
+                  - ec2:CreateSnapshot
                   - autoscaling:CreateOrUpdateTags
                 Resource: "*"
               - Effect: Allow
