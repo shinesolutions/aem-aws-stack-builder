@@ -10,12 +10,14 @@ proxy_protocol=%s
 proxy_host=%s
 proxy_port=%s
 aem_orchestrator_version=%s
+oak_run_version=%s
 """ % (
             str(params['proxy_enabled']).lower(),
             params['proxy_protocol'],
             params['proxy_host'],
             params['proxy_port'],
-            params['aem_orchestrator_version']
+            params['aem_orchestrator_version'],
+            params['oak_run_version']
         )
 
 def main():
@@ -27,6 +29,7 @@ def main():
         proxy_host               = dict(required=True, type='str'),
         proxy_port               = dict(required=True, type='str'), # string type to allow empty value when proxy is irrelevant
         aem_orchestrator_version = dict(required=True, type='str'),
+        oak_run_version          = dict(required=True, type='str'),
       )
     )
     response = generate_facts(module.params)

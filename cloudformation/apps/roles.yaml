@@ -105,6 +105,7 @@ Resources:
                   - ec2:CreateVolume
                   - ec2:DetachVolume
                   - ec2:CreateSnapshot
+                  - ec2:CreateTags
                 Resource: "*"
               - Effect: Allow
                 Action:

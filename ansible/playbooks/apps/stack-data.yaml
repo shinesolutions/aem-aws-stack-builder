@@ -34,6 +34,7 @@
         proxy_host: "{{ proxy.host }}"
         proxy_port: "{{ proxy.port }}"
         aem_orchestrator_version: "{{ library.aem_orchestrator_version }}"
+        oak_run_version: "{{ library.oak_run_version }}"
       register: stack_facter_facts
       tags:
       - create
@@ -96,6 +97,15 @@
         src_key: "library/aem-orchestrator-{{ library.aem_orchestrator_version }}.jar"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem-orchestrator-{{ library.aem_orchestrator_version }}.jar"
+      tags:
+      - create
+
+    - name: Copy Oak run from library to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/oak-run-{{ library.oak_run_version }}.jar"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/oak-run-{{ library.oak_run_version }}.jar"
       tags:
       - create
 
