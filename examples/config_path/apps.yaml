@@ -94,6 +94,8 @@ publish_dispatcher:
   instance_type: t2.micro
   min_size: 2
   max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
@@ -106,12 +108,20 @@ publish:
   instance_type: m3.large
   min_size: 2
   max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
+  use_data_vol_snapshot: 'false'
+  data_vol_snapshot_id: snap-06eea7764113b8844
   tag_name: AEM Publish
 
 author:
   stack_name: aem-author-stack
   instance_profile: aem-roles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
   instance_type: m3.large
+  root_vol_size: 20
+  data_vol_size: 20
+  use_data_vol_snapshot: 'false'
+  data_vol_snapshot_id: snap-06eea7764113b8844
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
@@ -123,6 +133,8 @@ author_dispatcher:
   instance_type: t2.micro
   min_size: 2
   max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
   load_balancer:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
@@ -132,20 +144,23 @@ orchestrator:
   stack_name: aem-orchestrator-stack
   instance_profile: aem-roles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
   instance_type: t2.small
+  root_vol_size: 20
+  data_vol_size: 20
   tag_name: AEM Orchestrator
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
   instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
   instance_type: t2.micro
+  root_vol_size: 20
   tag_name: AEM Chaos Monkey
 
-  dns_records:
-    stack_name: aem-dns-records
-    route53_hosted_zone_name: aem-stack.com.
-    author:
-      record_set_name: author
-    author_dispatcher:
-      record_set_name: author-dispatcher
-    publish_dispatcher:
-      record_set_name: publish-dispatcher
+dns_records:
+  stack_name: aem-dns-records
+  route53_hosted_zone_name: aem-stack.com.
+  author:
+    record_set_name: author
+  author_dispatcher:
+    record_set_name: author-dispatcher
+  publish_dispatcher:
+    record_set_name: publish-dispatcher

@@ -2,7 +2,7 @@ version ?= 0.9.0
 
 # development targets
 
-ci: clean deps lint
+ci: clean deps lint package
 
 clean:
 	rm -rf logs

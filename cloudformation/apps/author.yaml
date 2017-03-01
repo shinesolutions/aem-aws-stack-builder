@@ -87,7 +87,9 @@ Parameters:
 
 Conditions:
   UseAuthorDataVolSnapshotCondition:
-    !Equals [!Ref UseAuthorDataVolSnapshotParameter, true]
+    Fn::Equals:
+      - Ref: UseAuthorDataVolSnapshotParameter
+      - true
 
 Resources:
 
