@@ -48,6 +48,15 @@ Parameters:
     Type: Number
     Description: The Publish Instances Data EBS Volume Size
 
+  UsePublishDataVolSnapshotParameter:
+    Type: String
+    AllowedValues: [true, false]
+    Description: Wheather to use the Publish Snapshot Data Volume.
+
+  PublishDataVolSnapshotParamater:
+    Type: String
+    Description: The Publish Data Volume Snapshot Id
+
   PublishTagNameParameter:
     Type: String
     Description: The Publish Name Tag
@@ -76,8 +85,12 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
-Resources:
 
+Conditions:
+  UsePublishDataVolSnapshotCondition:
+    !Equals [!Ref UsePublishDataVolSnapshotParameter, true]
+
+Resources:
 
   PublishLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -96,6 +109,11 @@ Resources:
           VolumeSize:
             Ref: PublishDataVolSizeParameter
           VolumeType: gp2
+          SnapshotId:
+            Fn::If:
+              - UsePublishDataVolSnapshotCondition
+              - Ref: PublishDataVolSnapshotParamater
+              - Ref: AWS::NoValue
       IamInstanceProfile:
         Ref: PublishInstanceProfileParameter
       ImageId:
@@ -117,6 +135,7 @@ Resources:
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} publish ${AemAwsStackProvisionerVersionParameter}\n"
+
   PublishAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
