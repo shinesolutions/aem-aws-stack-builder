@@ -48,6 +48,15 @@ Parameters:
     Type: Number
     Description: Author Instances Data EBS Volume Size
 
+  UseAuthorDataVolSnapshotParameter:
+    Type: String
+    AllowedValues: [true, false]
+    Description: Wheather to use the Author Snapshot Data Volume.
+
+  AuthorDataVolSnapshotParamater:
+    Type: String
+    Description: The Author Data Volume Snapshot Id
+
   AuthorTagNameParameter:
     Type: String
     Description: The Author Name Tag
@@ -76,6 +85,10 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
+Conditions:
+  UseAuthorDataVolSnapshotCondition:
+    !Equals [!Ref UseAuthorDataVolSnapshotParameter, true]
+
 Resources:
 
   AuthorPrimaryInstance:
@@ -94,6 +107,11 @@ Resources:
           VolumeSize:
             Ref: AuthorDataVolSizeParameter
           VolumeType: gp2
+          SnapshotId:
+            Fn::If:
+              - UseAuthorDataVolSnapshotCondition
+              - Ref: AuthorDataVolSnapshotParamater
+              - Ref: AWS::NoValue
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter
       ImageId:
@@ -125,6 +143,7 @@ Resources:
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-primary ${AemAwsStackProvisionerVersionParameter}\n"
+
   AuthorStandbyInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -141,6 +160,11 @@ Resources:
           VolumeSize:
             Ref: AuthorDataVolSizeParameter
           VolumeType: gp2
+          SnapshotId:
+            Fn::If:
+              - UseAuthorDataVolSnapshotCondition
+              - Ref: AuthorDataVolSnapshotParamater
+              - Ref: AWS::NoValue
       IamInstanceProfile:
         Ref: AuthorInstanceProfileParameter
       ImageId:
