@@ -114,7 +114,7 @@ Resources:
         Target:
           Ref: PublishDispatcherLoadBalancerHealthCheckTargetParameter
         HealthyThreshold: '2'
-        UnhealthyThreshold: '2'
+        UnhealthyThreshold: '10'
         Interval: '30'
         Timeout: '5'
       Listeners:
