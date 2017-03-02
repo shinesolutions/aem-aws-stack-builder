@@ -58,6 +58,7 @@ Resources:
                   - autoscaling:DescribeLaunchConfigurations
                   - autoscaling:UpdateAutoScalingGroup
                   - autoscaling:CreateOrUpdateTags
+                  - cloudwatch:PutMetricData
                 Resource: "*"
               - Effect: Allow
                 Action:
@@ -106,6 +107,7 @@ Resources:
                   - ec2:DetachVolume
                   - ec2:CreateSnapshot
                   - ec2:CreateTags
+                  - cloudwatch:PutMetricData
                 Resource: "*"
               - Effect: Allow
                 Action:
@@ -155,6 +157,7 @@ Resources:
                   - ec2:DetachVolume
                   - ec2:CreateSnapshot
                   - autoscaling:CreateOrUpdateTags
+                  - cloudwatch:PutMetricData
                 Resource: "*"
               - Effect: Allow
                 Action:
