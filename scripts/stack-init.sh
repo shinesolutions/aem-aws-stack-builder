@@ -30,6 +30,7 @@ then
     gunzip aem-custom-stack-provisioner.tar.gz
     tar -xvf aem-custom-stack-provisioner.tar
     rm aem-custom-stack-provisioner.tar
+    chown -R root:root /opt/shinesolutions/aem-custom-stack-provisioner/
 
 fi
 
@@ -40,6 +41,7 @@ cd /opt/shinesolutions/aem-aws-stack-provisioner/
 gunzip "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 tar -xvf "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
 rm "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
+chown -R root:root /opt/shinesolutions/aem-aws-stack-provisioner/
 
 
 if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesolutions/aem-custom-stack-provisioner/pre-common.sh ]; then
