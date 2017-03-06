@@ -27,12 +27,12 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-b92625da
-  publish: ami-dd2625be
-  author_dispatcher: ami-eba9a988
-  publish_dispatcher: ami-eba9a988
-  orchestrator: ami-6caaaa0f
-  chaos_monkey: ami-6caaaa0f
+  author: ami-27525044
+  publish: ami-9f5153fc
+  author_dispatcher: ami-20696b43
+  publish_dispatcher: ami-20696b43
+  orchestrator: ami-9fbdbefc
+  chaos_monkey: ami-9fbdbefc
 
 security_groups:
   stack_name: aem-security-groups-stack
@@ -85,7 +85,7 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 0.9.0
+  aem_aws_stack_provisioner_version: 0.9.1
   aem_orchestrator_version: 0.9.1
   oak_run_version: 1.4.10
 
