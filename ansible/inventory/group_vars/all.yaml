@@ -10,5 +10,5 @@ proxy:
   port:
 
 cron:
-  env_path: '/sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin'
+  env_path: /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin
   https_proxy:
