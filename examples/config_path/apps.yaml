@@ -110,8 +110,6 @@ publish:
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
-  use_data_vol_snapshot: 'false'
-  data_vol_snapshot_id: snap-06eea7764113b8844
   tag_name: AEM Publish
 
 author:
@@ -120,12 +118,18 @@ author:
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 20
-  use_data_vol_snapshot: 'false'
-  data_vol_snapshot_id: snap-06eea7764113b8844
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
   elb_health_check: HTTP:4502/system/health?tags=devops
+
+snapshots:
+  author:
+    use_data_vol_snapshot: 'false'
+    data_vol_snapshot_id: snap-06eea7764113b8844
+  publish:
+    use_data_vol_snapshot: 'false'
+    data_vol_snapshot_id: snap-06eea7764113b8844
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
