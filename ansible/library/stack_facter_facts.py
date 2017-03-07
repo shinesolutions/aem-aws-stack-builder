@@ -11,13 +11,17 @@ proxy_host=%s
 proxy_port=%s
 aem_orchestrator_version=%s
 oak_run_version=%s
+cron_env_path=%s
+cron_https_proxy=%s
 """ % (
             str(params['proxy_enabled']).lower(),
             params['proxy_protocol'],
             params['proxy_host'],
             params['proxy_port'],
             params['aem_orchestrator_version'],
-            params['oak_run_version']
+            params['oak_run_version'],
+            params['cron_env_path'],
+            params['cron_https_proxy'],
         )
 
 def main():
@@ -30,6 +34,8 @@ def main():
         proxy_port               = dict(required=True, type='str'), # string type to allow empty value when proxy is irrelevant
         aem_orchestrator_version = dict(required=True, type='str'),
         oak_run_version          = dict(required=True, type='str'),
+        cron_env_path            = dict(required=True, type='str'),
+        cron_https_proxy         = dict(required=True, type='str'),
       )
     )
     response = generate_facts(module.params)

@@ -35,6 +35,8 @@
         proxy_port: "{{ proxy.port }}"
         aem_orchestrator_version: "{{ library.aem_orchestrator_version }}"
         oak_run_version: "{{ library.oak_run_version }}"
+        cron_env_path: "{{ cron.env_path }}"
+        cron_https_proxy: "{{ cron.https_proxy }}"
       register: stack_facter_facts
       tags:
       - create
