@@ -85,7 +85,7 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 0.9.1
+  aem_aws_stack_provisioner_version: 0.9.0
   aem_orchestrator_version: 0.9.1
   oak_run_version: 1.4.10
 
