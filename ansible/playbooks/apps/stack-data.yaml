@@ -65,6 +65,12 @@
       tags:
       - create
 
+    - name: Check source stack prefix value
+      debug:
+        msg: "source_stack_prefix: {{ source_stack_prefix }}"
+      tags:
+      - create
+
     - name: Copy system user credentials from source bucket to data bucket
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
