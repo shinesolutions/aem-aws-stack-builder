@@ -37,6 +37,7 @@
         oak_run_version: "{{ library.oak_run_version }}"
         cron_env_path: "{{ cron.env_path }}"
         cron_https_proxy: "{{ cron.https_proxy }}"
+        stack_manager_sns_topic_arn: "{{ stack_manager_sns_topic_arn }}"
       register: stack_facter_facts
       tags:
       - create

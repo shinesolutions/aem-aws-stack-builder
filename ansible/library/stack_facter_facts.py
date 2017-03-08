@@ -13,6 +13,7 @@ aem_orchestrator_version=%s
 oak_run_version=%s
 cron_env_path=%s
 cron_https_proxy=%s
+stack_manager_sns_topic_arn=%s
 """ % (
             str(params['proxy_enabled']).lower(),
             params['proxy_protocol'],
@@ -22,20 +23,22 @@ cron_https_proxy=%s
             params['oak_run_version'],
             params['cron_env_path'],
             params['cron_https_proxy'],
+            params['stack_manager_sns_topic_arn'],
         )
 
 def main():
 
     module = AnsibleModule(
       argument_spec = dict(
-        proxy_enabled            = dict(required=True, type='bool'),
-        proxy_protocol           = dict(required=True, type='str'),
-        proxy_host               = dict(required=True, type='str'),
-        proxy_port               = dict(required=True, type='str'), # string type to allow empty value when proxy is irrelevant
-        aem_orchestrator_version = dict(required=True, type='str'),
-        oak_run_version          = dict(required=True, type='str'),
-        cron_env_path            = dict(required=True, type='str'),
-        cron_https_proxy         = dict(required=True, type='str'),
+        proxy_enabled               = dict(required=True, type='bool'),
+        proxy_protocol              = dict(required=True, type='str'),
+        proxy_host                  = dict(required=True, type='str'),
+        proxy_port                  = dict(required=True, type='str'), # string type to allow empty value when proxy is irrelevant
+        aem_orchestrator_version    = dict(required=True, type='str'),
+        oak_run_version             = dict(required=True, type='str'),
+        cron_env_path               = dict(required=True, type='str'),
+        cron_https_proxy            = dict(required=True, type='str'),
+        stack_manager_sns_topic_arn = dict(required=True, type='str'),
       )
     )
     response = generate_facts(module.params)
