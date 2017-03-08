@@ -71,7 +71,7 @@
         src_key: "{{ source_stack_prefix }}/system-users-credentials.json"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/system-users-credentials.json"
-      when: source_stack_prefix is defined
+      when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
       tags:
       - create
 
@@ -81,7 +81,7 @@
         src_key: "{{ source_stack_prefix }}/deploy-artifacts-descriptor.json"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
-      when: source_stack_prefix is defined
+      when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
       tags:
       - create
 
@@ -91,7 +91,7 @@
         src_key: "{{ source_stack_prefix }}/export-backups-descriptor.json"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/export-backups-descriptor.json"
-      when: source_stack_prefix is defined
+      when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
       tags:
       - create
 
@@ -102,7 +102,7 @@
         src: ../../../stage/system-users-credentials.json
         mode: put
         encrypt: yes
-      when: source_stack_prefix is not defined
+      when: (source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == '')
       tags:
       - create
 
