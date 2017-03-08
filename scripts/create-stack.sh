@@ -28,6 +28,7 @@ mkdir -p "logs/$stack_prefix"
 echo "Start creating $stack_prefix $stack_type stack"
 ANSIBLE_LOG_PATH=$log_path \
   ansible-playbook ansible/playbooks/"$stack_type".yaml \
+  -v \
   -i ansible/inventory/hosts \
   --module-path ansible/library/ \
   --tags create \
