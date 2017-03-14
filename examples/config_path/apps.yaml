@@ -27,8 +27,8 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-9b7170f8
-  publish: ami-176e6f74
+  author: ami-eef4f68d
+  publish: ami-e0f7f583
   author_dispatcher: ami-0d6e6f6e
   publish_dispatcher: ami-0d6e6f6e
   orchestrator: ami-927170f1
@@ -86,7 +86,7 @@ s3:
 
 library:
   aem_aws_stack_provisioner_version: 0.9.0
-  aem_orchestrator_version: 0.9.1
+  aem_orchestrator_version: 0.9.2
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
@@ -99,7 +99,7 @@ publish_dispatcher:
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
-  elb_health_check: HTTP:80/system/health?tags=devops
+  elb_health_check: HTTP:80/system/health?tags=shallow
   elb_scheme: internet-facing
 
 publish:
@@ -121,7 +121,7 @@ author:
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
-  elb_health_check: HTTP:4502/system/health?tags=devops
+  elb_health_check: HTTP:4502/system/health?tags=shallow
 
 snapshots:
   author:
@@ -142,7 +142,7 @@ author_dispatcher:
   load_balancer:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
-  elb_health_check: HTTP:80/system/health?tags=devops
+  elb_health_check: HTTP:80/system/health?tags=shallow
 
 orchestrator:
   stack_name: aem-orchestrator-stack
