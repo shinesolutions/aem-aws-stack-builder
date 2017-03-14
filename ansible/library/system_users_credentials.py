@@ -9,7 +9,7 @@ def generate_password(length):
 
 def main():
 
-    system_users = ['orchestrator', 'replicator', 'deployer', 'exporter', 'importer']
+    system_users = ['orchestrator', 'replicator', 'deployer', 'exporter', 'importer', 'admin']
     credentials = {}
     for system_user in system_users:
         credentials[system_user] = generate_password(100)
