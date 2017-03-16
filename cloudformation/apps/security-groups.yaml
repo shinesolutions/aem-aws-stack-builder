@@ -322,17 +322,17 @@ Resources:
       IpProtocol: tcp
       ToPort: '22'
 
-  # Allow tcp inbound from Orchestrator Security Group on 4502 and 5433
+  # Allow tcp inbound from Orchestrator Security Group on 4503 and 5433
   PublishSecurityGroupIngress5:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: OrchestratorSecurityGroup
-      FromPort: '4502'
+      FromPort: '4503'
       GroupId:
         Ref: PublishSecurityGroup
       IpProtocol: tcp
-      ToPort: '4502'
+      ToPort: '4503'
 
   PublishSecurityGroupIngress6:
     Type: AWS::EC2::SecurityGroupIngress
