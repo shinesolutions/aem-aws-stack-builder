@@ -27,8 +27,8 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-27525044
-  publish: ami-9f5153fc
+  author: ami-64dfd207
+  publish: ami-31ded352
   author_dispatcher: ami-c13a38a2
   publish_dispatcher: ami-c13a38a2
   orchestrator: ami-9fbdbefc
@@ -111,7 +111,7 @@ publish:
   min_size: 2
   max_size: 2
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 50
   tag_name: AEM Publish
 
 author:
@@ -119,7 +119,7 @@ author:
   instance_profile: sandpit-aem-roles-stack-AuthorInstanceProfile-XK8SN8WFXZ34
   instance_type: m3.large
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 50
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
