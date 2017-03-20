@@ -54,7 +54,11 @@ fi
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
 echo "Applying common Puppet manifest for all components..."
-puppet apply --modulepath modules --hiera_config conf/hiera.yaml manifests/common.pp
+FACTER_data_bucket_name="${data_bucket_name}" \
+  FACTER_stack_prefix="${stack_prefix}" \
+  puppet apply \
+  --modulepath modules \
+  --hiera_config conf/hiera.yaml manifests/common.pp
 
 echo "Checking orchestration tags for ${component} component..."
 /opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
@@ -76,3 +80,6 @@ cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
 echo "Testing ${component} component using Serverspec..."
 cd test/serverspec && rake spec "SPEC=spec/${component}_spec.rb"
+
+echo "Cleaning up provisioner temp directory..."
+rm -rf /tmp/shinesolutions/aem-aws-stack-provisioner/*
