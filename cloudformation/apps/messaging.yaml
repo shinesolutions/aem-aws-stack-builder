@@ -25,7 +25,7 @@ Resources:
     Properties:
       QueueName:
         Ref: AEMASGEventQueueNameParameter
-      VisibilityTimeout: 30
+      VisibilityTimeout: 60
 
   AEMASGEventTopic:
     Type: AWS::SNS::Topic
