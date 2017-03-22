@@ -5,6 +5,11 @@ Description:
   Create a VPC for the AEM Stack
 
 Parameters:
+  StackPrefix:
+    Type: String
+    Description: Used to Namespace the Exported Resources
+    Default: ""
+
   Ec2VpcCidrBlockParameter:
     Type: String
     Default: 10.0.8.0/21
@@ -29,7 +34,7 @@ Resources:
             Ref: Ec2VpcTagNameParameter
 
 Outputs:
-  Ec2Vpc:
+  VPCId:
     Value:
       Ref: Ec2Vpc
     Description: The newly created VPC for the AEM Stack

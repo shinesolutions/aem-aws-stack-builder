@@ -22,6 +22,7 @@
         disable_rollback: true
         template: "../../../cloudformation/network/network.yaml"
         template_parameters:
+          StackPrefix: "{{ stack_prefix}}"
           VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
           AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"
           AvailabilityZoneBParameter: "{{ aws.availability_zone_b }}"

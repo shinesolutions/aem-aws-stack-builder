@@ -1,0 +1,174 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Export Network Resources to Make It Available for Other Stacks
+
+Parameters:
+  StackPrefix:
+    Type: String
+    Description: Used to Namespace the Exported Resources
+    Default: ""
+
+  VPCId:
+    Type: AWS::EC2::VPC::Id
+    Description: AEM VPC Id
+
+  PublishDispatcherELBSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
+
+  PublishDispatcherELBSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
+
+  PublishDispatcherSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Publish Dispatcher Subnet in Availability Zone A
+
+  PublishDispatcherSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Publish Dispatcher Subnet in Availability Zone B
+
+  PublishSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Publish Subnet in Availability Zone A
+
+  PublishSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Publish Subnet in Availability Zone B
+
+  AuthorSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Subnet in Availability Zone A
+
+  AuthorSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Subnet in Availability Zone B
+
+  AuthorDispatcherSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Dispatcher Subnet in Availability Zone A
+
+  AuthorDispatcherSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Dispatcher Subnet in Availability Zone B
+
+  ToolSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Tool Subnet in Availability Zone A
+    Default: ""
+
+  ToolSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Tool Subnet in Availability Zone B
+    Default: ""
+
+  PublicRouteTable:
+    Type: String
+    Description: The Public Route Table for AEM Stack VPC
+    Default: ""
+
+  PrivateRouteTable:
+    Type: String
+    Description: The Private Route Table for AEM Stack VPC
+    Default: ""
+
+Resources:
+  DummyGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Dummy Security Group to Allow Stack to Work
+      VpcId: !Ref VPCId
+
+Outputs:
+  VPCId:
+    Value: !Ref VPCId
+    Export:
+      Name: !Sub ${StackPrefix}-VPCId
+    Description: AEM VPC Id
+
+  PublishDispatcherELBSubnetA:
+    Value: !Ref PublishDispatcherELBSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetA
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
+
+  PublishDispatcherELBSubnetB:
+    Value: !Ref PublishDispatcherELBSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetB
+    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
+
+  PublishDispatcherSubnetA:
+    Value: !Ref PublishDispatcherSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetA
+    Description: The Publish Dispatcher Subnet in Availability Zone A
+
+  PublishDispatcherSubnetB:
+    Value: !Ref PublishDispatcherSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetB
+    Description: The Publish Dispatcher Subnet in Availability Zone B
+
+  PublishSubnetA:
+    Value: !Ref PublishSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-PublishSubnetA
+    Description: The Publish Subnet in Availability Zone A
+
+  PublishSubnetB:
+    Value: !Ref PublishSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-PublishSubnetB
+    Description: The Publish Subnet in Availability Zone B
+
+  AuthorSubnetA:
+    Value: !Ref AuthorSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorSubnetA
+    Description: The Author Subnet in Availability Zone A
+
+  AuthorSubnetB:
+    Value: !Ref AuthorSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorSubnetB
+    Description: The Author Subnet in Availability Zone B
+
+  AuthorDispatcherSubnetA:
+    Value: !Ref AuthorDispatcherSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetA
+    Description: The Author Dispatcher Subnet in Availability Zone A
+
+  AuthorDispatcherSubnetB:
+    Value: !Ref AuthorDispatcherSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetB
+    Description: The Author Dispatcher Subnet in Availability Zone B
+
+  ToolSubnetA:
+    Value: !Ref ToolSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-ToolSubnetA
+    Description: The Tool Subnet in Availability Zone A
+
+
+  ToolSubnetB:
+    Value: !Ref ToolSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-ToolSubnetB
+    Description: The Tool Subnet in Availability Zone B
+
+
+  PublicRouteTable:
+    Value: !Ref PublicRouteTable
+    Export:
+      Name: !Sub ${StackPrefix}-PublicRouteTable
+    Description: The Public Route Table for AEM Stack VPC
+
+
+  PrivateRouteTable:
+    Value: !Ref PrivateRouteTable
+    Export:
+      Name: !Sub ${StackPrefix}-PrivateRouteTable
+    Description: The Private Route Table for AEM Stack VPC

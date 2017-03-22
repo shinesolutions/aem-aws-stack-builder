@@ -13,6 +13,7 @@
         disable_rollback: true
         template: "../../../cloudformation/network/vpc.yaml"
         template_parameters:
+          StackPrefix: "{{ stack_prefix }}"
           Ec2VpcCidrBlockParameter: "{{ ec2_vpc.cidr_block }}"
           Ec2VpcTagNameParameter: "{{ stack_prefix }}-{{ ec2_vpc.tag_name }}"
       tags:
@@ -39,6 +40,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"        
+        "stack_query.rc == 0"
       tags:
       - delete

@@ -1,0 +1,62 @@
+---
+- name: AEM Network CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: Create CloudFormation Stack that Exports AEM Network Resources
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ network_exports.stack_name }}"
+        state: present
+        region: "{{ aws.region }}"
+        disable_rollback: true
+        template: "../../../cloudformation/network/network-exports.yaml"
+        template_parameters:
+          StackPrefix: "{{ stack_prefix }}"
+          VPCId: "{{ network_exports.VPCId }}"
+          PublishDispatcherELBSubnetA: "{{ network_exports.PublishDispatcherELBSubnetA }}"
+          PublishDispatcherELBSubnetB: "{{ network_exports.PublishDispatcherELBSubnetB }}"
+          PublishDispatcherSubnetA: "{{ network_exports.PublishDispatcherSubnetA }}"
+          PublishDispatcherSubnetB: "{{ network_exports.PublishDispatcherSubnetB }}"
+          PublishSubnetA: "{{ network_exports.PublishSubnetA }}"
+          PublishSubnetB: "{{ network_exports.PublishSubnetB }}"
+          AuthorSubnetA: "{{ network_exports.AuthorSubnetA }}"
+          AuthorSubnetB: "{{ network_exports.AuthorSubnetB }}"
+          AuthorDispatcherSubnetA: "{{ network_exports.AuthorDispatcherSubnetA }}"
+          AuthorDispatcherSubnetB: "{{ network_exports.AuthorDispatcherSubnetB }}"
+          ToolSubnetA: "{{ network_exports.ToolSubnetA }}"
+          ToolSubnetB: "{{ network_exports.ToolSubnetB }}"
+          PublicRouteTable: "{{ network_exports.PublicRouteTable }}"
+          PrivateRouteTable: "{{ network_exports.PrivateRouteTable }}"
+      tags:
+        - create
+
+
+    - name: Check if a Stack Exists
+      command: >
+               aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ network_exports.stack_name }}"
+               --query 'Stacks[].StackName' --region {{ aws.region }}
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ network_exports.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AEM Network Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ network_exports.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
