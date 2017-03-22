@@ -10,9 +10,9 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  VpcIdParameter:
-    Type: AWS::EC2::VPC::Id
-    Description: The VPC to create the AEM Stack Security Groups in.
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Network Resources Stack Prefix to Namespace Exports
 
   PublishDispatcherELBSecurityGroupTagNameParameter:
     Type: String
@@ -81,7 +81,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Publish Dispatcher ELB Security Group Cidr IP on ports 80 and 443
   PublishDispatcherELBSecurityGroupIngress0:
@@ -143,7 +143,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Publish Dispatcher ELB Security Group on ports 80 and 443
   PublishDispatcherSecurityGroupIngress0:
@@ -262,7 +262,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Publish Dispatcher Security Group on 4503 and 5433
   PublishSecurityGroupIngress0:
@@ -404,7 +404,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author ELB Security Group on 4502 and 5433
   AuthorSecurityGroupIngress0:
@@ -591,7 +591,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author Dispatcher Security Group on 80 and 443
   AuthorELBSecurityGroupIngress0:
@@ -675,7 +675,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author Dispatcher ELB Security Group on 80 and 443
   AuthorDispatcherSecurityGroupIngress0:
@@ -794,7 +794,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author Dispatcher ELB Cidr Ip on 80 and 443
   AuthorDispatcherELBSecurityGroupIngress0:
@@ -856,7 +856,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Secure Shell Cidr Ip on port 22
   OrchestratorSecurityGroupIngress0:
@@ -952,7 +952,7 @@ Resources:
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Secure Shell Cidr Ip on port 22
   ChaosMonkeySecurityGroupIngress0:
