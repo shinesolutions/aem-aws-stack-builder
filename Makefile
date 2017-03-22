@@ -52,6 +52,12 @@ create-network:
 delete-network:
 	./scripts/delete-stack.sh network/network "$(stack_prefix)" "$(config_path)"
 
+create-network-exports:
+	./scripts/create-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
+
+delete-network-exports:
+	./scripts/delete-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
+	
 create-nat-gateway:
 	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
 
