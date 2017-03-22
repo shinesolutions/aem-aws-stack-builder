@@ -37,4 +37,6 @@ Outputs:
   VPCId:
     Value:
       Ref: Ec2Vpc
+    Export:
+      Name: !Sub ${StackPrefix}-VPCId
     Description: The newly created VPC for the AEM Stack

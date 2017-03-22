@@ -5,14 +5,6 @@
   connection: local
 
   tasks:
-    - name: Get AEM Stack VPC
-      ec2_vpc_net_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ stack_prefix }}-{{ ec2_vpc.tag_name }}"
-      register: aem_stack_vpc
-      tags:
-      - create
 
     - name: Create AEM Network Stack
       cloudformation:
@@ -23,7 +15,6 @@
         template: "../../../cloudformation/network/network.yaml"
         template_parameters:
           StackPrefix: "{{ stack_prefix}}"
-          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
           AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"
           AvailabilityZoneBParameter: "{{ aws.availability_zone_b }}"
           Ec2InternetGatewayTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
