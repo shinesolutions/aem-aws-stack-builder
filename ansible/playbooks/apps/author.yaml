@@ -22,10 +22,9 @@
         template: "../../../cloudformation/apps/author.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
-          AuthorSubnetAParameter: "{{ aem_vpc.author_subnet_a_id }}"
-          AuthorSubnetBParameter: "{{ aem_vpc.author_subnet_b_id }}"
           AuthorInstanceProfileParameter: "{{ author.instance_profile }}"
           AuthorImageParameter: "{{ ami_ids.author }}"
           AuthorInstanceTypeParameter: "{{ author.instance_type }}"

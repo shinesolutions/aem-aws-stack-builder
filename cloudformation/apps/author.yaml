@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
   SSLCertificateARNParameter:
     Type: String
     Description: The ARN for SSL Certificate
@@ -15,14 +19,6 @@ Parameters:
   AuthorLoadBalancerHealthCheckTargetParameter:
     Type: String
     Description: AEM Author ELB Health Check Target
-
-  AuthorSubnetAParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Author Subnet in Availability Zone A
-
-  AuthorSubnetBParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Author Subnet in Availability Zone B
 
   AuthorInstanceProfileParameter:
     Type: String
@@ -127,7 +123,7 @@ Resources:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
-        Ref: AuthorSubnetAParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetA
       Tags:
       - Key: StackPrefix
         Value:
@@ -180,7 +176,7 @@ Resources:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
-        Ref: AuthorSubnetBParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetB
       Tags:
       - Key: StackPrefix
         Value:
