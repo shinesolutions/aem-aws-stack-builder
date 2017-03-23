@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Network Stack Resources Prefix
+
   OrchestratorInstanceProfileParameter:
     Type: String
     Description: The Orchestrator Instance Profile
@@ -27,10 +31,6 @@ Parameters:
   OrchestratorASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Orchestrator Availability Zone List
-
-  OrchestratorASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Orchestrator Subnets
 
   OrchestratorRootVolSizeParameter:
     Type: Number
@@ -130,7 +130,8 @@ Resources:
         Value: orchestrator
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: OrchestratorASGSubnetListParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetB
 
 Outputs:
 
