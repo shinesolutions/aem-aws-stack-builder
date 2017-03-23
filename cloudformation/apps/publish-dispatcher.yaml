@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
   SSLCertificateARNParameter:
     Type: String
     Description: The ARN for SSL Certificate
@@ -19,14 +23,6 @@ Parameters:
   PublishDispatcherLoadBalancerSchemeParameter:
     Type: String
     Description: AEM Publish Dispatcher ELB Scheme
-
-  PublishDispatcherELBSubnetAParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
-
-  PublishDispatcherELBSubnetBParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
   PublishDispatcherInstanceProfileParameter:
     Type: String
@@ -134,8 +130,8 @@ Resources:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-      - Ref: PublishDispatcherELBSubnetAParameter
-      - Ref: PublishDispatcherELBSubnetBParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetB
       Tags:
       - Key: Name
         Value:
@@ -207,22 +203,25 @@ Resources:
           Fn::ImportValue:
             Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
       Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${PublishDispatcherTagNameParameter}
-        PropagateAtLaunch: true
-      - Key: StackPrefix
-        Value:
-          Ref: ComputeStackPrefixParameter
-        PropagateAtLaunch: true
-      - Key: Component
-        Value: publish-dispatcher
-        PropagateAtLaunch: true
-      - Key: ApplicationDescriptorUrl
-        Value: PLACEHOLDER
-        PropagateAtLaunch: true
+        - Key: Name
+          Value:
+            Fn::Sub: ${PublishDispatcherTagNameParameter}
+          PropagateAtLaunch: true
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
+          PropagateAtLaunch: true
+        - Key: Component
+          Value: publish-dispatcher
+          PropagateAtLaunch: true
+        - Key: ApplicationDescriptorUrl
+          Value: PLACEHOLDER
+          PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: PublishDispatcherASGSubnetListParameter
+        - Fn::ImportValue:
+            !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetA
+        - Fn::ImportValue:
+            !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetB
 
 Outputs:
 
