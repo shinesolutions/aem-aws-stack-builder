@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Network Stack Resources Prefix
+
   SSLCertificateARNParameter:
     Type: String
     Description: The ARN for SSL Certificate
@@ -15,14 +19,6 @@ Parameters:
   AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
     Type: String
     Description: AEM Author Dispatcher ELB Health Check Target
-
-  AuthorDispatcherSubnetAParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Author Dispatcher Subnet in Availability Zone A
-
-  AuthorDispatcherSubnetBParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Author Dispatcher Subnet in Availability Zone B
 
   AuthorDispatcherInstanceProfileParameter:
     Type: String
@@ -43,11 +39,6 @@ Parameters:
   AuthorDispatcherASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Author Dispatcher Availability Zone List
-
-#TODO: Combine this parameter with AuthorDispatcherSubnetAParameter and AuthorDispatcherSubnetBParameter
-  AuthorDispatcherASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Author Dispatcher Subnets
 
   AuthorDispatcherASGMaxSizeParameter:
     Type: String
@@ -129,15 +120,15 @@ Resources:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-      - Ref: AuthorDispatcherSubnetAParameter
-      - Ref: AuthorDispatcherSubnetBParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetB
       Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${AuthorDispatcherLoadBalancerTagNameParameter}
-      - Key: StackPrefix
-        Value:
-          Ref: ComputeStackPrefixParameter
+        - Key: Name
+          Value:
+            Fn::Sub: ${AuthorDispatcherLoadBalancerTagNameParameter}
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
 
   AuthorDispatcherLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -214,7 +205,8 @@ Resources:
         Value: author-dispatcher
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: AuthorDispatcherASGSubnetListParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetB
 
 Outputs:
 
