@@ -28,10 +28,6 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Chaos Monkey Availability Zone List
 
-  ChaosMonkeyASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Chaos Monkey Subnets
-
   ChaosMonkeyTagNameParameter:
     Type: String
     Description: The Chaos Monkey Name Tag
