@@ -14,7 +14,7 @@
         template: "../../../cloudformation/apps/security-groups.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          NetworkStackPrefixParameter: {{ security_groups.network_stack_prefix }}
+          NetworkStackPrefixParameter: "{{ security_groups.network_stack_prefix }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.publish_dispatcher_elb.tag_name }}"
