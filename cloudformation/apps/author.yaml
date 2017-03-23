@@ -227,8 +227,8 @@ Resources:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-        - !Sub ${NetworkStackPrefixParameter}-AuthorSubnetA
-        - !Sub ${NetworkStackPrefixParameter}-AuthorSubnetB
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetB
       Tags:
       - Key: Name
         Value:
