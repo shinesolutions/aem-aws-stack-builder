@@ -24,10 +24,6 @@ Parameters:
     Type: String
     Description: AEM Publish Dispatcher ELB Scheme
 
-  PublishDispatcherInstanceProfileParameter:
-    Type: String
-    Description: The Publish Dispatcher Instance Profile
-
   PublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Publish Dispatcher Image Id
@@ -158,7 +154,7 @@ Resources:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: PublishDispatcherInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-PublishDispatcherInstanceProfile
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false

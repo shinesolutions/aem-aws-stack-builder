@@ -12,10 +12,6 @@ Parameters:
     Type: String
     Description: The AEM Network Stack Resources Prefix
 
-  ChaosMonkeyInstanceProfileParameter:
-    Type: String
-    Description: The Chaos Monkey Instance Profile
-
   ChaosMonkeyImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Chaos Monkey Image Id
@@ -79,7 +75,7 @@ Resources:
             Ref: ChaosMonkeyRootVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: ChaosMonkeyInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-ChaosMonkeyInstanceProfile
       ImageId:
         Ref: ChaosMonkeyImageParameter
       InstanceMonitoring: false

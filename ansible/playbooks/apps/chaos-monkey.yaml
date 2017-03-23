@@ -15,7 +15,6 @@
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
-          ChaosMonkeyInstanceProfileParameter: "{{ chaos_monkey.instance_profile }}"
           ChaosMonkeyImageParameter: "{{ ami_ids.chaos_monkey }}"
           ChaosMonkeyInstanceTypeParameter: "{{ chaos_monkey.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

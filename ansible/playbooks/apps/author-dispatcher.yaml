@@ -25,7 +25,6 @@
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           AuthorDispatcherLoadBalancerHealthCheckTargetParameter: "{{ author_dispatcher.elb_health_check }}"
-          AuthorDispatcherInstanceProfileParameter: "{{ author_dispatcher.instance_profile }}"
           AuthorDispatcherImageParameter: "{{ ami_ids.author_dispatcher }}"
           AuthorDispatcherInstanceTypeParameter: "{{ author_dispatcher.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

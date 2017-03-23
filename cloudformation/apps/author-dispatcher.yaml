@@ -20,10 +20,6 @@ Parameters:
     Type: String
     Description: AEM Author Dispatcher ELB Health Check Target
 
-  AuthorDispatcherInstanceProfileParameter:
-    Type: String
-    Description: The Author Dispatcher Instance Profile
-
   AuthorDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Author Dispatcher Image Id
@@ -148,7 +144,7 @@ Resources:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: AuthorDispatcherInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-AuthorDispatcherInstanceProfile
       ImageId:
         Ref: AuthorDispatcherImageParameter
       InstanceMonitoring: false

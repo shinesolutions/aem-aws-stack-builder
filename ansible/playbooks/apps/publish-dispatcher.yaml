@@ -26,7 +26,6 @@
           SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
           PublishDispatcherLoadBalancerSchemeParameter: "{{ publish_dispatcher.elb_scheme }}"
-          PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
           PublishDispatcherImageParameter: "{{ ami_ids.publish_dispatcher }}"
           PublishDispatcherInstanceTypeParameter: "{{ publish_dispatcher.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

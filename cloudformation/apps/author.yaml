@@ -20,10 +20,6 @@ Parameters:
     Type: String
     Description: AEM Author ELB Health Check Target
 
-  AuthorInstanceProfileParameter:
-    Type: String
-    Description: The Author Instance Profile
-
   AuthorImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Author Image Id
@@ -111,7 +107,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Ref: AuthorInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -164,7 +160,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Ref: AuthorInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:

@@ -12,10 +12,6 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  PublishInstanceProfileParameter:
-    Type: String
-    Description: The Publish Instance Profile
-
   PublishImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Publish Image Id
@@ -118,7 +114,7 @@ Resources:
               - Ref: PublishDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Ref: PublishInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-PublishInstanceProfile
       ImageId:
         Ref: PublishImageParameter
       InstanceMonitoring: false

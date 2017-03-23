@@ -12,10 +12,6 @@ Parameters:
     Type: String
     Description: The AEM Network Stack Resources Prefix
 
-  OrchestratorInstanceProfileParameter:
-    Type: String
-    Description: The Orchestrator Instance Profile
-
   OrchestratorImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Orchestrator Image Id
@@ -85,7 +81,7 @@ Resources:
             Ref: OrchestratorDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: OrchestratorInstanceProfileParameter
+        Fn::ImportValue: !Sub ${RolesStackNameParameter}-OrchestratorInstanceProfile
       ImageId:
         Ref: OrchestratorImageParameter
       InstanceMonitoring: false
