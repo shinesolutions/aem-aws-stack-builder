@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
   PublishInstanceProfileParameter:
     Type: String
     Description: The Publish Instance Profile
@@ -27,10 +31,6 @@ Parameters:
   PublishASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Publish Availability Zone List
-
-  PublishASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Publish Subnets
 
   PublishASGMaxSizeParameter:
     Type: String
@@ -174,8 +174,8 @@ Resources:
         Value: publish
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: PublishASGSubnetListParameter
-
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishSubnetB
 
 Outputs:
 
