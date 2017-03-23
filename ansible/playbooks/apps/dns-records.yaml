@@ -25,7 +25,9 @@
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ dns_records.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+              aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ dns_records.stack_name }}"
+                  --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:
@@ -45,6 +47,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"           
+        "stack_query.rc == 0"
       tags:
       - delete

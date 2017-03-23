@@ -31,7 +31,9 @@
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ chaos_monkey.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+           aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ chaos_monkey.stack_name }}"
+               --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:

@@ -14,7 +14,7 @@
         template: "../../../cloudformation/apps/publish.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"          
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
           PublishImageParameter: "{{ ami_ids.publish }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
@@ -37,7 +37,9 @@
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ publish.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+            aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ publish.stack_name }}"
+                --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:
