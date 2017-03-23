@@ -40,10 +40,6 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Publish Dispatcher Availability Zone List
 
-  PublishDispatcherASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Publish Dispatcher Subnets
-
   PublishDispatcherASGMaxSizeParameter:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Maximum Size
