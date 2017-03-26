@@ -136,14 +136,14 @@ delete-stack-data:
 # utility targets
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
-CERT_NAME = "aem-stack-certificate"
+CERT_NAME=aem-stack-builder
 
 create-cert:
 	openssl req \
 	    -new \
 	    -newkey rsa:4096 \
+			-nodes \
 	    -days 365 \
-	    -nodes \
 	    -x509 \
 	    -subj "/C=AU/ST=Victoria/L=Melbourne/O=Sample Organisation/CN=$(CERT_NAME)" \
 	    -keyout $(CERT_NAME).key \
