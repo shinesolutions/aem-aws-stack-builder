@@ -118,10 +118,6 @@ Resources:
       - Key: Component
         Value: chaos-monkey
         PropagateAtLaunch: true
-      - Key: ChaosMonkeyASG
-        Value:
-          Ref: ChaosMonkeyAutoScalingGroup
-        PropagateAtLaunch: true
       - Key: OrchestratorASG
         Value:
          Fn::ImportValue:
