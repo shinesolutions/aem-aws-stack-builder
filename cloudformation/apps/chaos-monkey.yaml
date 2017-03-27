@@ -120,23 +120,23 @@ Resources:
         PropagateAtLaunch: true
       - Key: OrchestratorASG
         Value:
-         Fn::ImportValue:
-           Fn::Sub: ${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup
+          Fn::ImportValue:
+            Fn::Sub: ${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup
         PropagateAtLaunch: true
       - Key: PublishASG
         Value:
-         Fn::ImportValue:
-           Fn::Sub: ${PublishStackNameParameter}-PublishAutoScalingGroup
+          Fn::ImportValue:
+            Fn::Sub: ${PublishStackNameParameter}-PublishAutoScalingGroup
         PropagateAtLaunch: true
       - Key: PublishDispatcherASG
         Value:
-         Fn::ImportValue:
-           Fn::Sub: ${PublishDispatcherStackNameParameter}-PublishDispatcherAutoScalingGroup
+          Fn::ImportValue:
+            Fn::Sub: ${PublishDispatcherStackNameParameter}-PublishDispatcherAutoScalingGroup
         PropagateAtLaunch: true
       - Key: AuthorDispatcherASG
         Value:
-         Fn::ImportValue:
-           Fn::Sub: ${AuthorDispatcherStackNameParameter}-AuthorDispatcherAutoScalingGroup
+          Fn::ImportValue:
+            Fn::Sub: ${AuthorDispatcherStackNameParameter}-AuthorDispatcherAutoScalingGroup
       PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
