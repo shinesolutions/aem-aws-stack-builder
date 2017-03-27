@@ -120,8 +120,7 @@ Resources:
         PropagateAtLaunch: true
       - Key: OrchestratorASG
         Value:
-          Fn::ImportValue:
-            !Sub "${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup"
+          Fn::ImportValue: jesus-aem-orchestrator-stack-OrchestratorAutoScalingGroup
         PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
