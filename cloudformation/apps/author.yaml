@@ -49,22 +49,6 @@ Parameters:
     Type: String
     Description: The Author Data Volume Snapshot Id
 
-  AuthorTagNameParameter:
-    Type: String
-    Description: The Author Name Tag
-
-  AuthorLoadBalancerTagNameParameter:
-    Type: String
-    Description: The Author Load Balancer Name Tag
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
-
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
@@ -107,7 +91,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${RolesStackNameParameter}-AuthorInstanceProfile
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -116,7 +100,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetA
@@ -125,8 +109,7 @@ Resources:
         Value:
           Ref: ComputeStackPrefixParameter
       - Key: Name
-        Value:
-          Fn::Sub: ${AuthorTagNameParameter}-Primary
+        Value: AEM Author - Primary
       - Key: Component
         Value: author-primary
       UserData:
@@ -160,7 +143,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${RolesStackNameParameter}-AuthorInstanceProfile
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -169,7 +152,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetB
@@ -178,8 +161,7 @@ Resources:
         Value:
           Ref: ComputeStackPrefixParameter
       - Key: Name
-        Value:
-          Fn::Sub: ${AuthorTagNameParameter}-Standby
+        Value: AEM Author - Standby
       - Key: Component
         Value: author-standby
       - Key: AuthorPrimaryHost
@@ -224,15 +206,14 @@ Resources:
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorELBSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetA
         - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetB
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${AuthorLoadBalancerTagNameParameter}
+        Value: AEM Author Load Balancer
       - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter

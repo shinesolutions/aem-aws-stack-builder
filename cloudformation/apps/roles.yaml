@@ -6,6 +6,10 @@ Description:
 
 Parameters:
 
+  ComputeStackPrefixParameter:
+      Type: String
+      Description: The AEM Stack Compute Resources Stack Prefix
+
   PublishDispatcherRoleNameParameter:
     Type: String
     Description: The AEM Stack Publish Dispatcher Role Name
@@ -374,7 +378,7 @@ Outputs:
     Description: The Publish Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishDispatcherInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherInstanceProfile
 
   PublishInstanceProfile:
     Value:
@@ -382,7 +386,7 @@ Outputs:
     Description: The Publish Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishInstanceProfile
 
   AuthorInstanceProfile:
     Value:
@@ -390,7 +394,7 @@ Outputs:
     Description: The Author Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorInstanceProfile
 
   AuthorDispatcherInstanceProfile:
     Value:
@@ -398,7 +402,7 @@ Outputs:
     Description: The Author Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorDispatcherInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherInstanceProfile
 
   OrchestratorInstanceProfile:
     Value:
@@ -406,7 +410,7 @@ Outputs:
     Description: The Orchestrator Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-OrchestratorInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorInstanceProfile
 
   ChaosMonkeyInstanceProfile:
     Value:
@@ -414,4 +418,4 @@ Outputs:
     Description: The Chaos Monkey Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-ChaosMonkeyInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-ChaosMonkeyInstanceProfile

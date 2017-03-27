@@ -36,18 +36,6 @@ Parameters:
     Type: Number
     Description: Orchestrator Instances Data EBS Volume Size
 
-  OrchestratorTagNameParameter:
-    Type: String
-    Description: The Orchestrator Name Tag
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
-
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
@@ -81,7 +69,7 @@ Resources:
             Ref: OrchestratorDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${RolesStackNameParameter}-OrchestratorInstanceProfile
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-OrchestratorInstanceProfile
       ImageId:
         Ref: OrchestratorImageParameter
       InstanceMonitoring: false
@@ -91,7 +79,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -115,8 +103,7 @@ Resources:
       MinSize: 1
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${OrchestratorTagNameParameter}
+        Value: AEM Orchestrator
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:

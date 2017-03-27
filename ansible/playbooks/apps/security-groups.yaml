@@ -17,16 +17,7 @@
           NetworkStackPrefixParameter: "{{ security_groups.network_stack_prefix }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
-          PublishDispatcherELBSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.publish_dispatcher_elb.tag_name }}"
-          PublishDispatcherSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.publish_dispatcher.tag_name }}"
-          PublishSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.publish.tag_name }}"
-          AuthorSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.author.tag_name }}"
-          AuthorELBSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.author_elb.tag_name }}"
-          AuthorDispatcherSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.author_dispatcher.tag_name }}"
-          AuthorDispatcherELBSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.author_dispatcher_elb.tag_name }}"
           AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
-          OrchestratorSecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.orchestrator.tag_name }}"
-          ChaosMonkeySecurityGroupTagNameParameter: "{{ stack_prefix }}-{{ security_groups.chaos_monkey.tag_name }}"
           PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internet_outbound_cidr_ip }}"
       tags:
       - create

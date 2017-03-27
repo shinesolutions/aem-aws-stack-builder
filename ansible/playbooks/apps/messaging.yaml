@@ -13,6 +13,7 @@
         disable_rollback: true
         template: "../../../cloudformation/apps/messaging.yaml"
         template_parameters:
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"

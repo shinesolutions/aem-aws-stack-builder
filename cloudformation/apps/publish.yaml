@@ -53,22 +53,6 @@ Parameters:
     Type: String
     Description: The Publish Data Volume Snapshot Id
 
-  PublishTagNameParameter:
-    Type: String
-    Description: The Publish Name Tag
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
-
-  MessagingStackNameParameter:
-    Type: String
-    Description: The AEM Messaging Stack Name
-
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
@@ -114,7 +98,7 @@ Resources:
               - Ref: PublishDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${RolesStackNameParameter}-PublishInstanceProfile
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PublishInstanceProfile
       ImageId:
         Ref: PublishImageParameter
       InstanceMonitoring: false
@@ -124,7 +108,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-PublishSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -156,11 +140,10 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${PublishTagNameParameter}
+        Value: AEM Publish
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:

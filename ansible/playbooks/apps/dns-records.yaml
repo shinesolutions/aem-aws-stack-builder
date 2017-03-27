@@ -15,11 +15,8 @@
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           Route53HostedZoneNameParameter: "{{dns_records.route53_hosted_zone_name}}"
-          AuthorStackNameParameter: "{{stack_prefix}}-{{author.stack_name}}"
           AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
-          AuthorDispatcherStackNameParameter: "{{stack_prefix}}-{{author_dispatcher.stack_name}}"
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
-          PublishDispatcherStackNameParameter: "{{stack_prefix}}-{{publish_dispatcher.stack_name}}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
       tags:
       - create

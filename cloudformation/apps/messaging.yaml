@@ -6,6 +6,10 @@ Description:
 
 Parameters:
 
+  ComputeStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
   AEMASGEventQueueNameParameter:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Quene Name
@@ -72,4 +76,4 @@ Outputs:
     Description: The AEM ASG Event Topic
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AEMASGEventTopic
+        Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic

@@ -56,26 +56,6 @@ Parameters:
     Type: Number
     Description: PublishDispatcher Instances Root EBS Volume Size
 
-  PublishDispatcherTagNameParameter:
-    Type: String
-    Description: The Publish Dispatcher Name Tag
-
-  PublishDispatcherLoadBalancerTagNameParameter:
-    Type: String
-    Description: The Publish Dispatcher Load Balancer Name Tag
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
-
-  MessagingStackNameParameter:
-    Type: String
-    Description: The AEM Messaging Stack Name
-
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
@@ -119,15 +99,14 @@ Resources:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetA
         - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetB
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${PublishDispatcherLoadBalancerTagNameParameter}
+        Value: AEM Publish Dispatcher Load Balancer
       - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
@@ -150,7 +129,7 @@ Resources:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${RolesStackNameParameter}-PublishDispatcherInstanceProfile
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PublishDispatcherInstanceProfile
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false
@@ -160,7 +139,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -193,11 +172,10 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${PublishDispatcherTagNameParameter}
+          Value: AEM Publish Dispatcher
           PropagateAtLaunch: true
         - Key: StackPrefix
           Value:
