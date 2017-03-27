@@ -12,7 +12,7 @@ Parameters:
 
   NetworkStackPrefixParameter:
     Type: String
-    Description: The AEM Network Resources Stack Prefix to Namespace Exports
+    Description: The AEM Stack Network Resources Stack Prefix
 
   PublishDispatcherELBSecurityGroupTagNameParameter:
     Type: String

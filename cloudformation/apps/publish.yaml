@@ -10,7 +10,7 @@ Parameters:
 
   NetworkStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
+    Description: The AEM Stack Network Resources Stack Prefix
 
   PublishImageParameter:
     Type: AWS::EC2::Image::Id

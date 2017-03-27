@@ -10,7 +10,7 @@ Parameters:
 
   NetworkStackPrefixParameter:
     Type: String
-    Description: The AEM Network Stack Resources Prefix
+    Description: The AEM Stack Network Resources Stack Prefix
 
   OrchestratorImageParameter:
     Type: AWS::EC2::Image::Id
