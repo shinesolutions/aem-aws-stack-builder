@@ -247,4 +247,7 @@ Outputs:
   PublishDispatcherAutoScalingGroup:
     Value:
       Ref: PublishDispatcherAutoScalingGroup
+    Export:
+      Name:
+        Fn::Sub : ${AWS::StackName}-PublishDispatcherAutoScalingGroup
     Description: The Publish Dispatcher Auto Scaling Group
