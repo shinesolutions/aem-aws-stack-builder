@@ -119,24 +119,29 @@ Resources:
         Value: chaos-monkey
         PropagateAtLaunch: true
       -Key: ChaosMonkeyASG
-       Value: 
+       Value:
          Ref: ChaosMonkeyAutoScalingGroup
+       PropagateAtLaunch: true
       -Key: OrchestratorASG
        Value:
          Fn::ImportValue:
            Fn::Sub: ${AWS::StackName}-OrchestratorAutoScalingGroup
+       PropagateAtLaunch: true
       -Key: PublishASG
        Value:
          Fn::ImportValue:
            Fn::Sub: ${AWS::StackName}-PublishAutoScalingGroup
+       PropagateAtLaunch: true
       -Key: PublishDispatcherASG
        Value:
          Fn::ImportValue:
            Fn::Sub: ${AWS::StackName}-PublishDispatcherAutoScalingGroup
+       PropagateAtLaunch: true
       -Key: AuthorDispatcherASG
        Value:
          Fn::ImportValue:
            Fn::Sub: ${AWS::StackName}-AuthorDispatcherAutoScalingGroup
+      PropagateAtLaunch: true 
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
 

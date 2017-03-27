@@ -145,5 +145,5 @@ Outputs:
       Ref: OrchestratorAutoScalingGroup
     Export:
       Name:
-        Fn::Sub : ${AWS::StackName}-OrchestratorAutoScalingGroup
+        Fn::Sub: ${AWS::StackName}-OrchestratorAutoScalingGroup
     Description: The Orchestrator Auto Scaling Group

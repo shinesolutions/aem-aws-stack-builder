@@ -241,5 +241,5 @@ Outputs:
       Ref: AuthorDispatcherAutoScalingGroup
     Export:
       Name:
-        Fn::Sub : ${AWS::StackName}-AuthorDispatcherAutoScalingGroup       
+        Fn::Sub: ${AWS::StackName}-AuthorDispatcherAutoScalingGroup
     Description: The Author Dispatcher Auto Scaling Group
