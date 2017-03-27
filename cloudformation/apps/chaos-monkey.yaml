@@ -121,22 +121,22 @@ Resources:
       - Key: OrchestratorASG
         Value:
          Fn::ImportValue:
-           Fn::Sub: ${AWS::StackName}-OrchestratorAutoScalingGroup
+           Fn::Sub: ${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup
         PropagateAtLaunch: true
       - Key: PublishASG
         Value:
          Fn::ImportValue:
-           Fn::Sub: ${AWS::StackName}-PublishAutoScalingGroup
+           Fn::Sub: ${PublishStackNameParameter}-PublishAutoScalingGroup
         PropagateAtLaunch: true
       - Key: PublishDispatcherASG
         Value:
          Fn::ImportValue:
-           Fn::Sub: ${AWS::StackName}-PublishDispatcherAutoScalingGroup
+           Fn::Sub: ${PublishDispatcherStackNameParameter}-PublishDispatcherAutoScalingGroup
         PropagateAtLaunch: true
       - Key: AuthorDispatcherASG
         Value:
          Fn::ImportValue:
-           Fn::Sub: ${AWS::StackName}-AuthorDispatcherAutoScalingGroup
+           Fn::Sub: ${AuthorDispatcherStackNameParameter}-AuthorDispatcherAutoScalingGroup
       PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
