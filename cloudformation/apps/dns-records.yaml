@@ -36,13 +36,21 @@ Parameters:
     Description: PublishDispatcher DNS Record Set Name
 
 Resources:
+  StackZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      HostedZoneConfig:
+        Comment: !Sub Hosted Zone for ${ComputeStackPrefixParameter} Stacks
+      Name: !Sub ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
+
+
   AuthorRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Ref: Route53HostedZoneNameParameter
+      HostedZoneId:
+        Ref: StackZone
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
             Fn::Sub : ${AuthorStackNameParameter}-LoadBalancerDNSName
@@ -52,10 +60,10 @@ Resources:
   AuthorDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Ref: Route53HostedZoneNameParameter
+      HostedZoneId:
+        Ref: StackZone
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
             Fn::Sub: ${AuthorDispatcherStackNameParameter}-LoadBalancerDNSName
@@ -66,9 +74,9 @@ Resources:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneName:
-        Ref: Route53HostedZoneNameParameter
+        Fn::Sub: ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-${PublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${PublishDispatcherDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
             Fn::Sub: ${PublishDispatcherStackNameParameter}-LoadBalancerDNSName
