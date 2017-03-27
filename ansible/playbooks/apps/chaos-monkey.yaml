@@ -27,10 +27,6 @@
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
-          OrchestratorStackNameParameter: "{{ stack_prefix }}-{{orchestrator.stack_name}}"
-          PublishStackNameParameter: "{{ stack_prefix }}-{{publish.stack_name}}"
-          PublishDispatcherStackNameParameter: "{{ stack_prefix }}-{{publish_dispatcher.stack_name}}"
-          AuthorDispatcherStackNameParameter: "{{ stack_prefix }}-{{author_dispatcher.stack_name}}"
       tags:
       - create
 
