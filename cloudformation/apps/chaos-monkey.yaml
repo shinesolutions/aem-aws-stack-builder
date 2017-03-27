@@ -119,7 +119,9 @@ Resources:
         Value: chaos-monkey
         PropagateAtLaunch: true
       - Key: OrchestratorASG
-        Value: !Sub "${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup"
+        Value:
+          Fn::ImportValue:
+            !Sub "${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup"
         PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
