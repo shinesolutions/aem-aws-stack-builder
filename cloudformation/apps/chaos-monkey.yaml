@@ -119,7 +119,8 @@ Resources:
         Value: chaos-monkey
         PropagateAtLaunch: true
       -Key: ChaosMonkeyASG
-       Value: ${AWS::StackName}-ChaosMonkeyAutoScalingGroup
+       Value: 
+         Ref: ChaosMonkeyAutoScalingGroup
       -Key: OrchestratorASG
        Value:
          Fn::ImportValue:
