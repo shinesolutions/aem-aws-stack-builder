@@ -123,21 +123,6 @@ Resources:
           Fn::ImportValue:
             !Sub "${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup"
         PropagateAtLaunch: true
-      - Key: PublishASG
-        Value:
-          Fn::ImportValue:
-            !Sub "${PublishStackNameParameter}-PublishAutoScalingGroup"
-        PropagateAtLaunch: true
-      - Key: PublishDispatcherASG
-        Value:
-          Fn::ImportValue:
-            !Sub "${PublishDispatcherStackNameParameter}-PublishDispatcherAutoScalingGroup"
-        PropagateAtLaunch: true
-      - Key: AuthorDispatcherASG
-        Value:
-          Fn::ImportValue:
-            !Sub "${AuthorDispatcherStackNameParameter}-AuthorDispatcherAutoScalingGroup"
-      PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
 
