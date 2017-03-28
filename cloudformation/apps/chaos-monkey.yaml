@@ -142,7 +142,7 @@ Resources:
       - Key: PublisherASG
         Value:
           Fn::ImportValue:
-            !Sub "${PublishStackNameParameter}-PublisherAutoScalingGroup"
+            !Sub "${PublishStackNameParameter}-PublishAutoScalingGroup"
         PropagateAtLaunch: true
       - Key: PublisherDispatcherASG
         Value:
