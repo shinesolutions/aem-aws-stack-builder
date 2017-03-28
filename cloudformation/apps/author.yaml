@@ -85,6 +85,14 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
+  AemAuthorSyncDelayAlarmTopicName:
+    Type: String
+    Description: AEM Author Sync Alarm Topic Name
+
+  AemAuthorSyncDelayAlarmTopicEnpointEmail:
+    Type: String
+    Description: AEM Author Sync Alarm Topic Contact Email
+
 Conditions:
   UseAuthorDataVolSnapshotCondition:
     Fn::Equals:
@@ -92,6 +100,31 @@ Conditions:
       - true
 
 Resources:
+
+  AemAuthorSyncDelayAlarmTopic: 
+    Type: AWS::SNS::Topic
+    Properties: 
+      Subscription: 
+        - Endpoint: AemAuthorSyncDelayAlarmTopicEnpointEmail
+          Protocol: email
+      TopicName: AemAuthorSyncDelayAlarmTopicName
+
+  AemAuthorSyncDelayAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmActions: 
+        - Fn::GetAtt: [ AemAuthorSyncDelayAlarmTopic, Arn ]
+      AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
+      AlarmName: AEM Author Sync Delay Alarm
+      ComparisonOperator: GreaterThanThreshold
+      MetricName: seconds_since_last_sync
+      Namespace: ${AWS::StackName}
+      Period: 60
+      EvaluationPeriods: 5
+      Statistic: Maximum
+      Threshold: 300
+      Unit: Seconds
 
   AuthorPrimaryInstance:
     Type: AWS::EC2::Instance
@@ -269,3 +302,13 @@ Outputs:
       Name:
         Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
     Description: The Author Load Balancer
+
+  AemAuthorSyncDelayAlarmTopic:
+      Value:
+      Ref: AemAuthorSyncDelayAlarmTopic
+    Description: The Author Sync Delay Alarm Topic
+
+  AemAuthorSyncDelayAlarm:
+    Value:
+      Ref: AemAuthorSyncDelayAlarm
+    Description: The Author Sync Delay Alarm
