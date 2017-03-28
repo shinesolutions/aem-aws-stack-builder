@@ -236,7 +236,7 @@ Outputs:
       Fn::GetAtt: [PublishDispatcherLoadBalancer, DNSName]
     Export:
       Name:
-        Fn::Sub : ${AWS::StackName}-LoadBalancerDNSName
+        Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
     Description: The Publish Dispatcher Load Balancer DNSName
 
   PublishDispatcherLaunchConfiguration:
@@ -247,4 +247,7 @@ Outputs:
   PublishDispatcherAutoScalingGroup:
     Value:
       Ref: PublishDispatcherAutoScalingGroup
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublishDispatcherAutoScalingGroup
     Description: The Publish Dispatcher Auto Scaling Group

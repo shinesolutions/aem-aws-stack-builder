@@ -8,7 +8,7 @@
 
     - name: Get AEM Stack IAM Server Certificate
       iam_server_certificate_facts:
-        name: "{{ compute.certificate_name }}"
+        name: "{{ author.certificate_name }}"
       register: aem_stack_certificate
       tags:
       - create
@@ -22,7 +22,7 @@
         template: "../../../cloudformation/apps/author.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
+          SSLCertificateARNParameter: "{{ aem_stack_certificate.results[author.certificate_name].arn }}"
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
           AuthorSubnetAParameter: "{{ aem_vpc.author_subnet_a_id }}"
           AuthorSubnetBParameter: "{{ aem_vpc.author_subnet_b_id }}"

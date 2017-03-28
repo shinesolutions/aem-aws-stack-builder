@@ -157,7 +157,7 @@
     - name: Copy AEM SSL cert from library to data bucket
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/{{ compute.certificate_name }}.cert"
+        src_key: "library/{{ aem.certificate_name }}.cert"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem.cert"
       tags:
@@ -166,7 +166,7 @@
     - name: Copy AEM SSL cert key from library to data bucket
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/{{ compute.certificate_name }}.key"
+        src_key: "library/{{ aem.certificate_name }}.key"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem.key"
       tags:

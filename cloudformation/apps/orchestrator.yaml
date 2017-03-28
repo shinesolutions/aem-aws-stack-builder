@@ -134,7 +134,6 @@ Resources:
 
 Outputs:
 
-
   OrchestratorLaunchConfiguration:
     Value:
       Ref: OrchestratorLaunchConfiguration
@@ -143,4 +142,7 @@ Outputs:
   OrchestratorAutoScalingGroup:
     Value:
       Ref: OrchestratorAutoScalingGroup
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-OrchestratorAutoScalingGroup
     Description: The Orchestrator Auto Scaling Group

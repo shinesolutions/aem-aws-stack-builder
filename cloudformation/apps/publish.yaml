@@ -187,4 +187,7 @@ Outputs:
   PublishAutoScalingGroup:
     Value:
       Ref: PublishAutoScalingGroup
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-PublishAutoScalingGroup
     Description: The Publish Auto Scaling Group
