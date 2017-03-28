@@ -89,10 +89,6 @@ Parameters:
     Type: String
     Description: AEM Author Sync Alarm Topic Name
 
-  AemAuthorSyncDelayAlarmTopicEnpointEmail:
-    Type: String
-    Description: AEM Author Sync Alarm Topic Contact Email
-
 Conditions:
   UseAuthorDataVolSnapshotCondition:
     Fn::Equals:
