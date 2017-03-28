@@ -6,13 +6,6 @@
 
   tasks:
 
-    - name: Get AEM Stack IAM Server Certificate
-      iam_server_certificate_facts:
-        name: "{{ compute.certificate_name }}"
-      register: aem_stack_certificate
-      tags:
-      - create
-
     - name: Create AEM Author Dispatcher Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ author_dispatcher.stack_name }}"
@@ -23,7 +16,7 @@
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
-          SSLCertificateARNParameter: "{{ aem_stack_certificate.results[compute.certificate_name].arn }}"
+          SSLCertificateARNParameter: "{{ compute.certificate_arn }}"
           AuthorDispatcherLoadBalancerHealthCheckTargetParameter: "{{ author_dispatcher.elb_health_check }}"
           AuthorDispatcherImageParameter: "{{ ami_ids.author_dispatcher }}"
           AuthorDispatcherInstanceTypeParameter: "{{ author_dispatcher.instance_type }}"
