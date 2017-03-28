@@ -103,7 +103,7 @@ Resources:
       Subscription: 
         - Endpoint: test@email.com
           Protocol: email
-      TopicName: AemAuthorSyncDelayAlarmTopicName
+      TopicName: ${AemAuthorSyncDelayAlarmTopicName}
 
   AemAuthorSyncDelayAlarm:
     Type: AWS::CloudWatch::Alarm
