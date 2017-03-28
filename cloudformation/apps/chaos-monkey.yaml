@@ -149,7 +149,7 @@ Resources:
           Fn::ImportValue:
             !Sub "${PublishDispatcherStackNameParameter}-PublishDispatcherAutoScalingGroup"
         PropagateAtLaunch: true
-      - Key: OrchestratorASG
+      - Key: AuthorDispatcherASG
         Value:
           Fn::ImportValue:
             !Sub "${AuthorDispatcherStackNameParameter}-AuthorDispatcherAutoScalingGroup"
