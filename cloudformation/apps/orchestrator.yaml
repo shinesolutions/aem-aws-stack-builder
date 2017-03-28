@@ -44,10 +44,6 @@ Parameters:
     Type: String
     Description: The Orchestrator Name Tag
 
-  OrchestratorStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
   RolesStackNameParameter:
     Type: String
     Description: The AEM Roles Stack Name

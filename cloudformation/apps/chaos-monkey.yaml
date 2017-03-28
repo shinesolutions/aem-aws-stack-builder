@@ -48,6 +48,10 @@ Parameters:
     Type: String
     Description: The AEM Security Groups Stack Name
 
+  OrchestratorStackNameParameter:
+    Type: String
+    Description: The AEM Roles Stack Name  
+
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
