@@ -41,7 +41,6 @@
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
-          AemAuthorSyncDelayAlarmTopicName: "{{ stack_prefix }}-aem-sync-alarm-topic"
       tags:
       - create
 

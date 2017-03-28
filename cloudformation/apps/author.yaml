@@ -85,10 +85,6 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
-  AemAuthorSyncDelayAlarmTopicName:
-    Type: String
-    Description: AEM Author Sync Alarm Topic Name
-
 Conditions:
   UseAuthorDataVolSnapshotCondition:
     Fn::Equals:
@@ -103,7 +99,7 @@ Resources:
       Subscription: 
         - Endpoint: test@email.com
           Protocol: email
-      TopicName: ${AemAuthorSyncDelayAlarmTopicName}
+      TopicName: !Sub "${ComputeStackPrefixParameter}-aem-sync-alarm-topic"
 
   AemAuthorSyncDelayAlarm:
     Type: AWS::CloudWatch::Alarm
