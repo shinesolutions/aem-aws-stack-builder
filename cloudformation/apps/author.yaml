@@ -105,7 +105,7 @@ Resources:
     Type: AWS::SNS::Topic
     Properties: 
       Subscription: 
-        - Endpoint: AemAuthorSyncDelayAlarmTopicEnpointEmail
+        - Endpoint: test@email.com
           Protocol: email
       TopicName: AemAuthorSyncDelayAlarmTopicName
 
