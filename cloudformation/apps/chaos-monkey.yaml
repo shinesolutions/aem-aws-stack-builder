@@ -50,7 +50,19 @@ Parameters:
 
   OrchestratorStackNameParameter:
     Type: String
-    Description: The AEM Roles Stack Name  
+    Description: The AEM Orchestrator Role Stack Name
+
+  PublishStackNameParameter:
+    Type: String
+    Description: The AEM Publish Role Stack Name
+
+  PublishDispatcherStackNameParameter:
+    Type: String
+    Description: The AEM Publish Dispatcher Role Stack Name
+
+  AuthorDispatcherStackNameParameter:
+    Type: String
+    Description: The AEM Author Dispatcher Role Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -126,6 +138,21 @@ Resources:
         Value:
           Fn::ImportValue:
             !Sub "${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup"
+        PropagateAtLaunch: true
+      - Key: PublisherASG
+        Value:
+          Fn::ImportValue:
+            !Sub "${PublishStackNameParameter}-PublisherAutoScalingGroup"
+        PropagateAtLaunch: true
+      - Key: PublisherDispatcherASG
+        Value:
+          Fn::ImportValue:
+            !Sub "${PublishDispatcherStackNameParameter}-PublishDispatcherAutoScalingGroup"
+        PropagateAtLaunch: true
+      - Key: OrchestratorASG
+        Value:
+          Fn::ImportValue:
+            !Sub "${AuthorDispatcherStackNameParameter}-AuthorDispatcherAutoScalingGroup"
         PropagateAtLaunch: true
       VPCZoneIdentifier:
         Ref: ChaosMonkeyASGSubnetListParameter
