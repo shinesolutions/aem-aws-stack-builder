@@ -134,7 +134,6 @@ Resources:
 
 Outputs:
 
-
   OrchestratorLaunchConfiguration:
     Value:
       Ref: OrchestratorLaunchConfiguration
