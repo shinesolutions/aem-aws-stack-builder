@@ -45,7 +45,7 @@ Resources:
         Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub : ${AuthorStackNameParameter}-LoadBalancerDNSName
+            Fn::Sub: ${AuthorStackNameParameter}-LoadBalancerDNSName
       TTL: 300
       Type: CNAME
 
