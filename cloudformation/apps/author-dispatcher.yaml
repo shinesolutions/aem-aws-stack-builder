@@ -182,7 +182,7 @@ Resources:
         - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetB
 
 Outputs:
-  
+
   AuthorDispatcherLoadBalancer:
     Value:
       Ref: AuthorDispatcherLoadBalancer
@@ -193,7 +193,7 @@ Outputs:
       Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
     Description: The Author Dispatcher Load Balancer
 
   AuthorDispatcherLaunchConfiguration:

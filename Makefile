@@ -57,7 +57,7 @@ create-network-exports:
 
 delete-network-exports:
 	./scripts/delete-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
-	
+
 create-nat-gateway:
 	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
 
@@ -138,6 +138,12 @@ create-stack-data:
 
 delete-stack-data:
 	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
+
+create-all-in-one:
+	./scripts/create-stack.sh apps/all-in-one  "$(stack_prefix)" "$(config_path)"
+
+delete-all-in-one:
+	./scripts/delete-stack.sh apps/all-in-one  "$(stack_prefix)"
 
 # utility targets
 

@@ -65,13 +65,11 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
-
 Conditions:
   UsePublishDataVolSnapshotCondition:
     Fn::Equals:
       - Ref: UsePublishDataVolSnapshotParameter
       - true
-
 
 Resources:
 

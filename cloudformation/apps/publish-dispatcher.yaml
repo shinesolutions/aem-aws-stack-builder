@@ -70,7 +70,6 @@ Parameters:
 
 Resources:
 
-
   PublishDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
@@ -205,7 +204,7 @@ Outputs:
       Fn::GetAtt: [PublishDispatcherLoadBalancer, DNSName]
     Export:
       Name:
-        Fn::Sub : ${AWS::StackName}-LoadBalancerDNSName
+        Fn::Sub : ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
     Description: The Publish Dispatcher Load Balancer DNSName
 
   PublishDispatcherLaunchConfiguration:

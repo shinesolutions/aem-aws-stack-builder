@@ -12,9 +12,6 @@ Parameters:
     Type: String
     Description: The AEM Stack Network Resources Stack Prefix
 
-    Type: String
-    Description: The AEM Roles Stack Name
-
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
     Description: The Compute Resources Key Pair Name
@@ -233,6 +230,22 @@ Parameters:
     Type: Number
     Description: Chaos Monkey Instances Root EBS Volum Size
 
+  Route53HostedZoneNameParameter:
+    Type: String
+    Description: Route53 Hosted Zone Name the Record Set will be Created in
+
+  AuthorDNSRecordSetNameParameter:
+    Type: String
+    Description: Author DNS Record Set Name
+
+  AuthorDispatcherDNSRecordSetNameParameter:
+    Type: String
+    Description: AuthorDispatcher DNS Record Set Name
+
+  PublishDispatcherDNSRecordSetNameParameter:
+    Type: String
+    Description: PublishDispatcher DNS Record Set Name
+
 Resources:
   SecurityGroupStack:
     Type: AWS::CloudFormation::Stack
@@ -251,12 +264,24 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/messaging.yaml
       Parameters:
+        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         AEMASGEventQueueNameParameter: !Ref AEMASGEventQueueNameParameter
         AEMASGEventTopicDisplayNameParameter: !Ref AEMASGEventTopicDisplayNameParameter
         AEMASGEventTopicNameParameter: !Ref AEMASGEventTopicNameParameter
 
+  RolesStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/roles.yaml
+      Parameters:
+        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
+
   AuthorStack:
     Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - RolesStack
+      - MessagingStack
+      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author.yaml
       Parameters:
@@ -277,15 +302,19 @@ Resources:
 
   PublisherStack:
     Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - RolesStack
+      - MessagingStack
+      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish.yaml
       Parameters:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishImageParameter: !Ref PublishImageParameter
-        PublishInstanceTypeParameter: PublishInstanceTypeParameter
+        PublishInstanceTypeParameter: !Ref PublishInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
-        PublishASGAvailabilityZoneListParameter: !Ref PublishASGAvailabilityZoneListParameter
+        PublishASGAvailabilityZoneListParameter: !Join [",", !Ref PublishASGAvailabilityZoneListParameter]
         PublishASGMaxSizeParameter: !Ref PublishASGMaxSizeParameter
         PublishASGMinSizeParameter: !Ref PublishASGMinSizeParameter
         PublishRootVolSizeParameter: !Ref PublishRootVolSizeParameter
@@ -298,6 +327,10 @@ Resources:
 
   PublisherDispatchStack:
     Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - RolesStack
+      - MessagingStack
+      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish-dispatcher.yaml
       Parameters:
@@ -309,7 +342,7 @@ Resources:
         PublishDispatcherImageParameter: !Ref PublishDispatcherImageParameter
         PublishDispatcherInstanceTypeParameter: !Ref PublishDispatcherInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
-        PublishDispatcherASGAvailabilityZoneListParameter: !Ref PublishDispatcherASGAvailabilityZoneListParameter
+        PublishDispatcherASGAvailabilityZoneListParameter: !Join [",", !Ref PublishDispatcherASGAvailabilityZoneListParameter]
         PublishDispatcherASGMaxSizeParameter: !Ref PublishDispatcherASGMaxSizeParameter
         PublishDispatcherASGMinSizeParameter: !Ref PublishDispatcherASGMinSizeParameter
         PublishDispatcherRootVolSizeParameter: !Ref PublishDispatcherRootVolSizeParameter
@@ -321,6 +354,10 @@ Resources:
 
   AuthorDispatcherStack:
     Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - RolesStack
+      - MessagingStack
+      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author-dispatcher.yaml
       Parameters:
@@ -331,7 +368,7 @@ Resources:
         AuthorDispatcherImageParameter: !Ref AuthorDispatcherImageParameter
         AuthorDispatcherInstanceTypeParameter: !Ref AuthorDispatcherInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
-        AuthorDispatcherASGAvailabilityZoneListParameter: !Ref AuthorDispatcherASGAvailabilityZoneListParameter
+        AuthorDispatcherASGAvailabilityZoneListParameter: !Join [",", !Ref AuthorDispatcherASGAvailabilityZoneListParameter]
         AuthorDispatcherASGMaxSizeParameter: !Ref AuthorDispatcherASGMaxSizeParameter
         AuthorDispatcherASGMinSizeParameter: !Ref AuthorDispatcherASGMinSizeParameter
         AuthorDispatcherRootVolSizeParameter: !Ref AuthorDispatcherRootVolSizeParameter
@@ -342,6 +379,10 @@ Resources:
 
   OrchestratorStack:
     Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - RolesStack
+      - MessagingStack
+      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/orchestrator.yaml
       Parameters:
@@ -350,7 +391,7 @@ Resources:
         OrchestratorImageParameter: !Ref OrchestratorImageParameter
         OrchestratorInstanceTypeParameter: !Ref OrchestratorInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
-        OrchestratorASGAvailabilityZoneListParameter: !Ref OrchestratorASGAvailabilityZoneListParameter
+        OrchestratorASGAvailabilityZoneListParameter: !Join [",", !Ref OrchestratorASGAvailabilityZoneListParameter]
         OrchestratorRootVolSizeParameter: !Ref OrchestratorRootVolSizeParameter
         OrchestratorDataVolSizeParameter: !Ref OrchestratorDataVolSizeParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
@@ -359,6 +400,10 @@ Resources:
 
   ChaosMonkeyStack:
     Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - RolesStack
+      - MessagingStack
+      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/chaos-monkey.yaml
       Parameters:
@@ -367,8 +412,23 @@ Resources:
         ChaosMonkeyImageParameter: !Ref ChaosMonkeyImageParameter
         ChaosMonkeyInstanceTypeParameter: !Ref ChaosMonkeyInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
-        ChaosMonkeyASGAvailabilityZoneListParameter: !Ref ChaosMonkeyASGAvailabilityZoneListParameter
+        ChaosMonkeyASGAvailabilityZoneListParameter: !Join [",", !Ref ChaosMonkeyASGAvailabilityZoneListParameter]
         ChaosMonkeyRootVolSizeParameter: !Ref ChaosMonkeyRootVolSizeParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter: !Ref AemAwsStackProvisionerVersionParameter
+
+  DNSRecordStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - AuthorDispatcherStack
+      - AuthorStack
+      - PublisherDispatchStack
+    Properties:
+      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/dns-records.yaml
+      Parameters:
+        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
+        Route53HostedZoneNameParameter: !Ref Route53HostedZoneNameParameter
+        AuthorDNSRecordSetNameParameter: !Ref AuthorDNSRecordSetNameParameter
+        AuthorDispatcherDNSRecordSetNameParameter: !Ref AuthorDispatcherDNSRecordSetNameParameter
+        PublishDispatcherDNSRecordSetNameParameter: !Ref PublishDispatcherDNSRecordSetNameParameter

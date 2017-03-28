@@ -240,5 +240,5 @@ Outputs:
       Fn::GetAtt: [AuthorLoadBalancer, DNSName]
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorLoadBalancerDNSName
     Description: The Author Load Balancer

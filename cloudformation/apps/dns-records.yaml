@@ -12,24 +12,13 @@ Parameters:
     Type: String
     Description: Route53 Hosted Zone Name the Record Set will be Created in
 
-  AuthorStackNameParameter:
-    Type: String
-    Description: Author Stack Name
-
   AuthorDNSRecordSetNameParameter:
     Type: String
     Description: Author DNS Record Set Name
 
-  AuthorDispatcherStackNameParameter:
-    Type: String
-    Description: AuthorDispatcher Stack Name
-
   AuthorDispatcherDNSRecordSetNameParameter:
     Type: String
     Description: AuthorDispatcher DNS Record Set Name
-  PublishDispatcherStackNameParameter:
-    Type: String
-    Description: PublishDispatcher Stack Name
 
   PublishDispatcherDNSRecordSetNameParameter:
     Type: String
@@ -53,7 +42,7 @@ Resources:
         Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub : ${AuthorStackNameParameter}-LoadBalancerDNSName
+            Fn::Sub : ${ComputeStackPrefixParameter}-AuthorLoadBalancerDNSName
       TTL: 300
       Type: CNAME
 
@@ -66,7 +55,7 @@ Resources:
         Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${AuthorDispatcherStackNameParameter}-LoadBalancerDNSName
+            Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
 
@@ -79,6 +68,13 @@ Resources:
         Fn::Sub: ${PublishDispatcherDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${PublishDispatcherStackNameParameter}-LoadBalancerDNSName
+            Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
+
+Outputs:
+  StackZoneId:
+    Value: !Ref StackZone
+    Description: AEM Stack Route53 Zone Id
+    Export:
+      Name: !Sub ${ComputeStackPrefixParameter}-StackZoneId

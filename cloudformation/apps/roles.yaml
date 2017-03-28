@@ -9,31 +9,7 @@ Parameters:
   ComputeStackPrefixParameter:
       Type: String
       Description: The AEM Stack Compute Resources Stack Prefix
-
-  PublishDispatcherRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Publish Dispatcher Role Name
-
-  PublishRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Publish Role Name
-
-  AuthorRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Author Role Name
-
-  AuthorDispatcherRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Author Dispatcher Role Name
-
-  OrchestratorRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Orchestrator Role Name
-
-  ChaosMonkeyRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Chaos Monkey Role Name
-
+      
 Resources:
 
   PublishDispatcherRole:
@@ -74,8 +50,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: PublishDispatcherRoleNameParameter
+      RoleName: AEMStackPublishDispatcherRole
 
   PublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -124,8 +99,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: PublishRoleNameParameter
+      RoleName: AEMStackPublishRole
 
   PublishInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -174,8 +148,8 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: AuthorRoleNameParameter
+      RoleName: AEMStackAuthorRole
+
 
   AuthorInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -218,8 +192,8 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: AuthorDispatcherRoleNameParameter
+      RoleName: AEMStackAuthorDispatcherRole
+
 
   AuthorDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -293,8 +267,8 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: OrchestratorRoleNameParameter
+      RoleName: AEMStackOrchestratorRole
+
 
   OrchestratorInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -360,8 +334,8 @@ Resources:
                   - s3:Get*
                   - s3:List*
                 Resource: "*"
-      RoleName:
-        Ref: ChaosMonkeyRoleNameParameter
+      RoleName: AEMStackChaosMonkeyRole
+
 
   ChaosMonkeyInstanceProfile:
     Type: AWS::IAM::InstanceProfile

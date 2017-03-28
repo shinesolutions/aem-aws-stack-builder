@@ -46,7 +46,6 @@ Parameters:
 
 Resources:
 
-
   ChaosMonkeyLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:

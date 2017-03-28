@@ -14,30 +14,9 @@ Parameters:
     Type: String
     Description: The AEM Stack Network Resources Stack Prefix
 
-    Type: String
-    Description: AEM Publish Dispatcher ELB Security Group Name
-
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Type: String
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
-
-    Type: String
-    Description: AEM Publish Dispatcher Security Group Name
-
-    Type: String
-    Description: AEM Publish Security Group Name
-
-    Type: String
-    Description: AEM Author Security Group Name
-
-    Type: String
-    Description: AEM Author ELB Security Group Name
-
-    Type: String
-    Description: AEM Author Dispatcher Security Group Name
-
-    Type: String
-    Description: AEM Author Dispatcher ELB Security Group Name
 
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Type: String
@@ -46,12 +25,6 @@ Parameters:
   SecureShellInboundCidrIpParameter:
     Type: String
     Description: AEM Stack Secure Shell Inbound Cidr Ip
-
-    Type: String
-    Description: AEM Orchestrator Security Group Name
-
-    Type: String
-    Description: AEM Chaos Monkey Security Group Name
 
   PrivateSubnetInternetOutboundCidrIpParameter:
     Type: String
