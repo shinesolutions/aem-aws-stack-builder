@@ -293,11 +293,6 @@ Outputs:
         Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
     Description: The Author Load Balancer
 
-  AuthorAlarmTopic:
-    Value:
-      Ref: AemAuthorSyncDelayAlarmTopic
-    Description: The Author Sync Delay Alarm Topic
-
   AuthorSyncDelayAlarm:
     Value:
       Ref: AemAuthorSyncDelayAlarm
