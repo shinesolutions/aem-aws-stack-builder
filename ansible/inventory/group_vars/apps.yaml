@@ -27,12 +27,12 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-a3e7ebc0
-  publish: ami-fbe6ea98
-  author_dispatcher: ami-c2a5a9a1
-  publish_dispatcher: ami-c2a5a9a1
-  orchestrator: ami-9fbdbefc
-  chaos_monkey: ami-9fbdbefc
+  author: ami-b11b14d2
+  publish: ami-d71c13b4
+  author_dispatcher: ami-07050a64
+  publish_dispatcher: ami-07050a64
+  orchestrator: ami-161e1175
+  chaos_monkey: ami-161e1175
 
 security_groups:
   stack_name: aem-security-groups-stack

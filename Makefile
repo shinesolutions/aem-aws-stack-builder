@@ -145,7 +145,7 @@ create-cert:
 			-nodes \
 	    -days 365 \
 	    -x509 \
-	    -subj "/C=AU/ST=Victoria/L=Melbourne/O=Sample Organisation/CN=$(CERT_NAME)" \
+	    -subj "/C=AU/ST=Victoria/L=Melbourne/O=Sample Organisation/CN=*.*.*.amazonaws.com" \
 	    -keyout $(CERT_NAME).key \
 	    -out $(CERT_NAME).cert
 
