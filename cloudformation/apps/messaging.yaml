@@ -93,4 +93,7 @@ Outputs:
   AlarmNotificationTopic:
     Value:
       Ref: AlarmNotificationTopic
-    Description: The AEM Alarm Notification Topic      
+    Description: The AEM Alarm Notification Topic
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-AlarmNotificationTopic
