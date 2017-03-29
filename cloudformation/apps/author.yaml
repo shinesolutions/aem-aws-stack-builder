@@ -111,7 +111,7 @@ Resources:
       AlarmName: AEM Author Sync Delay Alarm
       ComparisonOperator: GreaterThanThreshold
       MetricName: seconds_since_last_sync
-      Namespace: ${AWS::StackName}
+      Namespace: !Sub ${AWS::StackName}
       Period: 60
       EvaluationPeriods: 5
       Statistic: Maximum
