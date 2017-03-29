@@ -18,11 +18,11 @@ Parameters:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Topic Name
 
-  AlarmNotificationContactEmailParameter:
+  AlarmNotificationTopicNameParameter:
     Type: String
     Description: AEM Sync Delay Alarm Topic Name
 
-  AlarmNotificationTopicNameParameter:
+  AlarmNotificationContactEmailParameter:
     Type: String
     Description: AEM Sync Delay Alarm Contact Email (When alarm triggers)
 

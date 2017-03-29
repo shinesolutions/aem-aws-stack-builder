@@ -75,7 +75,7 @@ messaging:
   asg_event_sqs_queue_name: aem-asg-event-queue
   asg_event_sns_topic_name: aem-asg-event-topic
   asg_event_sns_topic_display_name: AEM ASG Event Topic
-  notification_alarm:
+  alarm_notification:
     topic_name: aem-sync-alarm-topic
     contact_email: test@email.com
 

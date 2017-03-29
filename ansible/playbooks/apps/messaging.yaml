@@ -16,8 +16,8 @@
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
-          AlarmNotificationContactEmailParameter: "{{ stack_prefix }}-{{ messaging.notification_alarm.topic_name }}"
-          AlarmNotificationTopicNameParameter: "{{ messaging.notification_alarm.contact_email }}"
+          AlarmNotificationTopicNameParameter: "{{ stack_prefix }}-{{ messaging.alarm_notification.topic_name }}"
+          AlarmNotificationContactEmailParameter: "{{ messaging.alarm_notification.contact_email }}"
       tags:
       - create
 
