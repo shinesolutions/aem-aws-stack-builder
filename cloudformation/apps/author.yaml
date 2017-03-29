@@ -295,5 +295,5 @@ Outputs:
 
   AuthorSyncDelayAlarm:
     Value:
-      Ref: AemAuthorSyncDelayAlarm
+      Ref: AuthorSyncDelayAlarm
     Description: The Author Sync Delay Alarm
