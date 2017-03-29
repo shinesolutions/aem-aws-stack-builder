@@ -75,6 +75,9 @@ messaging:
   asg_event_sqs_queue_name: aem-asg-event-queue
   asg_event_sns_topic_name: aem-asg-event-topic
   asg_event_sns_topic_display_name: AEM ASG Event Topic
+  notification_alarm:
+    topic_name: aem-sync-alarm-topic
+    contact_email: test@email.com
 
 compute:
   key_pair_name: sandpit-key
@@ -129,9 +132,6 @@ author:
   tag_name: AEM Author
   elb_health_check: HTTPS:5433/system/health?tags=shallow
   certificate_name: aem-stack-builder
-  aem_sync_alarm:
-    topic_name: aem-sync-alarm-topic
-    contact_email: test@email.com
 
 snapshots:
   author:
