@@ -44,6 +44,7 @@
           ToolSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.tool.subnet_b.tag_name }}"
           PublicRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
           PrivateRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
+          S3BucketParameter: "{{ endpoints.s3 | default('') }}"
       tags:
       - create
 

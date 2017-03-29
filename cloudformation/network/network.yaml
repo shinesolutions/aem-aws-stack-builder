@@ -107,7 +107,6 @@ Parameters:
     Default: AEM Auhtor Subnet B
     Description: AEM Author Subnet B Name
 
-
   AuthorDispatcherSubnetACidrBlockParameter:
     Type: String
     Default: 10.0.14.0/25
@@ -149,7 +148,6 @@ Parameters:
     Default: AEM Tool Subnet B
     Description: AEM Tool Subnet B Name
 
-
   PublicRouteTableTagNameParameter:
     Type: String
     Default: AEM VPC Public Route Table
@@ -160,6 +158,13 @@ Parameters:
     Default: AEM VPC Private Route Table
     Description: AEM VPC Private Route Table Name
 
+  S3BucketParameter:
+    Type: String
+    Default: ""
+    Description: S3 Bucket Allowed to Access Via S3 Endpoint in the VPC
+
+Conditions:
+  UseS3EndPoint: !Not [!Equals [!Ref S3BucketParameter, ""]]
 
 Resources:
   Ec2InternetGateway:
@@ -490,8 +495,29 @@ Resources:
         Ref: ToolSubnetB
 
 
-Outputs:
+  S3Endpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: UseS3EndPoint
+    Properties:
+      PolicyDocument: {
+        "Version": "2012-10-17",
+        "Statement": [{
+          "Effect": "Allow",
+          "Principal": "*",
+          "Action": ["s3:*"],
+          "Resource": {
+            "Fn::Sub": "arn:aws:s3:::${S3BucketParameter}/*"
+          }
+        }]
+      }
+      RouteTableIds:
+        - !Ref PublicRouteTable
+        - !Ref PrivateRouteTable
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
+      VpcId:
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
+Outputs:
   PublishDispatcherELBSubnetA:
     Value:
       Ref: PublishDispatcherELBSubnetA
