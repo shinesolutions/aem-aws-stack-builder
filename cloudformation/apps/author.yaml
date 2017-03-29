@@ -85,11 +85,11 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
-  AemAuthorSyncDelayAlarmTopicName:
+  AemAuthorSyncDelayAlarmTopicNameParameter:
     Type: String
     Description: AEM Sync Delay Alarm Topic Name
 
-  AemAuthorSyncDelayAlarmContactEmail:
+  AemAuthorSyncDelayAlarmContactEmailParameter:
     Type: String
     Description: AEM Sync Delay Alarm Contact Email (When alarm triggers)
 
@@ -105,9 +105,9 @@ Resources:
     Type: AWS::SNS::Topic
     Properties: 
       Subscription: 
-        - Endpoint: !Sub ${AemAuthorSyncDelayAlarmContactEmail}
+        - Endpoint: !Sub ${AemAuthorSyncDelayAlarmContactEmailParameter}
           Protocol: email
-      TopicName: !Sub ${AemAuthorSyncDelayAlarmTopicName}
+      TopicName: !Sub ${AemAuthorSyncDelayAlarmTopicNameParameter}
 
   AemAuthorSyncDelayAlarm:
     Type: AWS::CloudWatch::Alarm
