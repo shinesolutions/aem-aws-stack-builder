@@ -154,24 +154,6 @@
       tags:
       - create
 
-    - name: Copy AEM SSL cert from library to data bucket
-      s3_copy_object:
-        src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/{{ aem.certificate_name }}.cert"
-        dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/aem.cert"
-      tags:
-      - create
-
-    - name: Copy AEM SSL cert key from library to data bucket
-      s3_copy_object:
-        src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/{{ aem.certificate_name }}.key"
-        dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/aem.key"
-      tags:
-      - create
-
     - name: Check that custom AEM Stack Provisioner exists
       stat:
         path: ../../../stage/aem-custom-stack-provisioner.tar.gz
