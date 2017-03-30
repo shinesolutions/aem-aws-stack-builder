@@ -107,7 +107,7 @@ Resources:
             Fn::Sub: ${MessagingStackNameParameter}-AlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
       AlarmName: 
-        Fn::Sub: ${ComputeStackPrefixParameter}-AemAuthorSyncDelayAlarm
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
       MetricName: GenericJMX.delay.seconds_since_last_success
       Namespace:
