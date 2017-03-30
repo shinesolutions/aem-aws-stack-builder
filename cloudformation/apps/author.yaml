@@ -109,7 +109,7 @@ Resources:
       AlarmName: 
         Fn::Sub: ${ComputeStackPrefixParameter}-AemAuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
-      MetricName: seconds_since_last_sync
+      MetricName: GenericJMX.delay.seconds_since_last_success
       Namespace:
         Fn::Sub: ${AWS::StackName}
       Period: 60
