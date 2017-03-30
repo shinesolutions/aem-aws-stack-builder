@@ -115,7 +115,7 @@ Resources:
       Period: 60
       EvaluationPeriods: 5
       Statistic: Maximum
-      Threshold: 300
+      Threshold: 600
       Unit: Seconds
 
   AuthorPrimaryInstance:
