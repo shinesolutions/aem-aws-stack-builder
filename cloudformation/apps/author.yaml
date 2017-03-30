@@ -106,14 +106,16 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${MessagingStackNameParameter}-AlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
-      AlarmName: AEM Author Sync Delay Alarm
+      AlarmName: 
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
-      MetricName: seconds_since_last_sync
-      Namespace: !Sub ${AWS::StackName}
+      MetricName: GenericJMX.delay.seconds_since_last_success
+      Namespace:
+        Fn::Sub: ${AWS::StackName}
       Period: 60
       EvaluationPeriods: 5
       Statistic: Maximum
-      Threshold: 300
+      Threshold: 600
       Unit: Seconds
 
   AuthorPrimaryInstance:
