@@ -75,6 +75,9 @@ messaging:
   asg_event_sqs_queue_name: aem-asg-event-queue
   asg_event_sns_topic_name: aem-asg-event-topic
   asg_event_sns_topic_display_name: AEM ASG Event Topic
+  alarm_notification:
+    topic_name: alarm-notification-topic
+    contact_email: test@email.com
 
 compute:
   key_pair_name: sandpit-key
