@@ -107,7 +107,7 @@ Resources:
             Fn::Sub: ${MessagingStackNameParameter}-AlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
       AlarmName: 
-        Fn::Sub: ${AWS::StackName}-AemAuthorSyncDelayAlarm
+        Fn::Sub: ${ComputeStackPrefixParameter}-AemAuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
       MetricName: seconds_since_last_sync
       Namespace:
