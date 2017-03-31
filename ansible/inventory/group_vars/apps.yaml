@@ -31,8 +31,8 @@ ami_ids:
   publish: ami-bf2e21dc
   author_dispatcher: ami-07050a64
   publish_dispatcher: ami-07050a64
-  orchestrator: ami-161e1175
-  chaos_monkey: ami-161e1175
+  orchestrator: ami-56303f35
+  chaos_monkey: ami-56303f35
 
 security_groups:
   stack_name: aem-security-groups-stack
