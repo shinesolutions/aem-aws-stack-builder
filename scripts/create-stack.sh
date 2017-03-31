@@ -30,6 +30,6 @@ ANSIBLE_LOG_PATH=$log_path \
   ansible-playbook -v ansible/playbooks/"$stack_type".yaml \
   -i ansible/inventory/hosts \
   --module-path ansible/library/ \
-  --tags dcreate \
+  --tags create \
   "${extra_vars[@]}"
 echo "Finished creating $stack_prefix $stack_type stack"
