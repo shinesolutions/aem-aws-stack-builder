@@ -184,7 +184,7 @@
 
     - name: Create a Per Stack Route53 Hosted Zone
       route53_zone:
-        zone: "{{ stack_prefix }}.aem.{{ dns_records.route53_hosted_zone_name }}"
+        zone: "{{ stack_prefix }}.{{dns.stack_sub_domain}}.{{ dns.apex_domain_name}}"
         comment: AEM {{ stack_prefix }} App Stacks Hosted Zone
         region: "{{ aws.region }}"
         state: present
@@ -196,7 +196,7 @@
       route53_facts:
         query: hosted_zone
         hosted_zone_method: list_by_name
-        dns_name: "{{ stack_prefix }}.aem.{{ dns_records.route53_hosted_zone_name }}"
+        dns_name: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
       register: list_zone_result
       tags:
         - create
@@ -207,7 +207,7 @@
         query: record_sets
         hosted_zone_id: "{{ list_zone_result.HostedZones[0].Id }}"
         type: NS
-        start_record_name: "{{ stack_prefix }}.aem.{{ dns_records.route53_hosted_zone_name }}"
+        start_record_name: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
         max_items: 1
       register: stack_zone_ns_records
       tags:
@@ -217,10 +217,10 @@
     - name: Create a NS Record in Parenet Zone for the New Stack Zone
       route53:
         command: create
-        record: "{{ stack_prefix }}.aem.{{ dns_records.route53_hosted_zone_name }}"
+        record: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
         ttl: 86400
         type: NS
-        zone: "{{ dns_records.route53_hosted_zone_name }}"
+        zone: "{{ dns.apex_domain_name}}"
         value: "{{stack_zone_ns_records.ResourceRecordSets[0].ResourceRecords|json_query('[].Value')|sort|join(',')}}"
       tags:
         - create
@@ -228,17 +228,17 @@
     - name: Delete the NS Record in Parent Zone for the per Stack Zone
       route53:
         command: delete
-        record:  "{{ stack_prefix }}.aem.{{ dns_records.route53_hosted_zone_name }}"
+        record:  "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
         ttl: 86400
         type: NS
-        zone: "{{ dns_records.route53_hosted_zone_name }}"
+        zone: "{{ dns.apex_domain_name}}"
         value: "{{stack_zone_ns_records.ResourceRecordSets[0].ResourceRecords|json_query('[].Value')|sort|join(',')}}"
       tags:
         - delete
 
     - name: Delete Per Stack Route53 Hosted Zone
       route53_zone:
-        zone: "{{ stack_prefix }}.aem.{{ dns_records.route53_hosted_zone_name }}"
+        zone: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
         region: "{{ aws.region }}"
         state: absent
       tags:

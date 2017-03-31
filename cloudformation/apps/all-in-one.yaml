@@ -32,10 +32,6 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
-  SSLCertificateARNParameter:
-    Type: String
-    Description: The ARN for SSL Certificate
-
   AEMASGEventQueueNameParameter:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Quene Name
@@ -287,7 +283,6 @@ Resources:
       Parameters:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
-        SSLCertificateARNParameter: !Ref SSLCertificateARNParameter
         AuthorLoadBalancerHealthCheckTargetParameter: !Ref AuthorLoadBalancerHealthCheckTargetParameter
         AuthorImageParameter: !Ref AuthorImageParameter
         AuthorInstanceTypeParameter: !Ref AuthorInstanceTypeParameter
@@ -336,7 +331,6 @@ Resources:
       Parameters:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
-        SSLCertificateARNParameter: !Ref SSLCertificateARNParameter
         PublishDispatcherLoadBalancerHealthCheckTargetParameter: !Ref PublishDispatcherLoadBalancerHealthCheckTargetParameter
         PublishDispatcherLoadBalancerSchemeParameter: !Ref PublishDispatcherLoadBalancerSchemeParameter
         PublishDispatcherImageParameter: !Ref PublishDispatcherImageParameter
@@ -363,7 +357,6 @@ Resources:
       Parameters:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
-        SSLCertificateARNParameter: !Ref SSLCertificateARNParameter
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter: !Ref AuthorDispatcherLoadBalancerHealthCheckTargetParameter
         AuthorDispatcherImageParameter: !Ref AuthorDispatcherImageParameter
         AuthorDispatcherInstanceTypeParameter: !Ref AuthorDispatcherInstanceTypeParameter

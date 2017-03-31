@@ -7,6 +7,10 @@ Description: >-
   us-east-1 region.
 
 Parameters:
+  ComputeStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
   ApexDomainParameter:
     Type: String
     Description: >-
@@ -51,4 +55,4 @@ Outputs:
     Description: The generated certificate's ARN
     Export:
       Name:
-        !Sub ${AWS::StackName}-WildcardCertificateARN
+        !Sub ${ComputeStackPrefixParameter}-WildcardCertificateARN

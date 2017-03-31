@@ -145,6 +145,21 @@ create-all-in-one:
 delete-all-in-one:
 	./scripts/delete-stack.sh apps/all-in-one  "$(stack_prefix)"
 
+create-private-cert:
+	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
+
+delete-private-cert:
+	./scripts/delete-stack.sh apps/cert-private  "$(stack_prefix)"
+
+create-public-cert:
+	./scripts/create-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
+
+delete-public-cert:
+	./scripts/delete-stack.sh apps/cert-public  "$(stack_prefix)"
+
+
+
+
 # utility targets
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM

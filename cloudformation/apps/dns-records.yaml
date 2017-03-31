@@ -29,10 +29,9 @@ Resources:
   AuthorRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Fn::Sub: ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
+      HostedZoneName: !Ref Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
             Fn::Sub : ${ComputeStackPrefixParameter}-AuthorLoadBalancerDNSName
@@ -42,10 +41,9 @@ Resources:
   AuthorDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Fn::Sub: ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
+      HostedZoneName: !Ref Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
             Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
@@ -55,10 +53,9 @@ Resources:
   PublishDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Fn::Sub: ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
+      HostedZoneName: !Ref Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${PublishDispatcherDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${PublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
             Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName

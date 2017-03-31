@@ -12,5 +12,6 @@ config_path=$2
 
 echo "Start creating $stack_prefix AEM stacks..."
 ./scripts/create-stack.sh "apps/stack-data" "$stack_prefix" "$config_path"
+./scripts/create-stack.sh "apps/cert-private" "$stack_prefix" "$config_path"
 ./scripts/create-stack.sh "apps/all-in-one" "$stack_prefix" "$config_path"
 echo "Finished creating $stack_prefix AEM stacks"

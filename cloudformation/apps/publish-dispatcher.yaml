@@ -12,10 +12,6 @@ Parameters:
     Type: String
     Description: The AEM Stack Network Resources Stack Prefix
 
-  SSLCertificateARNParameter:
-    Type: String
-    Description: The ARN for SSL Certificate
-
   PublishDispatcherLoadBalancerHealthCheckTargetParameter:
     Type: String
     Description: AEM Publish Dispatcher ELB Health Check Target
@@ -93,7 +89,7 @@ Resources:
         InstancePort: '443'
         InstanceProtocol: HTTPS
         SSLCertificateId:
-          Ref: SSLCertificateARNParameter
+          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-WildcardCertificateARN
       Scheme:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:

@@ -17,7 +17,6 @@
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
-          SSLCertificateARNParameter: "{{ compute.certificate_arn }}"
 
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
@@ -80,10 +79,10 @@
           ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           ChaosMonkeyRootVolSizeParameter: "{{ chaos_monkey.root_vol_size }}"
 
-          Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name}}"
-          AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
-          AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
-          PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
+          Route53HostedZoneNameParameter: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name }}"
+          AuthorDNSRecordSetNameParameter: "{{ dns.author.record_set_name }}"
+          AuthorDispatcherDNSRecordSetNameParameter: "{{ dns.author_dispatcher.record_set_name }}"
+          PublishDispatcherDNSRecordSetNameParameter: "{{ dns.publish_dispatcher.record_set_name }}"
 
       tags:
       - create
@@ -105,7 +104,7 @@
       tags:
         - delete
 
-    - name: Delete AEM Author Stack
+    - name: Delete All AEM App Stacks
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ all_in_one.stack_name }}"
         region: "{{ aws.region }}"

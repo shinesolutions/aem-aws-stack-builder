@@ -6,6 +6,10 @@ Description: >-
   ELBs. This certificate must be provisioned in the same region as the ELBs.
 
 Parameters:
+  ComputeStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
   ApexDomainParameter:
     Type: String
     Description: >-
@@ -39,4 +43,4 @@ Outputs:
     Description: The generated certificate's ARN
     Export:
       Name:
-        !Sub ${AWS::StackName}-WildcardCertificateARN
+        !Sub ${ComputeStackPrefixParameter}-WildcardCertificateARN
