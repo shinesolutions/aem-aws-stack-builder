@@ -25,19 +25,12 @@ Parameters:
     Description: PublishDispatcher DNS Record Set Name
 
 Resources:
-  StackZone:
-    Type: AWS::Route53::HostedZone
-    Properties:
-      HostedZoneConfig:
-        Comment: !Sub Hosted Zone for ${ComputeStackPrefixParameter} Stacks
-      Name: !Sub ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
-
 
   AuthorRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneId:
-        Ref: StackZone
+      HostedZoneName:
+        Fn::Sub: ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       Name:
         Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
@@ -49,8 +42,8 @@ Resources:
   AuthorDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneId:
-        Ref: StackZone
+      HostedZoneName:
+        Fn::Sub: ${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       Name:
         Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${ComputeStackPrefixParameter}.aem.${Route53HostedZoneNameParameter}
       ResourceRecords:
@@ -71,10 +64,3 @@ Resources:
             Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
-
-Outputs:
-  StackZoneId:
-    Value: !Ref StackZone
-    Description: AEM Stack Route53 Zone Id
-    Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-StackZoneId
