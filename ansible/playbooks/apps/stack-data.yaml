@@ -161,6 +161,27 @@
       tags:
       - create
 
+    # TODO: s3_sync is only availabe in version 2.3
+    # - name: Upload CloudFormation Templates to S3
+    #   s3_sync:
+    #     bucket: "{{ s3.data_bucket_name }}"
+    #     file_root: "cloudformation/apps"
+    #     key_prefix: "{{ stack_prefix }}"
+    #     mode: push
+    #     permission: public-read
+    #     region: "{{ aws.region }}"
+    #     include: "*.yaml"
+    #   tags:
+    #     - create
+
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../cloudformation/apps
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml" --acl public-read
+      tags:
+        - create
+
     - name: Create a Per Stack Route53 Hosted Zone
       route53_zone:
         zone: "{{ stack_prefix }}.aem.{{ dns_records.route53_hosted_zone_name }}"
