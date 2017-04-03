@@ -14,12 +14,6 @@
         template: "../../../cloudformation/apps/roles.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          PublishDispatcherRoleNameParameter: "{{ stack_prefix }}-{{ roles.publish_dispatcher }}"
-          PublishRoleNameParameter: "{{ stack_prefix }}-{{ roles.publish }}"
-          AuthorRoleNameParameter: "{{ stack_prefix }}-{{ roles.author }}"
-          AuthorDispatcherRoleNameParameter: "{{ stack_prefix }}-{{ roles.author_dispatcher }}"
-          OrchestratorRoleNameParameter: "{{ stack_prefix }}-{{ roles.orchestrator }}"
-          ChaosMonkeyRoleNameParameter: "{{ stack_prefix }}-{{ roles.chaos_monkey }}"
       tags:
       - create
 

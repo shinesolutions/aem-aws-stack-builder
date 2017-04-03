@@ -9,7 +9,7 @@ Parameters:
   ComputeStackPrefixParameter:
       Type: String
       Description: The AEM Stack Compute Resources Stack Prefix
-      
+
 Resources:
 
   PublishDispatcherRole:
@@ -50,7 +50,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: AEMStackPublishDispatcherRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackPublishDispatcherRole
 
   PublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -99,7 +99,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: AEMStackPublishRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackPublishRole
 
   PublishInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -148,7 +148,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: AEMStackAuthorRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackAuthorRole
 
 
   AuthorInstanceProfile:
@@ -192,7 +192,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: AEMStackAuthorDispatcherRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackAuthorDispatcherRole
 
 
   AuthorDispatcherInstanceProfile:
@@ -267,7 +267,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: AEMStackOrchestratorRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackOrchestratorRole
 
 
   OrchestratorInstanceProfile:
@@ -334,7 +334,7 @@ Resources:
                   - s3:Get*
                   - s3:List*
                 Resource: "*"
-      RoleName: AEMStackChaosMonkeyRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackChaosMonkeyRole
 
 
   ChaosMonkeyInstanceProfile:
