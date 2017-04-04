@@ -107,6 +107,7 @@ Resources:
                   - ec2:DetachVolume
                   - ec2:CreateSnapshot
                   - ec2:CreateTags
+                  - ec2:ModifyInstanceAttribute
                   - cloudwatch:PutMetricData
                 Resource: "*"
               - Effect: Allow
