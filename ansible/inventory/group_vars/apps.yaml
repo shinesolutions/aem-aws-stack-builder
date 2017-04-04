@@ -27,8 +27,8 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-e22d2281
-  publish: ami-bf2e21dc
+  author: ami-51bfb032
+  publish: ami-8ebdb2ed
   author_dispatcher: ami-07050a64
   publish_dispatcher: ami-07050a64
   orchestrator: ami-56303f35
@@ -89,7 +89,7 @@ s3:
 library:
   aem_aws_stack_provisioner_version: 0.9.0
   aem_orchestrator_version: 0.9.3-SNAPSHOT
-  aem_password_reset_version: 1.0.0
+  aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.10
 
 aem:
