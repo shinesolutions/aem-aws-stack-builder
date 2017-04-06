@@ -117,6 +117,11 @@ Resources:
       Statistic: Maximum
       Threshold: 600
       Unit: Seconds
+      Dimensions:
+      - Name: PluginInstance
+        Value:
+          Fn::Sub: ${AWS::StackName}-standby-status
+
 
   AuthorPrimaryInstance:
     Type: AWS::EC2::Instance
