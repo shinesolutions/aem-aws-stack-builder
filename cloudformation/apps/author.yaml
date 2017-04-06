@@ -120,7 +120,7 @@ Resources:
       Dimensions:
       - Name: PluginInstance
         Value:
-          Fn::Sub: ${AWS::StackName}-standby-status
+          Fn::Sub: ${ComputeStackPrefixParameter}-standby-status
 
 
   AuthorPrimaryInstance:
