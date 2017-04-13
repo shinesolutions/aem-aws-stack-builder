@@ -24,6 +24,7 @@ create_multi_stacks() {
 echo "Start creating $stack_prefix AEM stacks..."
 create_single_stack "apps/stack-data"
 create_multi_stacks "apps/security-groups apps/messaging"
-create_multi_stacks "apps/author apps/publish apps/publish-dispatcher apps/author-dispatcher apps/orchestrator"
+create_multi_stacks "apps/author apps/publish apps/publish-dispatcher apps/author-dispatcher"
+create_multi_stacks "apps/orchestrator"
 create_multi_stacks "apps/chaos-monkey apps/dns-records"
 echo "Finished creating $stack_prefix AEM stacks"
