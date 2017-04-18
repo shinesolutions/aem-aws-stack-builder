@@ -94,7 +94,6 @@
         src: ../../../stage/system-users-credentials.json
         mode: put
         encrypt: yes
-      when: (source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == '')
       tags:
       - create
 
