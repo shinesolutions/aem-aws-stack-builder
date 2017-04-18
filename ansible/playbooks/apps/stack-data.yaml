@@ -67,16 +67,6 @@
       tags:
       - create
 
-    - name: Copy system user credentials from source bucket to data bucket
-      s3_copy_object:
-        src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "{{ source_stack_prefix }}/system-users-credentials.json"
-        dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/system-users-credentials.json"
-      when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
-      tags:
-      - create
-
     - name: Copy deploy-artifacts-descriptor from source bucket to data bucket
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
