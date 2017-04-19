@@ -12,6 +12,5 @@ config_path=$2
 
 echo "Deleting $stack_prefix AEM stacks..."
 ./scripts/delete-stack.sh "apps/all-in-one" "$stack_prefix" "$config_path"
-./scripts/delete-stack.sh "apps/cert-private" "$stack_prefix" "$config_path"
 ./scripts/delete-stack.sh "apps/stack-data" "$stack_prefix" "$config_path"
 echo "Finished deleting $stack_prefix AEM stacks"
