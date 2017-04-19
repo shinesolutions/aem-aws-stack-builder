@@ -84,6 +84,8 @@
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns.author_dispatcher.record_set_name }}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns.publish_dispatcher.record_set_name }}"
 
+          ImageRootDevice: "{{ ami_root_device_name }}"
+
       tags:
       - create
 

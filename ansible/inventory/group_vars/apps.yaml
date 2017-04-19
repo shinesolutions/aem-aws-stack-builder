@@ -34,6 +34,8 @@ ami_ids:
   orchestrator: ami-9fbdbefc
   chaos_monkey: ami-9fbdbefc
 
+ami_root_device_name: /dev/sda1
+
 security_groups:
   stack_name: aem-security-groups-stack
   secure_shell:
