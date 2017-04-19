@@ -43,4 +43,4 @@ Outputs:
     Description: The generated certificate's ARN
     Export:
       Name:
-        !Sub ${ComputeStackPrefixParameter}-WildcardCertificateARN
+        !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN

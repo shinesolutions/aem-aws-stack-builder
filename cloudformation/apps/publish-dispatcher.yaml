@@ -94,7 +94,7 @@ Resources:
         InstancePort: '443'
         InstanceProtocol: HTTPS
         SSLCertificateId:
-          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-WildcardCertificateARN
+          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:

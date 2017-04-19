@@ -203,7 +203,7 @@ Resources:
         InstancePort: '5433'
         InstanceProtocol: HTTPS
         SSLCertificateId:
-          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-WildcardCertificateARN
+          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
