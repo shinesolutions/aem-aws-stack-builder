@@ -57,6 +57,7 @@ echo "Applying common Puppet manifest for all components..."
 FACTER_data_bucket_name="${data_bucket_name}" \
   FACTER_stack_prefix="${stack_prefix}" \
   puppet apply \
+  --logdest /var/log/puppet-stack-init.log \
   --modulepath modules \
   --hiera_config conf/hiera.yaml manifests/common.pp
 
@@ -67,7 +68,7 @@ echo "Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
 
 echo "Applying Puppet manifest for ${component} component..."
-puppet apply --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
+puppet apply --logdest /var/log/puppet-stack-init.log --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
 
 if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesolutions/aem-custom-stack-provisioner/post-common.sh ]; then
 
