@@ -24,6 +24,11 @@ Parameters:
     Type: AWS::EC2::Image::Id
     Description: The Publish Dispatcher Image Id
 
+  PublishDispatcherImageRootDevice:
+    Type: String
+    Description: The root device name for the Publish Dispatcher Image Id
+    Default: /dev/sda1
+
   PublishDispatcherInstanceTypeParameter:
     Type: String
     Description: The Publish Dispatcher Instance Type
@@ -111,7 +116,7 @@ Resources:
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref PublishDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:

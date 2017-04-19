@@ -20,6 +20,11 @@ Parameters:
     Type: AWS::EC2::Image::Id
     Description: The Author Dispatcher Image Id
 
+  AuthorDispatcherImageRootDevice:
+    Type: String
+    Description: The root device name for the Author Dispatcher Image Id
+    Default: /dev/sda1
+
   AuthorDispatcherInstanceTypeParameter:
     Type: String
     Description: The Author Dispatcher Instance Type
@@ -105,7 +110,7 @@ Resources:
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref AuthorDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:

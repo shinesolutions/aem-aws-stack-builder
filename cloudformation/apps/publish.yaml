@@ -16,6 +16,11 @@ Parameters:
     Type: AWS::EC2::Image::Id
     Description: The Publish Image Id
 
+  PublishImageRootDevice:
+    Type: String
+    Description: The root device name for the Publish Image Id
+    Default: /dev/sda1
+
   PublishInstanceTypeParameter:
     Type: String
     Description: The Publish Instance Type
@@ -78,7 +83,7 @@ Resources:
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref PublishImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:

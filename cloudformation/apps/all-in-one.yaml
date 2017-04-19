@@ -242,6 +242,11 @@ Parameters:
     Type: String
     Description: PublishDispatcher DNS Record Set Name
 
+  ImageRootDevice:
+    Type: String
+    Description: The root device name for the Image Ids
+    Default: /dev/sda1
+
 Resources:
   SecurityGroupStack:
     Type: AWS::CloudFormation::Stack
@@ -285,6 +290,7 @@ Resources:
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorLoadBalancerHealthCheckTargetParameter: !Ref AuthorLoadBalancerHealthCheckTargetParameter
         AuthorImageParameter: !Ref AuthorImageParameter
+        AuthorImageRootDevice: !Ref ImageRootDevice
         AuthorInstanceTypeParameter: !Ref AuthorInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
         AuthorRootVolSizeParameter: !Ref AuthorRootVolSizeParameter
@@ -307,6 +313,7 @@ Resources:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishImageParameter: !Ref PublishImageParameter
+        PublishImageRootDevice: !Ref ImageRootDevice
         PublishInstanceTypeParameter: !Ref PublishInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
         PublishASGAvailabilityZoneListParameter: !Join [",", !Ref PublishASGAvailabilityZoneListParameter]
@@ -334,6 +341,7 @@ Resources:
         PublishDispatcherLoadBalancerHealthCheckTargetParameter: !Ref PublishDispatcherLoadBalancerHealthCheckTargetParameter
         PublishDispatcherLoadBalancerSchemeParameter: !Ref PublishDispatcherLoadBalancerSchemeParameter
         PublishDispatcherImageParameter: !Ref PublishDispatcherImageParameter
+        PublishDispatcherImageRootDevice: !Ref ImageRootDevice
         PublishDispatcherInstanceTypeParameter: !Ref PublishDispatcherInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
         PublishDispatcherASGAvailabilityZoneListParameter: !Join [",", !Ref PublishDispatcherASGAvailabilityZoneListParameter]
@@ -359,6 +367,7 @@ Resources:
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter: !Ref AuthorDispatcherLoadBalancerHealthCheckTargetParameter
         AuthorDispatcherImageParameter: !Ref AuthorDispatcherImageParameter
+        AuthorDispatcherImageRootDevice: !Ref ImageRootDevice
         AuthorDispatcherInstanceTypeParameter: !Ref AuthorDispatcherInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
         AuthorDispatcherASGAvailabilityZoneListParameter: !Join [",", !Ref AuthorDispatcherASGAvailabilityZoneListParameter]
@@ -382,6 +391,7 @@ Resources:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         OrchestratorImageParameter: !Ref OrchestratorImageParameter
+        OrchestratorImageRootDevice: !Ref ImageRootDevice
         OrchestratorInstanceTypeParameter: !Ref OrchestratorInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
         OrchestratorASGAvailabilityZoneListParameter: !Join [",", !Ref OrchestratorASGAvailabilityZoneListParameter]
@@ -403,6 +413,7 @@ Resources:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         ChaosMonkeyImageParameter: !Ref ChaosMonkeyImageParameter
+        ChaosMonkeyImageRootDevice: !Ref ImageRootDevice
         ChaosMonkeyInstanceTypeParameter: !Ref ChaosMonkeyInstanceTypeParameter
         ComputeKeyPairNameParameter: !Ref ComputeKeyPairNameParameter
         ChaosMonkeyASGAvailabilityZoneListParameter: !Join [",", !Ref ChaosMonkeyASGAvailabilityZoneListParameter]

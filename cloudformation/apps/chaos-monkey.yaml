@@ -16,6 +16,11 @@ Parameters:
     Type: AWS::EC2::Image::Id
     Description: The Chaos Monkey Image Id
 
+  ChaosMonkeyImageRootDevice:
+    Type: String
+    Description: The root device name for the Chaos Monkey Image Id
+    Default: /dev/sda1
+
   ChaosMonkeyInstanceTypeParameter:
     Type: String
     Description: The Chaos Monkey Instance Type
@@ -51,7 +56,7 @@ Resources:
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref ChaosMonkeyImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:

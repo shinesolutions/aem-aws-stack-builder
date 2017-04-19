@@ -20,6 +20,11 @@ Parameters:
     Type: AWS::EC2::Image::Id
     Description: The Author Image Id
 
+  AuthorImageRootDevice:
+    Type: String
+    Description: The root device name for the Author Image Id
+    Default: /dev/sda1
+
   AuthorInstanceTypeParameter:
     Type: String
     Description: The Author Instance Type
@@ -69,7 +74,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -121,7 +126,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
