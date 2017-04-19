@@ -27,8 +27,8 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-3a929c59
-  publish: ami-7898961b
+  author: ami-d1fdf4b2
+  publish: ami-aef2fbcd
   author_dispatcher: ami-07050a64
   publish_dispatcher: ami-07050a64
   orchestrator: ami-56303f35
