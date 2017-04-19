@@ -143,19 +143,19 @@ create-all-in-one:
 	./scripts/create-stack.sh apps/all-in-one  "$(stack_prefix)" "$(config_path)"
 
 delete-all-in-one:
-	./scripts/delete-stack.sh apps/all-in-one  "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/all-in-one  "$(stack_prefix)" "$(config_path)"
 
 create-private-cert:
 	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
 
 delete-private-cert:
-	./scripts/delete-stack.sh apps/cert-private  "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
 
 create-public-cert:
 	./scripts/create-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
 
 delete-public-cert:
-	./scripts/delete-stack.sh apps/cert-public  "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
 
 
 
