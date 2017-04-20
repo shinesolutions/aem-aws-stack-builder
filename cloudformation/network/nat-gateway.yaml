@@ -24,7 +24,7 @@ Resources:
       AllocationId:
         Ref: Ec2NatGatewayElasticIpAllocationIdParameter
       SubnetId:
-        Fn::ImportValue: !Sub ${StackPrefix}-PublishDispatcherSubnetA
+        Fn::ImportValue: !Sub ${StackPrefix}-PublishDispatcherELBSubnetA
 
   PrivateInternetGatewayRoute:
     Type: AWS::EC2::Route
