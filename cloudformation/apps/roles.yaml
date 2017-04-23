@@ -347,6 +347,7 @@ Resources:
                   - sdb:PutAttributes
                   - sdb:ListDomains
                   - sdb:CreateDomain
+                  - sdb:DeleteDomain
                   - sdb:Select
                 Resource: "*"
               - Effect: Allow
