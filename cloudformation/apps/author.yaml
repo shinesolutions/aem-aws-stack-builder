@@ -102,16 +102,15 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ActionsEnabled: true
-      AlarmActions: 
+      AlarmActions:
         - Fn::ImportValue:
             Fn::Sub: ${MessagingStackNameParameter}-AlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
-      AlarmName: 
+      AlarmName:
         Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
       MetricName: GenericJMX.delay.seconds_since_last_success
-      Namespace:
-        Fn::Sub: ${AWS::StackName}
+      Namespace: collectd
       Period: 60
       EvaluationPeriods: 5
       Statistic: Maximum
@@ -121,7 +120,9 @@ Resources:
       - Name: PluginInstance
         Value:
           Fn::Sub: ${ComputeStackPrefixParameter}-standby-status
-
+      - Name: Host
+        Value:
+          Ref: AuthorStandbyInstance
 
   AuthorPrimaryInstance:
     Type: AWS::EC2::Instance
