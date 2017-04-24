@@ -25,7 +25,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
-      ManagedPolicyArns: arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: PublishDispatcherRolePolicy
           PolicyDocument:
@@ -74,7 +75,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
-      ManagedPolicyArns: arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: PublishRolePolicy
           PolicyDocument:
@@ -123,7 +125,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
-      ManagedPolicyArns: arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: AuthorRolePolicy
           PolicyDocument:
@@ -174,7 +177,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
-      ManagedPolicyArns: arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: AuthorDispatcherRolePolicy
           PolicyDocument:
