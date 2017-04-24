@@ -160,6 +160,13 @@ delete-public-cert:
 library-upload:
 	./scripts/create-stack.sh apps/library-upload "$(stack_prefix)" "$(config_path)"
 
+create-stack-manager-cloud:
+	./scripts/create-stack.sh manage/stack-manager "$(stack_prefix)" "$(config_path)"
+
+delete-stack-manager-cloud:
+	./scripts/delete-stack.sh manage/stack-manager "$(stack_prefix)" "$(config_path)"
+
+
 # utility targets
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
