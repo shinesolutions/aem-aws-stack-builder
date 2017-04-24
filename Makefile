@@ -157,8 +157,8 @@ create-public-cert:
 delete-public-cert:
 	./scripts/delete-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
 
-
-
+library-upload:
+	./scripts/create-stack.sh apps/library-upload "$(stack_prefix)" "$(config_path)"
 
 # utility targets
 
