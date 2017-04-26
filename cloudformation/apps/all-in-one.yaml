@@ -301,7 +301,7 @@ Resources:
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter: !Ref AemAwsStackProvisionerVersionParameter
 
-  PublisherStack:
+  PublishStack:
     Type: AWS::CloudFormation::Stack
     DependsOn:
       - RolesStack
@@ -327,7 +327,7 @@ Resources:
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter:  !Ref AemAwsStackProvisionerVersionParameter
 
-  PublisherDispatchStack:
+  PublishDispatcherStack:
     Type: AWS::CloudFormation::Stack
     DependsOn:
       - RolesStack
@@ -427,7 +427,7 @@ Resources:
     DependsOn:
       - AuthorDispatcherStack
       - AuthorStack
-      - PublisherDispatchStack
+      - PublishDispatcherStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/dns-records.yaml
       Parameters:
