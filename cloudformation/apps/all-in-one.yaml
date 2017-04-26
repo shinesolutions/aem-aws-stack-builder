@@ -400,6 +400,10 @@ Resources:
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter: !Ref AemAwsStackProvisionerVersionParameter
+        AuthorStackName: !Ref AuthorStack
+        AuthorDispatcherStackName: !Ref AuthorDispatcherStack
+        PublishStackName: !Ref PublishStack
+        PublishDispatcherStackName: !Ref PublishDispatcherStack
 
   ChaosMonkeyStack:
     Type: AWS::CloudFormation::Stack

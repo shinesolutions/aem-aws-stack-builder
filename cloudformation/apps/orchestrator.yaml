@@ -53,6 +53,26 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
+  AuthorStackName:
+    Type: String
+    Description: The name of the author stack.
+    Default: ''
+
+  AuthorDispatcherStackName:
+    Type: String
+    Description: The name of the author-dispatcher stack.
+    Default: ''
+
+  PublishStackName:
+    Type: String
+    Description: The name of the author stack.
+    Default: ''
+
+  PublishDispatcherStackName:
+    Type: String
+    Description: The name of the publish-dispatcher stack.
+    Default: ''
+
 Resources:
 
 
@@ -88,12 +108,26 @@ Resources:
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n\
-            \ source /etc/profile\n\
-            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} orchestrator ${AemAwsStackProvisionerVersionParameter}\n"
+          Fn::Sub: |
+            #!/bin/bash -x
+            source /etc/profile
+            SB_ROOT_DIR="/opt/shinesolutions/aem-aws-stack-builder"
+            mkdir -p ${!SB_ROOT_DIR}
+            YAML_PREFIX="aem_orchestrator::application_properties::aws_cloudformation_stack_name"
+            cat > ${!SB_ROOT_DIR}/local.yaml < STACK_NAMES_YAML
+            ${!YAML_PREFIX}_author: "${AuthorStackName}"
+            ${!YAML_PREFIX}_author_dispatcher: "${AuthorDispatcherStackName}"
+            ${!YAML_PREFIX}_publish: "${PublishStackName}"
+            ${!YAML_PREFIX}_publish_dispatcher: "${PublishDispatcherStack}"
+            STACK_NAMES_YAML
+            aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh \
+                ${DataBucketNameParameter} \
+                ${ComputeStackPrefixParameter} \
+                orchestrator \
+                ${AemAwsStackProvisionerVersionParameter} \
+                ${!SB_ROOT_DIR}/local.yaml
 
   OrchestratorAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
