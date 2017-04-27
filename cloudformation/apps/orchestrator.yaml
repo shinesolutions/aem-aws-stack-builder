@@ -114,7 +114,7 @@ Resources:
             SB_ROOT_DIR="/opt/shinesolutions/aem-aws-stack-builder"
             mkdir -p ${!SB_ROOT_DIR}
             YAML_PREFIX="aem_orchestrator::application_properties::aws_cloudformation_stack_name"
-            cat > ${!SB_ROOT_DIR}/local.yaml < STACK_NAMES_YAML
+            cat > ${!SB_ROOT_DIR}/local.yaml << STACK_NAMES_YAML
             ${!YAML_PREFIX}_author: "${AuthorStackName}"
             ${!YAML_PREFIX}_author_dispatcher: "${AuthorDispatcherStackName}"
             ${!YAML_PREFIX}_publish: "${PublishStackName}"
