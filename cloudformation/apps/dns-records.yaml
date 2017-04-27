@@ -12,65 +12,52 @@ Parameters:
     Type: String
     Description: Route53 Hosted Zone Name the Record Set will be Created in
 
-  AuthorStackNameParameter:
-    Type: String
-    Description: Author Stack Name
-
   AuthorDNSRecordSetNameParameter:
     Type: String
     Description: Author DNS Record Set Name
 
-  AuthorDispatcherStackNameParameter:
-    Type: String
-    Description: AuthorDispatcher Stack Name
-
   AuthorDispatcherDNSRecordSetNameParameter:
     Type: String
     Description: AuthorDispatcher DNS Record Set Name
-  PublishDispatcherStackNameParameter:
-    Type: String
-    Description: PublishDispatcher Stack Name
 
   PublishDispatcherDNSRecordSetNameParameter:
     Type: String
     Description: PublishDispatcher DNS Record Set Name
 
 Resources:
+
   AuthorRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Ref: Route53HostedZoneNameParameter
+      HostedZoneName: !Ref Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${AuthorStackNameParameter}-LoadBalancerDNSName
+            Fn::Sub: ${ComputeStackPrefixParameter}-AuthorLoadBalancerDNSName
       TTL: 300
       Type: CNAME
 
   AuthorDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Ref: Route53HostedZoneNameParameter
+      HostedZoneName: !Ref Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${AuthorDispatcherStackNameParameter}-LoadBalancerDNSName
+            Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
 
   PublishDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName:
-        Ref: Route53HostedZoneNameParameter
+      HostedZoneName: !Ref Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-${PublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${PublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${PublishDispatcherStackNameParameter}-LoadBalancerDNSName
+            Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME

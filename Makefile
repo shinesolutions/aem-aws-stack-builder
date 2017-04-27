@@ -52,6 +52,12 @@ create-network:
 delete-network:
 	./scripts/delete-stack.sh network/network "$(stack_prefix)" "$(config_path)"
 
+create-network-exports:
+	./scripts/create-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
+
+delete-network-exports:
+	./scripts/delete-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
+
 create-nat-gateway:
 	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
 
@@ -132,6 +138,34 @@ create-stack-data:
 
 delete-stack-data:
 	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
+
+create-all-in-one:
+	./scripts/create-stack.sh apps/all-in-one  "$(stack_prefix)" "$(config_path)"
+
+delete-all-in-one:
+	./scripts/delete-stack.sh apps/all-in-one  "$(stack_prefix)" "$(config_path)"
+
+create-private-cert:
+	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
+
+delete-private-cert:
+	./scripts/delete-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
+
+create-public-cert:
+	./scripts/create-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
+
+delete-public-cert:
+	./scripts/delete-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
+
+library-upload:
+	./scripts/create-stack.sh apps/library-upload "$(stack_prefix)" "$(config_path)"
+
+create-stack-manager-cloud:
+	./scripts/create-stack.sh manage/stack-manager "$(stack_prefix)" "$(config_path)"
+
+delete-stack-manager-cloud:
+	./scripts/delete-stack.sh manage/stack-manager "$(stack_prefix)" "$(config_path)"
+
 
 # utility targets
 

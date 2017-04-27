@@ -1,0 +1,46 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: >-
+  Create a wildcard certificate for an AEM application stack. To be used with
+  ELBs. This certificate must be provisioned in the same region as the ELBs.
+
+Parameters:
+  ComputeStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
+  ApexDomainParameter:
+    Type: String
+    Description: >-
+      The top-level domain name ( like example.com ) that is appended to the
+      subdomains names specified in StackSubdomainParameter and
+      BlueGreenSubdomainParameter.
+
+  StackSubdomainParameter:
+    Type: String
+    Description: >-
+      The subdomain portion of the Route53 Hosted Zone used for this
+      application stack.
+
+Resources:
+  WildcardCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Join [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
+      SubjectAlternativeNames:
+        - !Join  [ '.', [ !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
+      DomainValidationOptions:
+        - DomainName: !Join  [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
+          ValidationDomain: !Ref ApexDomainParameter
+        - DomainName: !Join  [ '.', [ !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
+          ValidationDomain: !Ref ApexDomainParameter
+
+Outputs:
+  WildcardCertificateARN:
+    Value:
+      Ref: WildcardCertificate
+    Description: The generated certificate's ARN
+    Export:
+      Name:
+        !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN

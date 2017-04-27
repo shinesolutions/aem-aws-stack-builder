@@ -5,14 +5,28 @@ Description:
   Create a VPC for the AEM Stack
 
 Parameters:
+  StackPrefix:
+    Type: String
+    Description: Used to Namespace the Exported Resources
+    Default: ""
+
   Ec2VpcCidrBlockParameter:
     Type: String
     Default: 10.0.8.0/21
     Description: The CidrBlock for the VPC
+
   Ec2VpcTagNameParameter:
     Type: String
     Default: AEM Stack VPC
     Description: The name of the VPC for the AEM Stack
+
+  Ec2VpcDhcpOptionSetParameter:
+    Type: String
+    Default: ""
+    Description: Optional DHCP Option Set to Associated with the New VPC
+
+Conditions:
+  UseExistingDHCPOption: !Not [ !Equals [!Ref Ec2VpcDhcpOptionSetParameter, ""]]
 
 Resources:
   Ec2Vpc:
@@ -28,8 +42,19 @@ Resources:
           Value:
             Ref: Ec2VpcTagNameParameter
 
+  DHCPOptionAssociation:
+    Condition: UseExistingDHCPOption
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+    Properties:
+      VpcId:
+        Ref: Ec2Vpc
+      DhcpOptionsId:
+        Ref: Ec2VpcDhcpOptionSetParameter
+
 Outputs:
-  Ec2Vpc:
+  VPCId:
     Value:
       Ref: Ec2Vpc
+    Export:
+      Name: !Sub ${StackPrefix}-VPCId
     Description: The newly created VPC for the AEM Stack

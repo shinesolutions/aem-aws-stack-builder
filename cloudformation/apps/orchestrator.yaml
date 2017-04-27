@@ -8,13 +8,18 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  OrchestratorInstanceProfileParameter:
+  NetworkStackPrefixParameter:
     Type: String
-    Description: The Orchestrator Instance Profile
+    Description: The AEM Stack Network Resources Stack Prefix
 
   OrchestratorImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Orchestrator Image Id
+
+  OrchestratorImageRootDevice:
+    Type: String
+    Description: The root device name for the Orchestrator Image Id
+    Default: /dev/sda1
 
   OrchestratorInstanceTypeParameter:
     Type: String
@@ -28,10 +33,6 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Orchestrator Availability Zone List
 
-  OrchestratorASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Orchestrator Subnets
-
   OrchestratorRootVolSizeParameter:
     Type: Number
     Description: Orchestrator Instances Root EBS Volume Size
@@ -39,18 +40,6 @@ Parameters:
   OrchestratorDataVolSizeParameter:
     Type: Number
     Description: Orchestrator Instances Data EBS Volume Size
-
-  OrchestratorTagNameParameter:
-    Type: String
-    Description: The Orchestrator Name Tag
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -64,6 +53,36 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
+  AuthorStackName:
+    Type: String
+    Description: The name of the author stack.
+    Default: ''
+
+  AuthorDispatcherStackName:
+    Type: String
+    Description: The name of the author-dispatcher stack.
+    Default: ''
+
+  PublishStackName:
+    Type: String
+    Description: The name of the author stack.
+    Default: ''
+
+  PublishDispatcherStackName:
+    Type: String
+    Description: The name of the publish-dispatcher stack.
+    Default: ''
+
+  MessagingStackName:
+    Type: String
+    Description: The name of the messaging stack.
+    Default: ''
+
+  AEMASGEventQueueName:
+    Type: String
+    Description: The name of the messaging stack.
+    Default: ''
+
 Resources:
 
 
@@ -72,7 +91,7 @@ Resources:
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref OrchestratorImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -85,7 +104,7 @@ Resources:
             Ref: OrchestratorDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: OrchestratorInstanceProfileParameter
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-OrchestratorInstanceProfile
       ImageId:
         Ref: OrchestratorImageParameter
       InstanceMonitoring: false
@@ -95,16 +114,33 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-OrchestratorSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n\
-            \ source /etc/profile\n\
-            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} orchestrator ${AemAwsStackProvisionerVersionParameter}\n"
+          Fn::Sub: |
+            #!/bin/bash -x
+            source /etc/profile
+            SB_ROOT_DIR="/opt/shinesolutions/aem-aws-stack-builder"
+            mkdir -p ${!SB_ROOT_DIR}
+            YAML_PREFIX="aem_orchestrator::application_properties"
+            YAML_STACKNAME_PREFIX="aws_cloudformation_stack_name"
+            cat > ${!SB_ROOT_DIR}/local.yaml << STACK_NAMES_YAML
+            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_author: "${AuthorStackName}"
+            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_author_dispatcher: "${AuthorDispatcherStackName}"
+            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_publish: "${PublishStackName}"
+            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_publish_dispatcher: "${PublishDispatcherStackName}"
+            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_messaging: "${MessagingStackName}"
+            ${!YAML_PREFIX}::aws_sqs_queue_name: "${AEMASGEventQueueName}"
+            STACK_NAMES_YAML
+            aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh \
+                ${DataBucketNameParameter} \
+                ${ComputeStackPrefixParameter} \
+                orchestrator \
+                ${AemAwsStackProvisionerVersionParameter} \
+                ${!SB_ROOT_DIR}/local.yaml
 
   OrchestratorAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -119,8 +155,7 @@ Resources:
       MinSize: 1
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${OrchestratorTagNameParameter}
+        Value: AEM Orchestrator
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:
@@ -130,7 +165,8 @@ Resources:
         Value: orchestrator
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: OrchestratorASGSubnetListParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetB
 
 Outputs:
 
@@ -144,5 +180,5 @@ Outputs:
       Ref: OrchestratorAutoScalingGroup
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-OrchestratorAutoScalingGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorAutoScalingGroup
     Description: The Orchestrator Auto Scaling Group

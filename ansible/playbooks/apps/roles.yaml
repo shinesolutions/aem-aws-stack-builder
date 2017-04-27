@@ -13,17 +13,14 @@
         disable_rollback: true
         template: "../../../cloudformation/apps/roles.yaml"
         template_parameters:
-          PublishDispatcherRoleNameParameter: "{{ stack_prefix }}-{{ roles.publish_dispatcher }}"
-          PublishRoleNameParameter: "{{ stack_prefix }}-{{ roles.publish }}"
-          AuthorRoleNameParameter: "{{ stack_prefix }}-{{ roles.author }}"
-          AuthorDispatcherRoleNameParameter: "{{ stack_prefix }}-{{ roles.author_dispatcher }}"
-          OrchestratorRoleNameParameter: "{{ stack_prefix }}-{{ roles.orchestrator }}"
-          ChaosMonkeyRoleNameParameter: "{{ stack_prefix }}-{{ roles.chaos_monkey }}"
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
       tags:
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ roles.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ roles.stack_name }}"
+            --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:

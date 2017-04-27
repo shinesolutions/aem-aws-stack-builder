@@ -8,9 +8,9 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  SSLCertificateARNParameter:
+  NetworkStackPrefixParameter:
     Type: String
-    Description: The ARN for SSL Certificate
+    Description: The AEM Stack Network Resources Stack Prefix
 
   PublishDispatcherLoadBalancerHealthCheckTargetParameter:
     Type: String
@@ -20,21 +20,14 @@ Parameters:
     Type: String
     Description: AEM Publish Dispatcher ELB Scheme
 
-  PublishDispatcherELBSubnetAParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
-
-  PublishDispatcherELBSubnetBParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
-
-  PublishDispatcherInstanceProfileParameter:
-    Type: String
-    Description: The Publish Dispatcher Instance Profile
-
   PublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Publish Dispatcher Image Id
+
+  PublishDispatcherImageRootDevice:
+    Type: String
+    Description: The root device name for the Publish Dispatcher Image Id
+    Default: /dev/sda1
 
   PublishDispatcherInstanceTypeParameter:
     Type: String
@@ -47,10 +40,6 @@ Parameters:
   PublishDispatcherASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Publish Dispatcher Availability Zone List
-
-  PublishDispatcherASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Publish Dispatcher Subnets
 
   PublishDispatcherASGMaxSizeParameter:
     Type: String
@@ -68,26 +57,6 @@ Parameters:
     Type: Number
     Description: PublishDispatcher Instances Root EBS Volume Size
 
-  PublishDispatcherTagNameParameter:
-    Type: String
-    Description: The Publish Dispatcher Name Tag
-
-  PublishDispatcherLoadBalancerTagNameParameter:
-    Type: String
-    Description: The Publish Dispatcher Load Balancer Name Tag
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
-
-  MessagingStackNameParameter:
-    Type: String
-    Description: The AEM Messaging Stack Name
-
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
@@ -101,7 +70,6 @@ Parameters:
     Description: AEM AWS Stack Provisioner version number
 
 Resources:
-
 
   PublishDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
@@ -126,20 +94,19 @@ Resources:
         InstancePort: '443'
         InstanceProtocol: HTTPS
         SSLCertificateId:
-          Ref: SSLCertificateARNParameter
+          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-      - Ref: PublishDispatcherELBSubnetAParameter
-      - Ref: PublishDispatcherELBSubnetBParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetB
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${PublishDispatcherLoadBalancerTagNameParameter}
+        Value: AEM Publish Dispatcher Load Balancer
       - Key: StackPrefix
         Value:
           Ref: ComputeStackPrefixParameter
@@ -149,7 +116,7 @@ Resources:
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref PublishDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -162,7 +129,7 @@ Resources:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: PublishDispatcherInstanceProfileParameter
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PublishDispatcherInstanceProfile
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false
@@ -172,7 +139,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -205,24 +172,26 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic
       Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${PublishDispatcherTagNameParameter}
-        PropagateAtLaunch: true
-      - Key: StackPrefix
-        Value:
-          Ref: ComputeStackPrefixParameter
-        PropagateAtLaunch: true
-      - Key: Component
-        Value: publish-dispatcher
-        PropagateAtLaunch: true
-      - Key: ApplicationDescriptorUrl
-        Value: PLACEHOLDER
-        PropagateAtLaunch: true
+        - Key: Name
+          Value: AEM Publish Dispatcher
+          PropagateAtLaunch: true
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
+          PropagateAtLaunch: true
+        - Key: Component
+          Value: publish-dispatcher
+          PropagateAtLaunch: true
+        - Key: ApplicationDescriptorUrl
+          Value: PLACEHOLDER
+          PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: PublishDispatcherASGSubnetListParameter
+        - Fn::ImportValue:
+            !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetA
+        - Fn::ImportValue:
+            !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetB
 
 Outputs:
 
@@ -235,8 +204,7 @@ Outputs:
     Value:
       Fn::GetAtt: [PublishDispatcherLoadBalancer, DNSName]
     Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
+      Name: !Sub ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
     Description: The Publish Dispatcher Load Balancer DNSName
 
   PublishDispatcherLaunchConfiguration:
@@ -249,5 +217,5 @@ Outputs:
       Ref: PublishDispatcherAutoScalingGroup
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishDispatcherAutoScalingGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherAutoScalingGroup
     Description: The Publish Dispatcher Auto Scaling Group

@@ -10,41 +10,13 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  VpcIdParameter:
-    Type: AWS::EC2::VPC::Id
-    Description: The VPC to create the AEM Stack Security Groups in.
-
-  PublishDispatcherELBSecurityGroupTagNameParameter:
+  NetworkStackPrefixParameter:
     Type: String
-    Description: AEM Publish Dispatcher ELB Security Group Name
+    Description: The AEM Stack Network Resources Stack Prefix
 
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Type: String
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
-
-  PublishDispatcherSecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Publish Dispatcher Security Group Name
-
-  PublishSecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Publish Security Group Name
-
-  AuthorSecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Author Security Group Name
-
-  AuthorELBSecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Author ELB Security Group Name
-
-  AuthorDispatcherSecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Author Dispatcher Security Group Name
-
-  AuthorDispatcherELBSecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Author Dispatcher ELB Security Group Name
 
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Type: String
@@ -53,14 +25,6 @@ Parameters:
   SecureShellInboundCidrIpParameter:
     Type: String
     Description: AEM Stack Secure Shell Inbound Cidr Ip
-
-  OrchestratorSecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Orchestrator Security Group Name
-
-  ChaosMonkeySecurityGroupTagNameParameter:
-    Type: String
-    Description: AEM Chaos Monkey Security Group Name
 
   PrivateSubnetInternetOutboundCidrIpParameter:
     Type: String
@@ -75,13 +39,12 @@ Resources:
       GroupDescription: AEM Publish Dispatcher ELB Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${PublishDispatcherELBSecurityGroupTagNameParameter}
+          Value: AEM Publish Dispatcher ELB Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Publish Dispatcher ELB Security Group Cidr IP on ports 80 and 443
   PublishDispatcherELBSecurityGroupIngress0:
@@ -137,13 +100,12 @@ Resources:
       GroupDescription: AEM Publish Dispatcher Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${PublishDispatcherSecurityGroupTagNameParameter}
+          Value: AEM Publish Dispatcher Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Publish Dispatcher ELB Security Group on ports 80 and 443
   PublishDispatcherSecurityGroupIngress0:
@@ -256,13 +218,12 @@ Resources:
       GroupDescription: AEM Publish Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${PublishSecurityGroupTagNameParameter}
+          Value: AEM Publish Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Publish Dispatcher Security Group on 4503 and 5433
   PublishSecurityGroupIngress0:
@@ -398,13 +359,12 @@ Resources:
       GroupDescription: AEM Author Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${AuthorSecurityGroupTagNameParameter}
+          Value: AEM Author Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author ELB Security Group on 4502 and 5433
   AuthorSecurityGroupIngress0:
@@ -585,13 +545,12 @@ Resources:
       GroupDescription: AEM Author ELB Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${AuthorELBSecurityGroupTagNameParameter}
+          Value: AEM Author ELB Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author Dispatcher Security Group on 80 and 443
   AuthorELBSecurityGroupIngress0:
@@ -669,13 +628,12 @@ Resources:
       GroupDescription: AEM Author Dispatcher Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${AuthorDispatcherSecurityGroupTagNameParameter}
+          Value: AEM Author Dispatcher Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author Dispatcher ELB Security Group on 80 and 443
   AuthorDispatcherSecurityGroupIngress0:
@@ -788,13 +746,12 @@ Resources:
       GroupDescription: AEM Author Dispatcher ELB Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${AuthorDispatcherELBSecurityGroupTagNameParameter}
+          Value: AEM Author Dispatcher ELB Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Author Dispatcher ELB Cidr Ip on 80 and 443
   AuthorDispatcherELBSecurityGroupIngress0:
@@ -850,13 +807,12 @@ Resources:
       GroupDescription: AEM Orchestrator Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${OrchestratorSecurityGroupTagNameParameter}
+          Value: AEM Orchestrator Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Secure Shell Cidr Ip on port 22
   OrchestratorSecurityGroupIngress0:
@@ -946,13 +902,12 @@ Resources:
       GroupDescription: AEM Chaos Monkey Security Group
       Tags:
         - Key: Name
-          Value:
-            Fn::Sub: ${ChaosMonkeySecurityGroupTagNameParameter}
+          Value: AEM Chaos Monkey Security Group
         - Key: StackPrefix
           Value:
             Ref: ComputeStackPrefixParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
   # Allow tcp inbound from Secure Shell Cidr Ip on port 22
   ChaosMonkeySecurityGroupIngress0:
@@ -997,7 +952,7 @@ Outputs:
     Description: The Publish Dispatcher ELB Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishDispatcherELBSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherELBSecurityGroup
 
   PublishDispatcherSecurityGroup:
     Value:
@@ -1005,7 +960,7 @@ Outputs:
     Description: The Publish Dispatcher Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishDispatcherSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherSecurityGroup
 
   PublishSecurityGroup:
     Value:
@@ -1013,7 +968,7 @@ Outputs:
     Description: The Publish Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishSecurityGroup
 
   AuthorSecurityGroup:
     Value:
@@ -1021,7 +976,7 @@ Outputs:
     Description: The Author Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSecurityGroup
 
   AuthorELBSecurityGroup:
     Value:
@@ -1029,7 +984,7 @@ Outputs:
     Description: The Author ELB Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorELBSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorELBSecurityGroup
 
   AuthorDispatcherSecurityGroup:
     Value:
@@ -1037,7 +992,7 @@ Outputs:
     Description: The Author Dispatcher Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorDispatcherSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherSecurityGroup
 
   AuthorDispatcherELBSecurityGroup:
     Value:
@@ -1045,7 +1000,7 @@ Outputs:
     Description: The Author Dispatcher ELB Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorDispatcherELBSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
 
   OrchestratorSecurityGroup:
     Value:
@@ -1053,7 +1008,7 @@ Outputs:
     Description: The Orchestrator Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-OrchestratorSecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorSecurityGroup
 
   ChaosMonkeySecurityGroup:
     Value:
@@ -1061,4 +1016,4 @@ Outputs:
     Description: The Chaos Monkey Security Group
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-ChaosMonkeySecurityGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-ChaosMonkeySecurityGroup

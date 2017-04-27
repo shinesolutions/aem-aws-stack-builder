@@ -4,6 +4,11 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Create a Bastion Host inside AEM VPC
 
 Parameters:
+  StackPrefix:
+    Type: String
+    Description: Used to Namespace the Exported Resources
+    Default: ""
+  
   BastionImageId:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for Bastion Host

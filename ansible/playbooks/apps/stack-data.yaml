@@ -160,6 +160,89 @@
       tags:
       - create
 
+    # TODO: s3_sync is only availabe in version 2.3
+    # - name: Upload CloudFormation Templates to S3
+    #   s3_sync:
+    #     bucket: "{{ s3.data_bucket_name }}"
+    #     file_root: "cloudformation/apps"
+    #     key_prefix: "{{ stack_prefix }}"
+    #     mode: push
+    #     permission: public-read
+    #     region: "{{ aws.region }}"
+    #     include: "*.yaml"
+    #   tags:
+    #     - create
+
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../cloudformation/apps
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml" --acl public-read
+      tags:
+        - create
+
+    - name: Create a Per Stack Route53 Hosted Zone
+      route53_zone:
+        zone: "{{ stack_prefix }}.{{dns.stack_sub_domain}}.{{ dns.apex_domain_name}}"
+        comment: AEM {{ stack_prefix }} App Stacks Hosted Zone
+        region: "{{ aws.region }}"
+        state: present
+      register: create_zone_result
+      tags:
+        - create
+
+    - name: Retrieve the Hosted Zone ID of the Per Stack Zone
+      route53_facts:
+        query: hosted_zone
+        hosted_zone_method: list_by_name
+        dns_name: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
+      register: list_zone_result
+      tags:
+        - create
+        - delete
+
+    - name: Retrieve Name Servers for per Stack Zone
+      route53_facts:
+        query: record_sets
+        hosted_zone_id: "{{ list_zone_result.HostedZones[0].Id }}"
+        type: NS
+        start_record_name: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
+        max_items: 1
+      register: stack_zone_ns_records
+      tags:
+        - create
+        - delete
+
+    - name: Create a NS Record in Parenet Zone for the New Stack Zone
+      route53:
+        command: create
+        record: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
+        ttl: 86400
+        type: NS
+        zone: "{{ dns.apex_domain_name}}"
+        value: "{{stack_zone_ns_records.ResourceRecordSets[0].ResourceRecords|json_query('[].Value')|sort|join(',')}}"
+      tags:
+        - create
+
+    - name: Delete the NS Record in Parent Zone for the per Stack Zone
+      route53:
+        command: delete
+        record:  "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
+        ttl: 86400
+        type: NS
+        zone: "{{ dns.apex_domain_name}}"
+        value: "{{stack_zone_ns_records.ResourceRecordSets[0].ResourceRecords|json_query('[].Value')|sort|join(',')}}"
+      tags:
+        - delete
+
+    - name: Delete Per Stack Route53 Hosted Zone
+      route53_zone:
+        zone: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name}}"
+        region: "{{ aws.region }}"
+        state: absent
+      tags:
+        - delete
+
     - name: Delete stack data
       s3:
         bucket: "{{ s3.data_bucket_name }}"

@@ -8,13 +8,18 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  ChaosMonkeyInstanceProfileParameter:
+  NetworkStackPrefixParameter:
     Type: String
-    Description: The Chaos Monkey Instance Profile
+    Description: The AEM Stack Network Resources Stack Prefix
 
   ChaosMonkeyImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Chaos Monkey Image Id
+
+  ChaosMonkeyImageRootDevice:
+    Type: String
+    Description: The root device name for the Chaos Monkey Image Id
+    Default: /dev/sda1
 
   ChaosMonkeyInstanceTypeParameter:
     Type: String
@@ -28,41 +33,9 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Chaos Monkey Availability Zone List
 
-  ChaosMonkeyASGSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Chaos Monkey Subnets
-
-  ChaosMonkeyTagNameParameter:
-    Type: String
-    Description: The Chaos Monkey Name Tag
-
   ChaosMonkeyRootVolSizeParameter:
     Type: Number
     Description: Chaos Monkey Instances Root EBS Volum Size
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
-
-  OrchestratorStackNameParameter:
-    Type: String
-    Description: The AEM Orchestrator Role Stack Name
-
-  PublishStackNameParameter:
-    Type: String
-    Description: The AEM Publish Role Stack Name
-
-  PublishDispatcherStackNameParameter:
-    Type: String
-    Description: The AEM Publish Dispatcher Role Stack Name
-
-  AuthorDispatcherStackNameParameter:
-    Type: String
-    Description: The AEM Author Dispatcher Role Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -78,20 +51,19 @@ Parameters:
 
 Resources:
 
-
   ChaosMonkeyLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref ChaosMonkeyImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
             Ref: ChaosMonkeyRootVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: ChaosMonkeyInstanceProfileParameter
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-ChaosMonkeyInstanceProfile
       ImageId:
         Ref: ChaosMonkeyImageParameter
       InstanceMonitoring: false
@@ -101,7 +73,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-ChaosMonkeySecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-ChaosMonkeySecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -124,8 +96,7 @@ Resources:
       MinSize: 1
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${ChaosMonkeyTagNameParameter}
+        Value: AEM Chaos Monkey
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:
@@ -137,28 +108,28 @@ Resources:
       - Key: OrchestratorASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${OrchestratorStackNameParameter}-OrchestratorAutoScalingGroup"
+            Fn::Sub: "${ComputeStackPrefixParameter}-OrchestratorAutoScalingGroup"
         PropagateAtLaunch: true
       - Key: PublisherASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${PublishStackNameParameter}-PublishAutoScalingGroup"
+            Fn::Sub: "${ComputeStackPrefixParameter}-PublishAutoScalingGroup"
         PropagateAtLaunch: true
       - Key: PublisherDispatcherASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${PublishDispatcherStackNameParameter}-PublishDispatcherAutoScalingGroup"
+            Fn::Sub: "${ComputeStackPrefixParameter}-PublishDispatcherAutoScalingGroup"
         PropagateAtLaunch: true
       - Key: AuthorDispatcherASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${AuthorDispatcherStackNameParameter}-AuthorDispatcherAutoScalingGroup"
+            Fn::Sub: "${ComputeStackPrefixParameter}-AuthorDispatcherAutoScalingGroup"
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: ChaosMonkeyASGSubnetListParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetB
 
 Outputs:
-
 
   ChaosMonkeyLaunchConfiguration:
     Value:
