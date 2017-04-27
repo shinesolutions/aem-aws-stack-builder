@@ -126,36 +126,36 @@ def stack_health_check(stack_prefix):
     author-standby and publisher instances.
     """
 
-    base_filter = {
+    base_filter = [{
             'Name': 'tag:StackPrefix',
             'Values': [stack_prefix]
-    }
+    }]
 
-    author_primary_filter = [
+    author_primary_filter = base_filter + [
         {
             'Name': 'tag:Component',
             'Values': ['author-primary']
         }
     ]
-    author_primary_filter.append(base_filter)
+
     author_primary_instances = instance_ids_by_tags(author_primary_filter)
 
-    author_standby_filter = [
+    author_standby_filter = base_filter + [
         {
             'Name': 'tag:Component',
             'Values': ['author-standby']
         }
     ]
-    author_standby_filter.append(base_filter)
+
     author_standby_instances = instance_ids_by_tags(author_standby_filter)
 
-    publish_filter = [
+    publish_filter = base_filter + [
         {
             'Name': 'tag:Component',
             'Values': ['publish']
         }
     ]
-    publish_filter.append(base_filter)
+
     publish_instances = instance_ids_by_tags(publish_filter)
 
     if (len(author_primary_instances) == 1 and
@@ -226,7 +226,7 @@ def put_state_in_dynamodb(instance_info, command_id):
            datetime.datetime.fromtimestamp(0)).total_seconds()
     ttl += datetime.timedelta(days=1).total_seconds()
 
-    instances = { key: {'S': value} for (key, value) in instance_info.items() }
+    instances = {key: {'S': value} for (key, value) in instance_info.items()}
 
     dynamodb.put_item(
         TableName=offline_snapshot_config['dynamodb-table'],
@@ -237,9 +237,15 @@ def put_state_in_dynamodb(instance_info, command_id):
             'task': {
                 'S': 'offline_snapshot'
             },
-            'instance_ids': instances,
-            command_id: {
-                'S': 'STOP_AUTHOR_STANDBY'
+            'instance_ids': {
+                'M': instances
+            },
+            'command_state': {
+                'M': {
+                    command_id: {
+                        'S': 'STOP_AUTHOR_STANDBY'
+                    }
+                }
             },
             'ttl': {
                 'N': str(ttl)
@@ -249,7 +255,7 @@ def put_state_in_dynamodb(instance_info, command_id):
 
 
 # dynamodb is used to host state information
-def get_state_from_dynamodb(cmd_id):
+def get_state_from_dynamodb():
 
     item = dynamodb.get_item(
         TableName=offline_snapshot_config['dynamodb-table'],
@@ -263,10 +269,7 @@ def get_state_from_dynamodb(cmd_id):
         },
         ConsistentRead=True,
         ReturnConsumedCapacity='NONE',
-        ProjectionExpression='#cmd_id, instance_ids',
-        ExpressionAttributeNames={
-            '#cmd_id': cmd_id
-        })
+        ProjectionExpression='command_state, instance_ids'
     )
 
     return item
@@ -284,15 +287,15 @@ def update_state_in_dynamodb(command_id, current_state):
                 'S': 'offline_snapshot'
             }
         },
-        'UpdateExpression': 'SET #cmd_id = :state',
-        'ExpressionAttributeNames' = {
+        'UpdateExpression': 'SET command_state.#cmd_id = :state',
+        'ExpressionAttributeNames': {
             '#cmd_id': command_id
         },
         'ExpressionAttributeValues': {
             ':state': {
                 'S': current_state
             }
-        })
+        }
     }
 
     dynamodb.update_item(**item_update)
@@ -307,17 +310,18 @@ def sns_message_processor(event, context):
 
         # message that start offline snapshot has a task key
         task = message['task']
+        response = None
         if task is not None and task == 'offline-snapshot':
-            response =  start_offline_snapshot(message)
+            response = start_offline_snapshot(message)
             put_state_in_dynamodb(response['Command']['CommandId'],
                                   'STOP_AUTHOR_STANDBY')
-            return reponse
+            return response
         else:
             # extract important piece of information from the message
             cmd_id = message['commandId']
-            item = get_state_from_dynamodb(cmd_id)
-            state = item['Item'][cmd_id]['S']
+            item = get_state_from_dynamodb()
 
+            state = item['Item']['command_state']['M'][cmd_id]['S']
             author_primary_id = item['Item']['instance_ids']['M']['author-primary']['S']
             author_standby_id = item['Item']['instance_ids']['M']['author-standby']['S']
             publish_id = item['Item']['instance_ids']['M']['publish']['S']
