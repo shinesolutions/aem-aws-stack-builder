@@ -213,6 +213,7 @@ Parameters:
   ChaosMonkeyImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Chaos Monkey Image Id
+    Default: ''
 
   ChaosMonkeyInstanceTypeParameter:
     Type: String
@@ -246,6 +247,11 @@ Parameters:
     Type: String
     Description: The root device name for the Image Ids
     Default: /dev/sda1
+
+Conditions:
+  CreateChaosMonkeyStackCondition:
+    !Not
+      - !Equals [ !Ref ChaosMonkeyImageParameter, '' ]
 
 Resources:
   SecurityGroupStack:
@@ -413,6 +419,12 @@ Resources:
       - RolesStack
       - MessagingStack
       - SecurityGroupStack
+      - AuthorStack
+      - PublishStack
+      - AuthorDispatcherStack
+      - PublishDispatcherStack
+      - OrchestratorStack
+    Condition: CreateChaosMonkeyStackCondition
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/chaos-monkey.yaml
       Parameters:
