@@ -22,10 +22,6 @@ Parameters:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Topic Name
 
-  AlarmNotificationTopicNameParameter:
-    Type: String
-    Description: AEM Sync Delay Alarm Topic Name
-
   AlarmNotificationContactEmailParameter:
     Type: String
     Description: AEM Sync Delay Alarm Contact Email (When alarm triggers)
@@ -74,10 +70,7 @@ Resources:
   AlarmNotificationTopic:
     Type: AWS::SNS::Topic
     Properties:
-      Subscription:
-        - Endpoint: !Sub ${AlarmNotificationContactEmailParameter}
-          Protocol: email
-      TopicName: !Sub ${AlarmNotificationTopicNameParameter}
+      DisplayName: !Sub ${ComputeStackPrefixParameter}-alarm-notification-topic
 
 Outputs:
 
