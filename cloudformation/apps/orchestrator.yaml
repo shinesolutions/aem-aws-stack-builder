@@ -118,7 +118,7 @@ Resources:
             ${!YAML_PREFIX}_author: "${AuthorStackName}"
             ${!YAML_PREFIX}_author_dispatcher: "${AuthorDispatcherStackName}"
             ${!YAML_PREFIX}_publish: "${PublishStackName}"
-            ${!YAML_PREFIX}_publish_dispatcher: "${PublishDispatcherStack}"
+            ${!YAML_PREFIX}_publish_dispatcher: "${PublishDispatcherStackName}"
             STACK_NAMES_YAML
             aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
             chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
