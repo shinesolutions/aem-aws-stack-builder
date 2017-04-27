@@ -213,11 +213,11 @@ Parameters:
   ChaosMonkeyImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Chaos Monkey Image Id
-    Default: ''
 
   ChaosMonkeyInstanceTypeParameter:
     Type: String
     Description: The Chaos Monkey Instance Type
+    Default: ''
 
   ChaosMonkeyASGAvailabilityZoneListParameter:
     Type: List<AWS::EC2::AvailabilityZone::Name>
@@ -251,7 +251,7 @@ Parameters:
 Conditions:
   CreateChaosMonkeyStackCondition:
     !Not
-      - !Equals [ !Ref ChaosMonkeyImageParameter, '' ]
+      - !Equals [ !Ref ChaosMonkeyInstanceTypeParameter, '' ]
 
 Resources:
   SecurityGroupStack:
