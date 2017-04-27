@@ -405,6 +405,7 @@ Resources:
         PublishStackName: !Ref PublishStack
         PublishDispatcherStackName: !Ref PublishDispatcherStack
         MessagingStackName: !Ref MessagingStack
+        AEMASGEventQueueName: !Sub ${MessagingStack.Outputs.AEMASGEventQueueName}
 
   ChaosMonkeyStack:
     Type: AWS::CloudFormation::Stack

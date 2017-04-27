@@ -70,6 +70,10 @@ Outputs:
       Ref: AEMAutoScalingGroupEventQueue
     Description: The AEM ASG Event Queue
 
+  AEMASGEventQueueName:
+    Value: !Sub ${AEMAutoScalingGroupEventQueue.QueueName}
+    Description: The AEM ASG Event Queue Name
+
   AEMASGEventTopic:
     Value:
       Ref: AEMASGEventTopic
