@@ -73,6 +73,11 @@ Parameters:
     Description: The name of the publish-dispatcher stack.
     Default: ''
 
+  MessagingStackName:
+    Type: String
+    Description: The name of the messaging stack.
+    Default: ''
+
 Resources:
 
 
@@ -119,6 +124,7 @@ Resources:
             ${!YAML_PREFIX}_author_dispatcher: "${AuthorDispatcherStackName}"
             ${!YAML_PREFIX}_publish: "${PublishStackName}"
             ${!YAML_PREFIX}_publish_dispatcher: "${PublishDispatcherStackName}"
+            ${!YAML_PREFIX}_messaging: "%{MessagingStackName}"
             STACK_NAMES_YAML
             aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
             chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh

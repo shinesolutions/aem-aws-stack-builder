@@ -404,6 +404,7 @@ Resources:
         AuthorDispatcherStackName: !Ref AuthorDispatcherStack
         PublishStackName: !Ref PublishStack
         PublishDispatcherStackName: !Ref PublishDispatcherStack
+        MessagingStackName: !Ref MessagingStack
 
   ChaosMonkeyStack:
     Type: AWS::CloudFormation::Stack
