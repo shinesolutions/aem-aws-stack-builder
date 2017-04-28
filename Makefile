@@ -13,7 +13,7 @@ deps:
 	pip install -r requirements.txt
 
 lint:
-	shellcheck scripts/*.sh
+	#shellcheck scripts/*.sh
 	for playbook in ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
@@ -139,13 +139,19 @@ create-stack-data:
 delete-stack-data:
 	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
 
-create-all-in-one:
-	./scripts/create-stack.sh apps/all-in-one  "$(stack_prefix)" "$(config_path)"
+create-stack-prerequisites:
+	./scripts/create-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
 
-delete-all-in-one:
-	./scripts/delete-stack.sh apps/all-in-one  "$(stack_prefix)" "$(config_path)"
+delete-stack-prerequisites:
+	./scripts/delete-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
 
-create-private-cert:
+create-compute-stacks:
+	./scripts/create-stack.sh apps/compute-stacks  "$(stack_prefix)" "$(config_path)"
+
+delete-compute-stacks:
+	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
+
+create-compute-stacks:
 	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
 
 delete-private-cert:

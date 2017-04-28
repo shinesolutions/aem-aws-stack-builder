@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Overarching CF Template to Create All AEM Appp Stacks
+Description: Overarching CF Template to Create All AEM Compute Resources Stacks
 
 Parameters:
 
@@ -20,10 +20,6 @@ Parameters:
     Type: String
     Description: Bucket name that stores Stack data files
 
-  SecureShellInboundCidrIpParameter:
-    Type: String
-    Description: AEM Stack Secure Shell Inbound Cidr Ip
-
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
     Description: Inbound Bound from Bastion Host Security Group Id
@@ -31,30 +27,6 @@ Parameters:
   AemAwsStackProvisionerVersionParameter:
     Type: String
     Description: AEM AWS Stack Provisioner version number
-
-  AEMASGEventQueueNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Quene Name
-
-  AEMASGEventTopicDisplayNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
-
-  AEMASGEventTopicNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Topic Name
-
-  PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
-    Type: String
-    Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
-
-  AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
-    Type: String
-    Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
-
-  PrivateSubnetInternetOutboundCidrIpParameter:
-    Type: String
-    Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
 
   AuthorLoadBalancerHealthCheckTargetParameter:
     Type: String
@@ -254,41 +226,9 @@ Conditions:
       - !Equals [ !Ref ChaosMonkeyInstanceTypeParameter, '' ]
 
 Resources:
-  SecurityGroupStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/security-groups.yaml
-      Parameters:
-        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
-        NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
-        SecureShellInboundCidrIpParameter: !Ref SecureShellInboundCidrIpParameter
-        PublishDispatcherELBSecurityGroupInboundCidrIpParameter: !Ref PublishDispatcherELBSecurityGroupInboundCidrIpParameter
-        AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: !Ref AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
-        PrivateSubnetInternetOutboundCidrIpParameter: !Ref PrivateSubnetInternetOutboundCidrIpParameter
-
-  MessagingStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/messaging.yaml
-      Parameters:
-        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
-        AEMASGEventQueueNameParameter: !Ref AEMASGEventQueueNameParameter
-        AEMASGEventTopicDisplayNameParameter: !Ref AEMASGEventTopicDisplayNameParameter
-        AEMASGEventTopicNameParameter: !Ref AEMASGEventTopicNameParameter
-
-  RolesStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/roles.yaml
-      Parameters:
-        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
 
   AuthorStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - RolesStack
-      - MessagingStack
-      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author.yaml
       Parameters:
@@ -309,10 +249,6 @@ Resources:
 
   PublishStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - RolesStack
-      - MessagingStack
-      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish.yaml
       Parameters:
@@ -335,10 +271,6 @@ Resources:
 
   PublishDispatcherStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - RolesStack
-      - MessagingStack
-      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish-dispatcher.yaml
       Parameters:
@@ -359,13 +291,8 @@ Resources:
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter: !Ref AemAwsStackProvisionerVersionParameter
 
-
   AuthorDispatcherStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - RolesStack
-      - MessagingStack
-      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author-dispatcher.yaml
       Parameters:
@@ -387,10 +314,6 @@ Resources:
 
   OrchestratorStack:
     Type: AWS::CloudFormation::Stack
-    DependsOn:
-      - RolesStack
-      - MessagingStack
-      - SecurityGroupStack
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/orchestrator.yaml
       Parameters:
@@ -410,15 +333,14 @@ Resources:
         AuthorDispatcherStackName: !Ref AuthorDispatcherStack
         PublishStackName: !Ref PublishStack
         PublishDispatcherStackName: !Ref PublishDispatcherStack
-        MessagingStackName: !Ref MessagingStack
-        AEMASGEventQueueName: !Sub ${MessagingStack.Outputs.AEMASGEventQueueName}
+        MessagingStackName:
+          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-MessagingStackName
+        AEMASGEventQueueName:
+          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-AEMASGEventQueueName
 
   ChaosMonkeyStack:
     Type: AWS::CloudFormation::Stack
     DependsOn:
-      - RolesStack
-      - MessagingStack
-      - SecurityGroupStack
       - AuthorStack
       - PublishStack
       - AuthorDispatcherStack

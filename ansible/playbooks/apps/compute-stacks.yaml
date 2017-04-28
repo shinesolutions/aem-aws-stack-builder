@@ -1,5 +1,5 @@
 ---
-- name: AEM Apps Overarching CloudFormation Stack
+- name: AEM Apps Compute Resources Overarching CloudFormation Stack
   hosts: all
   gather_facts: no
   connection: local
@@ -8,11 +8,11 @@
 
     - name: Create a Complete AEM App Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ all_in_one.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../cloudformation/apps/all-in-one.yaml"
+        template: "../../../cloudformation/apps/compute-stacks.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
@@ -21,15 +21,6 @@
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
-
-          SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
-          PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
-          AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
-          PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internet_outbound_cidr_ip }}"
-
-          AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
-          AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
-          AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
 
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
           AuthorImageParameter: "{{ ami_ids.author }}"
@@ -91,7 +82,7 @@
 
     - name: Check if a Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ all_in_one.stack_name }}"
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -100,7 +91,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ all_in_one.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ compute_stacks.stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -108,7 +99,7 @@
 
     - name: Delete All AEM App Stacks
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ all_in_one.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:

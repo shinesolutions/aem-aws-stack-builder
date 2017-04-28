@@ -78,6 +78,10 @@ Outputs:
   AEMASGEventQueueName:
     Value: !Sub ${AEMAutoScalingGroupEventQueue.QueueName}
     Description: The AEM ASG Event Queue Name
+    Export:
+      Name:
+        Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventQueueName
+
 
   AEMASGEventTopic:
     Value:
