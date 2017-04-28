@@ -115,7 +115,6 @@ Resources:
       EvaluationPeriods: 5
       Statistic: Maximum
       Threshold: 600
-      Unit: Seconds
       Dimensions:
       - Name: PluginInstance
         Value:
