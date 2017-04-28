@@ -58,12 +58,15 @@ def instance_ids_by_tags(filters):
         Filters=filters
     )
     response2 = json.loads(json.dumps(response, cls=MyEncoder))
-    return [instance['InstanceId'] for instance in response2['Reservations'][0]['Instances']]
 
-
+    instance_ids=[]
+    for reservation in response2['Reservations']:
+        instance_ids += [instance['InstanceId'] for instance in reservation['Instances']]
+    return instance_ids
+    
 def send_ssm_cmd(cmd_details):
     print('calling ssm commands')
-    return json.dumps(ssm.send_command(**cmd_details), cls=MyEncoder)
+    return json.loads(json.dumps(ssm.send_command(**cmd_details), cls=MyEncoder))
 
 
 def deploy_artifact(message):

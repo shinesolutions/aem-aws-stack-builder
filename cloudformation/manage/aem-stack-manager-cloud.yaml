@@ -90,8 +90,13 @@ Resources:
                   - dynamodb:PutItem
                   - dynamodb:DeleteItem
                   - dynamodb:GetItem
+                  - dynamodb:UpdateItem
                   - dynamodb:UpdateTimeToLive
                 Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource: !GetAtt SSMServiceRole.arn
 
   ManagerLambdaFunction:
     Type: AWS::Lambda::Function
