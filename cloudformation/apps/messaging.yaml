@@ -76,7 +76,7 @@ Outputs:
     Description: The AEM ASG Event Queue
 
   AEMASGEventQueueName:
-    Value: !Sub ${AEMAutoScalingGroupEventQueue.QueueName}
+    Value: !GetAtt AEMAutoScalingGroupEventQueue.QueueName
     Description: The AEM ASG Event Queue Name
     Export:
       Name:
