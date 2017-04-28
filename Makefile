@@ -13,7 +13,7 @@ deps:
 	pip install -r requirements.txt
 
 lint:
-	#shellcheck scripts/*.sh
+	shellcheck scripts/*.sh
 	for playbook in ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
@@ -151,7 +151,7 @@ create-compute-stacks:
 delete-compute-stacks:
 	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
 
-create-compute-stacks:
+create-private-cert:
 	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
 
 delete-private-cert:

@@ -6,7 +6,7 @@
 
   tasks:
 
-    - name: Create a Complete AEM App Stack
+    - name: Create AEM App Prerequisite Resources Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
         region: "{{ aws.region }}"
@@ -47,7 +47,7 @@
       tags:
         - delete
 
-    - name: Delete All AEM App Stacks
+    - name: Delete AEM App Prerequisite Resources Stacks
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
         region: "{{ aws.region }}"

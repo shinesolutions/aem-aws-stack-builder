@@ -6,7 +6,7 @@
 
   tasks:
 
-    - name: Create a Complete AEM App Stack
+    - name: Create AEM App Compute Resources Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
         region: "{{ aws.region }}"
@@ -97,7 +97,7 @@
       tags:
         - delete
 
-    - name: Delete All AEM App Stacks
+    - name: Delete AEM App Compute Resources Stacks
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
         region: "{{ aws.region }}"
