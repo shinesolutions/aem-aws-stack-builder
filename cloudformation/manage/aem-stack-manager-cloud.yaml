@@ -96,7 +96,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - iam:PassRole
-                Resource: !GetAtt SSMServiceRole.arn
+                Resource: !GetAtt SSMServiceRole.Arn
 
   ManagerLambdaFunction:
     Type: AWS::Lambda::Function
@@ -256,6 +256,11 @@ Outputs:
   SSMServiceRoleArn:
     Description: SSM service role allowing output to s3 and send sns notification
     Value: !GetAtt SSMServiceRole.Arn
+
   BackupTopicArn:
     Description: SNS topic Arn used to orchestrate offline backup
     Value: !Ref OfflineBackupTopic
+
+  AemStackManagerTableName:
+    Description: DynamoDB table name for AEM stack manager
+    Value: !Ref StackManagerTable
