@@ -1,7 +1,7 @@
 # -*- coding: utf8 -*-
 
 """
-Lambda function to manange AEM stack offline backups. It uses a SNS topic to help
+Lambda function to manage AEM stack offline backups. It uses a SNS topic to help
 orchestrate sequence of steps
 """
 
@@ -75,7 +75,8 @@ ssm_common_parameters = {
     'NotificationConfig': {
         'NotificationArn': offline_snapshot_config['sns-topic-arn'],
         'NotificationEvents': [
-            'Success'
+            'Success',
+            'Failed'
         ],
         'NotificationType': 'Command'
     }
@@ -333,16 +334,19 @@ def sns_message_processor(event, context):
 
             instance_info = stack_health_check(message['stack_prefix'])
             if instance_info is None:
-                raise Exception("Unhealthy Stack")
+                raise Exception('Unhealthy Stack')
 
             response = start_offline_snapshot(instance_info)
             put_state_in_dynamodb(instance_info, response['Command']['CommandId'])
             return response
         else:
-            # extract important piece of information from the message
             cmd_id = message['commandId']
-            item = get_state_from_dynamodb()
 
+            if message['status'] == 'Failed':
+                raise Exception('Command {} failed.'.format(cmd_id))
+
+            # get back the state of this task
+            item = get_state_from_dynamodb()
             state = item['Item']['command_state']['M'][cmd_id]['S']
             author_primary_id = item['Item']['instance_ids']['M']['author-primary']['S']
             author_standby_id = item['Item']['instance_ids']['M']['author-standby']['S']
