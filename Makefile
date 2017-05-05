@@ -145,11 +145,11 @@ create-stack-prerequisites:
 delete-stack-prerequisites:
 	./scripts/delete-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
 
-create-compute-stacks:
+create-compute-stacks: create-stack-data
 	./scripts/create-stack.sh apps/compute-stacks  "$(stack_prefix)" "$(config_path)"
 
-delete-compute-stacks:
-	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
+delete-compute-stacks: delete-stack-data
+	./scripts/delete-stack.sh apps/statck-data "$(stack_prefix)" "$(config_path)"
 
 create-private-cert:
 	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"

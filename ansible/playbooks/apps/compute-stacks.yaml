@@ -5,6 +5,13 @@
   connection: local
 
   tasks:
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../cloudformation/apps
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml" --acl public-read
+      tags:
+        - create
 
     - name: Create AEM App Compute Resources Stack
       cloudformation:
