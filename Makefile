@@ -149,7 +149,7 @@ create-compute-stacks: create-stack-data
 	./scripts/create-stack.sh apps/compute-stacks  "$(stack_prefix)" "$(config_path)"
 
 delete-compute-stacks: delete-stack-data
-	./scripts/delete-stack.sh apps/statck-data "$(stack_prefix)" "$(config_path)"
+	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
 
 create-private-cert:
 	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
