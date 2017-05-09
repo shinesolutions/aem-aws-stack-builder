@@ -59,13 +59,20 @@ def instance_ids_by_tags(filters):
     )
     response2 = json.loads(json.dumps(response, cls=MyEncoder))
 
-    instance_ids=[]
+    instance_ids = []
     for reservation in response2['Reservations']:
         instance_ids += [instance['InstanceId'] for instance in reservation['Instances']]
     return instance_ids
-    
+
+
 def send_ssm_cmd(cmd_details):
     print('calling ssm commands')
+    cmd_details.update(
+        {
+            'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
+            'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix']
+        }
+    )
     return json.loads(json.dumps(ssm.send_command(**cmd_details), cls=MyEncoder))
 
 
@@ -74,8 +81,10 @@ def deploy_artifact(message):
         {
             'Name': 'tag:StackPrefix',
             'Values': [message['stack_prefix']]
-        },
-        {
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
             'Name': 'tag:Component',
             'Values': [message['details']['component']]
         }
@@ -98,8 +107,10 @@ def deploy_artifacts(message):
         {
             'Name': 'tag:StackPrefix',
             'Values': [message['stack_prefix']]
-        },
-        {
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
             'Name': 'tag:Component',
             'Values': ['author-primary',
                        'author-standby',
@@ -127,8 +138,10 @@ def export_package(message):
         {
             'Name': 'tag:StackPrefix',
             'Values': [message['stack_prefix']]
-        },
-        {
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
             'Name': 'tag:Component',
             'Values': [message['details']['component']]
         }
@@ -153,8 +166,10 @@ def import_package(message):
         {
             'Name': 'tag:StackPrefix',
             'Values': [message['stack_prefix']]
-        },
-        {
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
             'Name': 'tag:Component',
             'Values': [message['details']['component']]
         }
@@ -180,8 +195,10 @@ def promote_author(message):
         {
             'Name': 'tag:StackPrefix',
             'Values': [message['stack_prefix']]
-        },
-        {
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
             'Name': 'tag:Component',
             'Values': ['author-standby']
         }

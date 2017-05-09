@@ -18,17 +18,6 @@ Parameters:
     Description: Prefix within the bucket to locate files
     Default: andy
 
-  SNSTopicArn:
-    Type: String
-    Description: SNS topic ARN this Lambda function subscribes to get command
-    Default: arn:aws:sns:ap-southeast-2:918473058104:aem62test
-
-Conditions:
-  UseImportedTopicArn:
-    Fn::Equals:
-      - Ref: SNSTopicArn
-      - ""
-
 Resources:
   StackManagerTable:
     Type: AWS::DynamoDB::Table
@@ -51,6 +40,12 @@ Resources:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
       TableName: AemStackManagerTable
+
+  StackManagerTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: AEM Stack Manager Topic
+      TopicName: AemStackManager
 
   LambdaServiceRole:
     Type: AWS::IAM::Role
@@ -145,22 +140,14 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref LambdaProdAlias
       Principal: sns.amazonaws.com
-      SourceArn:
-        Fn::If:
-          - UseImportedTopicArn
-          - Fn::ImportValue: !Sub ${StackPrefix}-AEMASGEventTopic
-          - !Ref SNSTopicArn
+      SourceArn: !Ref StackManagerTopic
 
   SNSSubscription:
     Type: AWS::SNS::Subscription
     Properties:
       Endpoint: !Ref LambdaProdAlias
       Protocol: lambda
-      TopicArn:
-        Fn::If:
-          - UseImportedTopicArn
-          - Fn::ImportValue: !Sub ${StackPrefix}-AEMASGEventTopic
-          - !Ref SNSTopicArn
+      TopicArn: !Ref StackManagerTopic
 
   OfflineBackupTopic:
     Type: AWS::SNS::Topic
@@ -256,6 +243,10 @@ Outputs:
   SSMServiceRoleArn:
     Description: SSM service role allowing output to s3 and send sns notification
     Value: !GetAtt SSMServiceRole.Arn
+
+  StackManagerTopciArn:
+    Description: AEM stack manager SNS topic Arn
+    Value: !Ref StackManagerTopic
 
   BackupTopicArn:
     Description: SNS topic Arn used to orchestrate offline backup

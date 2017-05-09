@@ -62,7 +62,6 @@
           StackPrefix: "{{ stack_prefix }}"
           S3Bucket: "{{ s3.data_bucket_name }}"
           S3Prefix: " {{ stack_prefix }}"
-          SNSTopicArn: "{{ manage.sns_topic |''}}"
       tags:
         - create
 
@@ -90,7 +89,7 @@
       tags:
         - delete
 
-    - name: Delete AEM Author Stack
+    - name: Delete AEM Stack Manager Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-aem-stack-manager-cloud"
         region: "{{ aws.region }}"
