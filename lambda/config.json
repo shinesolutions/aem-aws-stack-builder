@@ -1,14 +1,14 @@
 {
   "environment": "aem62test",
   "document_mapping": {
-    "deploy-artifact": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-DeployArtifact-1PEWK4UCOKHHY",
-    "deploy-artifacts": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-DeployArtifacts-1I21LENEHFGIQ",
-    "export-package": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ExportPackage-1RXKM8ZTJQGSB",
-    "import-package": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ImportPackage-TW5DH8M9SXI3",
-    "offline-snapshot": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-OfflineSnapshot-B83D8S20IS2Z",
-    "promote-author": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-PromoteAuthor-44FW9QX5K2XG",
-    "manage-service": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ManageService-FDOHNWI90OHK",
-    "offline-compaction": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-OfflineCompaction-1BI5H12S179X5"
+    "deploy-artifact": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-DeployArtifact-BQUADTBM4ZCX",
+    "deploy-artifacts": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-DeployArtifacts-1OFGBDQOFQET8",
+    "export-package": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ExportPackage-1PM74LV73XZOG",
+    "import-package": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ImportPackage-B9GHIIK65579",
+    "offline-snapshot": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-OfflineSnapshot-1F7BMZGCZLPM",
+    "promote-author": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-PromoteAuthor-11VTPPO64NZ94",
+    "manage-service": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ManageService-PXILGNECX4O3",
+    "offline-compaction": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-OfflineCompaction-15KGG4JL51RGM"
   },
   "offline_snapshot": {
     "dynamodb-table": "AemStackManagerTable",
