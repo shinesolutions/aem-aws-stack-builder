@@ -12,7 +12,7 @@ stack_prefix=$2
 component=$3
 aem_aws_stack_provisioner_version=$4
 
-PATH=$PATH:/opt/puppetlabs/bin
+PATH=$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin
 
 download_provisioner() {
   dest_dir=$1
