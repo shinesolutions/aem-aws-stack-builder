@@ -27,23 +27,6 @@ ec2 = boto3.client('ec2')
 s3 = boto3.client('s3')
 dynamodb = boto3.client('dynamodb')
 
-# reading in config info from either s3 or within bundle
-bucket = os.getenv('S3_BUCKET')
-prefix = os.getenv('S3_PREFIX')
-if bucket is not None and prefix is not None:
-    config_file = '/tmp/config.json'
-    s3.download_file(bucket, '{}/config.json'.format(prefix), config_file)
-else:
-    logger.info('Unable to locate config.json in S3, searching within bundle')
-    config_file = 'config.json'
-
-with open(config_file, 'r') as f:
-    content = ''.join(f.readlines()).replace('\n', '')
-    logger.debug('config file: ' + content)
-    config = json.loads(content)
-    task_document_mapping = config['document_mapping']
-    offline_snapshot_config = config['offline_snapshot']
-
 
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -67,16 +50,10 @@ def instance_ids_by_tags(filters):
 
 def send_ssm_cmd(cmd_details):
     print('calling ssm commands')
-    cmd_details.update(
-        {
-            'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
-            'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix']
-        }
-    )
     return json.loads(json.dumps(ssm.send_command(**cmd_details), cls=MyEncoder))
 
 
-def deploy_artifact(message):
+def deploy_artifact(message, ssm_common_config):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -92,17 +69,17 @@ def deploy_artifact(message):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'DocumentName': task_document_mapping[message['task']],
         'TimeoutSeconds': 120,
         'Comment': 'deploy an AEM artifact',
         'Parameters': {
             'artifact': [message['details']['artifact']]
         }
     }
+    details.update(ssm_common_config)
     return send_ssm_cmd(details)
 
 
-def deploy_artifacts(message):
+def deploy_artifacts(message, ssm_common_config):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -123,17 +100,17 @@ def deploy_artifacts(message):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'DocumentName': task_document_mapping[message['task']],
         'TimeoutSeconds': 120,
         'Comment': 'deploying artifacts based on a descriptor file',
         'Parameters': {
             'descriptorFile': [message['details']['descriptor_file']]
         }
     }
+    details.update(ssm_common_config)
     return send_ssm_cmd(details)
 
 
-def export_package(message):
+def export_package(message, ssm_common_config):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -149,7 +126,6 @@ def export_package(message):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'DocumentName': task_document_mapping[message['task']],
         'TimeoutSeconds': 120,
         'Comment': 'exporting AEM pacakges as backup based on package group, name and filter',
         'Parameters': {
@@ -158,10 +134,11 @@ def export_package(message):
             'packageFilter': [message['details']['package_filter']]
         }
     }
+    details.update(ssm_common_config)
     return send_ssm_cmd(details)
 
 
-def import_package(message):
+def import_package(message, ssm_common_config):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -177,7 +154,6 @@ def import_package(message):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'DocumentName': task_document_mapping[message['task']],
         'TimeoutSeconds': 120,
         'Comment': 'import AEM backed up pacakges for a stack based on group, name and timestamp',
         'Parameters': {
@@ -187,10 +163,11 @@ def import_package(message):
             'packageDatestamp': [message['details']['package_datestamp']]
         }
     }
+    details.update(ssm_common_config)
     return send_ssm_cmd(details)
 
 
-def promote_author(message):
+def promote_author(message, ssm_common_config):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -206,10 +183,10 @@ def promote_author(message):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'DocumentName': task_document_mapping[message['task']],
         'TimeoutSeconds': 120,
         'Comment': 'promote standby author instance to be the primary'
     }
+    details.update(ssm_common_config)
     return send_ssm_cmd(details)
 
 
@@ -224,6 +201,24 @@ method_mapper = {
 
 def sns_message_processor(event, context):
 
+    # reading in config info from either s3 or within bundle
+    bucket = os.getenv('S3_BUCKET')
+    prefix = os.getenv('S3_PREFIX')
+
+    if bucket is not None and prefix is not None:
+        config_file = '/tmp/config.json'
+        s3.download_file(bucket, '{}/config.json'.format(prefix), config_file)
+    else:
+        logger.info('Unable to locate config.json in S3, searching within bundle')
+        config_file = 'config.json'
+
+    with open(config_file, 'r') as f:
+        content = ''.join(f.readlines()).replace('\n', '')
+        logger.debug('config file: ' + content)
+        config = json.loads(content)
+        task_document_mapping = config['document_mapping']
+        offline_snapshot_config = config['offline_snapshot']
+
     for record in event['Records']:
         message_text = record['Sns']['Message']
         logger.debug(message_text)
@@ -232,7 +227,13 @@ def sns_message_processor(event, context):
 
         if method is not None:
             logger.info('Received request for task {}'.format(method.func_name))
-            return method(message)
+            ssm_common_config = {
+                'DocumentName': task_document_mapping[message['task']],
+                'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
+                'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix']
+            }
+
+            return method(message, ssm_common_config)
         else:
             logger.error('Unknown task {} found on request {}'.format(
                 message['task'],
