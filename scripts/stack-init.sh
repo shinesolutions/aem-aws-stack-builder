@@ -96,7 +96,7 @@ run_custom_stage post-common
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
 echo "Testing ${component} component using Serverspec..."
-/opt/puppetlabs/puppet/bin/gem install rspec serverspec
+/opt/puppetlabs/puppet/bin/gem install --no-document rspec serverspec
 cd test/serverspec && /opt/puppetlabs/puppet/bin/rake spec "SPEC=spec/${component}_spec.rb"
 
 echo "Cleaning up provisioner temp directory..."
