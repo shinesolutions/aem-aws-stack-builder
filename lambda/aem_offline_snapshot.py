@@ -30,25 +30,6 @@ s3 = boto3.client('s3')
 dynamodb = boto3.client('dynamodb')
 
 
-# reading in config info from either s3 or within bundle
-bucket = os.getenv('S3_BUCKET')
-prefix = os.getenv('S3_PREFIX')
-if bucket is not None and prefix is not None:
-    config_file = '/tmp/config.json'
-    s3.download_file(bucket, '{}/config.json'.format(prefix), config_file)
-else:
-    logger.info('Unable to locate config.json in S3, searching within bundle')
-    config_file = 'config.json'
-
-with open(config_file, 'r') as f:
-    content = ''.join(f.readlines()).replace('\n', '')
-    logger.debug('config file: ' + content)
-    config = json.loads(content)
-    task_document_mapping = config['document_mapping']
-    offline_snapshot_config = config['offline_snapshot']
-    environment = config['environment']
-
-
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
@@ -68,64 +49,14 @@ def instance_ids_by_tags(filters):
         instance_ids += [instance['InstanceId'] for instance in reservation['Instances']]
     return instance_ids
 
-ssm_common_parameters = {
-    'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
-    'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix'],
-    'ServiceRoleArn': offline_snapshot_config['ssm-service-role-arn'],
-    'NotificationConfig': {
-        'NotificationArn': offline_snapshot_config['sns-topic-arn'],
-        'NotificationEvents': [
-            'Success',
-            'Failed'
-        ],
-        'NotificationType': 'Command'
-    }
-}
-
 
 def send_ssm_cmd(cmd_details):
     print('calling ssm commands')
-    parameters = ssm_common_parameters.copy()
-    parameters.update(cmd_details)
-    return json.loads(json.dumps(ssm.send_command(**parameters),
+    return json.loads(json.dumps(ssm.send_command(**cmd_details),
                       cls=MyEncoder))
 
 
-def manage_aem_service(target_instances, action):
-    # boto3 ssm client does not accept multiple filter for Targets
-    details = {
-        'InstanceIds': target_instances,
-        'DocumentName': task_document_mapping['manage-service'],
-        'TimeoutSeconds': 120,
-        'Comment': 'Start or Stop AEM service',
-        'Parameters': {
-            'action': [action]
-        }
-    }
-    return send_ssm_cmd(details)
-
-
-def offline_compaction(target_instances):
-    details = {
-        'InstanceIds': target_instances,
-        'DocumentName': task_document_mapping['offline-compaction'],
-        'TimeoutSeconds': 120,
-        'Comment': 'run offline compaction on author instances'
-    }
-    return send_ssm_cmd(details)
-
-
-def offline_snapshot(target_instances):
-    details = {
-        'InstanceIds': target_instances,
-        'DocumentName': task_document_mapping['offline-snapshot'],
-        'TimeoutSeconds': 120,
-        'Comment': 'run offline ebs snapshot on targeted instances'
-    }
-    return send_ssm_cmd(details)
-
-
-def stack_health_check(stack_prefix):
+def stack_health_check(stack_prefix, min_publish_instances):
     """
     Simple AEM stack health check based on the number of author-primary,
     author-standby and publisher instances.
@@ -168,7 +99,7 @@ def stack_health_check(stack_prefix):
 
     if (len(author_primary_instances) == 1 and
        len(author_standby_instances) == 1 and
-       len(publish_instances) >= config['offline_snapshot']['min-publish-instances']):
+       len(publish_instances) >= min_publish_instances):
         return {
           'author-primary': author_primary_instances[0],
           'author-standby': author_standby_instances[0],
@@ -181,37 +112,17 @@ def stack_health_check(stack_prefix):
     if len(author_standby_instances) != 1:
         logger.error('Found {} author-standby instances. Unhealthy stack.'.format(len(author_standby_instances)))
 
-    if len(publish_instances) < config['offline_snapshot']['min-publish-instances']:
+    if len(publish_instances) < min_publish_instances:
         logger.error('Found {} publish instances. Unhealthy stack.'.format(len(publish_instances)))
 
     return Exception('Unhealthy Stack')
 
 
-def start_offline_snapshot(instance_info):
-    """
-    offline snapshot is a complicated process, requiring a few things happen in the
-    right order. This function will kick start the process. The bulk of operations
-    will happen in another lambada function.
-    """
-
-    details = {
-        'InstanceIds': [instance_info['author-standby']],
-        'DocumentName': task_document_mapping["manage-service"],
-        'TimeoutSeconds': 120,
-        'Comment': 'kicking start offline snapshot with stopping AEM service on author-standby',
-        'Parameters': {
-            'action': ['stop']
-        }
-    }
-
-    return send_ssm_cmd(details)
-
-
-def put_state_in_dynamodb(instance_info, command_id):
+def put_state_in_dynamodb(instance_info, command_id, dynamodb_common_params):
     """
     schema:
     key: environment(hash) + task(range)
-    cmd_id: current state
+    command_state: map containing  {command_id: state}
     instance_ids: map containing authour-primary, author-stand and publish
                   instance ids
     ttl: one day
@@ -233,15 +144,9 @@ def put_state_in_dynamodb(instance_info, command_id):
 
     instances = {key: {'S': value} for (key, value) in instance_info.items()}
 
-    dynamodb.put_item(
-        TableName=offline_snapshot_config['dynamodb-table'],
-        Item={
-            'environment': {
-                'S': environment
-            },
-            'task': {
-                'S': 'offline_snapshot'
-            },
+    item = dynamodb_common_params['Key'].copy()
+    item.update(
+        {
             'instance_ids': {
                 'M': instances
             },
@@ -255,23 +160,22 @@ def put_state_in_dynamodb(instance_info, command_id):
             'ttl': {
                 'N': str(ttl)
             }
+
         }
+    )
+
+    dynamodb.put_item(
+        TableName=dynamodb_common_params['TableName'],
+        Item=item
     )
 
 
 # dynamodb is used to host state information
-def get_state_from_dynamodb():
+def get_state_from_dynamodb(dynamodb_common_params):
 
     item = dynamodb.get_item(
-        TableName=offline_snapshot_config['dynamodb-table'],
-        Key={
-            'environment': {
-                'S': environment
-            },
-            'task': {
-                'S': 'offline_snapshot'
-            }
-        },
+        TableName=dynamodb_common_params['TableName'],
+        Key=dynamodb_common_params['Key'],
         ConsistentRead=True,
         ReturnConsumedCapacity='NONE',
         ProjectionExpression='command_state, instance_ids'
@@ -280,18 +184,11 @@ def get_state_from_dynamodb():
     return item
 
 
-def update_state_in_dynamodb(command_id, current_state):
+def update_state_in_dynamodb(command_id, current_state, dynamodb_common_params):
 
     item_update = {
-        'TableName': offline_snapshot_config['dynamodb-table'],
-        'Key': {
-            'environment': {
-                'S': environment
-            },
-            'task': {
-                'S': 'offline_snapshot'
-            }
-        },
+        'TableName': dynamodb_common_params['TableName'],
+        'Key': dynamodb_common_params['Key'],
         'UpdateExpression': 'SET command_state.#cmd_id = :state',
         'ExpressionAttributeNames': {
             '#cmd_id': command_id
@@ -306,8 +203,40 @@ def update_state_in_dynamodb(command_id, current_state):
     dynamodb.update_item(**item_update)
 
 
-def delete_state_from_dynamodb():
+def delete_state_from_dynamodb(dynamodb_common_params):
     item_key = {
+        'TableName': dynamodb_common_params['TableName'],
+        'Key': dynamodb_common_params['Key']
+    }
+    dynamodb.delete_item(**item_key)
+
+
+def sns_message_processor(event, context):
+    """
+    offline snapshot is a complicated process, requiring a few things happen in the
+    right order. This function will kick start the process. The bulk of operations
+    will happen in another lambada function.
+    """
+
+    # reading in config info from either s3 or within bundle
+    bucket = os.getenv('S3_BUCKET')
+    prefix = os.getenv('S3_PREFIX')
+    if bucket is not None and prefix is not None:
+        config_file = '/tmp/config.json'
+        s3.download_file(bucket, '{}/config.json'.format(prefix), config_file)
+    else:
+        logger.info('Unable to locate config.json in S3, searching within bundle')
+        config_file = 'config.json'
+
+    with open(config_file, 'r') as f:
+        content = ''.join(f.readlines()).replace('\n', '')
+        logger.debug('config file: ' + content)
+        config = json.loads(content)
+        task_document_mapping = config['document_mapping']
+        offline_snapshot_config = config['offline_snapshot']
+        environment = config['environment']
+
+    dynamodb_common_params = {
         'TableName': offline_snapshot_config['dynamodb-table'],
         'Key': {
             'environment': {
@@ -318,10 +247,21 @@ def delete_state_from_dynamodb():
             }
         }
     }
-    dynamodb.delete_item(**item_key)
 
-
-def sns_message_processor(event, context):
+    ssm_common_params = {
+        'TimeoutSeconds': 120,
+        'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
+        'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix'],
+        'ServiceRoleArn': offline_snapshot_config['ssm-service-role-arn'],
+        'NotificationConfig': {
+            'NotificationArn': offline_snapshot_config['sns-topic-arn'],
+            'NotificationEvents': [
+                'Success',
+                'Failed'
+            ],
+            'NotificationType': 'Command'
+        }
+    }
 
     for record in event['Records']:
         message_text = record['Sns']['Message']
@@ -332,12 +272,25 @@ def sns_message_processor(event, context):
         response = None
         if 'task' in message and message['task'] == 'offline-snapshot':
 
-            instance_info = stack_health_check(message['stack_prefix'])
+            instance_info = stack_health_check(message['stack_prefix'],
+                                               config['offline_snapshot']['min-publish-instances'])
             if instance_info is None:
                 raise Exception('Unhealthy Stack')
 
-            response = start_offline_snapshot(instance_info)
-            put_state_in_dynamodb(instance_info, response['Command']['CommandId'])
+            ssm_params = ssm_common_params.copy()
+            ssm_params.update(
+                {
+                    'InstanceIds': instance_info['author-standby'],
+                    'DocumentName': task_document_mapping['manage-service'],
+                    'Comment': 'Kick start offline snapshot with stopping AEM service on Author standby instance',
+                    'Parameters': {
+                        'action': ['stop']
+                    }
+                }
+            )
+
+            response = send_ssm_cmd(ssm_params)
+            put_state_in_dynamodb(instance_info, response['Command']['CommandId'], dynamodb_common_params)
             return response
         else:
             cmd_id = message['commandId']
@@ -346,44 +299,97 @@ def sns_message_processor(event, context):
                 raise Exception('Command {} failed.'.format(cmd_id))
 
             # get back the state of this task
-            item = get_state_from_dynamodb()
+            item = get_state_from_dynamodb(dynamodb_common_params)
             state = item['Item']['command_state']['M'][cmd_id]['S']
             author_primary_id = item['Item']['instance_ids']['M']['author-primary']['S']
             author_standby_id = item['Item']['instance_ids']['M']['author-standby']['S']
             publish_id = item['Item']['instance_ids']['M']['publish']['S']
 
             if state == 'STOP_AUTHOR_STANDBY':
-                response = manage_aem_service([author_primary_id, publish_id], 'stop')
+                ssm_params = ssm_common_params.copy()
+                ssm_params.update(
+                    {
+                        'InstanceIds': [author_primary_id, publish_id],
+                        'DocumentName': task_document_mapping['manage-service'],
+                        'Comment': 'Stop AEM service on Author primary and Publish instances',
+                        'Parameters': {
+                            'action': ['stop']
+                        }
+                    }
+                )
 
+                response = send_ssm_cmd(ssm_params)
                 update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'STOP_AUTHOR_PRIMARY')
+                                         'STOP_AUTHOR_PRIMARY',
+                                         dynamodb_common_params)
 
             elif state == 'STOP_AUTHOR_PRIMARY':
-                response = offline_compaction([author_primary_id, author_standby_id])
+                ssm_params = ssm_common_params.copy()
+                ssm_params.update(
+                    {
+                        'InstanceIds': [author_primary_id, author_standby_id],
+                        'DocumentName': task_document_mapping['offline-compaction'],
+                        'Comment': 'Run offline compaction on Author primary and standby instances'
+                    }
+                )
 
+                response = send_ssm_cmd(ssm_params)
                 update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'OFFLINE_COMPACTION')
+                                         'OFFLINE_COMPACTION',
+                                         dynamodb_common_params)
 
             elif state == 'OFFLINE_COMPACTION':
-                response = offline_snapshot([author_primary_id, publish_id])
+                ssm_params = ssm_common_params.copy()
+                ssm_params.update(
+                    {
+                        'InstanceIds': [author_primary_id, publish_id],
+                        'DocumentName': task_document_mapping['offline-snapshot'],
+                        'Comment': 'Run offline EBS snapshot on Author primary and Publish instances'
+                    }
+                )
 
+                response = send_ssm_cmd(ssm_params)
                 update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'OFFLINE_BACKUP')
+                                         'OFFLINE_BACKUP',
+                                         dynamodb_common_params)
 
             elif state == 'OFFLINE_BACKUP':
-                response = manage_aem_service([author_primary_id], 'start')
+                ssm_params = ssm_common_params.copy()
+                ssm_params.update(
+                    {
+                        'InstanceIds': [author_primary_id],
+                        'DocumentName': task_document_mapping['manage-service'],
+                        'Comment': 'Start AEM service on Author primary instance',
+                        'Parameters': {
+                            'action': ['start']
+                        }
+                    }
+                )
 
+                response = send_ssm_cmd(ssm_params)
                 update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'START_AUTHOR_PRIMARY')
+                                         'START_AUTHOR_PRIMARY',
+                                         dynamodb_common_params)
 
             elif state == 'START_AUTHOR_PRIMARY':
-                response = manage_aem_service([author_standby_id, publish_id], 'start')
-
+                ssm_params = ssm_common_params.copy()
+                ssm_params.update(
+                    {
+                        'InstanceIds': [author_standby_id, publish_id],
+                        'DocumentName': task_document_mapping['manage-service'],
+                        'Comment': 'Start AEM service on Author standby and Publish instances',
+                        'Parameters': {
+                            'action': ['start']
+                        }
+                    }
+                )
+                response = send_ssm_cmd(ssm_params)
                 update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'START_AUTHOR_STANDBY')
+                                         'START_AUTHOR_STANDBY',
+                                         dynamodb_common_params)
 
             elif state == 'START_AUTHOR_STANDBY':
-                delete_state_from_dynamodb()
+                delete_state_from_dynamodb(dynamodb_common_params)
                 print('done')
 
             else:

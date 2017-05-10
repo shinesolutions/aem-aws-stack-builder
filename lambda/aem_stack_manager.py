@@ -53,7 +53,7 @@ def send_ssm_cmd(cmd_details):
     return json.loads(json.dumps(ssm.send_command(**cmd_details), cls=MyEncoder))
 
 
-def deploy_artifact(message, ssm_common_config):
+def deploy_artifact(message, ssm_commond_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -75,11 +75,11 @@ def deploy_artifact(message, ssm_common_config):
             'artifact': [message['details']['artifact']]
         }
     }
-    details.update(ssm_common_config)
+    details.update(ssm_commond_params)
     return send_ssm_cmd(details)
 
 
-def deploy_artifacts(message, ssm_common_config):
+def deploy_artifacts(message, ssm_commond_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -106,11 +106,11 @@ def deploy_artifacts(message, ssm_common_config):
             'descriptorFile': [message['details']['descriptor_file']]
         }
     }
-    details.update(ssm_common_config)
+    details.update(ssm_commond_params)
     return send_ssm_cmd(details)
 
 
-def export_package(message, ssm_common_config):
+def export_package(message, ssm_commond_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -134,11 +134,11 @@ def export_package(message, ssm_common_config):
             'packageFilter': [message['details']['package_filter']]
         }
     }
-    details.update(ssm_common_config)
+    details.update(ssm_commond_params)
     return send_ssm_cmd(details)
 
 
-def import_package(message, ssm_common_config):
+def import_package(message, ssm_commond_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -163,11 +163,11 @@ def import_package(message, ssm_common_config):
             'packageDatestamp': [message['details']['package_datestamp']]
         }
     }
-    details.update(ssm_common_config)
+    details.update(ssm_commond_params)
     return send_ssm_cmd(details)
 
 
-def promote_author(message, ssm_common_config):
+def promote_author(message, ssm_commond_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -186,7 +186,7 @@ def promote_author(message, ssm_common_config):
         'TimeoutSeconds': 120,
         'Comment': 'promote standby author instance to be the primary'
     }
-    details.update(ssm_common_config)
+    details.update(ssm_commond_params)
     return send_ssm_cmd(details)
 
 
@@ -227,13 +227,13 @@ def sns_message_processor(event, context):
 
         if method is not None:
             logger.info('Received request for task {}'.format(method.func_name))
-            ssm_common_config = {
+            ssm_commond_params = {
                 'DocumentName': task_document_mapping[message['task']],
                 'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
                 'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix']
             }
 
-            return method(message, ssm_common_config)
+            return method(message, ssm_commond_params)
         else:
             logger.error('Unknown task {} found on request {}'.format(
                 message['task'],
