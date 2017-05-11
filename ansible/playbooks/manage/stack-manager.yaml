@@ -22,13 +22,13 @@
         - create
 
     - name: Zip AEM Offline Snapshot Lambda Implementation
-      command: >
+      shell: >
         zip "{{ stack_manager_tmp }}/aem-offline-snapshot.zip" "../../../lambda/aem_offline_snapshot.py"
       tags:
         - create
 
     - name: Upload Stack Manager Zip Archive and Config File to S3
-      command: >
+      shell: >
               aws s3 sync "{{ stack_manager_tmp }}"
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
       tags:
