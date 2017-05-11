@@ -238,6 +238,7 @@ Resources:
                 Action:
                   - sns:Publish
                 Resource: !Ref OfflineBackupTopic
+      RoleName: !Sub ${StackPrefix}-aem-stack-manager-service-role
 
 Outputs:
   SSMServiceRoleArn:
