@@ -28,7 +28,7 @@
         - create
 
     - name: Upload Stack Manager Zip Archive and Config File to S3
-      shell: >
+      command: >
               aws s3 sync "{{ stack_manager_tmp }}"
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
       tags:
