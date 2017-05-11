@@ -33,15 +33,7 @@
       tags:
         - create
 
-    - name: Copy Lambda Config Files to Deploy Folder
-      copy:
-        src: "../../../lambda/config.json"
-        dest: "{{ stack_manager_tmp }}/config.json"
-        mode: 0755
-      tags:
-        - create
-
-    - name: Upload Stack Manager Zip Archive and Config File to S3
+    - name: Upload Stack Manager Zip Archives to S3
       s3_sync:
         bucket: "{{ s3.data_bucket_name }}"
         key_prefix: "{{ stack_prefix }}"
@@ -59,15 +51,6 @@
       tags:
         - create
 
-      s3_sync:
-        bucket: "{{ s3.data_bucket_name }}"
-        key_prefix: "{{ stack_prefix }}"
-        mode: push
-        file_root: "{{ stack_manager_tmp }}"
-
-      tags:
-        - create
-
     - name: >
         Create AEM Stack Manager/Offline Snapshot Lambda Function and Resources
       cloudformation:
@@ -80,8 +63,28 @@
           StackPrefix: "{{ stack_prefix }}"
           S3Bucket: "{{ s3.data_bucket_name }}"
           S3Prefix: " {{ stack_prefix }}"
+      register: stack_info
       tags:
-        - create
+        - dcreate
+
+    - name: Update config.json template to the stack output
+      shell:  >
+        jq --arg sns "{{ stack_info.stack_outputs.BackupTopicArn}}" \
+           --arg role "{{ stack_info.stack_outputs.SSMServiceRoleArn}}" \
+           --arg bucket "{{ s3.data_bucket_name }}" \
+           '."offline_snapshot"."sns-topic-arn"=$sns|."offline_snapshot"."ssm-service-role-arn"=$role|."offline_snapshot"."cmd-output-bucket"=$bucket' \
+           ../../../lambda/config.json.template  >  "{{ stack_manager_tmp }}"/config.json
+      tags:
+       - dcreate
+
+    - name: Upload config.json to S3
+      s3:
+         bucket: "{{ s3.data_bucket_name }}"
+         mode: put
+         src: "{{ stack_manager_tmp }}/config.json"
+         object: "{{ stack_prefix }}/config.json"
+      tags:
+       - create
 
     - name: Clean Up Deploy Folder After
       file:

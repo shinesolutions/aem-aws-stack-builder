@@ -15,7 +15,7 @@
     "min-publish-instances": 2,
     "cmd-output-bucket":"mb-aem-stack-builder",
     "cmd-output-prefix": "SSMOutput",
-    "sns-topic-arn": "arn:aws:sns:ap-southeast-2:652299490072:AemOfflineBackup",
-    "ssm-service-role-arn": "arn:aws:iam::652299490072:role/aem62test-aem-stack-manager-cloud-SSMServiceRole-ILVHE9WDLY3X"
+    "sns-topic-arn": "sns",
+    "ssm-service-role-arn": "role"
   }
 }
