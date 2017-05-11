@@ -16,20 +16,14 @@
         - create
 
     - name: Zip AEM Stack Manager Lambda Implementation
-      archive:
-        path: "../../../lambda/aem_stack_manager.py"
-        dest: "{{ stack_manager_tmp }}/aem-stack-manager.zip"
-        format: zip
-        remove: no
+      command: >
+        zip "{{ stack_manager_tmp }}/aem-stack-manager.zip" "../../../lambda/aem_stack_manager.py"
       tags:
         - create
 
     - name: Zip AEM Offline Snapshot Lambda Implementation
-      archive:
-        path: "../../../lambda/aem_offline_snapshot.py"
-        dest: "{{ stack_manager_tmp }}/aem-offline-snapshot.zip"
-        format: zip
-        remove: no
+      command: >
+        zip "{{ stack_manager_tmp }}/aem-offline-snapshot.zip" "../../../lambda/aem_offline_snapshot.py"
       tags:
         - create
 
@@ -65,7 +59,7 @@
           S3Prefix: " {{ stack_prefix }}"
       register: stack_info
       tags:
-        - dcreate
+        - create
 
     - name: Update config.json template to the stack output
       shell:  >
@@ -75,7 +69,7 @@
            '."offline_snapshot"."sns-topic-arn"=$sns|."offline_snapshot"."ssm-service-role-arn"=$role|."offline_snapshot"."cmd-output-bucket"=$bucket' \
            ../../../lambda/config.json.template  >  "{{ stack_manager_tmp }}"/config.json
       tags:
-       - dcreate
+       - create
 
     - name: Upload config.json to S3
       s3:
