@@ -47,6 +47,24 @@
         key_prefix: "{{ stack_prefix }}"
         mode: push
         file_root: "{{ stack_manager_tmp }}"
+      when: " ansible_version.full >= '2.3' "
+      tags:
+        - create
+
+    - name: Upload Stack Manager Zip Archive and Config File to S3
+      command: >
+              aws s3 sync "{{ stack_manager_tmp }}"
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+      when: " ansible_version.full  < '2.3' "
+      tags:
+        - create
+
+      s3_sync:
+        bucket: "{{ s3.data_bucket_name }}"
+        key_prefix: "{{ stack_prefix }}"
+        mode: push
+        file_root: "{{ stack_manager_tmp }}"
+
       tags:
         - create
 
