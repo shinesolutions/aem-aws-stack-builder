@@ -27,25 +27,24 @@
       tags:
         - create
 
-    - name: Upload Stack Manager Zip Archive and Config File to S3
+    - name: Upload Stack Manager and Offline Backup Zip Archive to S3
       command: >
               aws s3 sync "{{ stack_manager_tmp }}"
-                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  s3://{{ s3.data_bucket_name }}/{{ stack_manager.s3_prefix }}
       tags:
         - create
 
     - name: >
         Create AEM Stack Manager/Offline Snapshot Lambda Function and Resources
       cloudformation:
-        stack_name: "{{ stack_prefix }}-aem-stack-manager-cloud"
+        stack_name: aem-stack-manager-cloud
         region: "{{ aws.region }}"
         state: present
         disable_rollback: false
         template: "../../../cloudformation/manage/aem-stack-manager-cloud.yaml"
         template_parameters:
-          StackPrefix: "{{ stack_prefix }}"
           S3Bucket: "{{ s3.data_bucket_name }}"
-          S3Prefix: " {{ stack_prefix }}"
+          S3Prefix: " {{ stack_manager.s3_prefix }}"
       register: stack_info
       tags:
         - create
@@ -65,7 +64,7 @@
          bucket: "{{ s3.data_bucket_name }}"
          mode: put
          src: "{{ stack_manager_tmp }}/config.json"
-         object: "{{ stack_prefix }}/config.json"
+         object: "{{ stack_manager.s3_prefix }}/config.json"
       tags:
        - create
 
@@ -78,7 +77,7 @@
 
     - name: Check if a Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-aem-stack-manager-cloud"
+        aws cloudformation describe-stacks --stack-name "aem-stack-manager-cloud"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -87,7 +86,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-aem-stack-manager-cloud" does not exist or some other errors occured
+        msg: Stack aem-stack-manager-cloud does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -95,7 +94,7 @@
 
     - name: Delete AEM Stack Manager Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-aem-stack-manager-cloud"
+        stack_name: aem-stack-manager-cloud
         region: "{{ aws.region }}"
         state: absent
       when:

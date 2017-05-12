@@ -3,11 +3,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Create AWS Lambada Implementation of AEM Stack Mananger Resources
 
 Parameters:
-  StackPrefix:
-    Type: String
-    Description: The AEM compute stack prefix
-    Default: andy
-
   S3Bucket:
     Type: String
     Description: Bucket name that stores files used by the functions
@@ -100,7 +95,7 @@ Resources:
       FunctionName: AemStackManager
       Code:
         S3Bucket: !Ref S3Bucket
-        S3Key: !Sub ${StackPrefix}/aem-stack-manager.zip
+        S3Key: !Sub ${S3Prefix}/aem-stack-manager.zip
       Environment:
         Variables:
           LOG_LEVEL: "20"
@@ -162,7 +157,7 @@ Resources:
       FunctionName: AemOfflineBackup
       Code:
         S3Bucket: !Ref S3Bucket
-        S3Key: !Sub ${StackPrefix}/aem-offline-snapshot.zip
+        S3Key: !Sub ${S3Prefix}/aem-offline-snapshot.zip
       Environment:
         Variables:
           LOG_LEVEL: "20"
@@ -238,7 +233,7 @@ Resources:
                 Action:
                   - sns:Publish
                 Resource: !Ref OfflineBackupTopic
-      RoleName: !Sub ${StackPrefix}-aem-stack-manager-service-role
+      RoleName: !Sub ${AWS::Region}-aem-stack-manager-service-role
 
 Outputs:
   SSMServiceRoleArn:
