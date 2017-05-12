@@ -5,7 +5,6 @@ Lambda function to manage AEM stack offline backups. It uses a SNS topic to help
 orchestrate sequence of steps
 """
 
-
 import os
 import boto3
 import logging
@@ -56,46 +55,68 @@ def send_ssm_cmd(cmd_details):
                       cls=MyEncoder))
 
 
+def get_author_primary_ids(stack_prefix):
+    filters = [
+        {
+            'Name': 'tag:StackPrefix',
+            'Values': [stack_prefix]
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
+            'Name': 'tag:Component',
+            'Values': ['author-primary']
+        }
+    ]
+
+    return instance_ids_by_tags(filters)
+
+
+def get_author_standby_ids(stack_prefix):
+    filters = [
+        {
+            'Name': 'tag:StackPrefix',
+            'Values': [stack_prefix]
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
+            'Name': 'tag:Component',
+            'Values': ['author-standby']
+        }
+    ]
+
+    return instance_ids_by_tags(filters)
+
+
+def get_publish_ids(stack_prefix):
+    filters = [
+        {
+            'Name': 'tag:StackPrefix',
+            'Values': [stack_prefix]
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
+            'Name': 'tag:Component',
+            'Values': ['publish']
+        }
+    ]
+
+    return instance_ids_by_tags(filters)
+
+
 def stack_health_check(stack_prefix, min_publish_instances):
     """
     Simple AEM stack health check based on the number of author-primary,
     author-standby and publisher instances.
     """
 
-    base_filter = [{
-            'Name': 'tag:StackPrefix',
-            'Values': [stack_prefix]
-    }, {
-        'Name': 'instance-state-name',
-        'Values': ['running']
-    }]
+    author_primary_instances = get_author_primary_ids(stack_prefix)
 
-    author_primary_filter = base_filter + [
-        {
-            'Name': 'tag:Component',
-            'Values': ['author-primary']
-        }
-    ]
+    author_standby_instances = get_author_standby_ids(stack_prefix)
 
-    author_primary_instances = instance_ids_by_tags(author_primary_filter)
-
-    author_standby_filter = base_filter + [
-        {
-            'Name': 'tag:Component',
-            'Values': ['author-standby']
-        }
-    ]
-
-    author_standby_instances = instance_ids_by_tags(author_standby_filter)
-
-    publish_filter = base_filter + [
-        {
-            'Name': 'tag:Component',
-            'Values': ['publish']
-        }
-    ]
-
-    publish_instances = instance_ids_by_tags(publish_filter)
+    publish_instances = get_publish_ids(stack_prefix)
 
     if (len(author_primary_instances) == 1 and
        len(author_standby_instances) == 1 and
@@ -118,14 +139,15 @@ def stack_health_check(stack_prefix, min_publish_instances):
     return Exception('Unhealthy Stack')
 
 
-def put_state_in_dynamodb(instance_info, command_id, dynamodb_common_params):
+def put_state_in_dynamodb(table_name, command_id, environment, state, instance_info):
     """
     schema:
-    key: environment(hash) + task(range)
-    command_state: map containing  {command_id: state}
-    instance_ids: map containing authour-primary, author-stand and publish
-                  instance ids
-    ttl: one day
+    key: command_id
+    attr:
+      environment: S usually stack_prefix
+      command_state: S
+      instance_info:  M instance role : instance id
+      ttl: one day
     """
 
     # ideally set TTL attribute in CF tempalte
@@ -142,73 +164,46 @@ def put_state_in_dynamodb(instance_info, command_id, dynamodb_common_params):
            datetime.datetime.fromtimestamp(0)).total_seconds()
     ttl += datetime.timedelta(days=1).total_seconds()
 
-    instances = {key: {'S': value} for (key, value) in instance_info.items()}
-
-    item = dynamodb_common_params['Key'].copy()
-    item.update(
-        {
-            'instance_ids': {
-                'M': instances
-            },
-            'command_state': {
-                'M': {
-                    command_id: {
-                        'S': 'STOP_AUTHOR_STANDBY'
-                    }
-                }
-            },
-            'ttl': {
-                'N': str(ttl)
-            }
-
+    item = {
+        'command_id': {
+            'S': command_id
+        },
+        'environment': {
+            'S': environment
+        },
+        'state': {
+            'S': state
+        },
+        'instance_info': {
+            'M': instance_info
+        },
+        'ttl': {
+            'N': str(ttl)
         }
-    )
+    }
 
     dynamodb.put_item(
-        TableName=dynamodb_common_params['TableName'],
+        TableName=table_name,
         Item=item
     )
 
 
 # dynamodb is used to host state information
-def get_state_from_dynamodb(dynamodb_common_params):
+def get_state_from_dynamodb(table_name, command_id):
 
     item = dynamodb.get_item(
-        TableName=dynamodb_common_params['TableName'],
-        Key=dynamodb_common_params['Key'],
+        TableName=table_name,
+        Key={
+            'command_id': {
+                'S': command_id
+            }
+        },
         ConsistentRead=True,
         ReturnConsumedCapacity='NONE',
-        ProjectionExpression='command_state, instance_ids'
+        ProjectionExpression='environment, state, instance_info'
     )
 
     return item
-
-
-def update_state_in_dynamodb(command_id, current_state, dynamodb_common_params):
-
-    item_update = {
-        'TableName': dynamodb_common_params['TableName'],
-        'Key': dynamodb_common_params['Key'],
-        'UpdateExpression': 'SET command_state.#cmd_id = :state',
-        'ExpressionAttributeNames': {
-            '#cmd_id': command_id
-        },
-        'ExpressionAttributeValues': {
-            ':state': {
-                'S': current_state
-            }
-        }
-    }
-
-    dynamodb.update_item(**item_update)
-
-
-def delete_state_from_dynamodb(dynamodb_common_params):
-    item_key = {
-        'TableName': dynamodb_common_params['TableName'],
-        'Key': dynamodb_common_params['Key']
-    }
-    dynamodb.delete_item(**item_key)
 
 
 def sns_message_processor(event, context):
@@ -234,19 +229,8 @@ def sns_message_processor(event, context):
         config = json.loads(content)
         task_document_mapping = config['document_mapping']
         offline_snapshot_config = config['offline_snapshot']
-        environment = config['environment']
+        dynamodb_table = config['offline_snapshot']['dynamodb-table']
 
-    dynamodb_common_params = {
-        'TableName': offline_snapshot_config['dynamodb-table'],
-        'Key': {
-            'environment': {
-                'S': environment
-            },
-            'task': {
-                'S': 'offline_snapshot'
-            }
-        }
-    }
 
     ssm_common_params = {
         'TimeoutSeconds': 120,
@@ -272,15 +256,18 @@ def sns_message_processor(event, context):
         response = None
         if 'task' in message and message['task'] == 'offline-snapshot':
 
-            instance_info = stack_health_check(message['stack_prefix'],
-                                               config['offline_snapshot']['min-publish-instances'])
-            if instance_info is None:
+            stack_prefix = message['stack_prefix']
+            instances = stack_health_check(
+                stack_prefix,
+                config['offline_snapshot']['min-publish-instances']
+            )
+            if instances is None:
                 raise Exception('Unhealthy Stack')
 
             ssm_params = ssm_common_params.copy()
             ssm_params.update(
                 {
-                    'InstanceIds': instance_info['author-standby'],
+                    'InstanceIds': [instances['author-standby']],
                     'DocumentName': task_document_mapping['manage-service'],
                     'Comment': 'Kick start offline snapshot with stopping AEM service on Author standby instance',
                     'Parameters': {
@@ -290,7 +277,15 @@ def sns_message_processor(event, context):
             )
 
             response = send_ssm_cmd(ssm_params)
-            put_state_in_dynamodb(instance_info, response['Command']['CommandId'], dynamodb_common_params)
+
+            instance_info = {key: {'S': value} for (key, value) in instances.items()}
+            put_state_in_dynamodb(
+                dynamodb_table,
+                response['Command']['CommandId'],
+                stack_prefix,
+                'STOP_AUTHOR_STANDBY',
+                instance_info
+            )
             return response
         else:
             cmd_id = message['commandId']
@@ -299,11 +294,17 @@ def sns_message_processor(event, context):
                 raise Exception('Command {} failed.'.format(cmd_id))
 
             # get back the state of this task
-            item = get_state_from_dynamodb(dynamodb_common_params)
-            state = item['Item']['command_state']['M'][cmd_id]['S']
-            author_primary_id = item['Item']['instance_ids']['M']['author-primary']['S']
-            author_standby_id = item['Item']['instance_ids']['M']['author-standby']['S']
-            publish_id = item['Item']['instance_ids']['M']['publish']['S']
+            item = get_state_from_dynamodb(
+                dynamodb_table,
+                cmd_id
+            )
+            state = item['Item']['state']['S']
+            stack_prefix = item['Item']['environment']['S']
+            instance_info = item['Item']['instance_info']
+
+            author_primary_id = instance_info['M']['author-primary']['S']
+            author_standby_id = instance_info['M']['author-standby']['S']
+            publish_id = instance_info['M']['publish']['S']
 
             if state == 'STOP_AUTHOR_STANDBY':
                 ssm_params = ssm_common_params.copy()
@@ -319,9 +320,13 @@ def sns_message_processor(event, context):
                 )
 
                 response = send_ssm_cmd(ssm_params)
-                update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'STOP_AUTHOR_PRIMARY',
-                                         dynamodb_common_params)
+                put_state_in_dynamodb(
+                    dynamodb_table,
+                    response['Command']['CommandId'],
+                    stack_prefix,
+                    'STOP_AUTHOR_PRIMARY',
+                    instance_info
+                )
 
             elif state == 'STOP_AUTHOR_PRIMARY':
                 ssm_params = ssm_common_params.copy()
@@ -334,9 +339,13 @@ def sns_message_processor(event, context):
                 )
 
                 response = send_ssm_cmd(ssm_params)
-                update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'OFFLINE_COMPACTION',
-                                         dynamodb_common_params)
+                put_state_in_dynamodb(
+                    dynamodb_table,
+                    response['Command']['CommandId'],
+                    stack_prefix,
+                    'OFFLINE_COMPACTION',
+                    instance_info
+                )
 
             elif state == 'OFFLINE_COMPACTION':
                 ssm_params = ssm_common_params.copy()
@@ -349,9 +358,13 @@ def sns_message_processor(event, context):
                 )
 
                 response = send_ssm_cmd(ssm_params)
-                update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'OFFLINE_BACKUP',
-                                         dynamodb_common_params)
+                put_state_in_dynamodb(
+                    dynamodb_table,
+                    response['Command']['CommandId'],
+                    stack_prefix,
+                    'OFFLINE_BACKUP',
+                    instance_info
+                )
 
             elif state == 'OFFLINE_BACKUP':
                 ssm_params = ssm_common_params.copy()
@@ -367,9 +380,13 @@ def sns_message_processor(event, context):
                 )
 
                 response = send_ssm_cmd(ssm_params)
-                update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'START_AUTHOR_PRIMARY',
-                                         dynamodb_common_params)
+                put_state_in_dynamodb(
+                    dynamodb_table,
+                    response['Command']['CommandId'],
+                    stack_prefix,
+                    'START_AUTHOR_PRIMARY',
+                    instance_info
+                )
 
             elif state == 'START_AUTHOR_PRIMARY':
                 ssm_params = ssm_common_params.copy()
@@ -384,13 +401,16 @@ def sns_message_processor(event, context):
                     }
                 )
                 response = send_ssm_cmd(ssm_params)
-                update_state_in_dynamodb(response['Command']['CommandId'],
-                                         'START_AUTHOR_STANDBY',
-                                         dynamodb_common_params)
+                put_state_in_dynamodb(
+                    dynamodb_table,
+                    response['Command']['CommandId'],
+                    stack_prefix,
+                    'START_AUTHOR_STANDBY',
+                    instance_info
+                )
 
             elif state == 'START_AUTHOR_STANDBY':
-                delete_state_from_dynamodb(dynamodb_common_params)
-                print('done')
+                print('Offline backup for environment {} finished successfully'.format(stack_prefix))
 
             else:
                 raise Exception('Unknown state')
