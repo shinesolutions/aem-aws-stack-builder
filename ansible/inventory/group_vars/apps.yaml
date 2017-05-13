@@ -178,3 +178,6 @@ dns_records:
     record_set_name: author-dispatcher
   publish_dispatcher:
     record_set_name: publish-dispatcher
+
+stack_manager:
+  s3_prefix: manage
