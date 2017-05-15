@@ -1,14 +1,14 @@
 {
   "document_mapping": {
-    "promote-author": "aem-stack-mamager-ssm-PromoteAuthor-11VTPPO64NZ94",
-    "export-package": "aem-stack-mamager-ssm-ExportPackage-1PM74LV73XZOG",
-    "offline-compaction": "aem-stack-mamager-ssm-OfflineCompaction-15KGG4JL51RGM",
-    "deploy-artifacts": "aem-stack-mamager-ssm-DeployArtifacts-1OFGBDQOFQET8",
-    "offline-snapshot": "aem-stack-mamager-ssm-OfflineSnapshot-1F7BMZGCZLPM",
-    "manage-service": "aem-stack-mamager-ssm-ManageService-PXILGNECX4O3",
-    "import-package": "aem-stack-mamager-ssm-ImportPackage-B9GHIIK65579",
-    "deploy-artifact": "aem-stack-mamager-ssm-DeployArtifact-1GN7219Q4AQK4"
-},
+    "promote-author": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-PromoteAuthor-11VTPPO64NZ94",
+    "export-package": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ExportPackage-1PM74LV73XZOG",
+    "offline-compaction": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-OfflineCompaction-15KGG4JL51RGM",
+    "deploy-artifacts": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-DeployArtifacts-1OFGBDQOFQET8",
+    "offline-snapshot": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-OfflineSnapshot-1F7BMZGCZLPM",
+    "manage-service": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ManageService-PXILGNECX4O3",
+    "import-package": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ImportPackage-B9GHIIK65579",
+    "deploy-artifact": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-DeployArtifact-1GN7219Q4AQK4"
+  },
   "offline_snapshot": {
     "dynamodb-table": "AemStackManagerTable",
     "min-publish-instances": 2,
