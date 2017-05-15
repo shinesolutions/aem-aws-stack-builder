@@ -72,7 +72,14 @@ def deploy_artifact(message, ssm_commond_params):
         'TimeoutSeconds': 120,
         'Comment': 'deploy an AEM artifact',
         'Parameters': {
-            'artifact': [message['details']['artifact']]
+            'source': [message['details']['source']],
+            'group': [message['details']['group']],
+            'name': [message['details']['name']],
+            'version': [message['details']['version']],
+            'replicate': [message['details']['replicate']],
+            'activate': [message['details']['activate']],
+            'force': [message['details']['force']]
+
         }
     }
     details.update(ssm_commond_params)
