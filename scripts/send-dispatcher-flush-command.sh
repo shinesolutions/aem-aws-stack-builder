@@ -1,10 +1,13 @@
 #!/bin/bash -eu
 
+error() {
+  cat <<< "$@" 1>&2;
+  exit 1
+}
+
 echo Stack prefix: ${STACK_PREFIX:?You must set the STACK_PREFIX environment variable}
 echo Output S3 bucket name: ${OUTPUT_S3_BUCKET_NAME:=mb-aem-stack-builder}
 echo Output S3 key prefix: ${OUTPUT_S3_KEY_PREFIX:=${STACK_PREFIX}/run-command-output/}
-echo Parameter file: ${PARAMETER_FILE:=$(mktemp "XXXXXXXXXXXX")}
-echo Output file: ${OUTPUT_FILE:=$(mktemp "XXXXXXXXXXXX")}
 
 DISPATCHER_TYPE="${1:-publish-dispatcher}"
 echo Dispatcher type: ${DISPATCHER_TYPE}
@@ -21,9 +24,11 @@ INSTANCE_IDS=$(
 INSTANCE_COUNT=$(wc -w <<< $INSTANCE_IDS)
 
 if [[ -z $INSTANCE_IDS ]]; then
-  echo "No intances found matching StackPrefix=${STACK_PREFIX} and Component=${DISPATCHER_TYPE}"
-  exit 1
+  error "No intances found matching StackPrefix=${STACK_PREFIX} and Component=${DISPATCHER_TYPE}"
 fi
+
+PARAMETER_FILE=$(mktemp "XXXXXXXXXXXX")
+OUTPUT_FILE=$(mktemp "XXXXXXXXXXXX")
 
 cat > ${PARAMETER_FILE} << PARAMETERS
 {
@@ -54,6 +59,8 @@ else
     COMMAND_ID=$(< ${OUTPUT_FILE} python -c 'import sys,json; print json.load(sys.stdin).get("Command", {}).get("CommandId", "")')
 fi
 
+rm ${OUTPUT_FILE} ${PARAMETER_FILE}
+
 have_status() {
   STATUS_TO_CHECK=${1}; shift
   STATUSES=${@}
@@ -78,12 +85,12 @@ while true; do
       python -m json.tool ${OUTPUT_FILE}
       STATUSES=$(< ${OUTPUT_FILE} python -c 'import sys,json; print "\n".join(map(lambda x: x.get("Status"), json.load(sys.stdin).get("CommandInvocations", [])))' | sort -u)
   fi
+  rm ${OUTPUT_FILE}
 
   if ! ( have_status InProgress ${STATUSES} -o have_status Pending ${STATUSES} ); then
     echo "Commands complete."
     if have_status Failed ${STATUSES}; then
-      echo "One or more commands failed."
-      exit 1
+      error "One or more commands failed."
     fi
     exit 0
   fi
