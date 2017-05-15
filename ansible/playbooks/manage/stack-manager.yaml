@@ -20,13 +20,13 @@
 
     - name: Zip AEM Stack Manager Lambda Implementation
       command: >
-        zip "{{ stack_manager_tmp }}/aem-stack-manager.zip" "../../../lambda/aem_stack_manager.py"
+        zip -j "{{ stack_manager_tmp }}/aem-stack-manager.zip" "../../../lambda/aem_stack_manager.py"
       tags:
         - create
 
     - name: Zip AEM Offline Snapshot Lambda Implementation
       shell: >
-        zip "{{ stack_manager_tmp }}/aem-offline-snapshot.zip" "../../../lambda/aem_offline_snapshot.py"
+        zip -j "{{ stack_manager_tmp }}/aem-offline-snapshot.zip" "../../../lambda/aem_offline_snapshot.py"
       tags:
         - create
 
