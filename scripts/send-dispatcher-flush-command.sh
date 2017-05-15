@@ -21,7 +21,7 @@ INSTANCE_IDS=$(
 INSTANCE_COUNT=$(wc -w <<< $INSTANCE_IDS)
 
 if [[ -z $INSTANCE_IDS ]]; then
-  echo "No intances found matching StackPrefix=${StackPrefix} and Component=${DISPATCHER_TYPE}"
+  echo "No intances found matching StackPrefix=${STACK_PREFIX} and Component=${DISPATCHER_TYPE}"
   exit 1
 fi
 
