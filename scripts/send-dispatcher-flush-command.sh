@@ -5,6 +5,12 @@ error() {
   exit 1
 }
 
+if which jq > /dev/null; then
+  have_jq=true
+else
+  have_jq=false
+fi
+
 echo Stack prefix: ${STACK_PREFIX:?You must set the STACK_PREFIX environment variable}
 echo Output S3 bucket name: ${OUTPUT_S3_BUCKET_NAME:=mb-aem-stack-builder}
 echo Output S3 key prefix: ${OUTPUT_S3_KEY_PREFIX:=${STACK_PREFIX}/run-command-output/}
@@ -51,7 +57,7 @@ aws ssm send-command \
   --output-s3-key-prefix ${OUTPUT_S3_KEY_PREFIX} \
   > ${OUTPUT_FILE}
 
-if which -s jq; then
+if have_jq; then
     jq . < ${OUTPUT_FILE}
     COMMAND_ID=$(< ${OUTPUT_FILE} jq -r .Command.CommandId)
 else
@@ -78,7 +84,7 @@ while true; do
     --command-id ${COMMAND_ID} \
     > ${OUTPUT_FILE}
 
-  if which -s jq; then
+  if have_jq; then
       jq . < ${OUTPUT_FILE}
       STATUSES=$(< ${OUTPUT_FILE} jq -r .CommandInvocations[].Status | sort -u)
   else
