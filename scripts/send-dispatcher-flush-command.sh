@@ -57,7 +57,7 @@ aws ssm send-command \
   --output-s3-key-prefix ${OUTPUT_S3_KEY_PREFIX} \
   > ${OUTPUT_FILE}
 
-if have_jq; then
+if ${have_jq}; then
     jq . < ${OUTPUT_FILE}
     COMMAND_ID=$(< ${OUTPUT_FILE} jq -r .Command.CommandId)
 else
@@ -84,7 +84,7 @@ while true; do
     --command-id ${COMMAND_ID} \
     > ${OUTPUT_FILE}
 
-  if have_jq; then
+  if ${have_jq}; then
       jq . < ${OUTPUT_FILE}
       STATUSES=$(< ${OUTPUT_FILE} jq -r .CommandInvocations[].Status | sort -u)
   else
