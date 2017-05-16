@@ -140,7 +140,7 @@ def stack_health_check(stack_prefix, min_publish_instances):
     return None
 
 
-def put_state_in_dynamodb(table_name, command_id, environment, state, instance_info, last_command=None):
+def put_state_in_dynamodb(table_name, command_id, environment, state, instance_info, last_command='---':
     """
     schema:
     key: command_id
