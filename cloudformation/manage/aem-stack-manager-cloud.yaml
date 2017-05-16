@@ -42,6 +42,12 @@ Resources:
       DisplayName: AEM Stack Manager Topic
       TopicName: AemStackManager
 
+  TaskStatusTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: AEM Stack Manager Topic
+      TopicName: AemStackManagerStatus
+
   LambdaServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -87,6 +93,10 @@ Resources:
                 Action:
                   - iam:PassRole
                 Resource: !GetAtt SSMServiceRole.Arn
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref TaskStatusTopic
 
   ManagerLambdaFunction:
     Type: AWS::Lambda::Function
@@ -232,7 +242,9 @@ Resources:
               - Effect: Allow
                 Action:
                   - sns:Publish
-                Resource: !Ref OfflineBackupTopic
+                Resource:
+                  - !Ref OfflineBackupTopic
+                  - !Ref TaskStatusTopic
       RoleName: !Sub ${AWS::Region}-aem-stack-manager-service-role
 
 Outputs:
@@ -247,6 +259,10 @@ Outputs:
   BackupTopicArn:
     Description: SNS topic Arn used to orchestrate offline backup
     Value: !Ref OfflineBackupTopic
+
+  TaskStatusTopicArn:
+    Description: SNS toptic Arn to notifiy status of stack manager functions
+    Value: !Ref TaskStatusTopic
 
   AemStackManagerTableName:
     Description: DynamoDB table name for AEM stack manager

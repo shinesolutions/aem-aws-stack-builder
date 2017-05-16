@@ -53,7 +53,7 @@ def send_ssm_cmd(cmd_details):
     return json.loads(json.dumps(ssm.send_command(**cmd_details), cls=MyEncoder))
 
 
-def deploy_artifact(message, ssm_commond_params):
+def deploy_artifact(message, ssm_common_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -69,7 +69,6 @@ def deploy_artifact(message, ssm_commond_params):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'TimeoutSeconds': 120,
         'Comment': 'deploy an AEM artifact',
         'Parameters': {
             'source': [message['details']['source']],
@@ -82,11 +81,12 @@ def deploy_artifact(message, ssm_commond_params):
 
         }
     }
-    details.update(ssm_commond_params)
-    return send_ssm_cmd(details)
+    params = ssm_common_params.copy()
+    params.update(details)
+    return send_ssm_cmd(params)
 
 
-def deploy_artifacts(message, ssm_commond_params):
+def deploy_artifacts(message, ssm_common_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -107,17 +107,17 @@ def deploy_artifacts(message, ssm_commond_params):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'TimeoutSeconds': 120,
         'Comment': 'deploying artifacts based on a descriptor file',
         'Parameters': {
             'descriptorFile': [message['details']['descriptor_file']]
         }
     }
-    details.update(ssm_commond_params)
-    return send_ssm_cmd(details)
+    params = ssm_common_params.copy()
+    params.update(details)
+    return send_ssm_cmd(params)
 
 
-def export_package(message, ssm_commond_params):
+def export_package(message, ssm_common_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -133,7 +133,6 @@ def export_package(message, ssm_commond_params):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'TimeoutSeconds': 120,
         'Comment': 'exporting AEM pacakges as backup based on package group, name and filter',
         'Parameters': {
             'packageGroup': [message['details']['package_group']],
@@ -141,11 +140,12 @@ def export_package(message, ssm_commond_params):
             'packageFilter': [message['details']['package_filter']]
         }
     }
-    details.update(ssm_commond_params)
-    return send_ssm_cmd(details)
+    params = ssm_common_params.copy()
+    params.update(details)
+    return send_ssm_cmd(params)
 
 
-def import_package(message, ssm_commond_params):
+def import_package(message, ssm_common_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -161,7 +161,6 @@ def import_package(message, ssm_commond_params):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'TimeoutSeconds': 120,
         'Comment': 'import AEM backed up pacakges for a stack based on group, name and timestamp',
         'Parameters': {
             'sourceStackPrefix': [message['stack_prefix']],
@@ -170,11 +169,12 @@ def import_package(message, ssm_commond_params):
             'packageDatestamp': [message['details']['package_datestamp']]
         }
     }
-    details.update(ssm_commond_params)
-    return send_ssm_cmd(details)
+    params = ssm_common_params.copy()
+    params.update(details)
+    return send_ssm_cmd(params)
 
 
-def promote_author(message, ssm_commond_params):
+def promote_author(message, ssm_common_params):
     target_filter = [
         {
             'Name': 'tag:StackPrefix',
@@ -190,11 +190,11 @@ def promote_author(message, ssm_commond_params):
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
-        'TimeoutSeconds': 120,
         'Comment': 'promote standby author instance to be the primary'
     }
-    details.update(ssm_commond_params)
-    return send_ssm_cmd(details)
+    params = ssm_common_params.copy()
+    params.update(details)
+    return send_ssm_cmd(params)
 
 
 method_mapper = {
@@ -224,7 +224,7 @@ def sns_message_processor(event, context):
         logger.debug('config file: ' + content)
         config = json.loads(content)
         task_document_mapping = config['document_mapping']
-        offline_snapshot_config = config['offline_snapshot']
+        run_command = config['ec2_run_command']
 
     for record in event['Records']:
         message_text = record['Sns']['Message']
@@ -234,13 +234,23 @@ def sns_message_processor(event, context):
 
         if method is not None:
             logger.info('Received request for task {}'.format(method.func_name))
-            ssm_commond_params = {
+            ssm_common_params = {
+                'TimeoutSeconds': 120,
                 'DocumentName': task_document_mapping[message['task']],
-                'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
-                'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix']
+                'OutputS3BucketName': run_command['cmd-output-bucket'],
+                'OutputS3KeyPrefix': run_command['cmd-output-prefix'],
+                'ServiceRoleArn': run_command['ssm-service-role-arn'],
+                'NotificationConfig': {
+                    'NotificationArn': run_command['status-topic-arn'],
+                    'NotificationEvents': [
+                        'Success',
+                        'Failed'
+                    ],
+                    'NotificationType': 'Command'
+                }
             }
 
-            return method(message, ssm_commond_params)
+            return method(message, ssm_common_params)
         else:
             logger.error('Unknown task {} found on request {}'.format(
                 message['task'],

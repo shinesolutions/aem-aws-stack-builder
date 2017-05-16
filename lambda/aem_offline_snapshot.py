@@ -27,6 +27,7 @@ ssm = boto3.client('ssm')
 ec2 = boto3.client('ec2')
 s3 = boto3.client('s3')
 dynamodb = boto3.client('dynamodb')
+sns = boto3.client('sns')
 
 
 class MyEncoder(json.JSONEncoder):
@@ -136,28 +137,21 @@ def stack_health_check(stack_prefix, min_publish_instances):
     if len(publish_instances) < min_publish_instances:
         logger.error('Found {} publish instances. Unhealthy stack.'.format(len(publish_instances)))
 
-    return Exception('Unhealthy Stack')
+    return None
 
 
-def put_state_in_dynamodb(table_name, command_id, environment, state, instance_info):
+def put_state_in_dynamodb(table_name, command_id, environment, state, instance_info, last_command=None):
     """
     schema:
     key: command_id
     attr:
       environment: S usually stack_prefix
-      command_state: S
+      command_state: S STOP_AUTHOR_STANDBY, STOP_AUTHOR_PRIMARY, ....
       instance_info:  M instance role : instance id
+      triggered_by: S Last EC2 Run Command Id that trigggers this command,
+                      used more for debugging purpose
       ttl: one day
     """
-
-    # ideally set TTL attribute in CF tempalte
-    # dynamodb.update_time_to_live(
-    #     TableName=offline_snapshot_config['dynamodb-table'],
-    #     TimeToLiveSpecification={
-    #         'Enabled': True,
-    #         'AttributeName': 'ttl'
-    #     }
-    # )
 
     # item ttl is set to 1 day
     ttl = (datetime.datetime.now() -
@@ -176,6 +170,9 @@ def put_state_in_dynamodb(table_name, command_id, environment, state, instance_i
         },
         'instance_info': {
             'M': instance_info
+        },
+        'last_command': {
+            'S': last_command
         },
         'ttl': {
             'N': str(ttl)
@@ -206,6 +203,21 @@ def get_state_from_dynamodb(table_name, command_id):
     return item
 
 
+# TODO: this meant to be an intergration point for CI tools like jenkins/bamboo,
+# currently just forward the notification message from EC2 Run command.
+def publish_status_message(topic, message):
+
+    payload = {
+        'default': message
+    }
+
+    sns.publish(
+        TopicArn=topic,
+        MessageStructure='json',
+        Message=json.dumps(payload)
+    )
+
+
 def sns_message_processor(event, context):
     """
     offline snapshot is a complicated process, requiring a few things happen in the
@@ -227,16 +239,19 @@ def sns_message_processor(event, context):
         content = ''.join(f.readlines()).replace('\n', '')
         logger.debug('config file: ' + content)
         config = json.loads(content)
+
+        run_command = config['ec2_run_command']
         task_document_mapping = config['document_mapping']
         offline_snapshot_config = config['offline_snapshot']
-        dynamodb_table = config['offline_snapshot']['dynamodb-table']
 
+        dynamodb_table = offline_snapshot_config['dynamodb-table']
+        status_topic_arn = run_command['status-topic-arn']
 
     ssm_common_params = {
         'TimeoutSeconds': 120,
-        'OutputS3BucketName': offline_snapshot_config['cmd-output-bucket'],
-        'OutputS3KeyPrefix': offline_snapshot_config['cmd-output-prefix'],
-        'ServiceRoleArn': offline_snapshot_config['ssm-service-role-arn'],
+        'OutputS3BucketName': run_command['cmd-output-bucket'],
+        'OutputS3KeyPrefix': run_command['cmd-output-prefix'],
+        'ServiceRoleArn': run_command['ssm-service-role-arn'],
         'NotificationConfig': {
             'NotificationArn': offline_snapshot_config['sns-topic-arn'],
             'NotificationEvents': [
@@ -259,9 +274,15 @@ def sns_message_processor(event, context):
             stack_prefix = message['stack_prefix']
             instances = stack_health_check(
                 stack_prefix,
-                config['offline_snapshot']['min-publish-instances']
+                offline_snapshot_config['min-publish-instances']
             )
             if instances is None:
+                publish_status_message(
+                    status_topic_arn,
+                    json.dumps({
+                        'status': 'Failed'
+                    })
+                )
                 raise Exception('Unhealthy Stack')
 
             ssm_params = ssm_common_params.copy()
@@ -284,13 +305,18 @@ def sns_message_processor(event, context):
                 response['Command']['CommandId'],
                 stack_prefix,
                 'STOP_AUTHOR_STANDBY',
-                instance_info
+                instance_info,
+                ''
             )
             return response
         else:
             cmd_id = message['commandId']
 
             if message['status'] == 'Failed':
+                publish_status_message(
+                    status_topic_arn,
+                    json.dumps(message)
+                    )
                 raise Exception('Command {} failed.'.format(cmd_id))
 
             # get back the state of this task
@@ -325,7 +351,8 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'STOP_AUTHOR_PRIMARY',
-                    instance_info
+                    instance_info,
+                    cmd_id
                 )
 
             elif state == 'STOP_AUTHOR_PRIMARY':
@@ -344,7 +371,8 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'OFFLINE_COMPACTION',
-                    instance_info
+                    instance_info,
+                    cmd_id
                 )
 
             elif state == 'OFFLINE_COMPACTION':
@@ -363,7 +391,8 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'OFFLINE_BACKUP',
-                    instance_info
+                    instance_info,
+                    cmd_id
                 )
 
             elif state == 'OFFLINE_BACKUP':
@@ -385,7 +414,8 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'START_AUTHOR_PRIMARY',
-                    instance_info
+                    instance_info,
+                    cmd_id
                 )
 
             elif state == 'START_AUTHOR_PRIMARY':
@@ -406,10 +436,15 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'START_AUTHOR_STANDBY',
-                    instance_info
+                    instance_info,
+                    cmd_id
                 )
 
             elif state == 'START_AUTHOR_STANDBY':
+                publish_status_message(
+                    status_topic_arn,
+                    json.dumps(message)
+                    )
                 print('Offline backup for environment {} finished successfully'.format(stack_prefix))
 
             else:

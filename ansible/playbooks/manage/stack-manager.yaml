@@ -3,7 +3,6 @@
   hosts: all
   gather_facts: no
   connection: local
-  force_handlers: True
   vars:
     stack_manager_tmp: ./stack_manager_deploy
 
@@ -62,13 +61,17 @@
         - create
 
     - name: Update config.json template to the stack output
-      shell:  >
-        jq --arg sns "{{ stack_info.stack_outputs.BackupTopicArn}}" \
+      shell:  >-
+        jq --arg statusarn "{{ stack_info.stack_outputs.TaskStatusTopicArn }}" \
            --arg role "{{ stack_info.stack_outputs.SSMServiceRoleArn}}" \
            --arg bucket "{{ s3.data_bucket_name }}" \
-           '."offline_snapshot"."sns-topic-arn"=$sns|."offline_snapshot"."ssm-service-role-arn"=$role|."offline_snapshot"."cmd-output-bucket"=$bucket' \
+           --arg backuparn "{{ stack_info.stack_outputs.BackupTopicArn}}" \
+        '."ec2_run_command"."status-topic-arn"=$statusarn|'\
+        '."ec2_run_command"."ssm-service-role-arn"=$role|'\
+        '."ec2_run_command"."cmd-output-bucket"=$bucket|'\
+        '."offline_snapshot"."sns-topic-arn"=$backuparn' \
            ../../../lambda/config.json.template  >  "{{ stack_manager_tmp }}"/config.json
-      when: stack_info|succeeded and stack_info.changed == true
+      when: stack_info|succeeded
       tags:
        - create
 
@@ -78,7 +81,7 @@
          mode: put
          src: "{{ stack_manager_tmp }}/config.json"
          object: "{{ stack_manager.s3_prefix }}/config.json"
-      when: stack_info|succeeded and stack_info.changed == true
+      when: stack_info|succeeded
       tags:
        - create
 
@@ -109,8 +112,9 @@
       tags:
         - delete
 
-  handlers:
     - name: Clean Up Deploy Folder
       file:
         path: "{{ stack_manager_tmp }}"
         state: absent
+      tags:
+        - always

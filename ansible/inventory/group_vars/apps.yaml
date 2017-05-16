@@ -180,4 +180,4 @@ dns_records:
     record_set_name: publish-dispatcher
 
 stack_manager:
-  s3_prefix: manage
+  s3_prefix: manager

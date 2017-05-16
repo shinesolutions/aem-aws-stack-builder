@@ -1,4 +1,10 @@
 {
+  "ec2_run_command": {
+    "cmd-output-bucket": "mb-aem-stack-builder",
+    "cmd-output-prefix": "SSMOutput",
+    "status-topic-arn": "topic",
+    "ssm-service-role-arn": "role"
+  },
   "document_mapping": {
     "promote-author": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-PromoteAuthor-11VTPPO64NZ94",
     "export-package": "arn:aws:ssm:ap-southeast-2:918473058104:document/aem-stack-mamager-ssm-ExportPackage-1PM74LV73XZOG",
@@ -12,9 +18,6 @@
   "offline_snapshot": {
     "dynamodb-table": "AemStackManagerTable",
     "min-publish-instances": 2,
-    "cmd-output-bucket":"mb-aem-stack-builder",
-    "cmd-output-prefix": "SSMOutput",
-    "sns-topic-arn": "sns",
-    "ssm-service-role-arn": "role"
+    "sns-topic-arn": "sns"
   }
 }
