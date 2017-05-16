@@ -12,8 +12,6 @@
         path: "{{ stack_manager_tmp }}"
         state: directory
         mode: 0755
-      notify:
-        - Clean Up Deploy Folder
       tags:
         - create
 
