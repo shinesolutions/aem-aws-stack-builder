@@ -57,6 +57,10 @@ Parameters:
     Type: String
     Description: The Author Dispatcher Auto Scaling Group Minimum Size
 
+  AuthorDispatcherASGDesiredCapacityParameter:
+    Type: String
+    Description: The Author Dispatcher Auto Scaling Group Desired Capacity
+
   AuthorDispatcherRootVolSizeParameter:
     Type: Number
     Description: Author Dispatcher Instances Root EBS Volume Size
@@ -192,6 +196,8 @@ Resources:
         Ref: AuthorDispatcherASGMaxSizeParameter
       MinSize:
         Ref: AuthorDispatcherASGMinSizeParameter
+      DesiredCapacity:
+        Ref: AuthorDispatcherASGDesiredCapacityParameter
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH

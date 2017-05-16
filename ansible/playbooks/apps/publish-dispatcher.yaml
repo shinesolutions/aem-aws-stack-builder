@@ -35,6 +35,7 @@
           PublishDispatcherASGSubnetListParameter: "{{ aem_vpc.publish_dispatcher_subnet_a_id }}, {{ aem_vpc.publish_dispatcher_subnet_b_id}}"
           PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
           PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
+          PublishDispatcherASGDesiredCapacityParameter: "{{ publish_dispatcher.desired_capacity }}"
           PublishDispatcherRootVolSizeParameter: "{{ publish_dispatcher.root_vol_size }}"
           PublishDispatcherDataVolSizeParameter: "{{ publish_dispatcher.data_vol_size }}"
           PublishDispatcherTagNameParameter: "{{ stack_prefix }}-{{ publish_dispatcher.tag_name }}"

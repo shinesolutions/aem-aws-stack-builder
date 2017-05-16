@@ -40,6 +40,10 @@ Parameters:
     Type: String
     Description: The Publish Auto Scaling Group Minimum Size
 
+  PublishASGDesiredCapacityParameter:
+    Type: String
+    Description: The Publish Auto Scaling Group Desired Capacity
+
   PublishRootVolSizeParameter:
     Type: Number
     Description: Publish Instances Root EBS Volume Size
@@ -152,6 +156,8 @@ Resources:
         Ref: PublishASGMaxSizeParameter
       MinSize:
         Ref: PublishASGMinSizeParameter
+      DesiredCapacity:
+        Ref: PublishASGDesiredCapacityParameter
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH

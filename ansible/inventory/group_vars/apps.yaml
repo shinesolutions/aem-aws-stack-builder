@@ -96,7 +96,8 @@ publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
   instance_profile: sandpit-aem-roles-stack-PublishDispatcherInstanceProfile-V9GSTTG597O
   instance_type: t2.micro
-  min_size: 2
+  min_size: 1
+  desired_capacity: 2
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
@@ -112,7 +113,8 @@ publish:
   stack_name: aem-publish-stack
   instance_profile: sandpit-aem-roles-stack-PublishInstanceProfile-LSPF5DN4VASK
   instance_type: m3.large
-  min_size: 2
+  min_size:  1
+  desired_capacity: 2
   max_size: 2
   root_vol_size: 20
   data_vol_size: 50
@@ -142,7 +144,8 @@ author_dispatcher:
   stack_name: aem-author-dispatcher-stack
   instance_profile: sandpit-aem-roles-stack-AuthorDispatcherInstanceProfile-5U5O43PMKYJJ
   instance_type: t2.micro
-  min_size: 2
+  min_size:  1
+  desired_capacity: 2
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20

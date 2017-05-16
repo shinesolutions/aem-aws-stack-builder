@@ -34,6 +34,7 @@
           AuthorDispatcherASGSubnetListParameter: "{{ aem_vpc.author_dispatcher_subnet_a_id }}, {{ aem_vpc.author_dispatcher_subnet_b_id }}"
           AuthorDispatcherASGMaxSizeParameter: "{{ author_dispatcher.max_size }}"
           AuthorDispatcherASGMinSizeParameter: "{{ author_dispatcher.min_size }}"
+          AuthorDispatcherASGDesiredCapacityParameter: "{{ author_dispatcher.desired_capacity }}"
           AuthorDispatcherRootVolSizeParameter: "{{ author_dispatcher.root_vol_size }}"
           AuthorDispatcherDataVolSizeParameter: "{{ author_dispatcher.data_vol_size }}"
           AuthorDispatcherTagNameParameter: "{{ stack_prefix }}-{{ author_dispatcher.tag_name }}"
