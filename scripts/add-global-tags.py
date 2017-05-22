@@ -71,7 +71,7 @@ def read_global_tags():
     file = open(tags_file_name, 'r')
     global_tags = ruamel.yaml.load(file, Loader=ruamel.yaml.SafeLoader)
     file.close()
-    return global_tags['Tags']
+    return global_tags
 
 def add_tags(global_tags, template, resource_key):
     tags = template['Resources'][resource_key]['Properties']['Tags']
@@ -91,5 +91,9 @@ for app in apps:
     template = read_template(file_name)
     global_tags = read_global_tags()
     for resource_key in apps[app]['resource_keys']:
-        add_tags(global_tags, template, resource_key)
+        add_tags(global_tags['All'], template, resource_key)
+        resource_tags = global_tags.get(resource_key, None)
+        if resource_tags is not None:
+            add_tags(resource_tags, template, resource_key)
+
     write_template(file_name, template)
