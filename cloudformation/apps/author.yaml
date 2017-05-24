@@ -86,8 +86,7 @@ Resources:
       Period: 60
       EvaluationPeriods: 5
       Statistic: Maximum
-      Threshold: 600
-      Unit: Seconds
+      Threshold: 60
       Dimensions:
       - Name: PluginInstance
         Value:
