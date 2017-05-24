@@ -140,17 +140,22 @@ def stack_health_check(stack_prefix, min_publish_instances):
     return None
 
 
-def put_state_in_dynamodb(table_name, command_id, environment, state, instance_info, last_command='---':
+def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp, **kwargs):
+
     """
     schema:
-    key: command_id
+    key: command_id, ec2 run command id, or externalId if provided and no cmd
+         has ran yet
     attr:
       environment: S usually stack_prefix
-      command_state: S STOP_AUTHOR_STANDBY, STOP_AUTHOR_PRIMARY, ....
-      instance_info:  M instance role : instance id
-      triggered_by: S Last EC2 Run Command Id that trigggers this command,
-                      used more for debugging purpose
+      state: S STOP_AUTHOR_STANDBY, STOP_AUTHOR_PRIMARY, .... Succeeded, Failed
+      timestamp: S, example: 2017-05-16T01:57:05.9Z
       ttl: one day
+    Optional attr:
+      instance_info: M, exmaple: author-primary: i-13ad9rxxxx
+      last_command:  S, Last EC2 Run Command Id that trigggers this command,
+                     used more for debugging
+      externalId: S, provided by external parties, like Jenkins/Bamboo job id
     """
 
     # item ttl is set to 1 day
@@ -168,16 +173,22 @@ def put_state_in_dynamodb(table_name, command_id, environment, state, instance_i
         'state': {
             'S': state
         },
-        'instance_info': {
-            'M': instance_info
-        },
-        'last_command': {
-            'S': last_command
+        'timestamp': {
+            'S': timestamp
         },
         'ttl': {
             'N': str(ttl)
         }
     }
+
+    if 'InstanceInfo' in kwargs and kwargs['InstanceInfo'] is not None:
+        item['instance_info'] = {'M': kwargs['InstanceInfo']}
+
+    if 'LastCommand' in kwargs and kwargs['LastCommand'] is not None:
+        item['last_command'] = {'S': kwargs['LastCommand']}
+
+    if 'ExternalId' in kwargs and kwargs['ExternalId'] is not None:
+        item['externalId'] = {'S': kwargs['ExternalId']}
 
     dynamodb.put_item(
         TableName=table_name,
@@ -197,13 +208,40 @@ def get_state_from_dynamodb(table_name, command_id):
         },
         ConsistentRead=True,
         ReturnConsumedCapacity='NONE',
-        ProjectionExpression='environment, state, instance_info'
+        ProjectionExpression='environment, #command_state, instance_info, externalId',
+        ExpressionAttributeNames={
+            '#command_state': 'state'
+        }
     )
 
     return item
 
 
-# TODO: this meant to be an intergration point for CI tools like jenkins/bamboo,
+def update_state_in_dynamodb(table_name, command_id, new_state, timestamp):
+
+    item_update = {
+        'TableName': table_name,
+        'Key': {
+            'command_id': {
+                'S': command_id
+            }
+        },
+        'UpdateExpression': 'SET #S = :sval, #T = :tval',
+        'ExpressionAttributeNames': {
+            '#S': 'state',
+            '#T': 'timestamp'
+        },
+        'ExpressionAttributeValues': {
+            ':svalue': {
+                'S': new_state
+            },
+            ':tval': {
+                'S': timestamp
+            }
+        }
+    }
+
+    dynamodb.update_item(**item_update)
 # currently just forward the notification message from EC2 Run command.
 def publish_status_message(topic, message):
 
@@ -267,11 +305,15 @@ def sns_message_processor(event, context):
         logger.debug(message_text)
         message = json.loads(message_text.replace('\'', '"'))
 
-        # message that start offline snapshot has a task key
+        # message that start-offline snapshot has a task key
         response = None
         if 'task' in message and message['task'] == 'offline-snapshot':
 
             stack_prefix = message['stack_prefix']
+            external_id = None
+            if 'externalId' in message:
+                external_id = message['externalId']
+
             instances = stack_health_check(
                 stack_prefix,
                 offline_snapshot_config['min-publish-instances']
@@ -283,6 +325,17 @@ def sns_message_processor(event, context):
                         'status': 'Failed'
                     })
                 )
+
+                # if externalId is present, it means other parties are interested in the status.
+                # Need to put a record in daynamodb with this id duplicated to command_id
+                if 'externalId' is not None:
+                    external_id = message['externalId']
+                    put_state_in_dynamodb(
+                        dynamodb_table, external_id, stack_prefix, 'Failed',
+                        datetime.datetime.utcnow().isoformat()[:-3] + 'Z',
+                        ExternalId=external_id
+                    )
+
                 raise Exception('Unhealthy Stack')
 
             ssm_params = ssm_common_params.copy()
@@ -300,13 +353,18 @@ def sns_message_processor(event, context):
             response = send_ssm_cmd(ssm_params)
 
             instance_info = {key: {'S': value} for (key, value) in instances.items()}
+            supplement = {
+                'InstanceInfo': instance_info,
+                'ExternalId': external_id
+            }
+
             put_state_in_dynamodb(
                 dynamodb_table,
                 response['Command']['CommandId'],
                 stack_prefix,
                 'STOP_AUTHOR_STANDBY',
-                instance_info,
-                ''
+                datetime.datetime.utcnow().isoformat()[:-3] + 'Z',
+                **supplement
             )
             return response
         else:
@@ -317,6 +375,8 @@ def sns_message_processor(event, context):
                     status_topic_arn,
                     json.dumps(message)
                     )
+
+                update_state_in_dynamodb(dynamodb_table, cmd_id, 'Failed', message['eventTime'])
                 raise Exception('Command {} failed.'.format(cmd_id))
 
             # get back the state of this task
@@ -327,6 +387,9 @@ def sns_message_processor(event, context):
             state = item['Item']['state']['S']
             stack_prefix = item['Item']['environment']['S']
             instance_info = item['Item']['instance_info']
+            external_id = None
+            if 'externalId' in item:
+                external_id = item['externalId']
 
             author_primary_id = instance_info['M']['author-primary']['S']
             author_standby_id = instance_info['M']['author-standby']['S']
@@ -351,8 +414,10 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'STOP_AUTHOR_PRIMARY',
-                    instance_info,
-                    cmd_id
+                    message['eventTime'],
+                    ExternalId=external_id,
+                    InstanceInfo=instance_info,
+                    LastCommand=cmd_id
                 )
 
             elif state == 'STOP_AUTHOR_PRIMARY':
@@ -371,8 +436,10 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'OFFLINE_COMPACTION',
-                    instance_info,
-                    cmd_id
+                    message['eventTime'],
+                    ExternalId=external_id,
+                    InstanceInfo=instance_info,
+                    LastCommand=cmd_id
                 )
 
             elif state == 'OFFLINE_COMPACTION':
@@ -391,8 +458,10 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'OFFLINE_BACKUP',
-                    instance_info,
-                    cmd_id
+                    message['eventTime'],
+                    ExternalId=external_id,
+                    InstanceInfo=instance_info,
+                    LastCommand=cmd_id
                 )
 
             elif state == 'OFFLINE_BACKUP':
@@ -414,8 +483,10 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'START_AUTHOR_PRIMARY',
-                    instance_info,
-                    cmd_id
+                    message['eventTime'],
+                    ExternalId=external_id,
+                    InstanceInfo=instance_info,
+                    LastCommand=cmd_id
                 )
 
             elif state == 'START_AUTHOR_PRIMARY':
@@ -436,8 +507,10 @@ def sns_message_processor(event, context):
                     response['Command']['CommandId'],
                     stack_prefix,
                     'START_AUTHOR_STANDBY',
-                    instance_info,
-                    cmd_id
+                    message['eventTime'],
+                    ExternalId=external_id,
+                    InstanceInfo=instance_info,
+                    LastCommand=cmd_id
                 )
 
             elif state == 'START_AUTHOR_STANDBY':
@@ -445,9 +518,10 @@ def sns_message_processor(event, context):
                     status_topic_arn,
                     json.dumps(message)
                     )
+                update_state_in_dynamodb(dynamodb_table, cmd_id, 'Succeeded', message['eventTime'])
                 print('Offline backup for environment {} finished successfully'.format(stack_prefix))
 
             else:
-                raise Exception('Unknown state')
+                raise Exception('Unexpected state {} for {}'.format(state, cmd_id))
 
             return response

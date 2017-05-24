@@ -28,6 +28,19 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
+      GlobalSecondaryIndexes:
+        IndexName: ExternalQuery
+        KeySchema:
+          - AttributeName: externalId
+            KeyType: HASH
+        Projection:
+          NonKeyAttributes:
+            - state
+            - timestamp
+          ProjectionType: INCLUDE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
       TableName: AemStackManagerTable
 
   StackManagerTopic:
