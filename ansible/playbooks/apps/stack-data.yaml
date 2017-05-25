@@ -117,7 +117,7 @@
         src: ../../../data/local.yaml
         mode: put
         encrypt: yes
-      when: when: local_hiera.stat.exists == True
+      when: local_hiera.stat.exists == True
       tags:
       - create
 
