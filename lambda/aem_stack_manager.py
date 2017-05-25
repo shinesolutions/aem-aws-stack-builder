@@ -202,6 +202,110 @@ def promote_author(message, ssm_common_params):
     return send_ssm_cmd(params)
 
 
+def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp, **kwargs):
+
+    """
+    schema:
+    key: command_id, ec2 run command id, or externalId if provided and no cmd
+         has ran yet
+    attr:
+      environment: S usually stack_prefix
+      state: S STOP_AUTHOR_STANDBY, STOP_AUTHOR_PRIMARY, .... Succeeded, Failed
+      timestamp: S, example: 2017-05-16T01:57:05.9Z
+      ttl: one day
+    Optional attr:
+      instance_info: M, exmaple: author-primary: i-13ad9rxxxx
+      last_command:  S, Last EC2 Run Command Id that trigggers this command,
+                     used more for debugging
+      externalId: S, provided by external parties, like Jenkins/Bamboo job id
+    """
+
+    # item ttl is set to 1 day
+    ttl = (datetime.datetime.now() -
+           datetime.datetime.fromtimestamp(0)).total_seconds()
+    ttl += datetime.timedelta(days=1).total_seconds()
+
+    item = {
+        'command_id': {
+            'S': command_id
+        },
+        'environment': {
+            'S': environment
+        },
+        'state': {
+            'S': state
+        },
+        'timestamp': {
+            'S': timestamp
+        },
+        'ttl': {
+            'N': str(ttl)
+        }
+    }
+
+    if 'InstanceInfo' in kwargs and kwargs['InstanceInfo'] is not None:
+        item['instance_info'] = {'M': kwargs['InstanceInfo']}
+
+    if 'LastCommand' in kwargs and kwargs['LastCommand'] is not None:
+        item['last_command'] = {'S': kwargs['LastCommand']}
+
+    if 'ExternalId' in kwargs and kwargs['ExternalId'] is not None:
+        item['externalId'] = {'S': kwargs['ExternalId']}
+
+    dynamodb.put_item(
+        TableName=table_name,
+        Item=item
+    )
+
+
+# dynamodb is used to host state information
+def get_state_from_dynamodb(table_name, command_id):
+
+    item = dynamodb.get_item(
+        TableName=table_name,
+        Key={
+            'command_id': {
+                'S': command_id
+            }
+        },
+        ConsistentRead=True,
+        ReturnConsumedCapacity='NONE',
+        ProjectionExpression='environment, #command_state, instance_info, externalId',
+        ExpressionAttributeNames={
+            '#command_state': 'state'
+        }
+    )
+
+    return item
+
+
+def update_state_in_dynamodb(table_name, command_id, new_state, timestamp):
+
+    item_update = {
+        'TableName': table_name,
+        'Key': {
+            'command_id': {
+                'S': command_id
+            }
+        },
+        'UpdateExpression': 'SET #S = :sval, #T = :tval',
+        'ExpressionAttributeNames': {
+            '#S': 'state',
+            '#T': 'timestamp'
+        },
+        'ExpressionAttributeValues': {
+            ':svalue': {
+                'S': new_state
+            },
+            ':tval': {
+                'S': timestamp
+            }
+        }
+    }
+
+    dynamodb.update_item(**item_update)
+
+
 method_mapper = {
     'deploy-artifact': deploy_artifact,
     'deploy-artifacts': deploy_artifacts,
@@ -231,13 +335,24 @@ def sns_message_processor(event, context):
         task_document_mapping = config['document_mapping']
         run_command = config['ec2_run_command']
 
+        dynamodb_table = run_command['dynamodb-table']
+
     for record in event['Records']:
         message_text = record['Sns']['Message']
         logger.debug(message_text)
-        message = json.loads(message_text.replace('\'', '"'))
-        method = method_mapper.get(message['task'])
 
-        if method is not None:
+        # we could receive message from Stack Manager Topic, which trigger actions
+        # and Status Topic, which tells us how the command ends
+        message = json.loads(message_text.replace('\'', '"'))
+
+        if 'task' in message and message['task'] is not None:
+            method = method_mapper[message['task']]
+            stack_prefix = message['stack_prefix']
+
+            external_id = None
+            if 'externalId' in message:
+                external_id = message['externalId']
+
             logger.info('Received request for task {}'.format(method.func_name))
             ssm_common_params = {
                 'TimeoutSeconds': 120,
@@ -255,8 +370,23 @@ def sns_message_processor(event, context):
                 }
             }
 
-            return method(message, ssm_common_params)
+            respone = method(message, ssm_common_params)
+            put_state_in_dynamodb(
+                dynamodb_table,
+                respone['Command']['CommandId'],
+                stack_prefix,
+                respone['Command']['Status'],
+                respone['Command']['RequestedDateTime'],
+                ExternalId=external_id
+            )
+            return respone
+        elif 'commandId' in message:
+            cmd_id = message['commandId']
+            update_state_in_dynamodb(
+                dynamodb_table,
+                cmd_id,
+                message['status'],
+                message['eventTime']
+            )
         else:
-            logger.error('Unknown task {} found on request {}'.format(
-                message['task'],
-                context['aws_request_id']))
+            logger.error('Unknown message found  and ignored')

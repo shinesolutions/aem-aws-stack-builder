@@ -148,7 +148,7 @@ def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp,
          has ran yet
     attr:
       environment: S usually stack_prefix
-      state: S STOP_AUTHOR_STANDBY, STOP_AUTHOR_PRIMARY, .... Succeeded, Failed
+      state: S STOP_AUTHOR_STANDBY, STOP_AUTHOR_PRIMARY, .... Success, Failed
       timestamp: S, example: 2017-05-16T01:57:05.9Z
       ttl: one day
     Optional attr:
@@ -242,6 +242,8 @@ def update_state_in_dynamodb(table_name, command_id, new_state, timestamp):
     }
 
     dynamodb.update_item(**item_update)
+
+
 # currently just forward the notification message from EC2 Run command.
 def publish_status_message(topic, message):
 
@@ -282,7 +284,7 @@ def sns_message_processor(event, context):
         task_document_mapping = config['document_mapping']
         offline_snapshot_config = config['offline_snapshot']
 
-        dynamodb_table = offline_snapshot_config['dynamodb-table']
+        dynamodb_table = run_command['dynamodb-table']
         status_topic_arn = run_command['status-topic-arn']
 
     ssm_common_params = {
@@ -518,7 +520,7 @@ def sns_message_processor(event, context):
                     status_topic_arn,
                     json.dumps(message)
                     )
-                update_state_in_dynamodb(dynamodb_table, cmd_id, 'Succeeded', message['eventTime'])
+                update_state_in_dynamodb(dynamodb_table, cmd_id, 'Success', message['eventTime'])
                 print('Offline backup for environment {} finished successfully'.format(stack_prefix))
 
             else:

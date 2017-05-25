@@ -17,20 +17,27 @@
 
     - name: Zip AEM Stack Manager Lambda Implementation
       command: >
-        zip -j "{{ stack_manager_tmp }}/aem-stack-manager.zip" "../../../lambda/aem_stack_manager.py"
+        zip -j "{{ stack_manager_tmp }}/aem_stack_manager.zip" "../../../lambda/aem_stack_manager.py"
       tags:
         - create
 
     - name: Zip AEM Offline Snapshot Lambda Implementation
       shell: >
-        zip -j "{{ stack_manager_tmp }}/aem-offline-snapshot.zip" "../../../lambda/aem_offline_snapshot.py"
+        zip -j "{{ stack_manager_tmp }}/aem_offline_snapshot.zip" "../../../lambda/aem_offline_snapshot.py"
       tags:
         - create
 
-    - name: Upload Stack Manager and Offline Backup Zip Archive to S3
+    - name: Zip AEM Task Status Query Lambda Implementation
+      shell: >
+        zip -j "{{ stack_manager_tmp }}/aem_task_query.zip" "../../../lambda/aem_task_query.py"
+      tags:
+        - create
+
+    - name: Upload Lambada Function Zip Archives to S3
       command: >
               aws s3 sync "{{ stack_manager_tmp }}"
                   s3://{{ s3.data_bucket_name }}/{{ stack_manager.s3_prefix }}
+                  --include "*.zip"
       tags:
         - create
 
