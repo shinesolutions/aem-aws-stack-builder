@@ -109,6 +109,9 @@
 
     - stat: path=../../../data/local.yaml
       register: local_hiera
+      tags:
+        - create
+
 
     - name: Upload local Hiera YAML
       s3:
