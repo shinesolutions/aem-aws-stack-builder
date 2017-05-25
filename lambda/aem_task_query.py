@@ -80,20 +80,10 @@ def sns_message_processor(event, context):
         run_command = config['ec2_run_command']
         dynamodb_table = run_command['dynamodb-table']
 
-    result = []
-    for record in event['Records']:
-        message_text = record['Sns']['Message']
-        logger.debug(message_text)
-
-        # we could receive message from Stack Manager Topic, which triggers actions
-        # or Status Topic, which tells us how the command ends
-        message = json.loads(message_text.replace('\'', '"'))
-
-        if 'externalId' in message:
-            external_id = message['externalId']
-            task_state = query_state_by_external_id(dynamodb_table, external_id)
-            result.append(task_state)
-        else:
-            logger.info('Unknown message found  and ignored')
-
+    if 'externalId' in event:
+        external_id = event['externalId']
+        result = query_state_by_external_id(dynamodb_table, external_id)
+    else:
+        logger.info('Unknown message found and ignored')
+        result = {}
     return result
