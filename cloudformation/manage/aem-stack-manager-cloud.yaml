@@ -21,6 +21,13 @@ Resources:
         -
           AttributeName: command_id
           AttributeType: S
+        -
+          AttributeName: externalId
+          AttributeType: S
+        -
+          AttributeName: timestamp
+          AttributeType: S
+
       KeySchema:
         -
           AttributeName: command_id
@@ -29,19 +36,20 @@ Resources:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
       GlobalSecondaryIndexes:
-        IndexName: ExternalQuery
-        KeySchema:
-          - AttributeName: externalId
-            KeyType: HASH
-          - AttributeName: timestamp
-            KeyType: RANGE
-        Projection:
-          NonKeyAttributes:
-            - state
-          ProjectionType: INCLUDE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        -
+          IndexName: ExternalQuery
+          KeySchema:
+            - AttributeName: externalId
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+              - state
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
       TableName: AemStackManagerTable
 
   StackManagerTopic:
@@ -160,7 +168,7 @@ Resources:
           LOG_LEVEL: "20"
           S3_BUCKET: !Ref S3Bucket
           S3_PREFIX: !Ref S3Prefix
-      Handler: task_status_query.sns_message_processor
+      Handler: aem_task_query.sns_message_processor
       MemorySize: 128
       Role: !GetAtt LambdaServiceRole.Arn
       Runtime: python2.7
@@ -185,9 +193,8 @@ Resources:
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName: !Ref QueryLambdaFunction
-      FunctionVersion: !GetAtt InitialVersion.Version
+      FunctionVersion: !GetAtt QueryInitialVersion.Version
       Name: prod
-
 
   ManagerTopicPermission:
     Type: AWS::Lambda::Permission

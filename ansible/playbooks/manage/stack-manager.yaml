@@ -3,6 +3,7 @@
   hosts: all
   gather_facts: no
   connection: local
+  force_handlers: True
   vars:
     stack_manager_tmp: ./stack_manager_deploy
 
@@ -12,6 +13,7 @@
         path: "{{ stack_manager_tmp }}"
         state: directory
         mode: 0755
+      notify: Clean Up Deploy Folder
       tags:
         - create
 
@@ -42,7 +44,7 @@
         - create
 
     - name: >
-        Create AEM Stack Manager/Offline Snapshot Lambda Function and Resources
+        Create AEM Stack Manager Resources
       cloudformation:
         stack_name: aem-stack-manager-cloud
         region: "{{ aws.region }}"
@@ -61,7 +63,7 @@
         aws dynamodb update-time-to-live --table-name AemStackManagerTable
            --time-to-live-specification Enabled=true,AttributeName=ttl
            --region "{{ aws.region }}"
-      when: stack_info|succeeded  and stack_info.changed == true
+      when: stack_info|succeeded and stack_info.changed == true
       tags:
         - create
 
@@ -117,9 +119,8 @@
       tags:
         - delete
 
+  handlers:
     - name: Clean Up Deploy Folder
       file:
         path: "{{ stack_manager_tmp }}"
         state: absent
-      tags:
-        - always
