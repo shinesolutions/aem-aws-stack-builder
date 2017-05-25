@@ -55,6 +55,12 @@ run_custom_stage pre-common
 
 cd /opt/shinesolutions/aem-aws-stack-provisioner
 
+if [[ -d data ]]; then
+  echo "Attempting to sync Hiera config & YAML from ${data_bucket_name}"
+  aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/data/" data/
+  aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/conf/" conf/
+fi
+
 if [ "$#" -eq 5 ]; then
   local_yaml_file=$5
   local_yaml_path="${PWD}/data/local.yaml"

@@ -107,6 +107,20 @@
       tags:
       - create
 
+    - stat: path=../../../data/local.yaml
+      register: local_hiera
+
+    - name: Upload local Hiera YAML
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/data/local.yaml"
+        src: ../../../data/local.yaml
+        mode: put
+        encrypt: yes
+      when: when: local_hiera.stat.exists == True
+      tags:
+      - create
+
     - name: Copy AEM Stack Provisioner from library to data bucket
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
