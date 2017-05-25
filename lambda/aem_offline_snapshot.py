@@ -232,7 +232,7 @@ def update_state_in_dynamodb(table_name, command_id, new_state, timestamp):
             '#T': 'timestamp'
         },
         'ExpressionAttributeValues': {
-            ':svalue': {
+            ':sval': {
                 'S': new_state
             },
             ':tval': {
@@ -391,7 +391,7 @@ def sns_message_processor(event, context):
             instance_info = item['Item']['instance_info']
             external_id = None
             if 'externalId' in item:
-                external_id = item['externalId']
+                external_id = item['Item']['externalId']['S']
 
             author_primary_id = instance_info['M']['author-primary']['S']
             author_standby_id = instance_info['M']['author-standby']['S']

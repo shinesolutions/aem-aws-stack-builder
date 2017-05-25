@@ -49,7 +49,6 @@ def query_state_by_external_id(table_name, external_id):
             }
         },
         ScanIndexForward = False,
-        ConsistentRead='True',
         ReturnConsumedCapacity='NONE',
         Limit=1
     )

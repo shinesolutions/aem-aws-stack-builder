@@ -294,7 +294,7 @@ def update_state_in_dynamodb(table_name, command_id, new_state, timestamp):
             '#T': 'timestamp'
         },
         'ExpressionAttributeValues': {
-            ':svalue': {
+            ':sval': {
                 'S': new_state
             },
             ':tval': {
