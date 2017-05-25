@@ -16,14 +16,6 @@ Parameters:
     Type: String
     Description: AEM Author Dispatcher ELB Health Check Target
 
-  AuthorDispatcherSubnetAParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Author Dispatcher Subnet in Availability Zone A
-
-  AuthorDispatcherSubnetBParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Author Dispatcher Subnet in Availability Zone B
-
   AuthorDispatcherInstanceProfileParameter:
     Type: String
     Description: The Author Dispatcher Instance Profile
@@ -44,10 +36,9 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Author Dispatcher Availability Zone List
 
-#TODO: Combine this parameter with AuthorDispatcherSubnetAParameter and AuthorDispatcherSubnetBParameter
-  AuthorDispatcherASGSubnetListParameter:
+  AuthorDispatcherSubnetListParameter:
     Type: List<AWS::EC2::Subnet::Id>
-    Description: The Author Dispatcher Subnets
+    Description: The Author Dispatcher Subnet List
 
   AuthorDispatcherASGMaxSizeParameter:
     Type: String
@@ -133,8 +124,7 @@ Resources:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-      - Ref: AuthorDispatcherSubnetAParameter
-      - Ref: AuthorDispatcherSubnetBParameter
+        Ref: AuthorDispatcherSubnetListParameter
       Tags:
       - Key: Name
         Value:
@@ -181,6 +171,7 @@ Resources:
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
+
   AuthorDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -220,7 +211,7 @@ Resources:
         Value: author-dispatcher
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: AuthorDispatcherASGSubnetListParameter
+        Ref: AuthorDispatcherSubnetListParameter
 
 Outputs:
 

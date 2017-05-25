@@ -20,13 +20,9 @@ Parameters:
     Type: String
     Description: AEM Publish Dispatcher ELB Scheme
 
-  PublishDispatcherELBSubnetAParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
-
-  PublishDispatcherELBSubnetBParameter:
-    Type: AWS::EC2::Subnet::Id
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
+  PublishDispatcherELBSubnetListParameter:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: The Publish Dispatcher ELB Subnets
 
   PublishDispatcherInstanceProfileParameter:
     Type: String
@@ -138,8 +134,7 @@ Resources:
           Fn::Sub: ${SecurityGroupsStackNameParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-      - Ref: PublishDispatcherELBSubnetAParameter
-      - Ref: PublishDispatcherELBSubnetBParameter
+        Ref: PublishDispatcherELBSubnetListParameter
       Tags:
       - Key: Name
         Value:
@@ -186,6 +181,7 @@ Resources:
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} publish-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
+
   PublishDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
