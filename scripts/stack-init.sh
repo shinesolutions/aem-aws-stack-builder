@@ -74,6 +74,11 @@ if [ "$#" -eq 5 ]; then
   cp "${local_yaml_file}" "${local_yaml_path}"
 fi
 
+if [[ -d /opt/puppetlabs/facter/facts.d/ ]]; then
+  echo "Attempting to copy stack facts to Facter 'facts.d' directory."
+  aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
+fi
+
 export FACTER_data_bucket_name="${data_bucket_name}"
 export FACTER_stack_prefix="${stack_prefix}"
 
