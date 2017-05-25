@@ -107,6 +107,11 @@ Resources:
                 Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}
               - Effect: Allow
                 Action:
+                  - dynamodb:Query
+                Resource:
+                  - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}/index/ExternalQuery
+              - Effect: Allow
+                Action:
                   - iam:PassRole
                 Resource: !GetAtt SSMServiceRole.Arn
               - Effect: Allow
