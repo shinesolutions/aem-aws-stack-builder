@@ -187,7 +187,7 @@ Resources:
     Properties:
       AvailabilityZones:
         Ref: PublishDispatcherASGAvailabilityZoneListParameter
-      HealthCheckGracePeriod: 900
+      HealthCheckGracePeriod: 1200
       HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: PublishDispatcherLaunchConfiguration
