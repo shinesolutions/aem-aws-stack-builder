@@ -130,6 +130,11 @@ def export_package(message, ssm_common_params):
             'Values': [message['details']['component']]
         }
     ]
+
+    encoded = json.dumps(message['details']['package_filter'])
+    logger.debug('encoded filter: {}'.format(encoded))
+    logger.debug('escaped filter: {}'.format(json.dumps(encoded)))
+
     # boto3 ssm client does not accept multiple filter for Targets
     details = {
         'InstanceIds': instance_ids_by_tags(target_filter),
@@ -137,7 +142,7 @@ def export_package(message, ssm_common_params):
         'Parameters': {
             'packageGroup': [message['details']['package_group']],
             'packageName': [message['details']['package_name']],
-            'packageFilter': [message['details']['package_filter']]
+            'packageFilter': [json.dumps(message['details']['package_filter'])]
         }
     }
     params = ssm_common_params.copy()
@@ -163,7 +168,7 @@ def import_package(message, ssm_common_params):
         'InstanceIds': instance_ids_by_tags(target_filter),
         'Comment': 'import AEM backed up pacakges for a stack based on group, name and timestamp',
         'Parameters': {
-            'sourceStackPrefix': [message['stack_prefix']],
+            'sourceStackPrefix': [message['details']['source_stack_prefix']],
             'packageGroup': [message['details']['package_group']],
             'packageName': [message['details']['package_name']],
             'packageDatestamp': [message['details']['package_datestamp']]
