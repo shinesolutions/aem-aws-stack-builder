@@ -32,7 +32,7 @@ if [[ ${#config_paths[@]} -gt 0 ]]; then
 fi
 
 echo "Extra vars:"
-echo "  ${extra_vars[@]}"
+echo "  ${extra_vars[*]}"
 
 mkdir -p "logs/$stack_prefix"
 echo "Start creating $stack_prefix $stack_type stack"
