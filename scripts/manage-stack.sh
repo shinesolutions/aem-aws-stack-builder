@@ -10,7 +10,7 @@ fi
 if [[ ${0} =~ create-stack ]]; then
   tag=create
   action_verb=creating
-elif [[ ${1} =~ delete-stack ]]; then
+elif [[ ${0} =~ delete-stack ]]; then
   tag=delete
   action_verb=deleting
 else
