@@ -330,8 +330,7 @@ def sns_message_processor(event, context):
 
                 # if externalId is present, it means other parties are interested in the status.
                 # Need to put a record in daynamodb with this id duplicated to command_id
-                if 'externalId' is not None:
-                    external_id = message['externalId']
+                if external_id is not None:
                     put_state_in_dynamodb(
                         dynamodb_table, external_id, stack_prefix, 'Failed',
                         datetime.datetime.utcnow().isoformat()[:-3] + 'Z',
@@ -388,14 +387,14 @@ def sns_message_processor(event, context):
             )
             state = item['Item']['state']['S']
             stack_prefix = item['Item']['environment']['S']
-            instance_info = item['Item']['instance_info']
+            instance_info = item['Item']['instance_info']['M']
             external_id = None
             if 'externalId' in item:
                 external_id = item['Item']['externalId']['S']
 
-            author_primary_id = instance_info['M']['author-primary']['S']
-            author_standby_id = instance_info['M']['author-standby']['S']
-            publish_id = instance_info['M']['publish']['S']
+            author_primary_id = instance_info['author-primary']['S']
+            author_standby_id = instance_info['author-standby']['S']
+            publish_id = instance_info['publish']['S']
 
             if state == 'STOP_AUTHOR_STANDBY':
                 ssm_params = ssm_common_params.copy()
