@@ -437,28 +437,6 @@ def sns_message_processor(event, context):
                     dynamodb_table,
                     response['Command']['CommandId'],
                     stack_prefix,
-                    'OFFLINE_COMPACTION',
-                    message['eventTime'],
-                    ExternalId=external_id,
-                    InstanceInfo=instance_info,
-                    LastCommand=cmd_id
-                )
-
-            elif state == 'OFFLINE_COMPACTION':
-                ssm_params = ssm_common_params.copy()
-                ssm_params.update(
-                    {
-                        'InstanceIds': [author_primary_id, publish_id],
-                        'DocumentName': task_document_mapping['offline-snapshot'],
-                        'Comment': 'Run offline EBS snapshot on Author primary and Publish instances'
-                    }
-                )
-
-                response = send_ssm_cmd(ssm_params)
-                put_state_in_dynamodb(
-                    dynamodb_table,
-                    response['Command']['CommandId'],
-                    stack_prefix,
                     'OFFLINE_BACKUP',
                     message['eventTime'],
                     ExternalId=external_id,
@@ -466,6 +444,28 @@ def sns_message_processor(event, context):
                     LastCommand=cmd_id
                 )
 
+            # elif state == 'OFFLINE_COMPACTION':
+            #     ssm_params = ssm_common_params.copy()
+            #     ssm_params.update(
+            #         {
+            #             'InstanceIds': [author_primary_id, publish_id],
+            #             'DocumentName': task_document_mapping['offline-snapshot'],
+            #             'Comment': 'Run offline EBS snapshot on Author primary and Publish instances'
+            #         }
+            #     )
+            #
+            #     response = send_ssm_cmd(ssm_params)
+            #     put_state_in_dynamodb(
+            #         dynamodb_table,
+            #         response['Command']['CommandId'],
+            #         stack_prefix,
+            #         'OFFLINE_BACKUP',
+            #         message['eventTime'],
+            #         ExternalId=external_id,
+            #         InstanceInfo=instance_info,
+            #         LastCommand=cmd_id
+            #     )
+            #
             elif state == 'OFFLINE_BACKUP':
                 ssm_params = ssm_common_params.copy()
                 ssm_params.update(
