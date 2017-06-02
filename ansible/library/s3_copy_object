@@ -2,6 +2,7 @@
 
 from ansible.module_utils.basic import *
 import boto3
+import botocore
 
 def copy_object(src_bucket, src_key, dest_bucket, dest_key):
     s3 = boto3.resource('s3')
@@ -10,6 +11,7 @@ def copy_object(src_bucket, src_key, dest_bucket, dest_key):
       'Key': src_key
     }
     s3.meta.client.copy(src_config, dest_bucket, dest_key)
+
 
 def main():
 
@@ -21,8 +23,26 @@ def main():
         dest_key    = dict(required=True, type='str')
       )
     )
-    copy_object(module.params['src_bucket'], module.params['src_key'], module.params['dest_bucket'], module.params['dest_key'])
-    message = 'Successfully copied {0}/{1} to {2}/{3}' % [module.params['src_bucket'], module.params['src_key'], module.params['dest_bucket'], module.params['dest_key']]
+
+    s3 = boto3.resource('s3')
+
+    exists = False
+    try:
+        s3.Object(module.params['src_bucket'], module.params['src_key']).load()
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            exists = False
+        else:
+            raise
+    else:
+        exists = True
+
+    if exists:
+        copy_object(module.params['src_bucket'], module.params['src_key'], module.params['dest_bucket'], module.params['dest_key'])
+        message = 'Successfully copied {0}/{1} to {2}/{3}' % [module.params['src_bucket'], module.params['src_key'], module.params['dest_bucket'], module.params['dest_key']]
+    else:
+        message = 'File {0}/{1}  does not exist in bucket, nothing to copy' % [module.params['src_bucket'], module.params['src_key']]
+
     module.exit_json(changed = False, msg = message)
 
 if __name__ == '__main__':
