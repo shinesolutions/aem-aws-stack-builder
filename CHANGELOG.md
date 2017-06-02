@@ -5,6 +5,7 @@
 * Enhance the s3_copy_object script to not copy files that do not exist
 * Copy content-healthcheck-descriptor from source bucket
 * Update aem-orchestrator version to 1.0.0
+* Update aem-aws-stack-provisioner version to 1.1.0
 
 ### 1.0.0
 * Initial version
