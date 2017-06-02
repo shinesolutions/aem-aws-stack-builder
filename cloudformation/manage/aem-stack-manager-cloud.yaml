@@ -241,7 +241,7 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: AEM Backup
-      TopicName: AemOfflineBackup${Version}
+      TopicName: !Sub AemOfflineBackup${Version}
 
   OfflineBackupLambada:
     Type: AWS::Lambda::Function

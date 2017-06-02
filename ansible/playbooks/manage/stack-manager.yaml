@@ -46,7 +46,7 @@
     - name: >
         Create AEM Stack Manager Resources
       cloudformation:
-        stack_name: aem-stack-manager-cloud
+        stack_name: "{{ stack_manager.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: false
@@ -60,7 +60,7 @@
 
     - name: set TTL attribute on the DynamoDB Table
       command: >
-        aws dynamodb update-time-to-live --table-name AemStackManagerTable
+        aws dynamodb update-time-to-live --table-name "{{stack_info.stack_outputs.AemStackManagerTableName}}"
            --time-to-live-specification Enabled=true,AttributeName=ttl
            --region "{{ aws.region }}"
       when: stack_info|succeeded and stack_info.changed == true
@@ -73,9 +73,11 @@
            --arg role "{{ stack_info.stack_outputs.SSMServiceRoleArn}}" \
            --arg bucket "{{ s3.data_bucket_name }}" \
            --arg backuparn "{{ stack_info.stack_outputs.BackupTopicArn}}" \
+           --arg dbtable "{{ stack_info.stack_outputs.AemStackManagerTableName }}" \
         '."ec2_run_command"."status-topic-arn"=$statusarn|'\
         '."ec2_run_command"."ssm-service-role-arn"=$role|'\
         '."ec2_run_command"."cmd-output-bucket"=$bucket|'\
+        '."ec2_run_command"."dynamodb-table"=$dbtable|'\
         '."offline_snapshot"."sns-topic-arn"=$backuparn' \
            ../../../lambda/config.json.template  >  "{{ stack_manager_tmp }}"/config.json
       when: stack_info|succeeded
@@ -94,7 +96,7 @@
 
     - name: Check if a Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "aem-stack-manager-cloud"
+        aws cloudformation describe-stacks --stack-name "{{ stack_manager.stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -111,7 +113,7 @@
 
     - name: Delete AEM Stack Manager Stack
       cloudformation:
-        stack_name: aem-stack-manager-cloud
+        stack_name: "{{ stack_manager.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:
