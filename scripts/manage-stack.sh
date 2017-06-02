@@ -41,9 +41,11 @@ extra_vars=(--extra-vars "stack_prefix=$stack_prefix")
 if [[ ${#config_paths[@]} -gt 0 ]]; then
   OIFS="${IFS}"
   IFS=$'\n'
-  for config_file in $( find -L "${config_paths[@]}" -maxdepth 1 -type f -a \( -name '*.yaml' -o -name '*.yml' \) ); do
-    echo "  Adding extra vars from file: ${config_file}"
-    extra_vars+=(--extra-vars "@$config_file")
+  for d in "${config_paths[@]}"; do
+    for config_file in $( find -L "${d}" -maxdepth 1 -type f -a \( -name '*.yaml' -o -name '*.yml' \) | sort ); do
+      echo "  Adding extra vars from file: ${config_file}"
+      extra_vars+=(--extra-vars "@$config_file")
+    done
   done
   IFS="${OIFS}"
 fi
