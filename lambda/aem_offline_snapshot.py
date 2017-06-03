@@ -107,6 +107,123 @@ def get_publish_ids(stack_prefix):
     return instance_ids_by_tags(filters)
 
 
+def manage_autoscaling_standby(stack_prefix, action, **kwargs):
+    """
+    put instances in an autoscaling group into or bring them out of standby mode
+    one of byComponent or byInstanceIds must be give and not both. If byInstanceIds
+    are given, it is assumed that all the instances are in the same group
+    """
+    if 'byComponent' in kwargs:
+            filters = [{
+                    'Name': 'tag:StackPrefix',
+                    'Values': [stack_prefix]
+                }, {
+                    'Name': 'instance-state-name',
+                    'Values': ['running']
+                }, {
+                    'Name': 'tag:Component',
+                    'Values': [kwargs['byComponent']]
+                }
+            ]
+    elif 'byInstanceIds' in kwargs:
+        filters = [{
+            'Name': 'instance-state-name',
+            'Values': ['running']
+            }, {
+                'Name': 'instance-id',
+                'Values': kwargs['byInstanceIds'][0:1]
+            }
+        ]
+    else:
+        raise Exception('neither byComponent or byInstanceIds found in arguments')
+
+    # find the autoscaling group those instances are in
+    response = ec2.describe_instances(
+        Filters=filters
+    )
+    response2 = json.loads(json.dumps(response, cls=MyEncoder))
+
+    instance_ids = []
+    if 'byComponent' in kwargs:
+        for reservation in response2['Reservations']:
+            instance_ids += [instance['InstanceId'] for instance in reservation['Instances']]
+    else:
+        instance_ids = kwargs['byInstanceIds']
+
+    instance_tags = response2['Reservations'][0]['Instances'][0]['Tags']
+    asg_name = [tag['Value'] for tag in instance_tags if tag['Key'] == 'aws:autoscaling:groupName'][0]
+
+    # try to get the min size of the atutocaling group
+    autoscaling = boto3.client('autoscaling')
+    asg_dcrb = autoscaling.describe_auto_scaling_groups(
+        AutoScalingGroupNames=[asg_name]
+    )
+    asg_min_size = asg_dcrb['AutoScalingGroups'][0]['MinSize']
+
+    # manage the instances standby mode
+    if action == 'enter':
+        autoscaling.update_auto_scaling_group(
+            AutoScalingGroupName=asg_name,
+            MinSize=asg_min_size - len(instance_ids)
+        )
+
+        autoscaling.enter_standby(
+            InstanceIds=instance_ids,
+            AutoScalingGroupName=asg_name,
+            ShouldDecrementDesiredCapacity=True
+        )
+    elif action == 'exit':
+        autoscaling.exit_standby(
+            InstanceIds=instance_ids,
+            AutoScalingGroupName=asg_name
+        )
+
+        autoscaling.update_auto_scaling_group(
+            AutoScalingGroupName=asg_name,
+            MinSize=asg_min_size + len(instance_ids)
+        )
+
+
+def retrieve_tag_value(instance_id, tag_key):
+    response = boto3.client('ec2').describe_tags(
+        Filters=[{
+            'Name': 'resource-id',
+            'Values': [instance_id]
+        }, {
+            'Name': 'key',
+            'Values': [tag_key]
+        }]
+    )
+
+    tags = { tag['Key']: tag['Value'] for tag in response['Tags']}
+
+    tag_value = None
+    if len(tags) != 0:
+        tag_value = tags[tag_key]
+
+    return tag_value
+
+
+def manage_lock_tag_on_instances(instances_ids, action):
+
+    lock_tag = {
+        'Key':'locked',
+        'Value': 'true'
+    }
+
+    if action == 'create':
+        boto3.client('ec2').create_tags(
+            Resources=instances_ids,
+            Tags=[lock_tag]
+        )
+    elif action == 'delete':
+        boto3.client('ec2').delete_tags(
+            Resources=instances_ids,
+            Tags=[lock_tag]
+
+        )
+
+
 def stack_health_check(stack_prefix, min_publish_instances):
     """
     Simple AEM stack health check based on the number of author-primary,
