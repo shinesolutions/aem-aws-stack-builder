@@ -93,6 +93,12 @@ Resources:
               - Effect: Allow
                 Action:
                   - "ec2:Describe*"
+                  - ec2:CreateTags
+                  - ec2:DeleteTags
+                  - "autoscaling:Describe*"
+                  - autoscaling:UpdateAutoScalingGroup
+                  - autoscaling:EnterStandby
+                  - autoscaling:ExitStandby
                 Resource: "*"
               - Effect: Allow
                 Action:

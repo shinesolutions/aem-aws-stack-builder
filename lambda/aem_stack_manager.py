@@ -202,7 +202,7 @@ def promote_author(message, ssm_common_params):
     return send_ssm_cmd(params)
 
 
-def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp, **kwargs):
+def put_state_in_dynamodb(table_name, command_id, environment, task, state, timestamp, **kwargs):
 
     """
     schema:
@@ -231,6 +231,9 @@ def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp,
         },
         'environment': {
             'S': environment
+        },
+        'task': {
+            'S': task
         },
         'state': {
             'S': state
@@ -270,7 +273,7 @@ def get_state_from_dynamodb(table_name, command_id):
         },
         ConsistentRead=True,
         ReturnConsumedCapacity='NONE',
-        ProjectionExpression='environment, #command_state, instance_info, externalId',
+        ProjectionExpression='environment, task, #command_state, instance_info, externalId',
         ExpressionAttributeNames={
             '#command_state': 'state'
         }
@@ -375,6 +378,7 @@ def sns_message_processor(event, context):
                 dynamodb_table,
                 respone['Command']['CommandId'],
                 stack_prefix,
+                message['task'],
                 respone['Command']['Status'],
                 respone['Command']['RequestedDateTime'],
                 ExternalId=external_id

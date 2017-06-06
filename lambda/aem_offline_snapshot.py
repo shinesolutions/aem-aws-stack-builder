@@ -159,12 +159,13 @@ def manage_autoscaling_standby(stack_prefix, action, **kwargs):
         AutoScalingGroupNames=[asg_name]
     )
     asg_min_size = asg_dcrb['AutoScalingGroups'][0]['MinSize']
+    asg_max_sie = asg_dcrb['AutoScalingGroups'][0]['MaxSize']
 
     # manage the instances standby mode
     if action == 'enter':
         autoscaling.update_auto_scaling_group(
             AutoScalingGroupName=asg_name,
-            MinSize=asg_min_size - len(instance_ids)
+            MinSize=max(asg_min_size - len(instance_ids), 0)
         )
 
         autoscaling.enter_standby(
@@ -180,7 +181,7 @@ def manage_autoscaling_standby(stack_prefix, action, **kwargs):
 
         autoscaling.update_auto_scaling_group(
             AutoScalingGroupName=asg_name,
-            MinSize=asg_min_size + len(instance_ids)
+            MinSize=min(asg_min_size + len(instance_ids), asg_max_sie)
         )
 
 
@@ -195,7 +196,7 @@ def retrieve_tag_value(instance_id, tag_key):
         }]
     )
 
-    tags = { tag['Key']: tag['Value'] for tag in response['Tags']}
+    tags = {tag['Key']: tag['Value'] for tag in response['Tags']}
 
     tag_value = None
     if len(tags) != 0:
@@ -207,7 +208,7 @@ def retrieve_tag_value(instance_id, tag_key):
 def manage_lock_tag_on_instances(instances_ids, action):
 
     lock_tag = {
-        'Key':'locked',
+        'Key': 'locked',
         'Value': 'true'
     }
 
@@ -239,10 +240,12 @@ def stack_health_check(stack_prefix, min_publish_instances):
     if (len(author_primary_instances) == 1 and
        len(author_standby_instances) == 1 and
        len(publish_instances) >= min_publish_instances):
+        paired_publish_dispatcher_id = retrieve_tag_value(publish_instances[0], 'PairInstanceId')
         return {
           'author-primary': author_primary_instances[0],
           'author-standby': author_standby_instances[0],
-          'publish': publish_instances[0]
+          'publish': publish_instances[0],
+          'publish-dispatcher': paired_publish_dispatcher_id
         }
 
     if len(author_primary_instances) != 1:
@@ -257,7 +260,7 @@ def stack_health_check(stack_prefix, min_publish_instances):
     return None
 
 
-def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp, **kwargs):
+def put_state_in_dynamodb(table_name, command_id, environment, task, state, timestamp, **kwargs):
 
     """
     schema:
@@ -265,6 +268,7 @@ def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp,
          has ran yet
     attr:
       environment: S usually stack_prefix
+      task: S the task this command is for, offline-snapshot, offline-compaction-snapshot, etc
       state: S STOP_AUTHOR_STANDBY, STOP_AUTHOR_PRIMARY, .... Success, Failed
       timestamp: S, example: 2017-05-16T01:57:05.9Z
       ttl: one day
@@ -287,6 +291,9 @@ def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp,
         'environment': {
             'S': environment
         },
+        'task': {
+            'S': task
+        },
         'state': {
             'S': state
         },
@@ -307,6 +314,16 @@ def put_state_in_dynamodb(table_name, command_id, environment, state, timestamp,
     if 'ExternalId' in kwargs and kwargs['ExternalId'] is not None:
         item['externalId'] = {'S': kwargs['ExternalId']}
 
+    # the following three attributes are exclusively for compacting remaining publish instances
+    if 'PublishIds' in kwargs and kwargs['PublishIds'] is not None:
+        item['publish_ids'] = {'SS': kwargs['PublishIds']}
+
+    if 'DispatcherIds' in kwargs and kwargs['DispatcherIds'] is not None:
+        item['dispatcher_ids'] = {'SS': kwargs['DispatcherIds']}
+
+    if 'SubState' in kwargs and kwargs['SubState'] is not None:
+        item['sub_state'] = {'S': kwargs['SubState']}
+
     dynamodb.put_item(
         TableName=table_name,
         Item=item
@@ -324,11 +341,7 @@ def get_state_from_dynamodb(table_name, command_id):
             }
         },
         ConsistentRead=True,
-        ReturnConsumedCapacity='NONE',
-        ProjectionExpression='environment, #command_state, instance_info, externalId',
-        ExpressionAttributeNames={
-            '#command_state': 'state'
-        }
+        ReturnConsumedCapacity='NONE'
     )
 
     return item
@@ -373,6 +386,154 @@ def publish_status_message(topic, message):
         MessageStructure='json',
         Message=json.dumps(payload)
     )
+
+
+def get_remaining_publish_dispatcher_pairs(stack_prefix, completed_publish_id):
+
+    filters = [
+        {
+            'Name': 'tag:StackPrefix',
+            'Values': [stack_prefix]
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
+            'Name': 'tag:Component',
+            'Values': ['publish']
+        }
+    ]
+
+    publish_ids = instance_ids_by_tags(filters)
+    publish_dispatcher_ids = []
+    for publish_id in publish_ids:
+        if publish_id != completed_publish_id:
+            publish_dispatcher_id = retrieve_tag_value(publish_id, 'PairInstanceId')
+            publish_dispatcher_ids.append(publish_dispatcher_id)
+
+    return publish_ids, publish_dispatcher_ids
+
+
+def compact_remaining_publish_instances(context):
+    """
+    compact the remaining publish instances not covered in the main flow
+    """
+
+    # compaction_context = {
+    #     'StackPrefix': stack_prefix,
+    #     'Task': task,
+    #     'State': state,
+    #     'ExternalId': external_id,
+    #     'LastCmdId': cmd_id,
+    #     'LastCmdResponse': response,
+    #     'DynamoDbTable': dynamodb_table,
+    #     'TaskDocumentMapping': task_document_mapping,
+    #     'SSMCommonParams': ssm_common_params,
+    #     'Message': message,
+    #     'PublishIds': item['Item']['publish_ids']['SS'],
+    #     'DispatcherIds': item['Item']['dispatcher_ids']['SS'],
+    #     'SubState': item['Item']['sub_state']['S'],
+    #     'StatusTopic': status_topic_arn
+    # }
+
+    cmd_id = context['LastCmdId']
+    sub_state = context['SubState']
+
+    if sub_state == 'PUBLISH_READY':
+
+        manage_autoscaling_standby(context['StackPrefix'], 'enter', byInstanceIds=context['DispatcherIds'])
+        ssm_params = context['SSMCommonParams'].copy()
+        ssm_params.update(
+            {
+                'InstanceIds': context['PublishIds'],
+                'DocumentName': context['TaskDocumentMapping']['manage-service'],
+                'Comment': 'Stop AEM service on remaining publish instances',
+                'Parameters': {
+                    'action': ['stop']
+                }
+            }
+        )
+        response = send_ssm_cmd(ssm_params)
+
+        put_state_in_dynamodb(
+            context['DynamoDbTable'],
+            response['Command']['CommandId'],
+            context['StackPrefix'],
+            context['Task'],
+            context['State'],
+            context['Message']['eventTime'],
+            ExternalId=context['ExternalId'],
+            LastCommand=cmd_id,
+            PublishIds=context['PublishIds'],
+            DispatcherIds=context['DispatcherIds'],
+            SubState='STOP_PUBLISH'
+        )
+
+    elif sub_state == 'STOP_PUBLISH':
+        ssm_params = context['SSMCommonParams'].copy()
+        ssm_params.update(
+            {
+                'InstanceIds': context['PublishIds'],
+                'DocumentName': context['TaskDocumentMapping']['offline-compaction'],
+                'Comment': 'Run offline compaction on all remaining publish instances'
+            }
+        )
+
+        response = send_ssm_cmd(ssm_params)
+        put_state_in_dynamodb(
+            context['DynamoDbTable'],
+            response['Command']['CommandId'],
+            context['StackPrefix'],
+            context['Task'],
+            context['State'],
+            context['Message']['eventTime'],
+            ExternalId=context['ExternalId'],
+            LastCommand=cmd_id,
+            PublishIds=context['PublishIds'],
+            DispatcherIds=context['DispatcherIds'],
+            SubState='COMPACT_PUBLISH'
+        )
+    elif sub_state == 'COMPACT_PUBLISH':
+        ssm_params = context['SSMCommonParams'].copy()
+        ssm_params.update(
+            {
+                'InstanceIds': context['PublishIds'],
+                'DocumentName': context['TaskDocumentMapping']['manage-service'],
+                'Comment': 'Start AEM Service on all the publish instances',
+                'Parameters': {
+                    'action': ['start']
+                }
+            }
+        )
+
+        response = send_ssm_cmd(ssm_params)
+        put_state_in_dynamodb(
+            context['DynamoDbTable'],
+            response['Command']['CommandId'],
+            context['StackPrefix'],
+            context['Task'],
+            context['State'],
+            context['Message']['eventTime'],
+            ExternalId=context['ExternalId'],
+            LastCommand=cmd_id,
+            PublishIds=context['PublishIds'],
+            DispatcherIds=context['DispatcherIds'],
+            SubState='START_PUBLISH'
+        )
+    elif sub_state == 'START_PUBLISH':
+        manage_autoscaling_standby(context['StackPrefix'], 'exit', byInstanceIds=context['DispatcherIds'])
+        update_state_in_dynamodb(
+            context['DynamoDbTable'],
+            cmd_id,
+            'Success',
+            context['Message']['eventTime'],
+        )
+
+        manage_lock_tag_on_instances(get_author_primary_ids(context['StackPrefix']), 'delete')
+
+        publish_status_message(
+            context['StatusTopic'],
+            json.dumps(context['Message'])
+        )
 
 
 def sns_message_processor(event, context):
@@ -426,18 +587,36 @@ def sns_message_processor(event, context):
 
         # message that start-offline snapshot has a task key
         response = None
-        if 'task' in message and message['task'] == 'offline-snapshot':
+
+        if 'task' in message and (message['task'] == 'offline-snapshot' or
+                                  message['task'] == 'offline-compaction-snapshot'):
 
             stack_prefix = message['stack_prefix']
+            task = message['task']
+
             external_id = None
             if 'externalId' in message:
                 external_id = message['externalId']
 
-            instances = stack_health_check(
-                stack_prefix,
-                offline_snapshot_config['min-publish-instances']
-            )
-            if instances is None:
+            # enclosed in try is sanity check: stack health no concurrent runs
+            try:
+                instances = stack_health_check(
+                    stack_prefix,
+                    offline_snapshot_config['min-publish-instances']
+                )
+                if instances is None:
+                    raise RuntimeError('Unhealthy Stack')
+
+                # check and acquire stack lock
+                lock_tag = retrieve_tag_value(instances['author-primary'], 'locked')
+                if lock_tag is None or lock_tag != 'true':
+                    manage_lock_tag_on_instances([instances['author-primary']], 'create')
+                else:
+                    logger.warn("Cannot have two offline snapshots/compactions run in parallel")
+                    raise RuntimeError('Another offline snapshot backup/compaction backup is running')
+
+            except RuntimeError:
+                # send out notfication
                 publish_status_message(
                     status_topic_arn,
                     json.dumps({
@@ -449,19 +628,25 @@ def sns_message_processor(event, context):
                 # Need to put a record in daynamodb with this id duplicated to command_id
                 if external_id is not None:
                     put_state_in_dynamodb(
-                        dynamodb_table, external_id, stack_prefix, 'Failed',
+                        dynamodb_table, external_id, stack_prefix, task, 'Failed',
                         datetime.datetime.utcnow().isoformat()[:-3] + 'Z',
                         ExternalId=external_id
                     )
 
-                raise Exception('Unhealthy Stack')
+                # rethrow to fail the execution
+                raise
+
+            # put both author-dispather in standby mode after health check
+            manage_autoscaling_standby(stack_prefix, 'enter', byComponent='author-dispatcher')
+            # put both publish-dispatch in standby mode
+            manage_autoscaling_standby(stack_prefix, 'enter', byInstanceIds=[instances['publish-dispatcher']])
 
             ssm_params = ssm_common_params.copy()
             ssm_params.update(
                 {
                     'InstanceIds': [instances['author-standby']],
                     'DocumentName': task_document_mapping['manage-service'],
-                    'Comment': 'Kick start offline snapshot with stopping AEM service on Author standby instance',
+                    'Comment': 'Kick start offline backup with stopping AEM service on Author standby instance',
                     'Parameters': {
                         'action': ['stop']
                     }
@@ -480,6 +665,7 @@ def sns_message_processor(event, context):
                 dynamodb_table,
                 response['Command']['CommandId'],
                 stack_prefix,
+                task,
                 'STOP_AUTHOR_STANDBY',
                 datetime.datetime.utcnow().isoformat()[:-3] + 'Z',
                 **supplement
@@ -488,22 +674,15 @@ def sns_message_processor(event, context):
         else:
             cmd_id = message['commandId']
 
-            if message['status'] == 'Failed':
-                publish_status_message(
-                    status_topic_arn,
-                    json.dumps(message)
-                    )
-
-                update_state_in_dynamodb(dynamodb_table, cmd_id, 'Failed', message['eventTime'])
-                raise Exception('Command {} failed.'.format(cmd_id))
-
             # get back the state of this task
             item = get_state_from_dynamodb(
                 dynamodb_table,
                 cmd_id
             )
-            state = item['Item']['state']['S']
+
             stack_prefix = item['Item']['environment']['S']
+            task = item['Item']['task']['S']
+            state = item['Item']['state']['S']
             instance_info = item['Item']['instance_info']['M']
             external_id = None
             if 'externalId' in item:
@@ -512,6 +691,23 @@ def sns_message_processor(event, context):
             author_primary_id = instance_info['author-primary']['S']
             author_standby_id = instance_info['author-standby']['S']
             publish_id = instance_info['publish']['S']
+            publish_dispatcher_id = instance_info['publish-dispatcher']['S']
+
+            if message['status'] == 'Failed':
+                publish_status_message(
+                    status_topic_arn,
+                    json.dumps(message)
+                )
+
+                update_state_in_dynamodb(dynamodb_table, cmd_id, 'Failed', message['eventTime'])
+                # move author-dispatcher instances out of standby
+                manage_autoscaling_standby(stack_prefix, 'exit', byComponent='author-dispatcher')
+                # move publish-dispatcher instnace out of standby
+                manage_autoscaling_standby(stack_prefix, 'exit', byInstanceIds=[publish_dispatcher_id])
+
+                manage_lock_tag_on_instances([author_primary_id], 'delete')
+
+                raise RuntimeError('Command {} failed.'.format(cmd_id))
 
             if state == 'STOP_AUTHOR_STANDBY':
                 ssm_params = ssm_common_params.copy()
@@ -531,6 +727,7 @@ def sns_message_processor(event, context):
                     dynamodb_table,
                     response['Command']['CommandId'],
                     stack_prefix,
+                    task,
                     'STOP_AUTHOR_PRIMARY',
                     message['eventTime'],
                     ExternalId=external_id,
@@ -540,11 +737,56 @@ def sns_message_processor(event, context):
 
             elif state == 'STOP_AUTHOR_PRIMARY':
                 ssm_params = ssm_common_params.copy()
+                if task == 'offline-snapshot':
+                    ssm_params.update(
+                        {
+                            'InstanceIds': [author_primary_id, author_standby_id, publish_id],
+                            'DocumentName': task_document_mapping['offline-snapshot'],
+                            'Comment': 'Run offline snapshot on Author and a select publish instances'
+                        }
+                    )
+
+                    response = send_ssm_cmd(ssm_params)
+                    put_state_in_dynamodb(
+                        dynamodb_table,
+                        response['Command']['CommandId'],
+                        stack_prefix,
+                        task,
+                        'OFFLINE_BACKUP',
+                        message['eventTime'],
+                        ExternalId=external_id,
+                        InstanceInfo=instance_info,
+                        LastCommand=cmd_id
+                    )
+                elif task == 'offline-compaction-snapshot':
+                    ssm_params.update(
+                        {
+                            'InstanceIds': [author_primary_id, author_standby_id, publish_id],
+                            'DocumentName': task_document_mapping['offline-compaction'],
+                            'Comment': 'Run offline compaction on Author and a selected Publish instances'
+                        }
+                    )
+
+                    response = send_ssm_cmd(ssm_params)
+                    put_state_in_dynamodb(
+                        dynamodb_table,
+                        response['Command']['CommandId'],
+                        stack_prefix,
+                        task,
+                        'OFFLINE_COMPACTION',
+                        message['eventTime'],
+                        ExternalId=external_id,
+                        InstanceInfo=instance_info,
+                        LastCommand=cmd_id
+                    )
+
+            elif state == 'OFFLINE_COMPACTION':
+                ssm_params = ssm_common_params.copy()
                 ssm_params.update(
                     {
-                        'InstanceIds': [author_primary_id, author_standby_id],
-                        'DocumentName': task_document_mapping['offline-compaction'],
-                        'Comment': 'Run offline compaction on Author primary and standby instances'
+                        'InstanceIds': [author_primary_id, author_standby_id, publish_id],
+                        'DocumentName': task_document_mapping['offline-snapshot'],
+                        'Comment': 'Run offline EBS snapshot on Author and a selected Publish instances'
                     }
                 )
 
@@ -553,6 +795,7 @@ def sns_message_processor(event, context):
                     dynamodb_table,
                     response['Command']['CommandId'],
                     stack_prefix,
+                    task,
                     'OFFLINE_BACKUP',
                     message['eventTime'],
                     ExternalId=external_id,
@@ -560,28 +803,6 @@ def sns_message_processor(event, context):
                     LastCommand=cmd_id
                 )
 
-            # elif state == 'OFFLINE_COMPACTION':
-            #     ssm_params = ssm_common_params.copy()
-            #     ssm_params.update(
-            #         {
-            #             'InstanceIds': [author_primary_id, publish_id],
-            #             'DocumentName': task_document_mapping['offline-snapshot'],
-            #             'Comment': 'Run offline EBS snapshot on Author primary and Publish instances'
-            #         }
-            #     )
-            #
-            #     response = send_ssm_cmd(ssm_params)
-            #     put_state_in_dynamodb(
-            #         dynamodb_table,
-            #         response['Command']['CommandId'],
-            #         stack_prefix,
-            #         'OFFLINE_BACKUP',
-            #         message['eventTime'],
-            #         ExternalId=external_id,
-            #         InstanceInfo=instance_info,
-            #         LastCommand=cmd_id
-            #     )
-            #
             elif state == 'OFFLINE_BACKUP':
                 ssm_params = ssm_common_params.copy()
                 ssm_params.update(
@@ -600,6 +821,7 @@ def sns_message_processor(event, context):
                     dynamodb_table,
                     response['Command']['CommandId'],
                     stack_prefix,
+                    task,
                     'START_AUTHOR_PRIMARY',
                     message['eventTime'],
                     ExternalId=external_id,
@@ -624,6 +846,7 @@ def sns_message_processor(event, context):
                     dynamodb_table,
                     response['Command']['CommandId'],
                     stack_prefix,
+                    task,
                     'START_AUTHOR_STANDBY',
                     message['eventTime'],
                     ExternalId=external_id,
@@ -632,14 +855,80 @@ def sns_message_processor(event, context):
                 )
 
             elif state == 'START_AUTHOR_STANDBY':
-                publish_status_message(
-                    status_topic_arn,
-                    json.dumps(message)
+
+                # this is the success notification message
+                if task == 'offline-snapshot':
+                    publish_status_message(
+                        status_topic_arn,
+                        json.dumps(message)
+                        )
+                    update_state_in_dynamodb(dynamodb_table, cmd_id, 'Success', message['eventTime'])
+                    print('Offline backup for environment {} finished successfully'.format(stack_prefix))
+
+                    # move author-dispatcher instances out of standby
+                    manage_autoscaling_standby(stack_prefix, 'exit', byComponent='author-dispatcher')
+                    # move publish-dispatcher instance out of standby
+                    manage_autoscaling_standby(stack_prefix, 'exit', byInstanceIds=[publish_dispatcher_id])
+
+                    manage_lock_tag_on_instances(author_primary_id, 'delete')
+
+                elif task == 'offline-compaction-snapshot':
+                    # move author-dispatcher instances out of standby
+                    manage_autoscaling_standby(stack_prefix, 'exit', byComponent='author-dispatcher')
+                    # move publish-dispatcher instance out of standby
+                    manage_autoscaling_standby(stack_prefix, 'exit', byInstanceIds=[publish_dispatcher_id])
+
+                    remaining_pub_disp_pairs = get_remaining_publish_dispatcher_pairs(stack_prefix, publish_id)
+
+                    # need to continue with compact other publish instances
+                    # start with checking the selected publish instance is ready after compaction
+                    ssm_params = ssm_common_params.copy()
+                    ssm_params.update(
+                        {
+                            'InstanceIds': publish_id,
+                            'DocumentName': task_document_mapping['wait-until-ready'],
+                            'Comment': 'Wait Until AEM Service is properly up on the selected publish instance'
+                        }
                     )
-                update_state_in_dynamodb(dynamodb_table, cmd_id, 'Success', message['eventTime'])
-                print('Offline backup for environment {} finished successfully'.format(stack_prefix))
+                    response = send_ssm_cmd(ssm_params)
+
+                    put_state_in_dynamodb(
+                        dynamodb_table,
+                        response['Command']['CommandId'],
+                        stack_prefix,
+                        task,
+                        'COMPACT_REMAINING_PUBLISHERS',
+                        message['eventTime'],
+                        ExternalId=external_id,
+                        InstanceInfo=instance_info,
+                        LastCommand=cmd_id,
+                        PublishIds=remaining_pub_disp_pairs[0],
+                        DispatcherIds=remaining_pub_disp_pairs[1],
+                        SubState='PUBLISH_READY'
+                    )
+
+            elif state == 'COMPACT_REMAINING_PUBLISHERS':
+
+                compaction_context = {
+                    'StackPrefix': stack_prefix,
+                    'Task': task,
+                    'State': state,
+                    'ExternalId': external_id,
+                    'LastCmdId': cmd_id,
+                    'LastCmdResponse': response,
+                    'DynamoDbTable': dynamodb_table,
+                    'TaskDocumentMapping': task_document_mapping,
+                    'SSMCommonParams': ssm_common_params,
+                    'Message': message,
+                    'PublishIds': item['Item']['publish_ids']['SS'],
+                    'DispatcherIds': item['Item']['dispatcher_ids']['SS'],
+                    'SubState': item['Item']['sub_state']['S'],
+                    'StatusTopic': status_topic_arn
+                }
+                logger.debug('Dumping context for remaining publish compaction: {}'.format(compaction_context))
+                compact_remaining_publish_instances(compaction_context)
 
             else:
-                raise Exception('Unexpected state {} for {}'.format(state, cmd_id))
+                raise RuntimeError('Unexpected state {} for {}'.format(state, cmd_id))
 
             return response
