@@ -1,3 +1,6 @@
+### 1.1.1
+* Update aem-aws-stack-provisioner version to 1.1.1
+
 ### 1.1.0
 * Load Balancers and Auto Scaling Groups can now be created for a variety of network setups. i.e. 1-n Availability Zones, 1-n Subnets
 * Change the Publish Auto Scaling Group to use EC2 Health Check Type
