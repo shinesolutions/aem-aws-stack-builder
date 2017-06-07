@@ -404,11 +404,11 @@ def get_remaining_publish_dispatcher_pairs(stack_prefix, completed_publish_id):
     ]
 
     publish_ids = instance_ids_by_tags(filters)
+    publish_ids.remove(completed_publish_id)
     publish_dispatcher_ids = []
     for publish_id in publish_ids:
-        if publish_id != completed_publish_id:
-            publish_dispatcher_id = retrieve_tag_value(publish_id, 'PairInstanceId')
-            publish_dispatcher_ids.append(publish_dispatcher_id)
+        publish_dispatcher_id = retrieve_tag_value(publish_id, 'PairInstanceId')
+        publish_dispatcher_ids.append(publish_dispatcher_id)
 
     return publish_ids, publish_dispatcher_ids
 
@@ -463,6 +463,7 @@ def compact_remaining_publish_instances(context):
             context['Message']['eventTime'],
             ExternalId=context['ExternalId'],
             LastCommand=cmd_id,
+            InstnaceInfo=context['InstanceInfo'],
             PublishIds=context['PublishIds'],
             DispatcherIds=context['DispatcherIds'],
             SubState='STOP_PUBLISH'
@@ -488,6 +489,7 @@ def compact_remaining_publish_instances(context):
             context['Message']['eventTime'],
             ExternalId=context['ExternalId'],
             LastCommand=cmd_id,
+            InstnaceInfo=context['InstanceInfo'],
             PublishIds=context['PublishIds'],
             DispatcherIds=context['DispatcherIds'],
             SubState='COMPACT_PUBLISH'
@@ -515,6 +517,7 @@ def compact_remaining_publish_instances(context):
             context['Message']['eventTime'],
             ExternalId=context['ExternalId'],
             LastCommand=cmd_id,
+            InstnaceInfo=context['InstanceInfo'],
             PublishIds=context['PublishIds'],
             DispatcherIds=context['DispatcherIds'],
             SubState='START_PUBLISH'
@@ -587,7 +590,6 @@ def sns_message_processor(event, context):
 
         # message that start-offline snapshot has a task key
         response = None
-
         if 'task' in message and (message['task'] == 'offline-snapshot' or
                                   message['task'] == 'offline-compaction-snapshot'):
 
@@ -885,7 +887,7 @@ def sns_message_processor(event, context):
                     ssm_params = ssm_common_params.copy()
                     ssm_params.update(
                         {
-                            'InstanceIds': publish_id,
+                            'InstanceIds': [publish_id],
                             'DocumentName': task_document_mapping['wait-until-ready'],
                             'Comment': 'Wait Until AEM Service is properly up on the selected publish instance'
                         }
@@ -923,7 +925,8 @@ def sns_message_processor(event, context):
                     'PublishIds': item['Item']['publish_ids']['SS'],
                     'DispatcherIds': item['Item']['dispatcher_ids']['SS'],
                     'SubState': item['Item']['sub_state']['S'],
-                    'StatusTopic': status_topic_arn
+                    'StatusTopic': status_topic_arn,
+                    'InstanceInfo': instance_info
                 }
                 logger.debug('Dumping context for remaining publish compaction: {}'.format(compaction_context))
                 compact_remaining_publish_instances(compaction_context)
