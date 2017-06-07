@@ -113,16 +113,19 @@ def parse_args():
     return p.parse_args()
 
 
-def resolve_local_path(path, copy_basename_from = ''):
+def resolve_local_path(path, copy_basename_from = '', create_missing_dirs = False):
     log.debug('resolve_local_path "%s" "%s"', path, copy_basename_from)
     path = os.path.expanduser(path)
     basename = os.path.basename(copy_basename_from)
     if not os.path.exists(path):
-        log.error('Local path does not exist: %s', path)
-        raise SystemExit(1)
-    path = os.path.abspath(path)
+        if create_missing_dirs and path.endswith('/'):
+            os.makedirs(path)
+        else:
+            log.error('Local path does not exist: %s', path)
+            raise SystemExit(1)
     if os.path.isdir(path):
         path = os.path.join(path, basename)
+    path = os.path.abspath(path)
     return path
 
 
@@ -177,7 +180,7 @@ def main():
     elif source.scheme == 's3':
         bucket     = source.netloc
         key        = resolve_s3_key(source.path)
-        local_path = resolve_local_path(destination.path, source.path)
+        local_path = resolve_local_path(destination.path, source.path, True)
         log.debug('Download %s : %s => %s', bucket, key, local_path)
         s3.download_file(bucket, key, local_path)
     elif destination.scheme == 's3':
