@@ -21,12 +21,12 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-2e485e4d
-  publish: ami-857761e6
-  author_dispatcher: ami-07050a64
-  publish_dispatcher: ami-07050a64
-  orchestrator: ami-56303f35
-  chaos_monkey: ami-56303f35
+  author: ami-e7687e84
+  publish: ami-46160025
+  author_dispatcher: ami-cb687ea8
+  publish_dispatcher: ami-cb687ea8
+  orchestrator: ami-6e6b7d0d
+  chaos_monkey: ami-6e6b7d0d
 
 security_groups:
   stack_name: aem-security-groups-stack
@@ -74,7 +74,7 @@ messaging:
     contact_email: test@email.com
 
 compute:
-  key_pair_name: sandpit-key
+  key_pair_name: michaeld-sandpit
   inbound_from_bastion_host_security_group: sg-a5ac6cc2
 
 s3:
