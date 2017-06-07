@@ -119,6 +119,7 @@ def resolve_local_path(path, copy_basename_from = '', create_missing_dirs = Fals
     basename = os.path.basename(copy_basename_from)
     if not os.path.exists(path):
         if create_missing_dirs and path.endswith('/'):
+            log.info('Creating directories: %s', path)
             os.makedirs(path)
         else:
             log.error('Local path does not exist: %s', path)
