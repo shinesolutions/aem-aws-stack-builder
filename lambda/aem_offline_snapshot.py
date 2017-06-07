@@ -600,7 +600,7 @@ def sns_message_processor(event, context):
             if 'externalId' in message:
                 external_id = message['externalId']
 
-            # enclosed in try is sanity check: stack health no concurrent runs
+            # enclosed in try is sanity check: stack health and no concurrent runs
             try:
                 instances = stack_health_check(
                     stack_prefix,
