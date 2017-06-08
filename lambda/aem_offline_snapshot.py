@@ -463,7 +463,7 @@ def compact_remaining_publish_instances(context):
             context['Message']['eventTime'],
             ExternalId=context['ExternalId'],
             LastCommand=cmd_id,
-            InstnaceInfo=context['InstanceInfo'],
+            InstanceInfo=context['InstanceInfo'],
             PublishIds=context['PublishIds'],
             DispatcherIds=context['DispatcherIds'],
             SubState='STOP_PUBLISH'
@@ -489,7 +489,7 @@ def compact_remaining_publish_instances(context):
             context['Message']['eventTime'],
             ExternalId=context['ExternalId'],
             LastCommand=cmd_id,
-            InstnaceInfo=context['InstanceInfo'],
+            InstanceInfo=context['InstanceInfo'],
             PublishIds=context['PublishIds'],
             DispatcherIds=context['DispatcherIds'],
             SubState='COMPACT_PUBLISH'
@@ -517,7 +517,7 @@ def compact_remaining_publish_instances(context):
             context['Message']['eventTime'],
             ExternalId=context['ExternalId'],
             LastCommand=cmd_id,
-            InstnaceInfo=context['InstanceInfo'],
+            InstanceInfo=context['InstanceInfo'],
             PublishIds=context['PublishIds'],
             DispatcherIds=context['DispatcherIds'],
             SubState='START_PUBLISH'
