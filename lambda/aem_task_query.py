@@ -60,7 +60,7 @@ def query_state_by_external_id(table_name, external_id):
     return task_state
 
 
-def sns_message_processor(event, context):
+def handler(event, context):
 
     # reading in config info from either s3 or within bundle
     bucket = os.getenv('S3_BUCKET')

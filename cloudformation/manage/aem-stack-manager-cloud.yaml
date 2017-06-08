@@ -185,7 +185,7 @@ Resources:
           LOG_LEVEL: "20"
           S3_BUCKET: !Ref S3Bucket
           S3_PREFIX: !Ref S3Prefix
-      Handler: aem_task_query.sns_message_processor
+      Handler: aem_task_query.handler
       MemorySize: 128
       Role: !GetAtt LambdaServiceRole.Arn
       Runtime: python2.7
@@ -356,3 +356,7 @@ Outputs:
   AemStackManagerTableName:
     Description: DynamoDB table name for AEM stack manager
     Value: !Ref StackManagerTable
+
+  TaskStatusQueryLambda:
+    Description: Task status quer lambda function name
+    Value: !Ref QueryLambdaFunction
