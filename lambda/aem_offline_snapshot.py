@@ -852,7 +852,7 @@ def sns_message_processor(event, context):
                     # move publish-dispatcher instance out of standby
                     manage_autoscaling_standby(stack_prefix, 'exit', byInstanceIds=[publish_dispatcher_id])
 
-                    manage_lock_tag_on_instances(author_primary_id, 'delete')
+                    manage_lock_tag_on_instances([author_primary_id], 'delete')
 
                 elif task == 'offline-compaction-snapshot':
                     # move author-dispatcher instances out of standby
