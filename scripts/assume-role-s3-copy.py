@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys, os, logging, argparse, boto3, socket, textwrap
+from yaml import safe_load
 from urlparse import urlparse
 from socket import gethostname as ghn
 
@@ -100,6 +101,11 @@ def parse_args():
     )
 
     p.add_argument(
+        '--extra-args',
+        metavar = 'FILE',
+        help    = 'A YAML or JSON file to load extra upload args from.',
+    )
+    p.add_argument(
         'source',
         metavar = 'SRC',
         help    = 'A local path or s3://<bucket>/<path> URL.',
@@ -188,8 +194,9 @@ def main():
         local_path = resolve_local_path(source.path)
         bucket     = destination.netloc
         key        = resolve_s3_key(destination.path, local_path)
-        log.debug('Upload %s => %s : %s', local_path, bucket, key)
-        s3.upload_file(local_path, bucket, key)
+        extra_args = safe_load(open(args.extra_args)) if args.extra_args else {}
+        log.debug('Upload %s => %s : %s (%r)', local_path, bucket, key, extra_args)
+        s3.upload_file(local_path, bucket, key, ExtraArgs = extra_args)
     else:
         log.error('At least one of source or destination must be an S3 URL.')
         raise SystemExit(1)
