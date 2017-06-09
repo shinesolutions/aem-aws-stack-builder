@@ -687,7 +687,7 @@ def sns_message_processor(event, context):
             state = item['Item']['state']['S']
             instance_info = item['Item']['instance_info']['M']
             external_id = None
-            if 'externalId' in item:
+            if 'externalId' in item['Item']:
                 external_id = item['Item']['externalId']['S']
 
             author_primary_id = instance_info['author-primary']['S']
