@@ -533,11 +533,6 @@ def compact_remaining_publish_instances(context):
 
         manage_lock_tag_on_instances(get_author_primary_ids(context['StackPrefix']), 'delete')
 
-        publish_status_message(
-            context['StatusTopic'],
-            json.dumps(context['Message'])
-        )
-
 
 def sns_message_processor(event, context):
     """
@@ -618,13 +613,6 @@ def sns_message_processor(event, context):
                     raise RuntimeError('Another offline snapshot backup/compaction backup is running')
 
             except RuntimeError:
-                # send out notfication
-                publish_status_message(
-                    status_topic_arn,
-                    json.dumps({
-                        'status': 'Failed'
-                    })
-                )
 
                 # if externalId is present, it means other parties are interested in the status.
                 # Need to put a record in daynamodb with this id duplicated to command_id
@@ -696,10 +684,6 @@ def sns_message_processor(event, context):
             publish_dispatcher_id = instance_info['publish-dispatcher']['S']
 
             if message['status'] == 'Failed':
-                publish_status_message(
-                    status_topic_arn,
-                    json.dumps(message)
-                )
 
                 update_state_in_dynamodb(dynamodb_table, cmd_id, 'Failed', message['eventTime'])
                 # move author-dispatcher instances out of standby
@@ -860,10 +844,6 @@ def sns_message_processor(event, context):
 
                 # this is the success notification message
                 if task == 'offline-snapshot':
-                    publish_status_message(
-                        status_topic_arn,
-                        json.dumps(message)
-                        )
                     update_state_in_dynamodb(dynamodb_table, cmd_id, 'Success', message['eventTime'])
                     print('Offline backup for environment {} finished successfully'.format(stack_prefix))
 
