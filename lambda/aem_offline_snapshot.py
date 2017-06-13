@@ -7,6 +7,7 @@ orchestrate sequence of steps
 
 import os
 import boto3
+import botocore
 import logging
 import json
 import datetime
@@ -205,25 +206,56 @@ def retrieve_tag_value(instance_id, tag_key):
     return tag_value
 
 
-def manage_lock_tag_on_instances(instances_ids, action):
+def manage_lock_for_environment(table_name, lock, action):
+    """
+    use lock as command_id to prevent concurrent backup processes
+    """
 
-    lock_tag = {
-        'Key': 'locked',
-        'Value': 'true'
-    }
+    succeeded = False
 
-    if action == 'create':
-        boto3.client('ec2').create_tags(
-            Resources=instances_ids,
-            Tags=[lock_tag]
-        )
-    elif action == 'delete':
-        boto3.client('ec2').delete_tags(
-            Resources=instances_ids,
-            Tags=[lock_tag]
+    if action == 'trylock':
+        try:
+            # put a timestamp shows when the lock is set
+            timestamp = datetime.datetime.utcnow()
 
-        )
+            # item ttl is set to 1 day
+            ttl = (timestamp - datetime.datetime.utcfromtimestamp(0)).total_seconds()
+            ttl += datetime.timedelta(days=1).total_seconds()
 
+            item = {
+                'command_id': {
+                    'S': lock
+                },
+                'timestamp': {
+                    'S': timestamp.isoformat()[:-3] + 'Z'
+                },
+                'ttl': {
+                    'N': str(ttl)
+                }
+            }
+
+            dynamodb.put_item(
+                TableName=table_name,
+                Item=item,
+                ConditionExpression='attribute_not_exists(command_id)',
+                ReturnValues='NONE'
+            )
+            succsucceededeed = True
+        except botocore.exceptions.ClientError:
+            succeeded = False
+
+    elif action == 'unlock':
+         dynamodb.delete_item(
+            TableName=table_name,
+            Key={
+                'command_id': {
+                    'S': lock
+                }
+            }
+         )
+         succeeded = True
+
+    return succeeded
 
 def stack_health_check(stack_prefix, min_publish_instances):
     """
@@ -531,7 +563,10 @@ def compact_remaining_publish_instances(context):
             context['Message']['eventTime'],
         )
 
-        manage_lock_tag_on_instances(get_author_primary_ids(context['StackPrefix']), 'delete')
+        manage_lock_for_environment(
+            context['DynamoDbTable',
+            context['StackPrefix'] + '_backup_lock'],
+            'unlock')
 
 
 def sns_message_processor(event, context):
@@ -604,11 +639,9 @@ def sns_message_processor(event, context):
                 if instances is None:
                     raise RuntimeError('Unhealthy Stack')
 
-                # check and acquire stack lock
-                lock_tag = retrieve_tag_value(instances['author-primary'], 'locked')
-                if lock_tag is None or lock_tag != 'true':
-                    manage_lock_tag_on_instances([instances['author-primary']], 'create')
-                else:
+                # try to acquire stack lock
+                locked = manage_lock_for_environment(dynamodb_table, stack_prefix + '_backup_lock', 'trylock')
+                if locked == False:
                     logger.warn("Cannot have two offline snapshots/compactions run in parallel")
                     raise RuntimeError('Another offline snapshot backup/compaction backup is running')
 
@@ -691,7 +724,7 @@ def sns_message_processor(event, context):
                 # move publish-dispatcher instnace out of standby
                 manage_autoscaling_standby(stack_prefix, 'exit', byInstanceIds=[publish_dispatcher_id])
 
-                manage_lock_tag_on_instances([author_primary_id], 'delete')
+                manage_lock_for_environment(dynamodb_table, stack_prefix + '_backup_lock', 'unlock')
 
                 raise RuntimeError('Command {} failed.'.format(cmd_id))
 
@@ -852,7 +885,7 @@ def sns_message_processor(event, context):
                     # move publish-dispatcher instance out of standby
                     manage_autoscaling_standby(stack_prefix, 'exit', byInstanceIds=[publish_dispatcher_id])
 
-                    manage_lock_tag_on_instances([author_primary_id], 'delete')
+                    manage_lock_for_environment(dynamodb_table, stack_prefix + '_backup_lock', 'unlock')
 
                 elif task == 'offline-compaction-snapshot':
                     # move author-dispatcher instances out of standby
