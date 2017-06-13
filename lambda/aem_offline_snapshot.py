@@ -240,7 +240,7 @@ def manage_lock_for_environment(table_name, lock, action):
                 ConditionExpression='attribute_not_exists(command_id)',
                 ReturnValues='NONE'
             )
-            succsucceededeed = True
+            succeeded = True
         except botocore.exceptions.ClientError:
             succeeded = False
 
