@@ -58,15 +58,6 @@
       tags:
         - create
 
-    - name: set TTL attribute on the DynamoDB Table
-      command: >
-        aws dynamodb update-time-to-live --table-name "{{stack_info.stack_outputs.AemStackManagerTableName}}"
-           --time-to-live-specification Enabled=true,AttributeName=ttl
-           --region "{{ aws.region }}"
-      when: stack_info|succeeded and stack_info.changed == true
-      tags:
-        - create
-
     - name: Update config.json template to the stack output
       shell:  >-
         jq --arg statusarn "{{ stack_info.stack_outputs.TaskStatusTopicArn }}" \
@@ -93,6 +84,16 @@
       when: stack_info|succeeded
       tags:
        - create
+
+    - name: set TTL attribute on the DynamoDB Table
+      command: >
+        aws dynamodb update-time-to-live --table-name "{{stack_info.stack_outputs.AemStackManagerTableName}}"
+           --time-to-live-specification Enabled=true,AttributeName=ttl
+           --region "{{ aws.region }}"
+      when: stack_info|succeeded and stack_info.changed == true
+      ignore_errors: yes
+      tags:
+        - create
 
     - name: Check if a Stack Exists
       command: >
