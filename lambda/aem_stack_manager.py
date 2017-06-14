@@ -202,6 +202,29 @@ def promote_author(message, ssm_common_params):
     return send_ssm_cmd(params)
 
 
+def enable_crxde(message, ssm_common_params):
+    target_filter = [
+        {
+            'Name': 'tag:StackPrefix',
+            'Values': [message['stack_prefix']]
+        }, {
+            'Name': 'instance-state-name',
+            'Values': ['running']
+        }, {
+            'Name': 'tag:Component',
+            'Values': [message['details']['component']]
+        }
+    ]
+    # boto3 ssm client does not accept multiple filter for Targets
+    details = {
+        'InstanceIds': instance_ids_by_tags(target_filter),
+        'Comment': 'enable crxde on selected AEM instances by component'
+    }
+    params = ssm_common_params.copy()
+    params.update(details)
+    return send_ssm_cmd(params)
+
+
 def put_state_in_dynamodb(table_name, command_id, environment, task, state, timestamp, **kwargs):
 
     """
@@ -314,7 +337,8 @@ method_mapper = {
     'deploy-artifacts': deploy_artifacts,
     'export-package': export_package,
     'import-package': import_package,
-    'promote-author': promote_author
+    'promote-author': promote_author,
+    'enable-crxde': enable_crxde
 }
 
 
