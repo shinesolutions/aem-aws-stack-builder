@@ -1,3 +1,6 @@
+### 1.1.2
+* Disable generated system user credentials logging #34
+
 ### 1.1.1
 * Update aem-aws-stack-provisioner version to 1.1.1
 
