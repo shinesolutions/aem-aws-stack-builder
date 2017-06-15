@@ -36,7 +36,10 @@ def add_arguments(argument_parser):
         '--timeout',
         metavar = 'TIME',
         default = '15m',
-        help    = 'Stack timeout: XXn; for n - d = days, h = hour, m = mins, s = seconds.',
+        help    = unwrap("""
+            Stack timeout: XXn; for n - d = days, h = hour, m = mins, s =
+            seconds.
+        """)
     )
 
 def parse_filter(filter):
@@ -145,8 +148,12 @@ def main():
         logger.info('Waiting for %d instances to complete ServerSpec tests.', len(remaining_instance_ids))
         logger.debug('%r', remaining_instance_ids)
         filter_log_events_args['logStreamNames'] = list(remaining_instance_ids)
-        filtered_events = cwlogs.filter_log_events(**filter_log_events_args)
-        events = filtered_events['events']
+        try:
+            filtered_events = cwlogs.filter_log_events(**filter_log_events_args)
+            events = filtered_events['events']
+        except:
+            logger.exception('Caught an exception while polling for log events.')
+            events = []
         for event in events:
             instance = instances[event['logStreamName']]
             matched, ex, fa = parse_event_message(event['message'])
