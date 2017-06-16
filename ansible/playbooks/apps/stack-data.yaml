@@ -17,6 +17,7 @@
     - name: Generate random credentials for system users
       system_users_credentials:
       register: system_users_credentials
+      no_log: True
       tags:
       - create
 
