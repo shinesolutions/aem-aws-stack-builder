@@ -33,7 +33,7 @@
       system_users_credentials:
       register: system_users_credentials
       no_log: True
-      when: "stack_query.rc == 0"
+      when: "stack_query.rc != 0"
       tags:
         - create
 
@@ -41,7 +41,7 @@
       copy:
         content: "{{ system_users_credentials.meta }}"
         dest: ../../../stage/system-users-credentials.json
-      when: "stack_query.rc == 0"
+      when: "stack_query.rc != 0"
       tags:
         - create
 
@@ -52,7 +52,7 @@
         src: ../../../stage/system-users-credentials.json
         mode: put
         encrypt: yes
-      when: "stack_query.rc == 0"
+      when: "stack_query.rc != 0"
       tags:
         - create
 
