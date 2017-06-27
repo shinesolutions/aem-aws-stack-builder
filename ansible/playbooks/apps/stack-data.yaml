@@ -5,6 +5,14 @@
   connection: local
 
   tasks:
+    - name: Check if compute stack exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+            --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - always
 
     - name: Ensure stage directory exists
       file:
@@ -14,19 +22,39 @@
       tags:
       - create
 
+    - name: Ensure data bucket exists
+      s3_bucket:
+        name: "{{ s3.data_bucket_name }}"
+        state: present
+      tags:
+        - create
+
     - name: Generate random credentials for system users
       system_users_credentials:
       register: system_users_credentials
       no_log: True
+      when: "stack_query.rc == 0"
       tags:
-      - create
+        - create
 
     - name: Create temporary file containing generated credentials
       copy:
         content: "{{ system_users_credentials.meta }}"
         dest: ../../../stage/system-users-credentials.json
+      when: "stack_query.rc == 0"
       tags:
-      - create
+        - create
+
+    - name: Upload system user credentials
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/system-users-credentials.json"
+        src: ../../../stage/system-users-credentials.json
+        mode: put
+        encrypt: yes
+      when: "stack_query.rc == 0"
+      tags:
+        - create
 
     - name: Generate stack Facter facts
       stack_facter_facts:
@@ -52,10 +80,13 @@
       tags:
       - create
 
-    - name: Ensure data bucket exists
-      s3_bucket:
-        name: "{{ s3.data_bucket_name }}"
-        state: present
+    - name: Upload stack Facter facts
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/stack-facts.txt"
+        src: ../../../stage/stack-facts.txt
+        mode: put
+        encrypt: yes
       tags:
       - create
 
@@ -88,31 +119,12 @@
       tags:
       - create
 
-    - name: Upload system user credentials
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/system-users-credentials.json"
-        src: ../../../stage/system-users-credentials.json
-        mode: put
-        encrypt: yes
-      tags:
-      - create
-
-    - name: Upload stack Facter facts
-      s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/stack-facts.txt"
-        src: ../../../stage/stack-facts.txt
-        mode: put
-        encrypt: yes
-      tags:
-      - create
-
-    - stat: path=../../../data/local.yaml
+    - name: Check for local Hiera config
+      stat:
+        path: ../../../data/local.yaml
       register: local_hiera
       tags:
         - create
-
 
     - name: Upload local Hiera YAML
       s3:
@@ -178,20 +190,22 @@
       tags:
       - create
 
+    - name: Delete temporary file containing generated credentials
+      file:
+        path: ../../../stage/system-users-credentials.json
+        state: absent
+      tags:
+        - delete
+
+    - name: Delete system user credentials from S3 bucket
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/system-users-credentials.json"
+        mode: delobj
+      tags:
+        - delete
+
     - debug:
         msg: "Stack data will purged as part of prerequisite resource deletion"
       tags:
         - delete
-
-    # TODO: s3_sync is only availabe in version 2.3
-    # - name: Upload CloudFormation Templates to S3
-    #   s3_sync:
-    #     bucket: "{{ s3.data_bucket_name }}"
-    #     file_root: "cloudformation/apps"
-    #     key_prefix: "{{ stack_prefix }}"
-    #     mode: push
-    #     permission: public-read
-    #     region: "{{ aws.region }}"
-    #     include: "*.yaml"
-    #   tags:
-    #     - create
