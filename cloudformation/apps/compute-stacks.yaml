@@ -264,7 +264,7 @@ Resources:
         PublishRootVolSizeParameter: !Ref PublishRootVolSizeParameter
         PublishDataVolSizeParameter: !Ref PublishDataVolSizeParameter
         UsePublishDataVolSnapshotParameter: !Ref UsePublishDataVolSnapshotParameter
-        PublishDataVolSnapshotParamater: !Ref PublishDataVolSizeParameter
+        PublishDataVolSnapshotParamater: !Ref PublishDataVolSnapshotParamater
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter:  !Ref AemAwsStackProvisionerVersionParameter
