@@ -105,6 +105,9 @@ run_custom_stage post-common
 
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
+# Some tests seem to fail because services aren't fully up.
+sleep 30
+
 echo "Testing ${component} component using Serverspec..."
 /opt/puppetlabs/puppet/bin/gem install --no-document rspec serverspec
 cd test/serverspec && /opt/puppetlabs/puppet/bin/rake spec "SPEC=spec/${component}_spec.rb"
