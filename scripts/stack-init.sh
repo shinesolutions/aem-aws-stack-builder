@@ -36,6 +36,19 @@ run_custom_stage() {
   fi
 }
 
+# translate puppet exit code to follow convention
+translate_puppet_exit_code() {
+
+  exit_code="$1"
+  if [ "$exit_code" -eq 0 ] || [ "$exit_code" -eq 2 ]; then
+    exit_code=0
+  else
+    exit "$exit_code"
+  fi
+
+  return "$exit_code"
+}
+
 echo "Initialising AEM Stack Builder provisioning..."
 
 aws --version
@@ -81,12 +94,19 @@ aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppet
 export FACTER_data_bucket_name="${data_bucket_name}"
 export FACTER_stack_prefix="${stack_prefix}"
 
+set +o errexit
+
 echo "Applying common Puppet manifest for all components..."
 puppet apply \
+  --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   manifests/common.pp
+
+translate_puppet_exit_code "$?"
+
+set -o errexit
 
 echo "Checking orchestration tags for ${component} component..."
 /opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
@@ -94,12 +114,19 @@ echo "Checking orchestration tags for ${component} component..."
 echo "Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
 
+set +o errexit
+
 echo "Applying Puppet manifest for ${component} component..."
 puppet apply \
+  --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   "manifests/${component}.pp"
+
+translate_puppet_exit_code "$?"
+
+set -o errexit
 
 run_custom_stage post-common
 
