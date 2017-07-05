@@ -348,6 +348,11 @@ Resources:
                   - s3:Get*
                   - s3:List*
                 Resource: "*"
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - arn:aws:logs:*:*:*
       RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackChaosMonkeyRole
 
 
