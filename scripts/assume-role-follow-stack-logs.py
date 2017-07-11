@@ -182,6 +182,17 @@ def main():
         else:
             time.sleep(1)
 
+        # corner case: an existing instance might be replaced by a new one
+        current_instances = {i.id: i for i in find_instances(ec2, args)}
+        new_instances = filter(lambda x: x[0] not in instance_ids, current_instances.items())
+        if len(new_instances) > 0:
+            logger.info(
+                'Found %d new instances %r', len(new_instances), new_instances
+            )
+            instances = current_instances
+            instance_ids = set(current_instances.iterkeys())
+            remaining_instance_ids = instance_ids - complete_instance_ids
+
     if all_failures > 0:
         raise SystemExit(1)
 
