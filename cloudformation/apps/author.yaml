@@ -95,6 +95,31 @@ Resources:
         Value:
           Ref: AuthorStandbyInstance
 
+  MultiAuthorInstanceAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: Multiple Author Instances have Enterered into Service
+      AlarmName:
+        Fn::Sub: ${ComputeStackPrefixParameter}-MultiAuthorInstnaceAlarm
+      ComparisonOperator: GreaterThanThreshold
+      MetricName: HealthyHostCount
+      Namespace: AWS/ELB
+      EvaluationPeriods: 1
+      Period: 60
+      Statistic: Maximum
+      Threshold: 1
+      Dimensions:
+        - Name: LoadBalancerName
+          Value:
+            Ref: AuthorLoadBalancer
+
   AuthorPrimaryInstance:
     Type: AWS::EC2::Instance
     Properties:
