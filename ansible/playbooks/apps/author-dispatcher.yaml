@@ -25,6 +25,7 @@
           AuthorDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           AuthorDispatcherASGMaxSizeParameter: "{{ author_dispatcher.max_size }}"
           AuthorDispatcherASGMinSizeParameter: "{{ author_dispatcher.min_size }}"
+          AuthorDispatcherASGDesiredCapacityParameter: "{{ author_dispatcher.desired_capacity }}"
           AuthorDispatcherRootVolSizeParameter: "{{ author_dispatcher.root_vol_size }}"
           AuthorDispatcherDataVolSizeParameter: "{{ author_dispatcher.data_vol_size }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"

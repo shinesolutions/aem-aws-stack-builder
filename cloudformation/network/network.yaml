@@ -532,6 +532,12 @@ Outputs:
       Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetB
     Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
+  PublishDispatcherELBSubnetList:
+    Value: !Sub ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetList
+    Description: The Publish Dispatcher ELB Subnet List
+
   PublishDispatcherSubnetA:
     Value:
       Ref: PublishDispatcherSubnetA
@@ -545,6 +551,12 @@ Outputs:
     Export:
       Name: !Sub ${StackPrefix}-PublishDispatcherSubnetB
     Description: The Publish Dispatcher Subnet in Availability Zone B
+
+  PublishDispatcherSubnetList:
+    Value: !Sub ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetList
+    Description: The Publish Dispatcher Subnet List
 
   PublishSubnetA:
     Value:
@@ -560,6 +572,12 @@ Outputs:
       Name: !Sub ${StackPrefix}-PublishSubnetB
     Description: The Publish Subnet in Availability Zone B
 
+  PublishSubnetList:
+    Value: !Sub ${PublishSubnetA},${PublishSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-PublishSubnetList
+    Description: The Publish Subnet List
+
   AuthorSubnetA:
     Value:
       Ref: AuthorSubnetA
@@ -573,6 +591,12 @@ Outputs:
     Export:
       Name: !Sub ${StackPrefix}-AuthorSubnetB
     Description: The Author Subnet in Availability Zone B
+
+  AuthorSubnetList:
+    Value: !Sub ${AuthorSubnetA},${AuthorSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorSubnetList
+    Description: The Author Subnet List
 
   AuthorDispatcherSubnetA:
     Value:
@@ -588,6 +612,12 @@ Outputs:
       Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetB
     Description: The Author Dispatcher Subnet in Availability Zone B
 
+  AuthorDispatcherSubnetList:
+    Value: !Sub ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetList
+    Description: The Author Dispatcher Subnet List
+
   ToolSubnetA:
     Value:
       Ref: ToolSubnetA
@@ -601,6 +631,24 @@ Outputs:
     Export:
       Name: !Sub ${StackPrefix}-ToolSubnetB
     Description: The Tool Subnet in Availability Zone B
+
+  ToolSubnetList:
+    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-ToolSubnetList
+    Description: The Tool Subnet List
+
+  OrchestratorSubnetList:
+    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-OrchestratorSubnetList
+    Description: The Orchestrator Subnet List
+
+  ChaosMonkeySubnetList:
+    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-ChaosMonkeySubnetList
+    Description: The ChaosMonkey Subnet List
 
   PublicRouteTable:
     Value:

@@ -45,6 +45,10 @@ Parameters:
     Type: String
     Description: The Author Dispatcher Auto Scaling Group Minimum Size
 
+  AuthorDispatcherASGDesiredCapacityParameter:
+    Type: String
+    Description: The Author Dispatcher Auto Scaling Desired Capacity
+
   AuthorDispatcherRootVolSizeParameter:
     Type: Number
     Description: Author Dispatcher Instances Root EBS Volume Size
@@ -158,6 +162,8 @@ Resources:
         Ref: AuthorDispatcherASGMaxSizeParameter
       MinSize:
         Ref: AuthorDispatcherASGMinSizeParameter
+      DesiredCapacity:
+        Ref: AuthorDispatcherASGDesiredCapacityParameter
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH
@@ -179,8 +185,10 @@ Resources:
         Value: author-dispatcher
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetA
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetB
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+             !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetList
 
 Outputs:
 
@@ -209,5 +217,3 @@ Outputs:
       Name:
         Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherAutoScalingGroup
     Description: The Author Dispatcher Auto Scaling Group
-
-

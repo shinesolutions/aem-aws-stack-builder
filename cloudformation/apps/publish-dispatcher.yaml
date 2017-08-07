@@ -49,6 +49,10 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Minimum Size
 
+  PublishDispatcherASGDesiredCapacityParameter:
+    Type: String
+    Description: The Publish Dispatcher Auto Scaling Group Desired Capacity
+
   PublishDispatcherRootVolSizeParameter:
     Type: Number
     Description: PublishDispatcher Instances Root EBS Volume Size
@@ -154,7 +158,7 @@ Resources:
     Properties:
       AvailabilityZones:
         Ref: PublishDispatcherASGAvailabilityZoneListParameter
-      HealthCheckGracePeriod: 900
+      HealthCheckGracePeriod: 1200
       HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: PublishDispatcherLaunchConfiguration
@@ -164,6 +168,8 @@ Resources:
         Ref: PublishDispatcherASGMaxSizeParameter
       MinSize:
         Ref: PublishDispatcherASGMinSizeParameter
+      DesiredCapacity:
+        Ref: PublishDispatcherASGDesiredCapacityParameter
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH
@@ -188,10 +194,10 @@ Resources:
           Value: PLACEHOLDER
           PropagateAtLaunch: true
       VPCZoneIdentifier:
-        - Fn::ImportValue:
-            !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetA
-        - Fn::ImportValue:
-            !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetB
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+             !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetList
 
 Outputs:
 

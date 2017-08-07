@@ -165,8 +165,10 @@ Resources:
         Value: orchestrator
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetA
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetB
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              !Sub ${NetworkStackPrefixParameter}-OrchestratorSubnetList
 
 Outputs:
 

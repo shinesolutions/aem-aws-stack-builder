@@ -77,6 +77,10 @@ Parameters:
     Type: String
     Description: The Publish Auto Scaling Group Minimum Size
 
+  PublishASGDesiredCapacityParameter:
+    Type: String
+    Description: The Publish Auto Scaling Group Desired Capacity
+
   PublishRootVolSizeParameter:
     Type: Number
     Description: Publish Instances Root EBS Volume Size
@@ -122,6 +126,10 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Minimum Size
 
+  PublishDispatcherASGDesiredCapacityParameter:
+    Type: String
+    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
+
   PublishDispatcherRootVolSizeParameter:
     Type: Number
     Description: PublishDispatcher Instances Root EBS Volume Size
@@ -153,6 +161,10 @@ Parameters:
   AuthorDispatcherASGMinSizeParameter:
     Type: String
     Description: The Author Dispatcher Auto Scaling Group Minimum Size
+
+  AuthorDispatcherASGDesiredCapacityParameter:
+    Type: String
+    Description: The Author Dispatcher Auto Scaling Group Desired Capacity
 
   AuthorDispatcherRootVolSizeParameter:
     Type: Number
@@ -261,6 +273,7 @@ Resources:
         PublishASGAvailabilityZoneListParameter: !Join [",", !Ref PublishASGAvailabilityZoneListParameter]
         PublishASGMaxSizeParameter: !Ref PublishASGMaxSizeParameter
         PublishASGMinSizeParameter: !Ref PublishASGMinSizeParameter
+        PublishASGDesiredCapacityParameter: !Ref PublishASGDesiredCapacityParameter
         PublishRootVolSizeParameter: !Ref PublishRootVolSizeParameter
         PublishDataVolSizeParameter: !Ref PublishDataVolSizeParameter
         UsePublishDataVolSnapshotParameter: !Ref UsePublishDataVolSnapshotParameter
@@ -285,6 +298,7 @@ Resources:
         PublishDispatcherASGAvailabilityZoneListParameter: !Join [",", !Ref PublishDispatcherASGAvailabilityZoneListParameter]
         PublishDispatcherASGMaxSizeParameter: !Ref PublishDispatcherASGMaxSizeParameter
         PublishDispatcherASGMinSizeParameter: !Ref PublishDispatcherASGMinSizeParameter
+        PublishDispatcherASGDesiredCapacityParameter: !Ref PublishDispatcherASGDesiredCapacityParameter
         PublishDispatcherRootVolSizeParameter: !Ref PublishDispatcherRootVolSizeParameter
         PublishDispatcherDataVolSizeParameter: !Ref PublishDispatcherDataVolSizeParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
@@ -306,6 +320,7 @@ Resources:
         AuthorDispatcherASGAvailabilityZoneListParameter: !Join [",", !Ref AuthorDispatcherASGAvailabilityZoneListParameter]
         AuthorDispatcherASGMaxSizeParameter: !Ref AuthorDispatcherASGMaxSizeParameter
         AuthorDispatcherASGMinSizeParameter: !Ref AuthorDispatcherASGMinSizeParameter
+        AuthorDispatcherASGDesiredCapacityParameter: !Ref AuthorDispatcherASGDesiredCapacityParameter
         AuthorDispatcherRootVolSizeParameter: !Ref AuthorDispatcherRootVolSizeParameter
         AuthorDispatcherDataVolSizeParameter: !Ref AuthorDispatcherDataVolSizeParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter

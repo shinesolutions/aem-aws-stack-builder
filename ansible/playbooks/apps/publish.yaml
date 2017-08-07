@@ -22,6 +22,7 @@
           PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           PublishASGMaxSizeParameter: "{{ publish.max_size }}"
           PublishASGMinSizeParameter: "{{ publish.min_size }}"
+          PublishASGDesiredCapacityParameter: "{{ publish.desired_capacity }}"
           PublishRootVolSizeParameter: "{{ publish.root_vol_size }}"
           PublishDataVolSizeParameter: "{{ publish.data_vol_size }}"
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"

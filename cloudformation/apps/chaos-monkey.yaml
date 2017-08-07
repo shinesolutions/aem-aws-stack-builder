@@ -126,8 +126,10 @@ Resources:
             Fn::Sub: "${ComputeStackPrefixParameter}-AuthorDispatcherAutoScalingGroup"
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetA
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-ToolSubnetB
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              !Sub ${NetworkStackPrefixParameter}-ChaosMonkeySubnetList
 
 Outputs:
 

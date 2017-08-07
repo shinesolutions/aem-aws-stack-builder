@@ -7,3 +7,5 @@ aem-aws-stack-builder.iml
 logs/
 stage
 *.pyc
+backup/
+output/

@@ -42,6 +42,7 @@
           PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           PublishASGMaxSizeParameter: "{{ publish.max_size }}"
           PublishASGMinSizeParameter: "{{ publish.min_size }}"
+          PublishASGDesiredCapacityParameter: "{{ publish.desired_capacity }}"
           PublishRootVolSizeParameter: "{{ publish.root_vol_size }}"
           PublishDataVolSizeParameter: "{{ publish.data_vol_size }}"
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
@@ -54,6 +55,7 @@
           PublishDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
           PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
+          PublishDispatcherASGDesiredCapacityParameter: "{{ publish_dispatcher.desired_capacity }}"
           PublishDispatcherRootVolSizeParameter: "{{ publish_dispatcher.root_vol_size }}"
           PublishDispatcherDataVolSizeParameter: "{{ publish_dispatcher.data_vol_size }}"
 
@@ -63,6 +65,7 @@
           AuthorDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           AuthorDispatcherASGMaxSizeParameter: "{{ author_dispatcher.max_size }}"
           AuthorDispatcherASGMinSizeParameter: "{{ author_dispatcher.min_size }}"
+          AuthorDispatcherASGDesiredCapacityParameter: "{{ author_dispatcher.desired_capacity }}"
           AuthorDispatcherRootVolSizeParameter: "{{ author_dispatcher.root_vol_size }}"
           AuthorDispatcherDataVolSizeParameter: "{{ author_dispatcher.data_vol_size }}"
 
