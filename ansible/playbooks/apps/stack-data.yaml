@@ -149,6 +149,7 @@
         bucket: '{{ s3.data_bucket_name }}'
         file_root: ../../../hieraconf
         key_prefix: '{{ stack_prefix }}/conf/'
+        region: '{{ aws.region }}'
       when: local_hieraconf.stat.exists == True
       tags:
         - create
@@ -165,6 +166,7 @@
         bucket: '{{ s3.data_bucket_name }}'
         file_root: ../../../hieradata
         key_prefix: '{{ stack_prefix }}/data/'
+        region: '{{ aws.region }}'
       when: local_hieradata.stat.exists == True
       tags:
         - create
