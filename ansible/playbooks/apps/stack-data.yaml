@@ -137,6 +137,38 @@
       tags:
       - create
 
+    - name: Check for local Hiera conf directory
+      stat:
+        path: ../../../hieraconf
+      register: local_hieraconf
+      tags:
+        - create
+
+    - name: Sync local Hiera conf directory
+      s3_sync:
+        bucket: '{{ s3.data_bucket_name }}'
+        file_root: ../../../hieraconf
+        key_prefix: '{{ stack_prefix }}/conf/'
+      when: local_hieraconf.stat.exists == True
+      tags:
+        - create
+
+    - name: Check for local Hiera data directory
+      stat:
+        path: ../../../hieradata
+      register: local_hieradata
+      tags:
+        - create
+
+    - name: Sync local Hiera data directory
+      s3_sync:
+        bucket: '{{ s3.data_bucket_name }}'
+        file_root: ../../../hieradata
+        key_prefix: '{{ stack_prefix }}/data/'
+      when: local_hieradata.stat.exists == True
+      tags:
+        - create
+
     - name: Copy AEM Stack Provisioner from library to data bucket
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
