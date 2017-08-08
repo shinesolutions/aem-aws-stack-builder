@@ -37,8 +37,9 @@ Resources:
     Properties:
       DomainName: !Join [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
       SubjectAlternativeNames:
-        - !Join  [ '.', [ !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
-        - !Join  [ '.', [ !Ref BlueGreenSubdomainParameter, !Ref ApexDomainParameter ]]
+        - !Join [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
+        - !Join [ '.', [ !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
+        - !Join [ '.', [ !Ref BlueGreenSubdomainParameter, !Ref ApexDomainParameter ]]
       DomainValidationOptions:
         - DomainName: !Join  [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
           ValidationDomain: !Ref ApexDomainParameter
