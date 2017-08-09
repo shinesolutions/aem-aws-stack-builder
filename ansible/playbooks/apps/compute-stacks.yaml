@@ -116,3 +116,12 @@
         "stack_query.rc == 0"
       tags:
       - delete
+
+    - name: Delete default deployment descriptor
+      s3:
+        bucket: '{{ s3.data_bucket_name }}'
+        object: '{{ stack_prefix }}/deploy-artifacts-descriptor.json'
+        mode: delobj
+      ignore_errors: True
+      tags:
+        - delete
