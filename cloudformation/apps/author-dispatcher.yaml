@@ -195,6 +195,8 @@ Outputs:
   AuthorDispatcherLoadBalancer:
     Value:
       Ref: AuthorDispatcherLoadBalancer
+    Export:
+      Name: !Sub ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancer
     Description: The Author Dispatcher Load Balancer
 
   AuthorDispatcherLoadBalancerDNSName:

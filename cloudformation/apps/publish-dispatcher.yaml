@@ -204,6 +204,8 @@ Outputs:
   PublishDispatcherLoadBalancer:
     Value:
       Ref: PublishDispatcherLoadBalancer
+    Export:
+      Name: !Sub ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancer
     Description: The Publish Dispatcher Load Balancer
 
   PublishDispatcherLoadBalancerDNSName:
