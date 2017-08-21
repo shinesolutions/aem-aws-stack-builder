@@ -8,9 +8,19 @@ import boto3
 def add_additional_security_groups(stack_prefix, resource_name, security_groups):
 
     # retrieve existing security groups
-    stack_exports = boto3.client('cloudformation').list_exports()['Exports']
-    elb_export = filter(lambda export: export['Name'] == '{}-{}'.format(stack_prefix, resource_name), stack_exports)[0]
-    elb_name = elb_export['Value']
+    cloudformation = boto3.client('cloudformation')
+    stack_exports_response = cloudformation.list_exports()
+    elb_exports = filter(lambda export: export['Name'] == '{}-{}'.format(stack_prefix, resource_name),
+                         stack_exports_response['Exports'])
+    while len(elb_exports) == 0:
+        if 'NextToken' not in stack_exports_response:
+            raise Exception('Unable to find {}-{} cloudformation export.'.format(stack_prefix, resource_name))
+        stack_exports_response = cloudformation.list_exports(NextToken=stack_exports_response['NextToken'])
+        elb_exports = filter(lambda export: export['Name'] == '{}-{}'.format(stack_prefix, resource_name),
+                             stack_exports_response['Exports'])
+
+    elb_name = elb_exports[0]['Value']
+    print('Found ELB with name {}'.format(elb_name))
 
     elb = boto3.client('elb')
     response = elb.describe_load_balancers(
