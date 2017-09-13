@@ -5,6 +5,7 @@ ec2_vpc:
   stack_name: aem-vpc-stack
   tag_name: AEM Stack VPC
   cidr_block: 10.0.0.0/21
+  dhcp_option: dopt-1036df75
 
 network:
   stack_name: aem-network-stack
@@ -80,3 +81,6 @@ bastion:
   security_groups: sg-ba61aadd
   key_pair_name: ea-andy
   subnet: subnet-fb831e9f
+
+endpoints:
+  s3: aem-stack-builder

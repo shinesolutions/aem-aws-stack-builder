@@ -66,3 +66,6 @@ network:
 nat_gateway:
   stack_name: aem-nat-gateway-stack
   elastic_ip_allocation_id: eipalloc-32711957
+
+endpoints:
+  s3: aem-stack-builder
