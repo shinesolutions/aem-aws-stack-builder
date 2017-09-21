@@ -1,0 +1,93 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Create a Unified AEM Host inside AEM VPC
+
+Parameters:
+  UniAEMImageId:
+    Type: AWS::EC2::Image::Id
+    Description: AMI Id used for the Host
+    Default: "ami-e2997f80"
+
+  UniAEMKeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Key Pair Name
+    Default: "sshim-sandpit"
+
+  UniAEMSubnet:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet Ids the Host Will be Launched into
+    Default: "subnet-7d0bf80a"
+
+  VPCId:
+    Type: AWS::EC2::VPC::Id
+    Description: The VPC that the UniAEM Host will reside
+    Default: "vpc-b3ad53d6"
+
+Resources:
+
+  # UniAEM Security Group
+  UniAEMSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: UniAEM Security Group
+      Tags:
+        - Key: Name
+          Value: UniAEM Security Group
+      VpcId:
+        Ref: VPCId
+
+  # Allow tcp on ports 22
+  UniAEMSecurityGroupIngress0:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: '0.0.0.0/0'
+      FromPort: '22'
+      GroupId:
+        Ref: UniAEMSecurityGroup
+      IpProtocol: tcp
+      ToPort: '22'
+
+  # Allow tcp on ports 4502, 4503
+  UniAEMSecurityGroupIngress1:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: '0.0.0.0/0'
+      FromPort: '4502'
+      GroupId:
+        Ref: UniAEMSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4503'
+
+  # Allow tcp on ports 5432, 5433
+  UniAEMSecurityGroupIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: '0.0.0.0/0'
+      FromPort: '5432'
+      GroupId:
+        Ref: UniAEMSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+
+
+  UniAEM:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId:
+        Ref: UniAEMImageId
+      InstanceType: m4.large
+      KeyName:
+        Ref: UniAEMKeyPairName
+      NetworkInterfaces:
+        -
+          AssociatePublicIpAddress: true
+          DeviceIndex: "0"
+          GroupSet:
+            - Ref: UniAEMSecurityGroup
+          SubnetId:
+            Ref: UniAEMSubnet
+      Tags:
+        -
+          Key: Name
+          Value: uniAEM

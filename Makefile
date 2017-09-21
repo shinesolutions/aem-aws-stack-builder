@@ -116,6 +116,12 @@ create-publish:
 delete-publish:
 	./scripts/delete-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
 
+create-uniaem:
+	./scripts/create-stack.sh apps/uniaem "$(stack_prefix)" "$(config_path)"
+
+delete-uniaem:
+	./scripts/delete-stack.sh apps/uniaem "$(stack_prefix)" "$(config_path)"
+
 create-roles:
 	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
 

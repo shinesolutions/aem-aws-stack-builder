@@ -157,6 +157,9 @@ author_dispatcher:
   elb_health_check: HTTPS:443/system/health?tags=shallow
   certificate_name: aem-stack-builder
 
+uniaem:
+  stack_name: aem-uniaem-stack
+
 orchestrator:
   stack_name: aem-orchestrator-stack
   instance_profile: sandpit-aem-roles-stack-OrchestratorInstanceProfile-13GOYKB2JLF5U
