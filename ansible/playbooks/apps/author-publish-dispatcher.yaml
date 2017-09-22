@@ -1,17 +1,17 @@
 ---
-- name: AEM Unified AEM CloudFormation Stack
+- name: AEM Author Publish Dispatcher CloudFormation Stack
   hosts: all
   gather_facts: no
   connection: local
 
   tasks:
-    - name: Create Unified AEM Publish Stack
+    - name: Create AEM Author Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ uniaem.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../cloudformation/apps/uniaem.yaml"
+        template: "../../../cloudformation/apps/author-publish-dispatcher.yaml"
         template_parameters:
           UniAEMImageId: "ami-e2997f80"
       tags:
@@ -19,7 +19,7 @@
 
     - name: Check if a Stack Exists
       command: >
-            aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ uniaem.stack_name }}"
+            aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}"
                 --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -28,15 +28,15 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ uniaem.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
         - delete
 
-    - name: Delete AEM Publish Stack
+    - name: Delete AEM Author Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ uniaem.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:

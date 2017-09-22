@@ -157,8 +157,8 @@ author_dispatcher:
   elb_health_check: HTTPS:443/system/health?tags=shallow
   certificate_name: aem-stack-builder
 
-uniaem:
-  stack_name: aem-uniaem-stack
+author_publish_dispatcher:
+  stack_name: aem-author-publish-dispatcher-stack
 
 orchestrator:
   stack_name: aem-orchestrator-stack

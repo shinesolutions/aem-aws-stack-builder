@@ -4,6 +4,12 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Create a Unified AEM Host inside AEM VPC
 
 Parameters:
+
+  ComputeStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Default: "sshim"
+
   UniAEMImageId:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for the Host
@@ -71,9 +77,63 @@ Resources:
       ToPort: '5433'
 
 
+  UniAEMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Policies:
+        - PolicyName: UniAEMRolePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:Describe*
+                  - ec2:AttachVolume
+                  - ec2:CreateVolume
+                  - ec2:DetachVolume
+                  - ec2:CreateSnapshot
+                  - ec2:CreateTags
+                  - ec2:ModifyInstanceAttribute
+                  - cloudwatch:PutMetricData
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:List*
+                  - s3:Put*
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - arn:aws:logs:*:*:*
+      RoleName: UniAEMStackPublishRole
+
+  UniAEMInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - Ref: UniAEMRole
+
+
   UniAEM:
     Type: "AWS::EC2::Instance"
     Properties:
+      IamInstanceProfile:
+        Ref: UniAEMInstanceProfile
       ImageId:
         Ref: UniAEMImageId
       InstanceType: m4.large
@@ -88,6 +148,10 @@ Resources:
           SubnetId:
             Ref: UniAEMSubnet
       Tags:
-        -
-          Key: Name
+        - Key: Name
           Value: uniAEM
+        - Key: Component
+          Value: author-primary
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
