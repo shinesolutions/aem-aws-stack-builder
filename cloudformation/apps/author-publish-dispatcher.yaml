@@ -1,7 +1,7 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
 
-Description: Create a Unified AEM Host inside AEM VPC
+Description: Create the Compute resources for the AEM Author Publish Dispatcher
 
 Parameters:
 
@@ -10,74 +10,74 @@ Parameters:
     Description: The AEM Stack Compute Resources Stack Prefix
     Default: "sshim"
 
-  UniAEMImageId:
+  AuthorPublishDispatcherImageId:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for the Host
     Default: "ami-e2997f80"
 
-  UniAEMKeyPairName:
+  AuthorPublishDispatcherKeyPairName:
     Type: AWS::EC2::KeyPair::KeyName
     Description: Key Pair Name
     Default: "sshim-sandpit"
 
-  UniAEMSubnet:
+  AuthorPublishDispatcherSubnet:
     Type: AWS::EC2::Subnet::Id
     Description: Subnet Ids the Host Will be Launched into
     Default: "subnet-7d0bf80a"
 
   VPCId:
     Type: AWS::EC2::VPC::Id
-    Description: The VPC that the UniAEM Host will reside
+    Description: The VPC that the Host will reside
     Default: "vpc-b3ad53d6"
 
 Resources:
 
-  # UniAEM Security Group
-  UniAEMSecurityGroup:
+  # AuthorPublishDispatcher Security Group
+  AuthorPublishDispatcherSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: UniAEM Security Group
+      GroupDescription: AuthorPublishDispatcher Security Group
       Tags:
         - Key: Name
-          Value: UniAEM Security Group
+          Value: AuthorPublishDispatcher Security Group
       VpcId:
         Ref: VPCId
 
   # Allow tcp on ports 22
-  UniAEMSecurityGroupIngress0:
+  AuthorPublishDispatcherSecurityGroupIngress0:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       CidrIp: '0.0.0.0/0'
       FromPort: '22'
       GroupId:
-        Ref: UniAEMSecurityGroup
+        Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '22'
 
   # Allow tcp on ports 4502, 4503
-  UniAEMSecurityGroupIngress1:
+  AuthorPublishDispatcherSecurityGroupIngress1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       CidrIp: '0.0.0.0/0'
       FromPort: '4502'
       GroupId:
-        Ref: UniAEMSecurityGroup
+        Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '4503'
 
   # Allow tcp on ports 5432, 5433
-  UniAEMSecurityGroupIngress2:
+  AuthorPublishDispatcherSecurityGroupIngress2:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       CidrIp: '0.0.0.0/0'
       FromPort: '5432'
       GroupId:
-        Ref: UniAEMSecurityGroup
+        Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '5433'
 
 
-  UniAEMRole:
+  AuthorPublishDispatcherRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -93,7 +93,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
-        - PolicyName: UniAEMRolePolicy
+        - PolicyName: AuthorPublishDispatcherRolePolicy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -119,37 +119,37 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: UniAEMStackPublishRole
+      RoleName: AuthorPublishDispatcherStackPublishRole
 
-  UniAEMInstanceProfile:
+  AuthorPublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
-        - Ref: UniAEMRole
+        - Ref: AuthorPublishDispatcherRole
 
 
-  UniAEM:
+  AuthorPublishDispatcher:
     Type: "AWS::EC2::Instance"
     Properties:
       IamInstanceProfile:
-        Ref: UniAEMInstanceProfile
+        Ref: AuthorPublishDispatcherInstanceProfile
       ImageId:
-        Ref: UniAEMImageId
+        Ref: AuthorPublishDispatcherImageId
       InstanceType: m4.large
       KeyName:
-        Ref: UniAEMKeyPairName
+        Ref: AuthorPublishDispatcherKeyPairName
       NetworkInterfaces:
         -
           AssociatePublicIpAddress: true
           DeviceIndex: "0"
           GroupSet:
-            - Ref: UniAEMSecurityGroup
+            - Ref: AuthorPublishDispatcherSecurityGroup
           SubnetId:
-            Ref: UniAEMSubnet
+            Ref: AuthorPublishDispatcherSubnet
       Tags:
         - Key: Name
-          Value: uniAEM
+          Value: AuthorPublishDispatcher
         - Key: Component
           Value: author-primary
         - Key: StackPrefix
