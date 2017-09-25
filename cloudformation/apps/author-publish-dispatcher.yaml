@@ -8,27 +8,30 @@ Parameters:
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
-    Default: "sshim"
+
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Network Resources Stack Prefix
 
   AuthorPublishDispatcherImageId:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for the Host
-    Default: "ami-e2997f80"
+
+  AuthorPublishDispatcherInstanceType:
+    Type: String
+    Description: The Author Publish Dispatcher Instance Type
 
   AuthorPublishDispatcherKeyPairName:
     Type: AWS::EC2::KeyPair::KeyName
     Description: Key Pair Name
-    Default: "sshim-sandpit"
 
   AuthorPublishDispatcherSubnet:
     Type: AWS::EC2::Subnet::Id
     Description: Subnet Ids the Host Will be Launched into
-    Default: "subnet-7d0bf80a"
 
   VPCId:
     Type: AWS::EC2::VPC::Id
     Description: The VPC that the Host will reside
-    Default: "vpc-b3ad53d6"
 
 Resources:
 
@@ -39,7 +42,10 @@ Resources:
       GroupDescription: AuthorPublishDispatcher Security Group
       Tags:
         - Key: Name
-          Value: AuthorPublishDispatcher Security Group
+          Value: AEM Author Publish Dispatcher Security Group
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VPCId
 
@@ -119,7 +125,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: AuthorPublishDispatcherStackPublishRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AuthorPublishDispatcherStackPublishRole
 
   AuthorPublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -128,7 +134,6 @@ Resources:
       Roles:
         - Ref: AuthorPublishDispatcherRole
 
-
   AuthorPublishDispatcher:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -136,7 +141,8 @@ Resources:
         Ref: AuthorPublishDispatcherInstanceProfile
       ImageId:
         Ref: AuthorPublishDispatcherImageId
-      InstanceType: m4.large
+      InstanceType:
+        Ref: AuthorPublishDispatcherInstanceType
       KeyName:
         Ref: AuthorPublishDispatcherKeyPairName
       NetworkInterfaces:
@@ -148,10 +154,14 @@ Resources:
           SubnetId:
             Ref: AuthorPublishDispatcherSubnet
       Tags:
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
         - Key: Name
           Value: AuthorPublishDispatcher
         - Key: Component
           Value: author-primary
-        - Key: StackPrefix
-          Value:
-            Ref: ComputeStackPrefixParameter
+      UserData:
+        Fn::Base64:
+          Fn::Sub: "#!/bin/bash -x\n\
+            \ echo HelloWorld!\n"
