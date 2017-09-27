@@ -74,7 +74,7 @@ messaging:
     contact_email: test@email.com
 
 compute:
-  key_pair_name: sandpit-key
+  key_pair_name: densikat-sandpit
   inbound_from_bastion_host_security_group: sg-a5ac6cc2
 
 s3:
