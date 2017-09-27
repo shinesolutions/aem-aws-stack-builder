@@ -160,7 +160,7 @@ Resources:
         - Key: Name
           Value: AuthorPublishDispatcher
         - Key: Component
-          Value: author-primary
+          Value: author-publish-dispatcher
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n\
