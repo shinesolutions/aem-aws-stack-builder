@@ -20,6 +20,8 @@
           AuthorPublishDispatcherKeyPairName: "sshim-sandpit"
           AuthorPublishDispatcherSubnet: "subnet-7d0bf80a"
           VPCId: "vpc-b3ad53d6"
+          DataBucketNameParameter: "aem-aws-stack-builder"
+          AemAwsStackProvisionerVersionParameter: "2.0.0b"
       tags:
       - create
 
