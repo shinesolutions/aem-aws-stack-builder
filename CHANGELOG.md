@@ -1,5 +1,8 @@
 ### 1.1.2
 * Disable generated system user credentials logging #34
+* Added CPU alarm based scaling to publish-dispatcher. Controlled by publish_dispatcher.cpu_scaling_threshold in apps.yaml #26
+* Update aem-aws-stack-provisioner version to 1.1.2
+* Update aem-orchestrator version to 1.0.1
 
 ### 1.1.1
 * Update aem-aws-stack-provisioner version to 1.1.1

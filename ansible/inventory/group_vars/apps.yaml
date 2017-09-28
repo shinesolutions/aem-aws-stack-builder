@@ -3,7 +3,7 @@
 aem_vpc:
   id: vpc-2fc3014b
   author_dispatcher_subnet_list: subnet-8562f4e1, subnet-0e2f9178
-  author_subnet_a_id: subnet-8462f4e0
+  author_subnet_a_id: subnet-b451bad3
   author_subnet_b_id: subnet-022f9174
   chaos_monkey_subnet_list: subnet-8662f4e2, subnet-052f9173
   orchestrator_subnet_list: subnet-8662f4e2, subnet-052f9173
@@ -81,8 +81,8 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 1.1.1
-  aem_orchestrator_version: 1.0.0
+  aem_aws_stack_provisioner_version: 1.1.2
+  aem_orchestrator_version: 1.0.1
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
 
@@ -90,9 +90,10 @@ publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
   instance_profile: sandpit-aem-roles-stack-PublishDispatcherInstanceProfile-V9GSTTG597O
   instance_type: t2.micro
-  min_size: 1
+  min_size: 2
   desired_capacity: 2
-  max_size: 2
+  max_size: 4
+  cpu_scaling_threshold: 80
   root_vol_size: 20
   data_vol_size: 20
   load_balancer:
@@ -109,7 +110,7 @@ publish:
   instance_type: m3.large
   min_size:  1
   desired_capacity: 2
-  max_size: 2
+  max_size: 4
   root_vol_size: 20
   data_vol_size: 50
   tag_name: AEM Publish

@@ -41,7 +41,7 @@ network:
       tag_name: AEM Author Subnet A
     subnet_b:
       cidr_block: 10.0.13.128/25
-      tag_name: AEM Auhtor Subnet B
+      tag_name: AEM Author Subnet B
 
   author_dispatcher:
     subnet_a:

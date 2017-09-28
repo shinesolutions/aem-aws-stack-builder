@@ -1,4 +1,4 @@
-version ?= 1.1.1
+version ?= 1.1.2
 
 # development targets
 
@@ -179,6 +179,6 @@ package:
 git-archive:
 	rm -rf stage
 	mkdir -p stage
-	git archive --format=tar.gz --prefix=aaem-aws-stack-builder-$(version)/ HEAD -o stage/aem-aws-stack-builder-$(version).tar.gz
+	git archive --format=tar.gz --prefix=aem-aws-stack-builder-$(version)/ HEAD -o stage/aem-aws-stack-builder-$(version).tar.gz
 
 .PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert package git-archive
