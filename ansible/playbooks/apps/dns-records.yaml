@@ -7,25 +7,24 @@
   tasks:
     - name: Create DNS Records CloudFormation Stack
       cloudformation:
-        stack_name: "{{stack_prefix}}-{{ dns_records.stack_name }}"
+        stack_name: "{{stack_prefix}}-{{ dns.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
         template: "../../../cloudformation/apps/dns-records.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          Route53HostedZoneNameParameter: "{{dns_records.route53_hosted_zone_name}}"
-          AuthorStackNameParameter: "{{stack_prefix}}-{{author.stack_name}}"
-          AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
-          AuthorDispatcherStackNameParameter: "{{stack_prefix}}-{{author_dispatcher.stack_name}}"
-          AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
-          PublishDispatcherStackNameParameter: "{{stack_prefix}}-{{publish_dispatcher.stack_name}}"
-          PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
+          Route53HostedZoneNameParameter: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name }}"
+          AuthorDNSRecordSetNameParameter: "{{ dns.author.record_set_name }}"
+          AuthorDispatcherDNSRecordSetNameParameter: "{{ dns.author_dispatcher.record_set_name }}"
+          PublishDispatcherDNSRecordSetNameParameter: "{{ dns.publish_dispatcher.record_set_name }}"
       tags:
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ dns_records.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+              aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ dns.stack_name }}"
+                  --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:
@@ -33,7 +32,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ dns_records.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ dns.stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -41,10 +40,10 @@
 
     - name: Delete AEM DNS Record Set Stack
       cloudformation:
-        stack_name: "{{stack_prefix}}-{{ dns_records.stack_name }}"
+        stack_name: "{{stack_prefix}}-{{ dns.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"           
+        "stack_query.rc == 0"
       tags:
       - delete

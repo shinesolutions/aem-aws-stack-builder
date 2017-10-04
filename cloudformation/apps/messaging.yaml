@@ -6,6 +6,10 @@ Description:
 
 Parameters:
 
+  ComputeStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+
   AEMASGEventQueueNameParameter:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Quene Name
@@ -17,14 +21,6 @@ Parameters:
   AEMASGEventTopicNameParameter:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Topic Name
-
-  AlarmNotificationTopicNameParameter:
-    Type: String
-    Description: AEM Sync Delay Alarm Topic Name
-
-  AlarmNotificationContactEmailParameter:
-    Type: String
-    Description: AEM Sync Delay Alarm Contact Email (When alarm triggers)
 
 Resources:
 
@@ -67,13 +63,10 @@ Resources:
       Queues:
         - Ref: AEMAutoScalingGroupEventQueue
 
-  AlarmNotificationTopic: 
+  AlarmNotificationTopic:
     Type: AWS::SNS::Topic
-    Properties: 
-      Subscription: 
-        - Endpoint: !Sub ${AlarmNotificationContactEmailParameter}
-          Protocol: email
-      TopicName: !Sub ${AlarmNotificationTopicNameParameter}
+    Properties:
+      DisplayName: !Sub ${ComputeStackPrefixParameter}-alarm-notification-topic
 
 Outputs:
 
@@ -82,13 +75,21 @@ Outputs:
       Ref: AEMAutoScalingGroupEventQueue
     Description: The AEM ASG Event Queue
 
+  AEMASGEventQueueName:
+    Value: !GetAtt AEMAutoScalingGroupEventQueue.QueueName
+    Description: The AEM ASG Event Queue Name
+    Export:
+      Name:
+        Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventQueueName
+
+
   AEMASGEventTopic:
     Value:
       Ref: AEMASGEventTopic
     Description: The AEM ASG Event Topic
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AEMASGEventTopic
+        Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic
 
   AlarmNotificationTopic:
     Value:
@@ -96,4 +97,4 @@ Outputs:
     Description: The AEM Alarm Notification Topic
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AlarmNotificationTopic
+        Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic

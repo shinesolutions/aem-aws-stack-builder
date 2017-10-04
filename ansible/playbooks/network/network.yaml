@@ -5,14 +5,6 @@
   connection: local
 
   tasks:
-    - name: Get AEM Stack VPC
-      ec2_vpc_net_facts:
-        region: "{{ aws.region }}"
-        filters:
-          "tag:Name": "{{ stack_prefix }}-{{ ec2_vpc.tag_name }}"
-      register: aem_stack_vpc
-      tags:
-      - create
 
     - name: Create AEM Network Stack
       cloudformation:
@@ -22,7 +14,7 @@
         disable_rollback: true
         template: "../../../cloudformation/network/network.yaml"
         template_parameters:
-          VpcIdParameter: "{{ aem_stack_vpc.vpcs.0.id }}"
+          StackPrefix: "{{ stack_prefix}}"
           AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"
           AvailabilityZoneBParameter: "{{ aws.availability_zone_b }}"
           Ec2InternetGatewayTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
@@ -50,14 +42,17 @@
           ToolSubnetATagNameParameter: "{{ stack_prefix }}-{{ network.tool.subnet_a.tag_name }}"
           ToolSubnetBCidrBlockParameter: "{{ network.tool.subnet_b.cidr_block }}"
           ToolSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.tool.subnet_b.tag_name }}"
-          PublicRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
-          PrivateRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
+          PublicRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.public_route_table.tag_name }}"
+          PrivateRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.private_route_table.tag_name }}"
+          S3BucketParameter: "{{ endpoints.s3 | default('') }}"
       tags:
       - create
 
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ network.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+       aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ network.stack_name }}"
+            --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:

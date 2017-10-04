@@ -2,8 +2,8 @@
 set -o nounset
 set -o errexit
 
-if [ "$#" -ne 4 ]; then
-  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix> <component> <aem_aws_stack_provisioner_version>'
+if [ "$#" -lt 4 ]; then
+  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix> <component> <aem_aws_stack_provisioner_version> [local_yaml_file]'
   exit 1
 fi
 
@@ -11,7 +11,43 @@ data_bucket_name=$1
 stack_prefix=$2
 component=$3
 aem_aws_stack_provisioner_version=$4
-PATH=$PATH:/opt/puppetlabs/bin
+
+PATH=$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin
+
+download_provisioner() {
+  dest_dir=$1
+  s3_object_name=$2
+  mkdir -p "${dest_dir}"
+  pushd "${dest_dir}"
+  aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/${s3_object_name}" .
+  tar -xzvf "${s3_object_name}"
+  rm "${s3_object_name}"
+  chown -R root:root .
+  popd
+}
+
+run_custom_stage() {
+  stage=${1}
+  custom_stack_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
+  script=${custom_stack_provisioner_dir}/${stage}.sh
+  if [ -x "${script}" ]; then
+    echo "Execute the ${stage} custom provisioning script..."
+    cd ${custom_stack_provisioner_dir} && ${script} "${stack_prefix}" "${component}"
+  fi
+}
+
+# translate puppet exit code to follow convention
+translate_puppet_exit_code() {
+
+  exit_code="$1"
+  if [ "$exit_code" -eq 0 ] || [ "$exit_code" -eq 2 ]; then
+    exit_code=0
+  else
+    exit "$exit_code"
+  fi
+
+  return "$exit_code"
+}
 
 echo "Initialising AEM Stack Builder provisioning..."
 
@@ -20,46 +56,57 @@ puppet --version
 python --version
 ruby --version
 
-if aws s3 ls "s3://${data_bucket_name}/${stack_prefix}/" | grep aem-custom-stack-provisioner.tar.gz
-then
-
-    echo "Downloading AEM Stack Custom Provisioner..."
-    mkdir -p /opt/shinesolutions/aem-custom-stack-provisioner/
-    aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-custom-stack-provisioner.tar.gz" /opt/shinesolutions/aem-custom-stack-provisioner/aem-custom-stack-provisioner.tar.gz
-    cd /opt/shinesolutions/aem-custom-stack-provisioner/
-    gunzip aem-custom-stack-provisioner.tar.gz
-    tar -xvf aem-custom-stack-provisioner.tar
-    rm aem-custom-stack-provisioner.tar
-    chown -R root:root /opt/shinesolutions/aem-custom-stack-provisioner/
-
+if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
+  echo "Downloading AEM Stack Custom Provisioner..."
+  download_provisioner /opt/shinesolutions/aem-custom-stack-provisioner aem-custom-stack-provisioner.tar.gz
 fi
 
 echo "Downloading AEM Stack Provisioner..."
-mkdir -p /opt/shinesolutions/aem-aws-stack-provisioner/
-aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz" "/opt/shinesolutions/aem-aws-stack-provisioner/aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
-cd /opt/shinesolutions/aem-aws-stack-provisioner/
-gunzip "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
-tar -xvf "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
-rm "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar"
-chown -R root:root /opt/shinesolutions/aem-aws-stack-provisioner/
+download_provisioner /opt/shinesolutions/aem-aws-stack-provisioner "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 
+run_custom_stage pre-common
 
-if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesolutions/aem-custom-stack-provisioner/pre-common.sh ]; then
+cd /opt/shinesolutions/aem-aws-stack-provisioner
 
-    echo "Execute the pre-common custom provisioning script..."
-    cd /opt/shinesolutions/aem-custom-stack-provisioner && ./pre-common.sh "${stack_prefix}" "${component}"
-
+if [[ -d data ]]; then
+  echo "Attempting to sync Hiera config & YAML from ${data_bucket_name}"
+  aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/data/" data/
+  aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/conf/" conf/
 fi
 
-cd /opt/shinesolutions/aem-aws-stack-provisioner/
+if [ "$#" -eq 5 ]; then
+  local_yaml_file=$5
+  local_yaml_path="${PWD}/data/local.yaml"
+  if [[ -e ${local_yaml_path} ]]; then
+    echo "WARNING: ${local_yaml_path} exists and will be overwritten."
+    echo "Previous contents:"
+    cat "${local_yaml_path}"
+    echo "New contents:"
+    cat "${local_yaml_file}"
+  fi
+  cp "${local_yaml_file}" "${local_yaml_path}"
+fi
+
+echo "Attempting to copy stack facts to Facter 'facts.d' directory."
+mkdir -p /opt/puppetlabs/facts/facts.d
+aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
+
+export FACTER_data_bucket_name="${data_bucket_name}"
+export FACTER_stack_prefix="${stack_prefix}"
+
+set +o errexit
 
 echo "Applying common Puppet manifest for all components..."
-FACTER_data_bucket_name="${data_bucket_name}" \
-  FACTER_stack_prefix="${stack_prefix}" \
-  puppet apply \
+puppet apply \
+  --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
   --modulepath modules \
-  --hiera_config conf/hiera.yaml manifests/common.pp
+  --hiera_config conf/hiera.yaml \
+  manifests/common.pp
+
+translate_puppet_exit_code "$?"
+
+set -o errexit
 
 echo "Checking orchestration tags for ${component} component..."
 /opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
@@ -67,20 +114,30 @@ echo "Checking orchestration tags for ${component} component..."
 echo "Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
 
+set +o errexit
+
 echo "Applying Puppet manifest for ${component} component..."
-puppet apply --logdest /var/log/puppet-stack-init.log --modulepath modules --hiera_config conf/hiera.yaml "manifests/${component}.pp"
+puppet apply \
+  --detailed-exitcodes \
+  --logdest /var/log/puppet-stack-init.log \
+  --modulepath modules \
+  --hiera_config conf/hiera.yaml \
+  "manifests/${component}.pp"
 
-if [ -d /opt/shinesolutions/aem-custom-stack-provisioner ] && [ -f /opt/shinesolutions/aem-custom-stack-provisioner/post-common.sh ]; then
+translate_puppet_exit_code "$?"
 
-    echo "Execute the post-common custom provisioning script..."
-    cd /opt/shinesolutions/aem-custom-stack-provisioner && ./post-common.sh "${stack_prefix}" "${component}"
+set -o errexit
 
-fi
+run_custom_stage post-common
 
 cd /opt/shinesolutions/aem-aws-stack-provisioner/
 
+# Some tests seem to fail because services aren't fully up.
+sleep 30
+
 echo "Testing ${component} component using Serverspec..."
-cd test/serverspec && rake spec "SPEC=spec/${component}_spec.rb"
+/opt/puppetlabs/puppet/bin/gem install --no-document rspec serverspec
+cd test/serverspec && /opt/puppetlabs/puppet/bin/rake spec "SPEC=spec/${component}_spec.rb"
 
 echo "Cleaning up provisioner temp directory..."
 rm -rf /tmp/shinesolutions/aem-aws-stack-provisioner/*

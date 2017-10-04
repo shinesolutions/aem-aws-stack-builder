@@ -13,6 +13,7 @@
         disable_rollback: true
         template: "../../../cloudformation/apps/messaging.yaml"
         template_parameters:
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
@@ -22,7 +23,9 @@
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ messaging.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+            aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ messaging.stack_name }}"
+                --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:
@@ -42,6 +45,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"           
+        "stack_query.rc == 0"
       tags:
       - delete

@@ -1,0 +1,7 @@
+
+
+ec2_vpc:
+  stack_name: aem-vpc-stack
+  tag_name: AEM Stack VPC
+  cidr_block: 10.0.8.0/21
+  dhcp_option: dopt-75958817

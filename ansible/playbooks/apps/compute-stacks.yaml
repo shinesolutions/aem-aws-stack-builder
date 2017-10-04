@@ -1,0 +1,127 @@
+---
+- name: AEM Apps Compute Resources Overarching CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../cloudformation/apps
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml" --acl public-read
+      tags:
+        - create
+
+    - name: Create AEM App Compute Resources Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../cloudformation/apps/compute-stacks.yaml"
+        template_parameters:
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
+          ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+
+          InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
+
+          AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
+          AuthorImageParameter: "{{ ami_ids.author }}"
+          AuthorInstanceTypeParameter: "{{ author.instance_type }}"
+          AuthorRootVolSizeParameter: "{{ author.root_vol_size }}"
+          AuthorDataVolSizeParameter: "{{ author.data_vol_size }}"
+          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot }}"
+          AuthorDataVolSnapshotParamater: "{{ snapshots.author.data_vol_snapshot_id }}"
+
+          PublishImageParameter: "{{ ami_ids.publish }}"
+          PublishInstanceTypeParameter: "{{ publish.instance_type }}"
+          PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          PublishASGMaxSizeParameter: "{{ publish.max_size }}"
+          PublishASGMinSizeParameter: "{{ publish.min_size }}"
+          PublishASGDesiredCapacityParameter: "{{ publish.desired_capacity }}"
+          PublishRootVolSizeParameter: "{{ publish.root_vol_size }}"
+          PublishDataVolSizeParameter: "{{ publish.data_vol_size }}"
+          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
+          PublishDataVolSnapshotParamater: "{{ snapshots.publish.data_vol_snapshot_id }}"
+
+          PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
+          PublishDispatcherLoadBalancerSchemeParameter: "{{ publish_dispatcher.elb_scheme }}"
+          PublishDispatcherImageParameter: "{{ ami_ids.publish_dispatcher }}"
+          PublishDispatcherInstanceTypeParameter: "{{ publish_dispatcher.instance_type }}"
+          PublishDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
+          PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
+          PublishDispatcherASGDesiredCapacityParameter: "{{ publish_dispatcher.desired_capacity }}"
+          PublishDispatcherRootVolSizeParameter: "{{ publish_dispatcher.root_vol_size }}"
+          PublishDispatcherDataVolSizeParameter: "{{ publish_dispatcher.data_vol_size }}"
+
+          AuthorDispatcherLoadBalancerHealthCheckTargetParameter: "{{ author_dispatcher.elb_health_check }}"
+          AuthorDispatcherImageParameter: "{{ ami_ids.author_dispatcher }}"
+          AuthorDispatcherInstanceTypeParameter: "{{ author_dispatcher.instance_type }}"
+          AuthorDispatcherASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          AuthorDispatcherASGMaxSizeParameter: "{{ author_dispatcher.max_size }}"
+          AuthorDispatcherASGMinSizeParameter: "{{ author_dispatcher.min_size }}"
+          AuthorDispatcherASGDesiredCapacityParameter: "{{ author_dispatcher.desired_capacity }}"
+          AuthorDispatcherRootVolSizeParameter: "{{ author_dispatcher.root_vol_size }}"
+          AuthorDispatcherDataVolSizeParameter: "{{ author_dispatcher.data_vol_size }}"
+
+          OrchestratorImageParameter: "{{ ami_ids.orchestrator }}"
+          OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
+          OrchestratorASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          OrchestratorRootVolSizeParameter: "{{ orchestrator.root_vol_size }}"
+          OrchestratorDataVolSizeParameter: "{{ orchestrator.data_vol_size }}"
+
+          ChaosMonkeyImageParameter: "{{ ami_ids.chaos_monkey }}"
+          ChaosMonkeyInstanceTypeParameter: "{{ chaos_monkey.instance_type }}"
+          ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
+          ChaosMonkeyRootVolSizeParameter: "{{ chaos_monkey.root_vol_size }}"
+
+          Route53HostedZoneNameParameter: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name }}"
+          AuthorDNSRecordSetNameParameter: "{{ dns.author.record_set_name }}"
+          AuthorDispatcherDNSRecordSetNameParameter: "{{ dns.author_dispatcher.record_set_name }}"
+          PublishDispatcherDNSRecordSetNameParameter: "{{ dns.publish_dispatcher.record_set_name }}"
+
+          ImageRootDevice: "{{ ami_root_device_name }}"
+
+      tags:
+      - create
+
+    - name: Check if a Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+             --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ compute_stacks.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AEM App Compute Resources Stacks
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
+
+    - name: Delete default deployment descriptor
+      s3:
+        bucket: '{{ s3.data_bucket_name }}'
+        object: '{{ stack_prefix }}/deploy-artifacts-descriptor.json'
+        mode: delobj
+      ignore_errors: True
+      tags:
+        - delete

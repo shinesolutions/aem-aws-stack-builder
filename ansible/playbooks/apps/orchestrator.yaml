@@ -14,17 +14,14 @@
         template: "../../../cloudformation/apps/orchestrator.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           OrchestratorImageParameter: "{{ ami_ids.orchestrator }}"
+          OrchestratorImageRootDevice: "{{ ami_root_device_name }}"
           OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
-          OrchestratorASGAvailabilityZoneListParameter: "{{ aws.availability_zone_list }}"
-          OrchestratorASGSubnetListParameter: "{{ aem_vpc.orchestrator_subnet_list }}"
+          OrchestratorASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           OrchestratorRootVolSizeParameter: "{{ orchestrator.root_vol_size }}"
           OrchestratorDataVolSizeParameter: "{{ orchestrator.data_vol_size }}"
-          OrchestratorTagNameParameter: "{{ stack_prefix }}-{{ orchestrator.tag_name }}"
-          RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
-          SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
@@ -32,7 +29,9 @@
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ orchestrator.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+          aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ orchestrator.stack_name }}"
+              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:

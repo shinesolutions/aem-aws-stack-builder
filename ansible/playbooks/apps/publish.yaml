@@ -14,12 +14,12 @@
         template: "../../../cloudformation/apps/publish.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           PublishImageParameter: "{{ ami_ids.publish }}"
+          PublishImageRootDevice: "{{ ami_root_device_name }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
-          PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_list }}"
-          PublishASGSubnetListParameter: "{{ aem_vpc.publish_subnet_list }}"
+          PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           PublishASGMaxSizeParameter: "{{ publish.max_size }}"
           PublishASGMinSizeParameter: "{{ publish.min_size }}"
           PublishASGDesiredCapacityParameter: "{{ publish.desired_capacity }}"
@@ -27,10 +27,6 @@
           PublishDataVolSizeParameter: "{{ publish.data_vol_size }}"
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
           PublishDataVolSnapshotParamater: "{{ snapshots.publish.data_vol_snapshot_id }}"
-          PublishTagNameParameter: "{{ stack_prefix }}-{{ publish.tag_name }}"
-          RolesStackNameParameter: "{{ stack_prefix }}-{{ roles.stack_name }}"
-          SecurityGroupsStackNameParameter: "{{ stack_prefix }}-{{ security_groups.stack_name }}"
-          MessagingStackNameParameter: "{{ stack_prefix }}-{{ messaging.stack_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
@@ -38,7 +34,9 @@
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ publish.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+            aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ publish.stack_name }}"
+                --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:

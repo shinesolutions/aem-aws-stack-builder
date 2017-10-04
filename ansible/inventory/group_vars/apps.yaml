@@ -2,14 +2,20 @@
 
 aem_vpc:
   id: vpc-2fc3014b
-  author_dispatcher_subnet_list: subnet-8562f4e1, subnet-0e2f9178
+  author_dispatcher_subnet_a_id: subnet-8562f4e1
+  author_dispatcher_subnet_b_id: subnet-0e2f9178
   author_subnet_a_id: subnet-8462f4e0
   author_subnet_b_id: subnet-022f9174
-  chaos_monkey_subnet_list: subnet-8662f4e2, subnet-052f9173
-  orchestrator_subnet_list: subnet-8662f4e2, subnet-052f9173
-  publish_dispatcher_elb_subnet_list: subnet-8162f4e5, subnet-002f9176
-  publish_dispatcher_subnet_list: subnet-8762f4e3, subnet-012f9177
-  publish_subnet_list: subnet-8062f4e4, subnet-032f9175
+  chaos_monkey_subnet_a_id: subnet-8662f4e2
+  chaos_monkey_subnet_b_id: subnet-052f9173
+  orchestrator_subnet_a_id: subnet-8662f4e2
+  orchestrator_subnet_b_id: subnet-052f9173
+  publish_dispatcher_elb_subnet_a_id: subnet-8162f4e5
+  publish_dispatcher_elb_subnet_b_id: subnet-002f9176
+  publish_dispatcher_subnet_a_id: subnet-8762f4e3
+  publish_dispatcher_subnet_b_id: subnet-012f9177
+  publish_subnet_a_id: subnet-8062f4e4
+  publish_subnet_b_id: subnet-032f9175
 
 roles:
   stack_name: aem-roles-stack
@@ -21,12 +27,14 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-e7687e84
-  publish: ami-46160025
-  author_dispatcher: ami-cb687ea8
-  publish_dispatcher: ami-cb687ea8
-  orchestrator: ami-6e6b7d0d
-  chaos_monkey: ami-6e6b7d0d
+  author: ami-1f3e367c
+  publish: ami-003f3763
+  author_dispatcher: ami-07050a64
+  publish_dispatcher: ami-07050a64
+  orchestrator: ami-56303f35
+  chaos_monkey: ami-56303f35
+
+ami_root_device_name: /dev/sda1
 
 security_groups:
   stack_name: aem-security-groups-stack
@@ -81,7 +89,7 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 1.1.1
+  aem_aws_stack_provisioner_version: 0.9.0
   aem_orchestrator_version: 1.0.0
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
@@ -107,7 +115,7 @@ publish:
   stack_name: aem-publish-stack
   instance_profile: sandpit-aem-roles-stack-PublishInstanceProfile-LSPF5DN4VASK
   instance_type: m3.large
-  min_size:  1
+  min_size: 1
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
@@ -138,8 +146,8 @@ author_dispatcher:
   stack_name: aem-author-dispatcher-stack
   instance_profile: sandpit-aem-roles-stack-AuthorDispatcherInstanceProfile-5U5O43PMKYJJ
   instance_type: t2.micro
-  min_size:  0
-  desired_capacity: 2
+  min_size: 0
+  desired_capacity: 2  
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
@@ -148,6 +156,9 @@ author_dispatcher:
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTPS:443/system/health?tags=shallow
   certificate_name: aem-stack-builder
+
+author_publish_dispatcher:
+  stack_name: aem-author-publish-dispatcher-stack
 
 orchestrator:
   stack_name: aem-orchestrator-stack

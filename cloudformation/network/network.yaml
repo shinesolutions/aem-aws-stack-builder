@@ -5,10 +5,10 @@ Description:
   Create Subnets, Internet Gateway, and Route Tables for AEM Stack
 
 Parameters:
-  VpcIdParameter:
-    Type: AWS::EC2::VPC::Id
-    Default: vpc-2fc3014b
-    Description: The VPC to create the AEM Network in.
+  StackPrefix:
+    Type: String
+    Description: Used to Namespace the Exported Resources
+    Default: ""
 
   AvailabilityZoneAParameter:
     Type: AWS::EC2::AvailabilityZone::Name
@@ -44,7 +44,6 @@ Parameters:
     Type: String
     Default: AEM Publish Dispatcher ELB Subnet B
     Description: AEM Publish Dispatcher ELB Subnet B Name
-
 
   PublishDispatcherSubnetACidrBlockParameter:
     Type: String
@@ -108,7 +107,6 @@ Parameters:
     Default: AEM Auhtor Subnet B
     Description: AEM Author Subnet B Name
 
-
   AuthorDispatcherSubnetACidrBlockParameter:
     Type: String
     Default: 10.0.14.0/25
@@ -150,7 +148,6 @@ Parameters:
     Default: AEM Tool Subnet B
     Description: AEM Tool Subnet B Name
 
-
   PublicRouteTableTagNameParameter:
     Type: String
     Default: AEM VPC Public Route Table
@@ -161,6 +158,13 @@ Parameters:
     Default: AEM VPC Private Route Table
     Description: AEM VPC Private Route Table Name
 
+  S3BucketParameter:
+    Type: String
+    Default: ""
+    Description: S3 Bucket Allowed to Access Via S3 Endpoint in the VPC
+
+Conditions:
+  UseS3EndPoint: !Not [!Equals [!Ref S3BucketParameter, ""]]
 
 Resources:
   Ec2InternetGateway:
@@ -179,7 +183,7 @@ Resources:
       InternetGatewayId:
         Ref: Ec2InternetGateway
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
 
   PublishDispatcherELBSubnetA:
@@ -195,7 +199,7 @@ Resources:
           Value:
             Ref: PublishDispatcherELBSubnetATagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   PublishDispatcherELBSubnetB:
     Type: AWS::EC2::Subnet
@@ -210,7 +214,7 @@ Resources:
           Value:
             Ref: PublishDispatcherELBSubnetBTagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   PublishDispatcherSubnetA:
     Type: AWS::EC2::Subnet
@@ -225,7 +229,7 @@ Resources:
           Value:
             Ref: PublishDispatcherSubnetATagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   PublishDispatcherSubnetB:
     Type: AWS::EC2::Subnet
@@ -240,7 +244,7 @@ Resources:
           Value:
             Ref: PublishDispatcherSubnetBTagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   PublishSubnetA:
     Type: AWS::EC2::Subnet
@@ -255,7 +259,7 @@ Resources:
           Value:
             Ref: PublishSubnetATagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   PublishSubnetB:
     Type: AWS::EC2::Subnet
@@ -270,7 +274,7 @@ Resources:
           Value:
             Ref: PublishSubnetBTagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   AuthorSubnetA:
     Type: AWS::EC2::Subnet
@@ -285,7 +289,7 @@ Resources:
           Value:
             Ref: AuthorSubnetATagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   AuthorSubnetB:
     Type: AWS::EC2::Subnet
@@ -300,7 +304,7 @@ Resources:
           Value:
             Ref: AuthorSubnetBTagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   AuthorDispatcherSubnetA:
     Type: AWS::EC2::Subnet
@@ -315,7 +319,7 @@ Resources:
           Value:
             Ref: AuthorDispatcherSubnetATagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   AuthorDispatcherSubnetB:
     Type: AWS::EC2::Subnet
@@ -330,7 +334,7 @@ Resources:
           Value:
             Ref: AuthorDispatcherSubnetBTagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   ToolSubnetA:
     Type: AWS::EC2::Subnet
@@ -345,7 +349,7 @@ Resources:
           Value:
             Ref: ToolSubnetATagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   ToolSubnetB:
     Type: AWS::EC2::Subnet
@@ -360,13 +364,13 @@ Resources:
           Value:
             Ref: ToolSubnetBTagNameParameter
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
       Tags:
         - Key: Name
           Value:
@@ -387,7 +391,7 @@ Resources:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId:
-        Ref: VpcIdParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
       Tags:
         - Key: Name
           Value:
@@ -491,80 +495,171 @@ Resources:
         Ref: ToolSubnetB
 
 
-Outputs:
+  S3Endpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: UseS3EndPoint
+    Properties:
+      PolicyDocument: {
+        "Version": "2012-10-17",
+        "Statement": [{
+          "Effect": "Allow",
+          "Principal": "*",
+          "Action": ["s3:*"],
+          "Resource": {
+            "Fn::Sub": "arn:aws:s3:::${S3BucketParameter}/*"
+          }
+        }]
+      }
+      RouteTableIds:
+        - !Ref PublicRouteTable
+        - !Ref PrivateRouteTable
+      ServiceName: !Sub com.amazonaws.${AWS::Region}.s3
+      VpcId:
+        Fn::ImportValue: !Sub ${StackPrefix}-VPCId
 
+Outputs:
   PublishDispatcherELBSubnetA:
     Value:
       Ref: PublishDispatcherELBSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetA
     Description: The Publish Dispatcher ELB Subnet in Availability Zone A
 
   PublishDispatcherELBSubnetB:
     Value:
       Ref: PublishDispatcherELBSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetB
     Description: The Publish Dispatcher ELB Subnet in Availability Zone B
+
+  PublishDispatcherELBSubnetList:
+    Value: !Sub ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetList
+    Description: The Publish Dispatcher ELB Subnet List
 
   PublishDispatcherSubnetA:
     Value:
       Ref: PublishDispatcherSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetA
     Description: The Publish Dispatcher Subnet in Availability Zone A
 
   PublishDispatcherSubnetB:
     Value:
       Ref: PublishDispatcherSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetB
     Description: The Publish Dispatcher Subnet in Availability Zone B
+
+  PublishDispatcherSubnetList:
+    Value: !Sub ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetList
+    Description: The Publish Dispatcher Subnet List
 
   PublishSubnetA:
     Value:
       Ref: PublishSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-PublishSubnetA
     Description: The Publish Subnet in Availability Zone A
 
   PublishSubnetB:
     Value:
       Ref: PublishSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-PublishSubnetB
     Description: The Publish Subnet in Availability Zone B
+
+  PublishSubnetList:
+    Value: !Sub ${PublishSubnetA},${PublishSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-PublishSubnetList
+    Description: The Publish Subnet List
 
   AuthorSubnetA:
     Value:
       Ref: AuthorSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorSubnetA
     Description: The Author Subnet in Availability Zone A
 
   AuthorSubnetB:
     Value:
       Ref: AuthorSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorSubnetB
     Description: The Author Subnet in Availability Zone B
+
+  AuthorSubnetList:
+    Value: !Sub ${AuthorSubnetA},${AuthorSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorSubnetList
+    Description: The Author Subnet List
 
   AuthorDispatcherSubnetA:
     Value:
       Ref: AuthorDispatcherSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetA
     Description: The Author Dispatcher Subnet in Availability Zone A
 
   AuthorDispatcherSubnetB:
     Value:
       Ref: AuthorDispatcherSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetB
     Description: The Author Dispatcher Subnet in Availability Zone B
+
+  AuthorDispatcherSubnetList:
+    Value: !Sub ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetList
+    Description: The Author Dispatcher Subnet List
 
   ToolSubnetA:
     Value:
       Ref: ToolSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-ToolSubnetA
     Description: The Tool Subnet in Availability Zone A
 
   ToolSubnetB:
     Value:
       Ref: ToolSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-ToolSubnetB
     Description: The Tool Subnet in Availability Zone B
+
+  ToolSubnetList:
+    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-ToolSubnetList
+    Description: The Tool Subnet List
+
+  OrchestratorSubnetList:
+    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-OrchestratorSubnetList
+    Description: The Orchestrator Subnet List
+
+  ChaosMonkeySubnetList:
+    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-ChaosMonkeySubnetList
+    Description: The ChaosMonkey Subnet List
 
   PublicRouteTable:
     Value:
       Ref: PublicRouteTable
     Description: The Public Route Table for AEM Stack VPC
     Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-PublicRouteTable
+      Name: !Sub ${StackPrefix}-PublicRouteTable
 
   PrivateRouteTable:
     Value:
       Ref: PrivateRouteTable
     Description: The Private Route Table for AEM Stack VPC
     Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-PrivateRouteTable
+      Name: !Sub ${StackPrefix}-PrivateRouteTable

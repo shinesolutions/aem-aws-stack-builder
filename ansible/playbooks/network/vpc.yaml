@@ -13,13 +13,17 @@
         disable_rollback: true
         template: "../../../cloudformation/network/vpc.yaml"
         template_parameters:
+          StackPrefix: "{{ stack_prefix }}"
           Ec2VpcCidrBlockParameter: "{{ ec2_vpc.cidr_block }}"
           Ec2VpcTagNameParameter: "{{ stack_prefix }}-{{ ec2_vpc.tag_name }}"
+          Ec2VpcDhcpOptionSetParameter: " {{ ec2_vpc.dhcp_option}}"
       tags:
       - create
 
     - name: Check if a Stack Exists
-      command: aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ ec2_vpc.stack_name }}" --query 'Stacks[].StackName'
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ ec2_vpc.stack_name }}"
+            --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
       tags:
@@ -39,6 +43,6 @@
         region: "{{ aws.region }}"
         state: absent
       when:
-        "stack_query.rc == 0"        
+        "stack_query.rc == 0"
       tags:
       - delete

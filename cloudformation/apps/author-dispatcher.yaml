@@ -8,21 +8,22 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  SSLCertificateARNParameter:
+  NetworkStackPrefixParameter:
     Type: String
-    Description: The ARN for SSL Certificate
+    Description: The AEM Stack Network Resources Stack Prefix
 
   AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
     Type: String
     Description: AEM Author Dispatcher ELB Health Check Target
 
-  AuthorDispatcherInstanceProfileParameter:
-    Type: String
-    Description: The Author Dispatcher Instance Profile
-
   AuthorDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: The Author Dispatcher Image Id
+
+  AuthorDispatcherImageRootDevice:
+    Type: String
+    Description: The root device name for the Author Dispatcher Image Id
+    Default: /dev/sda1
 
   AuthorDispatcherInstanceTypeParameter:
     Type: String
@@ -36,10 +37,6 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
     Description: The Author Dispatcher Availability Zone List
 
-  AuthorDispatcherSubnetListParameter:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: The Author Dispatcher Subnet List
-
   AuthorDispatcherASGMaxSizeParameter:
     Type: String
     Description: The Author Dispatcher Auto Scaling Group Maximum Size
@@ -50,7 +47,7 @@ Parameters:
 
   AuthorDispatcherASGDesiredCapacityParameter:
     Type: String
-    Description: The Author Dispatcher Auto Scaling Group Desired Capacity
+    Description: The Author Dispatcher Auto Scaling Desired Capacity
 
   AuthorDispatcherRootVolSizeParameter:
     Type: Number
@@ -59,26 +56,6 @@ Parameters:
   AuthorDispatcherDataVolSizeParameter:
     Type: Number
     Description: Author Dispatcher Instances Data EBS Volume Size
-
-  AuthorDispatcherTagNameParameter:
-    Type: String
-    Description: The Author Dispatcher Name Tag
-
-  AuthorDispatcherLoadBalancerTagNameParameter:
-    Type: String
-    Description: The Author Dispatcher Load Balancer Name Tag
-
-  RolesStackNameParameter:
-    Type: String
-    Description: The AEM Roles Stack Name
-
-  SecurityGroupsStackNameParameter:
-    Type: String
-    Description: The AEM Security Groups Stack Name
-
-  MessagingStackNameParameter:
-    Type: String
-    Description: The AEM Messaging Stack Name
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -93,7 +70,6 @@ Parameters:
     Description: AEM AWS Stack Provisioner version number
 
 Resources:
-
   AuthorDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
@@ -117,28 +93,28 @@ Resources:
         InstancePort: '443'
         InstanceProtocol: HTTPS
         SSLCertificateId:
-          Ref: SSLCertificateARNParameter
+          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorDispatcherELBSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-        Ref: AuthorDispatcherSubnetListParameter
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetA
+        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetB
       Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${AuthorDispatcherLoadBalancerTagNameParameter}
-      - Key: StackPrefix
-        Value:
-          Ref: ComputeStackPrefixParameter
+        - Key: Name
+          Value: AEM Author Dispatcher Load Balancer
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
 
   AuthorDispatcherLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: /dev/sda1
+      - DeviceName: !Ref AuthorDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -151,7 +127,7 @@ Resources:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: AuthorDispatcherInstanceProfileParameter
+        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-AuthorDispatcherInstanceProfile
       ImageId:
         Ref: AuthorDispatcherImageParameter
       InstanceMonitoring: false
@@ -161,7 +137,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackNameParameter}-AuthorDispatcherSecurityGroup
+          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -171,7 +147,6 @@ Resources:
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
-
   AuthorDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
@@ -197,11 +172,10 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${MessagingStackNameParameter}-AEMASGEventTopic
+            Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic
       Tags:
       - Key: Name
-        Value:
-          Fn::Sub: ${AuthorDispatcherTagNameParameter}
+        Value: AEM Author Dispatcher
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:
@@ -211,13 +185,18 @@ Resources:
         Value: author-dispatcher
         PropagateAtLaunch: true
       VPCZoneIdentifier:
-        Ref: AuthorDispatcherSubnetListParameter
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+             !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetList
 
 Outputs:
 
   AuthorDispatcherLoadBalancer:
     Value:
       Ref: AuthorDispatcherLoadBalancer
+    Export:
+      Name: !Sub ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancer
     Description: The Author Dispatcher Load Balancer
 
   AuthorDispatcherLoadBalancerDNSName:
@@ -225,7 +204,7 @@ Outputs:
       Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-LoadBalancerDNSName
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
     Description: The Author Dispatcher Load Balancer
 
   AuthorDispatcherLaunchConfiguration:
@@ -238,5 +217,5 @@ Outputs:
       Ref: AuthorDispatcherAutoScalingGroup
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorDispatcherAutoScalingGroup
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherAutoScalingGroup
     Description: The Author Dispatcher Auto Scaling Group

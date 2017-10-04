@@ -6,29 +6,9 @@ Description:
 
 Parameters:
 
-  PublishDispatcherRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Publish Dispatcher Role Name
-
-  PublishRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Publish Role Name
-
-  AuthorRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Author Role Name
-
-  AuthorDispatcherRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Author Dispatcher Role Name
-
-  OrchestratorRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Orchestrator Role Name
-
-  ChaosMonkeyRoleNameParameter:
-    Type: String
-    Description: The AEM Stack Chaos Monkey Role Name
+  ComputeStackPrefixParameter:
+      Type: String
+      Description: The AEM Stack Compute Resources Stack Prefix
 
 Resources:
 
@@ -45,6 +25,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: PublishDispatcherRolePolicy
           PolicyDocument:
@@ -70,8 +52,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: PublishDispatcherRoleNameParameter
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackPublishDispatcherRole
 
   PublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -94,6 +75,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: PublishRolePolicy
           PolicyDocument:
@@ -121,8 +104,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: PublishRoleNameParameter
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackPublishRole
 
   PublishInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -144,6 +126,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: AuthorRolePolicy
           PolicyDocument:
@@ -171,8 +155,8 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: AuthorRoleNameParameter
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackAuthorRole
+
 
   AuthorInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -194,6 +178,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: AuthorDispatcherRolePolicy
           PolicyDocument:
@@ -215,8 +201,8 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: AuthorDispatcherRoleNameParameter
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackAuthorDispatcherRole
+
 
   AuthorDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -238,6 +224,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: OrchestratorRolePolicy
           PolicyDocument:
@@ -291,8 +279,8 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName:
-        Ref: OrchestratorRoleNameParameter
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackOrchestratorRole
+
 
   OrchestratorInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -314,6 +302,8 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
         - PolicyName: ChaosMonkeyRolePolicy
           PolicyDocument:
@@ -358,8 +348,13 @@ Resources:
                   - s3:Get*
                   - s3:List*
                 Resource: "*"
-      RoleName:
-        Ref: ChaosMonkeyRoleNameParameter
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - arn:aws:logs:*:*:*
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackChaosMonkeyRole
+
 
   ChaosMonkeyInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -376,7 +371,7 @@ Outputs:
     Description: The Publish Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishDispatcherInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherInstanceProfile
 
   PublishInstanceProfile:
     Value:
@@ -384,7 +379,7 @@ Outputs:
     Description: The Publish Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-PublishInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-PublishInstanceProfile
 
   AuthorInstanceProfile:
     Value:
@@ -392,7 +387,7 @@ Outputs:
     Description: The Author Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorInstanceProfile
 
   AuthorDispatcherInstanceProfile:
     Value:
@@ -400,7 +395,7 @@ Outputs:
     Description: The Author Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-AuthorDispatcherInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherInstanceProfile
 
   OrchestratorInstanceProfile:
     Value:
@@ -408,7 +403,7 @@ Outputs:
     Description: The Orchestrator Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-OrchestratorInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorInstanceProfile
 
   ChaosMonkeyInstanceProfile:
     Value:
@@ -416,4 +411,4 @@ Outputs:
     Description: The Chaos Monkey Instance Profile
     Export:
       Name:
-        Fn::Sub: ${AWS::StackName}-ChaosMonkeyInstanceProfile
+        Fn::Sub: ${ComputeStackPrefixParameter}-ChaosMonkeyInstanceProfile

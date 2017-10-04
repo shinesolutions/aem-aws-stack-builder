@@ -65,24 +65,22 @@ It is also possible to create specific components without the complete set. Chec
 
 ## Configuration
 
-|--------------------------------------------|------|
-| Name                                       | Description | Default value |
-|--------------------------------------------|------|
-| publish_dispatcher.stack_name              | TODO |
-| publish_dispatcher.instance_profile        | TODO |
-| publish_dispatcher.instance_type           | TODO |
-| publish_dispatcher.min_size                | TODO |
-| publish_dispatcher.max_size                | TODO |
-| publish_dispatcher.load_balancer.tag_name  | TODO |
-| publish_dispatcher.tag_name                | TODO |
-| publish_dispatcher.elb_health_check        | TODO |
-| publish_dispatcher.route53_record_set_name | TODO |
-| chaos_monkey.stack_name                    | TODO |
-| chaos_monkey.ami_id                        | TODO |
-| chaos_monkey.instance_profile              | TODO |
-| chaos_monkey.instance_type                 | TODO |
-| chaos_monkey.tag_name                      | TODO |
-|--------------------------------------------|------|
+| Name                                         | Description |
+|----------------------------------------------|-------------|
+| publish_dispatcher.stack_name                | TODO        |
+| publish_dispatcher.instance_profile          | TODO        |
+| publish_dispatcher.instance_type             | TODO        |
+| publish_dispatcher.min_size                  | TODO        |
+| publish_dispatcher.max_size                  | TODO        |
+| publish_dispatcher.load_balancer.tag_name    | TODO        |
+| publish_dispatcher.tag_name                  | TODO        |
+| publish_dispatcher.elb_health_check          | TODO        |
+| publish_dispatcher.route53_record_set_name   | TODO        |
+| chaos_monkey.stack_name                      | TODO        |
+| chaos_monkey.ami_id                          | TODO        |
+| chaos_monkey.instance_profile                | TODO        |
+| chaos_monkey.instance_type                   | TODO        |
+| chaos_monkey.tag_name                        | TODO        |
 
 ## Development
 

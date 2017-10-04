@@ -1,0 +1,21 @@
+---
+- name: Upload AEM Stack Provisioner to library
+  hosts: all
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Ensure data bucket exists
+      s3_bucket:
+        name: "{{ s3.data_bucket_name }}"
+        state: present
+      tags:
+        - always
+
+    - name: Upload AEM Stack Provisioner to library
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "library/aem-aws-stack-provisioner-{{ aem_aws_stack_provisioner_version }}.tar.gz"
+        src: "../../../artifact/aem-aws-stack-provisioner-{{ aem_aws_stack_provisioner_version }}.tar.gz"
+        mode: put
+      tags:
+        - always

@@ -6,21 +6,15 @@ Description:
 
 Parameters:
 
+  StackPrefix:
+    Type: String
+    Description: Used to Namespace the Exported Resources
+    Default: ""
+
   Ec2NatGatewayElasticIpAllocationIdParameter:
     Type: String
     Default: eipalloc-32711957
     Description: The EC2 Nat Gateway Elastic Ip Allocation Id
-
-  PublishDispatcherELBSubnetAParameter:
-    Type: AWS::EC2::Subnet::Id
-    Default: subnet-8162f4e5
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
-
-  NetworkStackNameParameter:
-    Type: String
-    Default: aem-network-stack
-    Description: The AEM Network Stack Name
-
 
 Resources:
 
@@ -30,7 +24,7 @@ Resources:
       AllocationId:
         Ref: Ec2NatGatewayElasticIpAllocationIdParameter
       SubnetId:
-        Ref: PublishDispatcherELBSubnetAParameter
+        Fn::ImportValue: !Sub ${StackPrefix}-PublishDispatcherELBSubnetA
 
   PrivateInternetGatewayRoute:
     Type: AWS::EC2::Route
@@ -39,7 +33,7 @@ Resources:
       NatGatewayId:
         Ref: Ec2NatGateway
       RouteTableId:
-        Fn::ImportValue: !Sub  ${NetworkStackNameParameter}-PrivateRouteTable
+        Fn::ImportValue: !Sub  ${StackPrefix}-PrivateRouteTable
 
 Outputs:
 

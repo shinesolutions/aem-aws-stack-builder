@@ -20,6 +20,7 @@ lint:
 
 validate:
 	for template in cloudformation/*/*.yaml; do \
+		echo "checking template $${template} ...."; \
 		aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 
@@ -51,6 +52,12 @@ create-network:
 
 delete-network:
 	./scripts/delete-stack.sh network/network "$(stack_prefix)" "$(config_path)"
+
+create-network-exports:
+	./scripts/create-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
+
+delete-network-exports:
+	./scripts/delete-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
 
 create-nat-gateway:
 	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
@@ -109,6 +116,12 @@ create-publish:
 delete-publish:
 	./scripts/delete-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
 
+create-author-publish-dispatcher:
+	./scripts/create-stack.sh apps/author-publish-dispatcher "$(stack_prefix)" "$(config_path)"
+
+delete-author-publish-dispatcher:
+	./scripts/delete-stack.sh apps/author-publish-dispatcher "$(stack_prefix)" "$(config_path)"
+
 create-roles:
 	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
 
@@ -132,6 +145,33 @@ create-stack-data:
 
 delete-stack-data:
 	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
+
+create-stack-prerequisites:
+	./scripts/create-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
+
+delete-stack-prerequisites:
+	./scripts/delete-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
+
+create-compute-stacks: create-stack-data
+	./scripts/create-stack.sh apps/compute-stacks  "$(stack_prefix)" "$(config_path)"
+
+delete-compute-stacks: delete-stack-data
+	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
+
+create-private-cert:
+	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
+
+delete-private-cert:
+	./scripts/delete-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
+
+create-public-cert:
+	./scripts/create-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
+
+delete-public-cert:
+	./scripts/delete-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
+
+library-upload:
+	./scripts/create-stack.sh apps/library-upload "$(stack_prefix)" "$(config_path)"
 
 # utility targets
 
