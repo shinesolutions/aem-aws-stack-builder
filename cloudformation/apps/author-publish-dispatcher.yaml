@@ -41,6 +41,14 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
+  Route53HostedZoneNameParameter:
+    Type: String
+    Description: Route53 Hosted Zone Name the Record Set will be Created in
+
+  AuthorPublishDispatcherDNSRecordSetNameParameter:
+    Type: String
+    Description: Author DNS Record Set Name
+
 Resources:
 
   # AuthorPublishDispatcher Security Group
@@ -177,3 +185,14 @@ Resources:
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-publish-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
+
+  AuthorPublishDispatcherRoute53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: !Ref Route53HostedZoneNameParameter
+      Name:
+        Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+      ResourceRecords:
+        - Fn::GetAtt: [ AuthorPublishDispatcher, PrivateIp ]
+      TTL: 300
+      Type: A

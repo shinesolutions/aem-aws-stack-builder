@@ -22,6 +22,8 @@
           VPCId: "vpc-b3ad53d6"
           DataBucketNameParameter: "aem-aws-stack-builder"
           AemAwsStackProvisionerVersionParameter: "2.0.0b"
+          Route53HostedZoneNameParameter: "aem-stack.com."
+          AuthorPublishDispatcherDNSRecordSetNameParameter: "aupudisp02"
       tags:
       - create
 
