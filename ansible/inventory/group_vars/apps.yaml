@@ -31,6 +31,7 @@ ami_ids:
   publish: ami-003f3763
   author_dispatcher: ami-07050a64
   publish_dispatcher: ami-07050a64
+  author_publish_dispatcher: ami-2a6c8a48
   orchestrator: ami-56303f35
   chaos_monkey: ami-56303f35
 
@@ -159,6 +160,7 @@ author_dispatcher:
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
+  instance_type: m4.large
 
 orchestrator:
   stack_name: aem-orchestrator-stack
@@ -184,3 +186,6 @@ dns_records:
     record_set_name: author-dispatcher
   publish_dispatcher:
     record_set_name: publish-dispatcher
+  author_publish_dispatcher:
+    record_set_name: author-publish-dispatcher
+    ttl: 300

@@ -21,17 +21,17 @@ Parameters:
     Type: String
     Description: The Author Publish Dispatcher Instance Type
 
-  AuthorPublishDispatcherKeyPairName:
+  ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
-    Description: Key Pair Name
-
-  AuthorPublishDispatcherSubnet:
-    Type: AWS::EC2::Subnet::Id
-    Description: Subnet Ids the Host Will be Launched into
+    Description: The Compute Resources Key Pair Name
 
   VPCId:
     Type: AWS::EC2::VPC::Id
     Description: The VPC that the Host will reside
+
+  AuthorPublishDispatcherSubnet:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet Ids the Host Will be Launched into
 
   DataBucketNameParameter:
     Type: String
@@ -48,6 +48,10 @@ Parameters:
   AuthorPublishDispatcherDNSRecordSetNameParameter:
     Type: String
     Description: Author DNS Record Set Name
+
+  DNSRecordSetTTL:
+    Type: String
+    Description: Record Set TTL value
 
 Resources:
 
@@ -160,10 +164,10 @@ Resources:
       InstanceType:
         Ref: AuthorPublishDispatcherInstanceType
       KeyName:
-        Ref: AuthorPublishDispatcherKeyPairName
+        Ref: ComputeKeyPairNameParameter
       NetworkInterfaces:
         -
-          AssociatePublicIpAddress: true
+          AssociatePublicIpAddress: false
           DeviceIndex: "0"
           GroupSet:
             - Ref: AuthorPublishDispatcherSecurityGroup
@@ -194,5 +198,5 @@ Resources:
         Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::GetAtt: [ AuthorPublishDispatcher, PrivateIp ]
-      TTL: 300
+      TTL: !Ref DNSRecordSetTTL
       Type: A
