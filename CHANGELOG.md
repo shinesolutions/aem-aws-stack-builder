@@ -1,3 +1,9 @@
+### 2.1.0
+* Add AuthorPublishDispatcher component
+
+### 2.0.0
+* (NEED TO COMPLETE)
+
 ### 1.1.2
 * Disable generated system user credentials logging #34
 
