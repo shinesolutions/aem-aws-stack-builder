@@ -80,8 +80,30 @@ Resources:
       IpProtocol: tcp
       ToPort: '22'
 
-  # Allow tcp on ports 4502, 4503
+  # Allow tcp on ports 80
   AuthorPublishDispatcherSecurityGroupIngress1:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: '0.0.0.0/0'
+      FromPort: '80'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  # Allow tcp on ports 443
+  AuthorPublishDispatcherSecurityGroupIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: '0.0.0.0/0'
+      FromPort: '443'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+
+  # Allow tcp on ports 4502, 4503
+  AuthorPublishDispatcherSecurityGroupIngress3:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       CidrIp: '0.0.0.0/0'
@@ -92,7 +114,7 @@ Resources:
       ToPort: '4503'
 
   # Allow tcp on ports 5432, 5433
-  AuthorPublishDispatcherSecurityGroupIngress2:
+  AuthorPublishDispatcherSecurityGroupIngress4:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       CidrIp: '0.0.0.0/0'
