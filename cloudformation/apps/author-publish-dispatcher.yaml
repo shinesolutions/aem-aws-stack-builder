@@ -41,6 +41,10 @@ Parameters:
     Type: String
     Description: AEM AWS Stack Provisioner version number
 
+  AssociatePublicIpAddressParameter:
+    Type: String
+    Description: Add Public IP Address to instance
+
   Route53HostedZoneNameParameter:
     Type: String
     Description: Route53 Hosted Zone Name the Record Set will be Created in
@@ -189,7 +193,8 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       NetworkInterfaces:
         -
-          AssociatePublicIpAddress: false
+          AssociatePublicIpAddress:
+            Ref: AssociatePublicIpAddressParameter
           DeviceIndex: "0"
           GroupSet:
             - Ref: AuthorPublishDispatcherSecurityGroup
