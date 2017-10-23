@@ -217,7 +217,7 @@ Resources:
     Properties:
       HostedZoneName: !Ref Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::GetAtt: [ AuthorPublishDispatcher, PrivateIp ]
       TTL: !Ref DNSRecordSetTTL
