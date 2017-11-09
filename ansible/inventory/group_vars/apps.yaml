@@ -1,21 +1,21 @@
 ---
 
 aem_vpc:
-  id: vpc-2fc3014b
-  author_dispatcher_subnet_a_id: subnet-8562f4e1
-  author_dispatcher_subnet_b_id: subnet-0e2f9178
-  author_subnet_a_id: subnet-8462f4e0
-  author_subnet_b_id: subnet-022f9174
-  chaos_monkey_subnet_a_id: subnet-8662f4e2
-  chaos_monkey_subnet_b_id: subnet-052f9173
-  orchestrator_subnet_a_id: subnet-8662f4e2
-  orchestrator_subnet_b_id: subnet-052f9173
-  publish_dispatcher_elb_subnet_a_id: subnet-8162f4e5
-  publish_dispatcher_elb_subnet_b_id: subnet-002f9176
-  publish_dispatcher_subnet_a_id: subnet-8762f4e3
-  publish_dispatcher_subnet_b_id: subnet-012f9177
-  publish_subnet_a_id: subnet-8062f4e4
-  publish_subnet_b_id: subnet-032f9175
+  id: change-me
+  author_dispatcher_subnet_a_id: change-me
+  author_dispatcher_subnet_b_id: change-me
+  author_subnet_a_id: change-me
+  author_subnet_b_id: change-me
+  chaos_monkey_subnet_a_id: change-me
+  chaos_monkey_subnet_b_id: change-me
+  orchestrator_subnet_a_id: change-me
+  orchestrator_subnet_b_id: change-me
+  publish_dispatcher_elb_subnet_a_id: change-me
+  publish_dispatcher_elb_subnet_b_id: change-me
+  publish_dispatcher_subnet_a_id: change-me
+  publish_dispatcher_subnet_b_id: change-me
+  publish_subnet_a_id: change-me
+  publish_subnet_b_id: change-me
 
 roles:
   stack_name: aem-roles-stack
@@ -27,26 +27,26 @@ roles:
   chaos_monkey: AEMStackChaosMonkeyRole
 
 ami_ids:
-  author: ami-1f3e367c
-  publish: ami-003f3763
-  author_dispatcher: ami-07050a64
-  publish_dispatcher: ami-07050a64
-  author_publish_dispatcher: ami-2a6c8a48
-  orchestrator: ami-56303f35
-  chaos_monkey: ami-56303f35
+  author: change-me
+  publish: change-me
+  author_dispatcher: change-me
+  publish_dispatcher: change-me
+  author_publish_dispatcher: change-me
+  orchestrator: change-me
+  chaos_monkey: change-me
 
 ami_root_device_name: /dev/sda1
 
 security_groups:
   stack_name: aem-security-groups-stack
   secure_shell:
-    inbound_cidr_ip: 10.0.10.0/25
+    inbound_cidr_ip: change-me
 
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
 
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
-    inbound_cidr_ip: 10.0.10.0/25
+    inbound_cidr_ip: change-me
 
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
@@ -65,7 +65,7 @@ security_groups:
 
   author_dispatcher_elb:
     tag_name: AEM Author Dispatcher ELB Security Group
-    inbound_cidr_ip: 10.0.10.0/25
+    inbound_cidr_ip: change-me
 
   orchestrator:
     tag_name: AEM Orchestrator Security Group
@@ -80,11 +80,11 @@ messaging:
   asg_event_sns_topic_display_name: AEM ASG Event Topic
   alarm_notification:
     topic_name: alarm-notification-topic
-    contact_email: test@email.com
+    contact_email: change-me
 
 compute:
-  key_pair_name: sandpit-key
-  inbound_from_bastion_host_security_group: sg-a5ac6cc2
+  key_pair_name: change-me
+  inbound_from_bastion_host_security_group: change-me
 
 s3:
   data_bucket_name: aem-stack-builder
@@ -97,9 +97,9 @@ library:
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
-  instance_profile: sandpit-aem-roles-stack-PublishDispatcherInstanceProfile-V9GSTTG597O
+  instance_profile: change-me
   instance_type: t2.micro
-  min_size: 1
+  min_size: 2
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
@@ -114,9 +114,9 @@ publish_dispatcher:
 
 publish:
   stack_name: aem-publish-stack
-  instance_profile: sandpit-aem-roles-stack-PublishInstanceProfile-LSPF5DN4VASK
+  instance_profile: change-me
   instance_type: m3.large
-  min_size: 1
+  min_size: 2
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
@@ -125,7 +125,7 @@ publish:
 
 author:
   stack_name: aem-author-stack
-  instance_profile: sandpit-aem-roles-stack-AuthorInstanceProfile-XK8SN8WFXZ34
+  instance_profile: change-me
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 50
@@ -133,22 +133,22 @@ author:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
   elb_health_check: HTTPS:5433/system/health?tags=shallow
-  certificate_name: aem-stack-builder
+  certificate_name: change-me
 
 snapshots:
   author:
     use_data_vol_snapshot: 'false'
-    data_vol_snapshot_id: snap-06eea7764113b8844
+    data_vol_snapshot_id: change-me
   publish:
     use_data_vol_snapshot: 'false'
-    data_vol_snapshot_id: snap-06eea7764113b8844
+    data_vol_snapshot_id: change-me
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
-  instance_profile: sandpit-aem-roles-stack-AuthorDispatcherInstanceProfile-5U5O43PMKYJJ
+  instance_profile: change-me
   instance_type: t2.micro
   min_size: 0
-  desired_capacity: 2  
+  desired_capacity: 2
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
@@ -165,7 +165,7 @@ author_publish_dispatcher:
 
 orchestrator:
   stack_name: aem-orchestrator-stack
-  instance_profile: sandpit-aem-roles-stack-OrchestratorInstanceProfile-13GOYKB2JLF5U
+  instance_profile: change-me
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
@@ -173,14 +173,14 @@ orchestrator:
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
-  instance_profile: sandpit-aem-roles-stack-ChaosMonkeyInstanceProfile-K90AXGDS554N
+  instance_profile: change-me
   instance_type: t2.micro
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
 
 dns_records:
   stack_name: aem-dns-records
-  route53_hosted_zone_name: aem-stack.com.
+  route53_hosted_zone_name: change-me.com.
   author:
     record_set_name: author
   author_dispatcher:

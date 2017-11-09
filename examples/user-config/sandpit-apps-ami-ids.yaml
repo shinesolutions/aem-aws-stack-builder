@@ -1,0 +1,8 @@
+ami_ids:
+  author: ami-8428c1e6
+  publish: ami-052ac367
+  author_dispatcher: ami-b3a64fd1
+  publish_dispatcher: ami-b3a64fd1
+  author_publish_dispatcher: ami-ef2dc48d
+  orchestrator: ami-70bb5212
+  chaos_monkey: ami-70bb5212
