@@ -17,6 +17,7 @@
           NetworkStackPrefixParameter: "{{ stack_prefix }}"
           AuthorPublishDispatcherImageId: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceType: "{{ author_publish_dispatcher.instance_type }}"
+          AuthorPublishDispatcherInstanceProfilePre: "NONE"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           VPCId: "{{ aem_vpc.id }}"
           AuthorPublishDispatcherSubnet: "{{ aem_vpc.publish_dispatcher_subnet_a_id }}"

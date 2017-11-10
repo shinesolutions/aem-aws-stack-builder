@@ -21,6 +21,11 @@ Parameters:
     Type: String
     Description: The Author Publish Dispatcher Instance Type
 
+  AuthorPublishDispatcherInstanceProfilePre:
+    Type: String
+    Description: The Author Publish Dispatcher pre-created Instance Profile
+    Default: NONE
+
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
     Description: The Compute Resources Key Pair Name
@@ -56,6 +61,10 @@ Parameters:
   DNSRecordSetTTL:
     Type: String
     Description: Record Set TTL value
+
+Conditions:
+
+  createNewInstanceProfile: !Equals [!Ref AuthorPublishDispatcherInstanceProfilePre, NONE]
 
 Resources:
 
@@ -131,6 +140,7 @@ Resources:
 
   AuthorPublishDispatcherRole:
     Type: AWS::IAM::Role
+    Condition: createNewInstanceProfile
     Properties:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -175,6 +185,7 @@ Resources:
 
   AuthorPublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
+    Condition: createNewInstanceProfile
     Properties:
       Path: /
       Roles:
@@ -184,7 +195,7 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       IamInstanceProfile:
-        Ref: AuthorPublishDispatcherInstanceProfile
+        !If [createNewInstanceProfile, !Ref AuthorPublishDispatcherInstanceProfile, !Ref AuthorPublishDispatcherInstanceProfilePre]
       ImageId:
         Ref: AuthorPublishDispatcherImageId
       InstanceType:
