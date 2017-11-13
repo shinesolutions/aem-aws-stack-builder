@@ -116,10 +116,10 @@ create-publish:
 delete-publish:
 	./scripts/delete-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
 
-create-author-publish-dispatcher:
+create-author-publish-dispatcher: create-stack-data
 	./scripts/create-stack.sh apps/author-publish-dispatcher "$(stack_prefix)" "$(config_path)"
 
-delete-author-publish-dispatcher:
+delete-author-publish-dispatcher: delete-stack-data
 	./scripts/delete-stack.sh apps/author-publish-dispatcher "$(stack_prefix)" "$(config_path)"
 
 create-roles:
