@@ -13,11 +13,11 @@ Parameters:
     Type: String
     Description: The AEM Stack Network Resources Stack Prefix
 
-  AuthorPublishDispatcherImageId:
+  AuthorPublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for the Host
 
-  AuthorPublishDispatcherInstanceType:
+  AuthorPublishDispatcherInstanceTypeParameter:
     Type: String
     Description: The Author Publish Dispatcher Instance Type
 
@@ -197,9 +197,9 @@ Resources:
       IamInstanceProfile:
         !If [createNewInstanceProfile, !Ref AuthorPublishDispatcherInstanceProfile, !Ref AuthorPublishDispatcherInstanceProfilePre]
       ImageId:
-        Ref: AuthorPublishDispatcherImageId
+        Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
-        Ref: AuthorPublishDispatcherInstanceType
+        Ref: AuthorPublishDispatcherInstanceTypeParameter
       KeyName:
         Ref: ComputeKeyPairNameParameter
       NetworkInterfaces:
