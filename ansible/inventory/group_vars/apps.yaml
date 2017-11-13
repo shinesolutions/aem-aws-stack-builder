@@ -16,6 +16,7 @@ aem_vpc:
   publish_dispatcher_subnet_b_id: change-me
   publish_subnet_a_id: change-me
   publish_subnet_b_id: change-me
+  author_publish_dispatcher_subnet_id: change-me
 
 roles:
   stack_name: aem-roles-stack
@@ -161,7 +162,10 @@ author_dispatcher:
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
   instance_type: m4.xlarge
-  associate_public_ip_address: false
+  root_vol_size: 20
+  data_vol_size: 20
+  tag_name: AEM Author Publish Dispatcher
+  associate_public_ip_address: true
 
 orchestrator:
   stack_name: aem-orchestrator-stack
