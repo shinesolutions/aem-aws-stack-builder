@@ -9,13 +9,14 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
-  NetworkStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Network Resources Stack Prefix
-
   AuthorPublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for the Host
+
+  AuthorPublishDispatcherImageRootDevice:
+    Type: String
+    Description: The root device name for the Author Publish Dispatcher Image Id
+    Default: /dev/sda1
 
   AuthorPublishDispatcherInstanceTypeParameter:
     Type: String
@@ -29,6 +30,14 @@ Parameters:
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
     Description: The Compute Resources Key Pair Name
+
+  AuthorPublishDispatcherRootVolSizeParameter:
+    Type: Number
+    Description: Author Publish Dispatcher Instances Root EBS Volume Size
+
+  AuthorPublishDispatcherDataVolSizeParameter:
+    Type: Number
+    Description: Author Publish Dispatcher Instances Data EBS Volume Size
 
   VPCId:
     Type: AWS::EC2::VPC::Id
@@ -194,6 +203,25 @@ Resources:
   AuthorPublishDispatcher:
     Type: "AWS::EC2::Instance"
     Properties:
+      BlockDeviceMappings:
+      - DeviceName: !Ref AuthorPublishDispatcherImageRootDevice
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize:
+            Ref: AuthorPublishDispatcherRootVolSizeParameter
+          VolumeType: gp2
+      - DeviceName: /dev/sdb
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize:
+            Ref: AuthorPublishDispatcherDataVolSizeParameter
+          VolumeType: gp2
+      - DeviceName: /dev/sdc
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize:
+            Ref: AuthorPublishDispatcherDataVolSizeParameter
+          VolumeType: gp2
       IamInstanceProfile:
         !If [createNewInstanceProfile, !Ref AuthorPublishDispatcherInstanceProfile, !Ref AuthorPublishDispatcherInstanceProfilePre]
       ImageId:

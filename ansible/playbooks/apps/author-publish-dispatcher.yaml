@@ -14,11 +14,12 @@
         template: "../../../cloudformation/apps/author-publish-dispatcher.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
-          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
           AuthorPublishDispatcherInstanceProfilePre: "NONE"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"
+          AuthorPublishDispatcherDataVolSizeParameter: "{{ author_publish_dispatcher.data_vol_size }}"
           VPCId: "{{ aem_vpc.id }}"
           AuthorPublishDispatcherSubnet: "{{ aem_vpc.author_publish_dispatcher_subnet_id }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
