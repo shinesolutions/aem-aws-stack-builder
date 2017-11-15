@@ -3,16 +3,16 @@ aem_vpc:
   author_publish_dispatcher_subnet_id: subnet-7d0bf80a
 
 compute:
-  key_pair_name: cliffs-sandpit
+  key_pair_name: aem-stack-key-pair
 
 compute_stacks:
-  stack_name: TODO
+  stack_name: author-publish-dispatcher
 
 s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 0.9.0
+  aem_aws_stack_provisioner_version: 2.0.0
   aem_orchestrator_version:
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
@@ -29,7 +29,7 @@ author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
   instance_type: m4.xlarge
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 100
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
   default_secgrp_id: sg-12345678  
