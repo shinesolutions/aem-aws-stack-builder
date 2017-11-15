@@ -27,6 +27,10 @@ Parameters:
     Description: The Author Publish Dispatcher pre-created Instance Profile
     Default: NONE
 
+  AuthorPublishDispatcherDefaultSecurityGroupParameter:
+    Type: String
+    Description: The Author Publish Dispatcher default Security Group ID
+
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
     Description: The Compute Resources Key Pair Name
@@ -76,76 +80,6 @@ Conditions:
   createNewInstanceProfile: !Equals [!Ref AuthorPublishDispatcherInstanceProfilePre, NONE]
 
 Resources:
-
-  # AuthorPublishDispatcher Security Group
-  AuthorPublishDispatcherSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: AuthorPublishDispatcher Security Group
-      Tags:
-        - Key: Name
-          Value: AEM Author Publish Dispatcher Security Group
-        - Key: StackPrefix
-          Value:
-            Ref: ComputeStackPrefixParameter
-      VpcId:
-        Ref: VPCId
-
-  # Allow tcp on ports 22
-  AuthorPublishDispatcherSecurityGroupIngress0:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: '0.0.0.0/0'
-      FromPort: '22'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '22'
-
-  # Allow tcp on ports 80
-  AuthorPublishDispatcherSecurityGroupIngress1:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: '0.0.0.0/0'
-      FromPort: '80'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-
-  # Allow tcp on ports 443
-  AuthorPublishDispatcherSecurityGroupIngress2:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: '0.0.0.0/0'
-      FromPort: '443'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '443'
-
-  # Allow tcp on ports 4502, 4503
-  AuthorPublishDispatcherSecurityGroupIngress3:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: '0.0.0.0/0'
-      FromPort: '4502'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '4503'
-
-  # Allow tcp on ports 5432, 5433
-  AuthorPublishDispatcherSecurityGroupIngress4:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: '0.0.0.0/0'
-      FromPort: '5432'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '5433'
-
 
   AuthorPublishDispatcherRole:
     Type: AWS::IAM::Role
@@ -236,7 +170,7 @@ Resources:
             Ref: AssociatePublicIpAddressParameter
           DeviceIndex: "0"
           GroupSet:
-            - Ref: AuthorPublishDispatcherSecurityGroup
+            - Ref: AuthorPublishDispatcherDefaultSecurityGroupParameter
           SubnetId:
             Ref: AuthorPublishDispatcherSubnet
       Tags:
