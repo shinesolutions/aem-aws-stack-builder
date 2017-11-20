@@ -27,9 +27,13 @@ Parameters:
     Description: The Author Publish Dispatcher pre-created Instance Profile
     Default: NONE
 
-  AuthorPublishDispatcherDefaultSecurityGroupParameter:
+  AuthorPublishDispatcherSecurityGroupParameter:
     Type: String
-    Description: The Author Publish Dispatcher default Security Group ID
+    Description: The Author Publish Dispatcher default Security Group Id
+
+  InboundFromBastionHostSecurityGroupParameter:
+    Type: String
+    Description: Inbound Bound from Bastion Host Security Group Id
 
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
@@ -170,7 +174,8 @@ Resources:
             Ref: AssociatePublicIpAddressParameter
           DeviceIndex: "0"
           GroupSet:
-            - Ref: AuthorPublishDispatcherDefaultSecurityGroupParameter
+            - Ref: AuthorPublishDispatcherSecurityGroupParameter
+            - Ref: InboundFromBastionHostSecurityGroupParameter
           SubnetId:
             Ref: AuthorPublishDispatcherSubnet
       Tags:
