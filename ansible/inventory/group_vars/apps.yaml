@@ -166,6 +166,7 @@ author_publish_dispatcher:
   data_vol_size: 20
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
+  security_group: change-me
 
 orchestrator:
   stack_name: aem-orchestrator-stack
