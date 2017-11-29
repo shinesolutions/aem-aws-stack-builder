@@ -2,7 +2,8 @@
 * Add AuthorPublishDispatcher component
 
 ### 2.0.0
-* (NEED TO COMPLETE)
+* Add Stack Provisioner custom hiera configuration support
+* TODO
 
 ### 1.1.2
 * Disable generated system user credentials logging #34
