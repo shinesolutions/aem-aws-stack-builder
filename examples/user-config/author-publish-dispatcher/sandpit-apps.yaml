@@ -32,7 +32,7 @@ author_publish_dispatcher:
   data_vol_size: 100
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
-  default_secgrp_id: sg-12345678  
+  default_secgrp_id: sg-12345678
 
 dns_records:
   stack_name: aem-dns-records

@@ -58,6 +58,9 @@ compute:
   key_pair_name: cliffs-sandpit
   inbound_from_bastion_host_security_group: sg-b260abd5
 
+compute_stacks:
+  stack_name: aem-set
+
 s3:
   data_bucket_name: aem-stack-builder
 
