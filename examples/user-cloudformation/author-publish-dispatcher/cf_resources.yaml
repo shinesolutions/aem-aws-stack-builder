@@ -1,0 +1,94 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Create resources for Author Publish Dispatcher
+
+Parameters:
+
+Resources:
+
+  # AuthorPublishDispatcher Security Group
+  AuthorPublishDispatcherSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: AuthorPublishDispatcher Security Group
+      Tags:
+        - Key: Name
+          Value: AEM Author Publish Dispatcher Security Group
+        - Key: StackPrefix
+          Value:
+            Ref: ComputeStackPrefixParameter
+      VpcId:
+        Ref: VPCId
+
+  # Allow tcp on ports 80
+  AuthorPublishDispatcherSecurityGroupIngress1:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: '0.0.0.0/0'
+      FromPort: '80'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  # Allow tcp on ports 443
+  AuthorPublishDispatcherSecurityGroupIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: '0.0.0.0/0'
+      FromPort: '443'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+
+
+
+
+  PackerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: PackerRolePolicy
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:Describe*
+                  - ec2:AttachVolume
+                  - ec2:CreateVolume
+                  - ec2:DetachVolume
+                  - ec2:CreateSnapshot
+                  - ec2:CreateTags
+                  - ec2:ModifyInstanceAttribute
+                  - cloudwatch:PutMetricData
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:List*
+                  - s3:Put*
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource:
+                  - arn:aws:logs:*:*:*
+
+
+  PackerInstanceProfile:
+      Type: AWS::IAM::InstanceProfile
+      Properties:
+        Path: /
+        Roles:
+          - Ref: PackerRole
