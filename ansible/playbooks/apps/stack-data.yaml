@@ -31,6 +31,7 @@
 
     - name: Generate random credentials for system users
       system_users_credentials:
+        enable_default_passwords: "{{ aem.enable_default_passwords }}"
       register: system_users_credentials
       no_log: True
       when: "stack_query.rc != 0"

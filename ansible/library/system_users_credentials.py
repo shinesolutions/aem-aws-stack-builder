@@ -9,12 +9,17 @@ def generate_password(length):
 
 def main():
 
+    module = AnsibleModule(
+      argument_spec = dict(
+        enable_default_passwords = dict(required=True, type='bool'),
+      )
+    )
+
     system_users = ['orchestrator', 'replicator', 'deployer', 'exporter', 'importer', 'admin']
     credentials = {}
     for system_user in system_users:
-        credentials[system_user] = generate_password(100)
+        credentials[system_user] = system_user if module.params['enable_default_passwords'] == True else generate_password(100)
 
-    module = AnsibleModule(argument_spec = {})
     response = credentials
     module.exit_json(changed = False, meta = response)
 

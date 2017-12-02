@@ -1,5 +1,6 @@
 ### 2.1.0
 * Add AuthorPublishDispatcher component
+* Add configuration flag for enabling CRXDE #35
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
