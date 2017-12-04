@@ -1,6 +1,8 @@
 ### 2.1.0
 * Add AuthorPublishDispatcher component
 * Add configuration flag for enabling CRXDE #35
+* Add configuration flag for enabling default system users password #36
+* Hieradata config file is now generated based on Ansible group vars
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support

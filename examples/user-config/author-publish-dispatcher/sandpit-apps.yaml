@@ -3,10 +3,11 @@ aem_vpc:
   author_publish_dispatcher_subnet_id: subnet-7d0bf80a
 
 aem:
+  enable_crxde: true
   enable_default_passwords: true
 
 compute:
-  key_pair_name: aem-stack-key-pair
+  key_pair_name: cliffs-sandpit
   inbound_from_bastion_host_security_group: sg-60cb1005
 
 compute_stacks:
@@ -16,7 +17,7 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 2.0.0
+  aem_aws_stack_provisioner_version: cliffs
   aem_orchestrator_version:
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15

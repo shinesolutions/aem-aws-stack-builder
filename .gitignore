@@ -9,3 +9,4 @@ stage
 *.pyc
 backup/
 output/
+data/stack-provisioner-hieradata.yaml

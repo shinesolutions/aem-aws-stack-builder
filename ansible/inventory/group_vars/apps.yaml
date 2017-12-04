@@ -19,6 +19,7 @@ aem_vpc:
   author_publish_dispatcher_subnet_id: change-me
 
 aem:
+  enable_crxde: false
   enable_default_passwords: false
 
 roles:

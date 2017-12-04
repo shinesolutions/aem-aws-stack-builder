@@ -120,21 +120,29 @@
       tags:
       - create
 
-    - name: Check for local Hiera config
-      stat:
-        path: ../../../data/local.yaml
-      register: local_hiera
+    - name: Ensure Hieradata directory exists
+      file:
+        path: ../../../data
+        state: directory
+        mode: 0755
+      tags:
+      - create
+
+    - name: Generate Hieradata configuration
+      template:
+        src: ../../templates/stack-provisioner-hieradata.j2
+        dest: ../../../data/stack-provisioner-hieradata.yaml
+        mode: 0644
       tags:
         - create
 
-    - name: Upload local Hiera YAML
+    - name: Upload Hieradata configuration
       s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/data/local.yaml"
-        src: ../../../data/local.yaml
+        src: ../../../data/stack-provisioner-hieradata.yaml
         mode: put
         encrypt: yes
-      when: local_hiera.stat.exists == True
       tags:
       - create
 
