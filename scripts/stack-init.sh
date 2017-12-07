@@ -12,6 +12,8 @@ stack_prefix=$2
 component=$3
 aem_aws_stack_provisioner_version=$4
 
+tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
+
 PATH=$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin
 
 download_provisioner() {
@@ -140,4 +142,4 @@ echo "Testing ${component} component using Serverspec..."
 cd test/serverspec && /opt/puppetlabs/puppet/bin/rake spec "SPEC=spec/${component}_spec.rb"
 
 echo "Cleaning up provisioner temp directory..."
-rm -rf /tmp/shinesolutions/aem-aws-stack-provisioner/*
+rm -rf "${tmp_dir}/*"
