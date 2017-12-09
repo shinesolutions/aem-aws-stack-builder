@@ -1,6 +1,7 @@
 aem:
   enable_crxde: true
   enable_default_passwords: true
+  enable_deploy_on_init: false
 
 aem_vpc:
   id: vpc-2fc3014b

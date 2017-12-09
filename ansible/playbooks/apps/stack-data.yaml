@@ -100,13 +100,30 @@
       tags:
       - create
 
-    - name: Copy deploy-artifacts-descriptor from source bucket to data bucket
+    - name: Copy deploy-artifacts-descriptor from source bucket to data bucket when source stack is specified
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
         src_key: "{{ source_stack_prefix }}/deploy-artifacts-descriptor.json"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
       when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
+      tags:
+      - create
+
+    - name: Check deploy-artifacts-descriptor existence
+      stat:
+        path: ../../../stage/deploy-artifacts-descriptor.json
+      register: deploy_descriptor_stat_result
+      tags:
+      - create
+
+    - name: Upload deploy-artifacts-descriptor from stage directory to data bucket when supplied
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
+        src: ../../../stage/deploy-artifacts-descriptor.json
+        mode: put
+      when: deploy_descriptor_stat_result.stat.exists == True
       tags:
       - create
 
@@ -120,38 +137,23 @@
       tags:
       - create
 
-    - name: Ensure Hieradata directory exists
-      file:
-        path: ../../../data
-        state: directory
-        mode: 0755
-      tags:
-      - create
-
     - name: Generate Hieradata configuration
       template:
         src: ../../templates/stack-provisioner-hieradata.j2
-        dest: ../../../data/stack-provisioner-hieradata.yaml
+        dest: ../../../stage/stack-provisioner-hieradata.yaml
         mode: 0644
       tags:
-        - create
+      - create
 
     - name: Upload Hieradata configuration
       s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/data/local.yaml"
-        src: ../../../data/stack-provisioner-hieradata.yaml
+        src: ../../../stage/stack-provisioner-hieradata.yaml
         mode: put
         encrypt: yes
       tags:
       - create
-
-    - name: Check for local Hiera conf directory
-      stat:
-        path: ../../../hieraconf
-      register: local_hieraconf
-      tags:
-        - create
 
     - name: Copy AEM Stack Provisioner from library to data bucket
       s3_copy_object:
