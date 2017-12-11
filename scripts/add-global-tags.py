@@ -13,46 +13,52 @@ tags_file_name = sys.argv[1]
 # file_name is the location of CloudFormation template file relative to current working directory
 # resource_keys is an array of resource key names which tags need to be updated with the global tags
 apps = {
-  'author_dispatcher': {
-    'file_name': './cloudformation/apps/author-dispatcher.yaml',
+  'author_publish_dispatcher': {
+    'file_name': './cloudformation/apps/author-publish-dispatcher.yaml',
     'resource_keys': [
-      'AuthorDispatcherAutoScalingGroup',
-      'AuthorDispatcherLoadBalancer'
-    ]
-  },
-  'author': {
-    'file_name': './cloudformation/apps/author.yaml',
-    'resource_keys': [
-      'AuthorPrimaryInstance',
-      'AuthorStandbyInstance',
-      'AuthorLoadBalancer'
-    ]
-  },
-  'chaos_monkey': {
-    'file_name': './cloudformation/apps/chaos-monkey.yaml',
-    'resource_keys': [
-      'ChaosMonkeyAutoScalingGroup'
-    ]
-  },
-  'orchestrator': {
-    'file_name': './cloudformation/apps/orchestrator.yaml',
-    'resource_keys': [
-      'OrchestratorAutoScalingGroup'
-    ]
-  },
-  'publish_dispatcher': {
-    'file_name': './cloudformation/apps/publish-dispatcher.yaml',
-    'resource_keys': [
-      'PublishDispatcherAutoScalingGroup',
-      'PublishDispatcherLoadBalancer'
-    ]
-  },
-  'publish': {
-    'file_name': './cloudformation/apps/publish.yaml',
-    'resource_keys': [
-      'PublishAutoScalingGroup'
+      "AuthorPublishDispatcherInstance"
     ]
   }
+  # 'author_dispatcher': {
+  #   'file_name': './cloudformation/apps/author-dispatcher.yaml',
+  #   'resource_keys': [
+  #     'AuthorDispatcherAutoScalingGroup',
+  #     'AuthorDispatcherLoadBalancer'
+  #   ]
+  # },
+  # 'author': {
+  #   'file_name': './cloudformation/apps/author.yaml',
+  #   'resource_keys': [
+  #     'AuthorPrimaryInstance',
+  #     'AuthorStandbyInstance',
+  #     'AuthorLoadBalancer'
+  #   ]
+  # },
+  # 'chaos_monkey': {
+  #   'file_name': './cloudformation/apps/chaos-monkey.yaml',
+  #   'resource_keys': [
+  #     'ChaosMonkeyAutoScalingGroup'
+  #   ]
+  # },
+  # 'orchestrator': {
+  #   'file_name': './cloudformation/apps/orchestrator.yaml',
+  #   'resource_keys': [
+  #     'OrchestratorAutoScalingGroup'
+  #   ]
+  # },
+  # 'publish_dispatcher': {
+  #   'file_name': './cloudformation/apps/publish-dispatcher.yaml',
+  #   'resource_keys': [
+  #     'PublishDispatcherAutoScalingGroup',
+  #     'PublishDispatcherLoadBalancer'
+  #   ]
+  # },
+  # 'publish': {
+  #   'file_name': './cloudformation/apps/publish.yaml',
+  #   'resource_keys': [
+  #     'PublishAutoScalingGroup'
+  #   ]
+  # }
 }
 
 def read_template(file_name):

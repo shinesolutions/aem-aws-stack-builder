@@ -1,5 +1,4 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 
 Description: Create the Compute resources for the AEM Author Publish Dispatcher
 
@@ -80,7 +79,10 @@ Parameters:
     Description: Record Set TTL value
 
 Conditions:
-  CreateInstanceProfileCondition: !Equals [!Ref AuthorPublishDispatcherInstanceProfilePre, NONE]
+  CreateInstanceProfileCondition:
+    Fn::Equals:
+    - Ref: AuthorPublishDispatcherInstanceProfilePre
+    - NONE
 
 Resources:
 
@@ -90,11 +92,11 @@ Resources:
     Properties:
       GroupDescription: AuthorPublishDispatcher Security Group
       Tags:
-        - Key: Name
-          Value: AEM Author Publish Dispatcher Security Group
-        - Key: StackPrefix
-          Value:
-            Ref: ComputeStackPrefixParameter
+      - Key: Name
+        Value: AEM Author Publish Dispatcher Security Group
+      - Key: StackPrefix
+        Value:
+          Ref: ComputeStackPrefixParameter
       VpcId:
         Ref: VPCId
 
@@ -102,7 +104,7 @@ Resources:
   AuthorPublishDispatcherSecurityGroupIngress1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      CidrIp: '0.0.0.0/0'
+      CidrIp: 0.0.0.0/0
       FromPort: '80'
       GroupId:
         Ref: AuthorPublishDispatcherSecurityGroup
@@ -113,7 +115,7 @@ Resources:
   AuthorPublishDispatcherSecurityGroupIngress2:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      CidrIp: '0.0.0.0/0'
+      CidrIp: 0.0.0.0/0
       FromPort: '443'
       GroupId:
         Ref: AuthorPublishDispatcherSecurityGroup
@@ -124,7 +126,7 @@ Resources:
   AuthorPublishDispatcherSecurityGroupIngress3:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      CidrIp: '0.0.0.0/0'
+      CidrIp: 0.0.0.0/0
       FromPort: '4502'
       GroupId:
         Ref: AuthorPublishDispatcherSecurityGroup
@@ -135,7 +137,7 @@ Resources:
   AuthorPublishDispatcherSecurityGroupIngress4:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      CidrIp: '0.0.0.0/0'
+      CidrIp: 0.0.0.0/0
       FromPort: '5432'
       GroupId:
         Ref: AuthorPublishDispatcherSecurityGroup
@@ -147,45 +149,46 @@ Resources:
     Condition: CreateInstanceProfileCondition
     Properties:
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
       Path: /
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
       Policies:
-        - PolicyName: AuthorPublishDispatcherRolePolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ec2:Describe*
-                  - ec2:AttachVolume
-                  - ec2:CreateVolume
-                  - ec2:DetachVolume
-                  - ec2:CreateSnapshot
-                  - ec2:CreateTags
-                  - ec2:ModifyInstanceAttribute
-                  - cloudwatch:PutMetricData
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - s3:Get*
-                  - s3:List*
-                  - s3:Put*
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - logs:*
-                Resource:
-                  - arn:aws:logs:*:*:*
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AuthorPublishDispatcherStackPublishRole
+      - PolicyName: AuthorPublishDispatcherRolePolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - ec2:Describe*
+            - ec2:AttachVolume
+            - ec2:CreateVolume
+            - ec2:DetachVolume
+            - ec2:CreateSnapshot
+            - ec2:CreateTags
+            - ec2:ModifyInstanceAttribute
+            - cloudwatch:PutMetricData
+            Resource: '*'
+          - Effect: Allow
+            Action:
+            - s3:Get*
+            - s3:List*
+            - s3:Put*
+            Resource: '*'
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource:
+            - arn:aws:logs:*:*:*
+      RoleName:
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorPublishDispatcherStackPublishRole
 
   AuthorPublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -193,13 +196,14 @@ Resources:
     Properties:
       Path: /
       Roles:
-        - Ref: AuthorPublishDispatcherRole
+      - Ref: AuthorPublishDispatcherRole
 
-  AuthorPublishDispatcher:
-    Type: "AWS::EC2::Instance"
+  AuthorPublishDispatcherInstance:
+    Type: AWS::EC2::Instance
     Properties:
       BlockDeviceMappings:
-      - DeviceName: !Ref AuthorPublishDispatcherImageRootDevice
+      - DeviceName:
+          Ref: AuthorPublishDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -218,7 +222,10 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        !If [CreateInstanceProfileCondition, !Ref AuthorPublishDispatcherInstanceProfile, !Ref AuthorPublishDispatcherInstanceProfilePre]
+        Fn::If:
+        - CreateInstanceProfileCondition
+        - Ref: AuthorPublishDispatcherInstanceProfile
+        - Ref: AuthorPublishDispatcherInstanceProfilePre
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
@@ -226,40 +233,41 @@ Resources:
       KeyName:
         Ref: ComputeKeyPairNameParameter
       NetworkInterfaces:
-        -
-          AssociatePublicIpAddress:
-            Ref: AssociatePublicIpAddressParameter
-          DeviceIndex: "0"
-          GroupSet:
-            - Ref: AuthorPublishDispatcherSecurityGroupParameter
-            - Ref: AuthorPublishDispatcherSecurityGroup
-            - Ref: InboundFromBastionHostSecurityGroupParameter
-          SubnetId:
-            Ref: AuthorPublishDispatcherSubnet
+      - AssociatePublicIpAddress:
+          Ref: AssociatePublicIpAddressParameter
+        DeviceIndex: '0'
+        GroupSet:
+        - Ref: AuthorPublishDispatcherSecurityGroupParameter
+        - Ref: AuthorPublishDispatcherSecurityGroup
+        - Ref: InboundFromBastionHostSecurityGroupParameter
+        SubnetId:
+          Ref: AuthorPublishDispatcherSubnet
       Tags:
-        - Key: StackPrefix
-          Value:
-            Ref: ComputeStackPrefixParameter
-        - Key: Name
-          Value: AuthorPublishDispatcher
-        - Key: Component
-          Value: author-publish-dispatcher
+      - Key: StackPrefix
+        Value:
+          Ref: ComputeStackPrefixParameter
+      - Key: Name
+        Value: AuthorPublishDispatcher
+      - Key: Component
+        Value: author-publish-dispatcher
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n\
-            \ source /etc/profile\n\
-            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-publish-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
+          Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
+            \ ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-publish-dispatcher\
+            \ ${AemAwsStackProvisionerVersionParameter}\n"
 
   AuthorPublishDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName: !Ref Route53HostedZoneNameParameter
+      HostedZoneName:
+        Ref: Route53HostedZoneNameParameter
       Name:
         Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
-        - Fn::GetAtt: [ AuthorPublishDispatcher, PrivateIp ]
-      TTL: !Ref DNSRecordSetTTL
+      - Fn::GetAtt: [AuthorPublishDispatcherInstance, PrivateIp]
+      TTL:
+        Ref: DNSRecordSetTTL
       Type: A
