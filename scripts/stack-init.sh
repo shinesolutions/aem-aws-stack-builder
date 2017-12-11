@@ -142,4 +142,4 @@ echo "Testing ${component} component using Serverspec..."
 cd test/serverspec && /opt/puppetlabs/puppet/bin/rake spec "SPEC=spec/${component}_spec.rb"
 
 echo "Cleaning up provisioner temp directory..."
-rm -rf "${tmp_dir}/*"
+rm -rf "${tmp_dir:?}/*"
