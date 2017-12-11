@@ -25,6 +25,7 @@
     - name: Ensure data bucket exists
       s3_bucket:
         name: "{{ s3.data_bucket_name }}"
+        region: "{{ aws.region }}"
         state: present
       tags:
         - create
