@@ -24,7 +24,6 @@ Parameters:
   AuthorPublishDispatcherInstanceProfilePre:
     Type: String
     Description: The Author Publish Dispatcher pre-created Instance Profile
-    Default: NONE
 
   AuthorPublishDispatcherSecurityGroupParameter:
     Type: String
@@ -70,9 +69,13 @@ Parameters:
     Type: String
     Description: Route53 Hosted Zone Name the Record Set will be Created in
 
-  AuthorPublishDispatcherDNSRecordSetNameParameter:
+  AuthorPublishDispatcherDNSRecordSetNamePrefixParameter:
     Type: String
-    Description: Author DNS Record Set Name
+    Description: Author Publish Dispatcher DNS Record Set Prefix Name
+
+  AuthorPublishDispatcherDNSRecordSetNameSuffixParameter:
+    Type: String
+    Description: Author Publish Dispatcher DNS Record Set Suffix Name
 
   DNSRecordSetTTL:
     Type: String
@@ -265,7 +268,7 @@ Resources:
       HostedZoneName:
         Ref: Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNamePrefixParameter}${ComputeStackPrefixParameter}${AuthorPublishDispatcherDNSRecordSetNameSuffixParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
       - Fn::GetAtt: [AuthorPublishDispatcherInstance, PrivateIp]
       TTL:
