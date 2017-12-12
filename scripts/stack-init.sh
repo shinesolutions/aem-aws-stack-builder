@@ -16,6 +16,7 @@ tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
 
 PATH=$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin
 
+# Download stack provisioner artifacts from S3.
 download_provisioner() {
   dest_dir=$1
   s3_object_name=$2
@@ -28,20 +29,29 @@ download_provisioner() {
   popd
 }
 
+# Execute a stage (e.g. pre-common, post-common) on custom stack provisioner.
+# The two stages are available to allow users to execute their provisioning
+# before and after AEM provisioning.
 run_custom_stage() {
   stage=${1}
   custom_stack_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
   script=${custom_stack_provisioner_dir}/${stage}.sh
   if [ -x "${script}" ]; then
-    echo "Execute the ${stage} custom provisioning script..."
+    echo "Executing the ${stage} script of Custom Stack Provisioner..."
     cd ${custom_stack_provisioner_dir} && ${script} "${stack_prefix}" "${component}"
+  else
+    echo "${stage} script of Custom Stack Provisioner is either not provided or not executable..."
   fi
 }
 
-# translate puppet exit code to follow convention
+# Translate puppet detailed exit codes to basic convention 0 to indicate success.
+# More info on Puppet --detailed-exitcodes https://puppet.com/docs/puppet/5.3/man/agent.html
 translate_puppet_exit_code() {
 
   exit_code="$1"
+
+  # 0 (success) and 2 (success with changes) are considered as success.
+  # Everything else is considered to be a failure.
   if [ "$exit_code" -eq 0 ] || [ "$exit_code" -eq 2 ]; then
     exit_code=0
   else
@@ -53,14 +63,19 @@ translate_puppet_exit_code() {
 
 echo "Initialising AEM Stack Builder provisioning..."
 
+# List down version numbers of utility tools
 aws --version
+facter --version
+hiera --version
 puppet --version
 python --version
 ruby --version
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
-  echo "Downloading AEM Stack Custom Provisioner..."
+  echo "Downloading Custom Stack Provisioner..."
   download_provisioner /opt/shinesolutions/aem-custom-stack-provisioner aem-custom-stack-provisioner.tar.gz
+else
+  echo "No Custom Stack Provisioner provided..."
 fi
 
 echo "Downloading AEM Stack Provisioner..."
@@ -71,7 +86,7 @@ run_custom_stage pre-common
 cd /opt/shinesolutions/aem-aws-stack-provisioner
 
 if [[ -d data ]]; then
-  echo "Attempting to sync Hiera config & YAML from ${data_bucket_name}"
+  echo "Downloading custom configuration..."
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/data/" data/
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/conf/" conf/
 fi
@@ -79,17 +94,11 @@ fi
 if [ "$#" -eq 5 ]; then
   local_yaml_file=$5
   local_yaml_path="${PWD}/data/local.yaml"
-  if [[ -e ${local_yaml_path} ]]; then
-    echo "WARNING: ${local_yaml_path} exists and will be overwritten."
-    echo "Previous contents:"
-    cat "${local_yaml_path}"
-    echo "New contents:"
-    cat "${local_yaml_file}"
-  fi
+  echo "Overwriting local AEM Stack Provisioner configuration at ${local_yaml_path}..."
   cp "${local_yaml_file}" "${local_yaml_path}"
 fi
 
-echo "Attempting to copy stack facts to Facter 'facts.d' directory."
+echo "Downloading custom Facter facts..."
 mkdir -p /opt/puppetlabs/facts/facts.d
 aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
 
