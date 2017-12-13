@@ -4,6 +4,8 @@
 * Add configuration flag for enabling default system users password #36
 * Hieradata config file is now generated based on Ansible group vars
 * Add configuration flag for enabling package and artifacts deployment on instance initialisation
+* Replace Serverspec with InSpec for testing #50
+* Remove external package installation during cloud init #43
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
