@@ -147,7 +147,7 @@ sleep 30
 
 echo "Testing ${component} component using InSpec..."
 cd "${aws_provisioner_dir}/test/inspec"
-HOME=/root inspec exec ${component}_spec.rb
+HOME=/root inspec exec "${component}_spec.rb"
 
 echo "Cleaning up provisioner temp directory..."
 rm -rf "${tmp_dir:?}/*"
