@@ -168,28 +168,32 @@ Resources:
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
-          - Effect: Allow
-            Action:
-            - ec2:Describe*
-            - ec2:AttachVolume
-            - ec2:CreateVolume
-            - ec2:DetachVolume
-            - ec2:CreateSnapshot
-            - ec2:CreateTags
-            - ec2:ModifyInstanceAttribute
-            - cloudwatch:PutMetricData
-            Resource: '*'
-          - Effect: Allow
-            Action:
-            - s3:Get*
-            - s3:List*
-            - s3:Put*
-            Resource: '*'
-          - Effect: Allow
-            Action:
-            - logs:*
-            Resource:
-            - arn:aws:logs:*:*:*
+            - Effect: Allow
+              Action:
+                - ec2:Describe*
+                - ec2:CreateTags
+                - ec2:AttachVolume
+                - ec2:CreateVolume
+                - ec2:DetachVolume
+                - ec2:CreateSnapshot
+                - ec2:ModifyInstanceAttribute
+                - autoscaling:CreateLaunchConfiguration
+                - autoscaling:DescribeLaunchConfigurations
+                - autoscaling:UpdateAutoScalingGroup
+                - autoscaling:CreateOrUpdateTags
+                - cloudwatch:PutMetricData
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - s3:Get*
+                - s3:List*
+                - s3:Put*
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - logs:*
+              Resource:
+                - arn:aws:logs:*:*:*
       RoleName:
         Fn::Sub: ${ComputeStackPrefixParameter}-AuthorPublishDispatcherStackPublishRole
 
