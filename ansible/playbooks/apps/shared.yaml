@@ -1,0 +1,45 @@
+---
+- name: Shared resources CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Create Shared resources Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ roles.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../cloudformation/apps/shared.yaml"
+        template_parameters:
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+      tags:
+      - create
+
+    - name: Check if a Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ roles.stack_name }}"
+            --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ roles.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AEM Roles Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ roles.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
