@@ -12,9 +12,11 @@ stack_prefix=$2
 component=$3
 aem_aws_stack_provisioner_version=$4
 
+aws_provisioner_dir=/opt/shinesolutions/aem-aws-stack-provisioner
+custom_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
 tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
 
-PATH=$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin
+PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH
 
 # Download stack provisioner artifacts from S3.
 download_provisioner() {
@@ -34,11 +36,10 @@ download_provisioner() {
 # before and after AEM provisioning.
 run_custom_stage() {
   stage=${1}
-  custom_stack_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
-  script=${custom_stack_provisioner_dir}/${stage}.sh
+  script=${custom_provisioner_dir}/${stage}.sh
   if [ -x "${script}" ]; then
     echo "Executing the ${stage} script of Custom Stack Provisioner..."
-    cd ${custom_stack_provisioner_dir} && ${script} "${stack_prefix}" "${component}"
+    cd ${custom_provisioner_dir} && ${script} "${stack_prefix}" "${component}"
   else
     echo "${stage} script of Custom Stack Provisioner is either not provided or not executable..."
   fi
@@ -73,17 +74,17 @@ ruby --version
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
   echo "Downloading Custom Stack Provisioner..."
-  download_provisioner /opt/shinesolutions/aem-custom-stack-provisioner aem-custom-stack-provisioner.tar.gz
+  download_provisioner "${custom_provisioner_dir}" aem-custom-stack-provisioner.tar.gz
 else
   echo "No Custom Stack Provisioner provided..."
 fi
 
 echo "Downloading AEM Stack Provisioner..."
-download_provisioner /opt/shinesolutions/aem-aws-stack-provisioner "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
+download_provisioner "${aws_provisioner_dir}" "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 
 run_custom_stage pre-common
 
-cd /opt/shinesolutions/aem-aws-stack-provisioner
+cd "${aws_provisioner_dir}"
 
 if [[ -d data ]]; then
   echo "Downloading custom configuration..."
@@ -141,14 +142,12 @@ set -o errexit
 
 run_custom_stage post-common
 
-cd /opt/shinesolutions/aem-aws-stack-provisioner/
-
 # Some tests seem to fail because services aren't fully up.
 sleep 30
 
-echo "Testing ${component} component using Serverspec..."
-/opt/puppetlabs/puppet/bin/gem install --no-document rspec serverspec
-cd test/serverspec && /opt/puppetlabs/puppet/bin/rake spec "SPEC=spec/${component}_spec.rb"
+echo "Testing ${component} component using InSpec..."
+cd "${aws_provisioner_dir}/test/inspec"
+HOME=/root inspec exec "${component}_spec.rb"
 
 echo "Cleaning up provisioner temp directory..."
 rm -rf "${tmp_dir:?}/*"
