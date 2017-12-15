@@ -72,3 +72,13 @@ Resources:
         Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '5433'
+
+Outputs:
+
+  AuthorPublishDispatcherSecurityGroup:
+    Value:
+      Ref: AuthorPublishDispatcherSecurityGroup
+    Description: The Author Publish Dispatcher Security Group
+    Export:
+      Name:
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup

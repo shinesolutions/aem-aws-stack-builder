@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create Roles for AEM Stack
+  Create Shared resources for AEM Stack
 
 Parameters:
 
@@ -424,6 +424,14 @@ Resources:
         - Ref: ChaosMonkeyRole
 
 Outputs:
+
+  AuthorPublishDispatcherInstanceProfile:
+    Value:
+      Ref: AuthorPublishDispatcherInstanceProfile
+    Description: The Author Publish Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
 
   PublishDispatcherInstanceProfile:
     Value:
