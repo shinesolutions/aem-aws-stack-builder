@@ -11,7 +11,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../cloudformation/apps/author-publish-dispatcher/prerequisites.yaml"
+        template: "../../../../cloudformation/apps/author-publish-dispatcher/prerequisites.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           VPCId: "{{ aem_vpc.id }}"
