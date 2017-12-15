@@ -16,7 +16,7 @@
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
-          AuthorPublishDispatcherInstanceProfilePre: "NONE"
+          AuthorPublishDispatcherInstanceProfileParameter: "{{ author_publish_dispatcher.instance_profile }}"
           AuthorPublishDispatcherSecurityGroupParameter: "{{ author_publish_dispatcher.security_group }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

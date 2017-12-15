@@ -21,9 +21,9 @@ Parameters:
     Type: String
     Description: The Author Publish Dispatcher Instance Type
 
-  AuthorPublishDispatcherInstanceProfilePre:
+  AuthorPublishDispatcherInstanceProfileParameter:
     Type: String
-    Description: The Author Publish Dispatcher pre-created Instance Profile
+    Description: The Author Publish Dispatcher Instance Profile
 
   AuthorPublishDispatcherSecurityGroupParameter:
     Type: String
@@ -81,129 +81,9 @@ Parameters:
     Type: String
     Description: Record Set TTL value
 
-Conditions:
-  CreateInstanceProfileCondition:
-    Fn::Equals:
-    - Ref: AuthorPublishDispatcherInstanceProfilePre
-    - NONE
 
 Resources:
 
-  # AuthorPublishDispatcher Security Group
-  AuthorPublishDispatcherSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: AuthorPublishDispatcher Security Group
-      Tags:
-      - Key: Name
-        Value: AEM Author Publish Dispatcher Security Group
-      - Key: StackPrefix
-        Value:
-          Ref: ComputeStackPrefixParameter
-      VpcId:
-        Ref: VPCId
-
-  # Allow tcp on ports 80
-  AuthorPublishDispatcherSecurityGroupIngress1:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: 0.0.0.0/0
-      FromPort: '80'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-
-  # Allow tcp on ports 443
-  AuthorPublishDispatcherSecurityGroupIngress2:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: 0.0.0.0/0
-      FromPort: '443'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '443'
-
-  # Allow tcp on ports 4502, 4503
-  AuthorPublishDispatcherSecurityGroupIngress3:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: 0.0.0.0/0
-      FromPort: '4502'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '4503'
-
-  # Allow tcp on ports 5432, 5433
-  AuthorPublishDispatcherSecurityGroupIngress4:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      CidrIp: 0.0.0.0/0
-      FromPort: '5432'
-      GroupId:
-        Ref: AuthorPublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '5433'
-
-  AuthorPublishDispatcherRole:
-    Type: AWS::IAM::Role
-    Condition: CreateInstanceProfileCondition
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - ec2.amazonaws.com
-          Action:
-          - sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
-      Policies:
-      - PolicyName: AuthorPublishDispatcherRolePolicy
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - ec2:Describe*
-                - ec2:CreateTags
-                - ec2:AttachVolume
-                - ec2:CreateVolume
-                - ec2:DetachVolume
-                - ec2:CreateSnapshot
-                - ec2:ModifyInstanceAttribute
-                - autoscaling:CreateLaunchConfiguration
-                - autoscaling:DescribeLaunchConfigurations
-                - autoscaling:UpdateAutoScalingGroup
-                - autoscaling:CreateOrUpdateTags
-                - cloudwatch:PutMetricData
-              Resource: "*"
-            - Effect: Allow
-              Action:
-                - s3:Get*
-                - s3:List*
-                - s3:Put*
-              Resource: "*"
-            - Effect: Allow
-              Action:
-                - logs:*
-              Resource:
-                - arn:aws:logs:*:*:*
-      RoleName:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorPublishDispatcherStackPublishRole
-
-  AuthorPublishDispatcherInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Condition: CreateInstanceProfileCondition
-    Properties:
-      Path: /
-      Roles:
-      - Ref: AuthorPublishDispatcherRole
 
   AuthorPublishDispatcherInstance:
     Type: AWS::EC2::Instance
@@ -229,10 +109,7 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::If:
-        - CreateInstanceProfileCondition
-        - Ref: AuthorPublishDispatcherInstanceProfile
-        - Ref: AuthorPublishDispatcherInstanceProfilePre
+        Ref: AuthorPublishDispatcherInstanceProfileParameter
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
@@ -245,7 +122,6 @@ Resources:
         DeviceIndex: '0'
         GroupSet:
         - Ref: AuthorPublishDispatcherSecurityGroupParameter
-        - Ref: AuthorPublishDispatcherSecurityGroup
         - Ref: InboundFromBastionHostSecurityGroupParameter
         SubnetId:
           Ref: AuthorPublishDispatcherSubnet
