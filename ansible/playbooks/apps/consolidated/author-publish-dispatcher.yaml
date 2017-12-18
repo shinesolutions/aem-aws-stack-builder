@@ -11,7 +11,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../cloudformation/apps/author-publish-dispatcher/author-publish-dispatcher.yaml"
+        template: "../../../../cloudformation/apps/author-publish-dispatcher.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
