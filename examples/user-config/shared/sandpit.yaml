@@ -1,0 +1,8 @@
+roles:
+  stack_name: aem-roles-stack
+  publish_dispatcher: AEMStackPublishDispatcherRole
+  publish: AEMStackPublishRole
+  author: AEMStackAuthorRole
+  author_dispatcher: AEMStackAuthorDispatcherRole
+  orchestrator: AEMStackOrchestratorRole
+  chaos_monkey: AEMStackChaosMonkeyRole
