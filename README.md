@@ -1,21 +1,25 @@
 [![Build Status](https://img.shields.io/travis/shinesolutions/aem-aws-stack-builder.svg)](http://travis-ci.org/shinesolutions/aem-aws-stack-builder)
 
-# AEM AWS Stack Builder
+AEM AWS Stack Builder
+---------------------
+
 A set of [Ansible](https://www.ansible.com/) playbooks for building [Adobe Experience Manager (AEM)](http://www.adobe.com/au/marketing-cloud/enterprise-content-management.html) on [AWS](https://aws.amazon.com/) using CloudFormation stacks.
 
-Stack Builder has been designed with a focus on modularity, allowing the separation between network set up (VPC, subnets, etc) and applications set up (AEM Author, Publish, and Dispatcher).
+Stack Builder has been designed with a focus on modularity, allowing the separation between network set up (VPC, subnets, etc) and applications set up (AEM Author, Publish, and Dispatcher), while also providing a flexible way to support multiple architectures.
 
-TODO: note on Orchestrator and Chaos Monkey.
+Stack Builder currently supports the following AEM architectures:
+* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - runs AEM Author, Publish, and Dispatcher on separate EC2 instances with auto-recovery and auto-scaling support, suitable for production environment
+* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - runs AEM Author, Publish, and Dispatcher on a single EC2 instance, suitable for development environment
 
-## Installation
+Installation
+------------
 
-Requirements:
+Install the following required tools:
+* [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
+* [Ansible](http://docs.ansible.com/ansible/intro_installation.html) version 2.2.0.0 or later
 
-* Run `make deps` to install [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html), [Ansible](http://docs.ansible.com/ansible/intro_installation.html), and [Boto 3](https://boto3.readthedocs.io/en/latest/).
-* [Configure](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration) AWS CLI.
-* Install [GNU Parallel](https://www.gnu.org/software/parallel/).
-
-## Usage
+Usage
+-----
 
 Requirements:
 
@@ -62,33 +66,3 @@ Makefile variables:
 | config_path  | Path to directory containing configuration files |
 
 It is also possible to create specific components without the complete set. Check out the Makefile for the complete list of targets.
-
-## Configuration
-
-| Name                                         | Description |
-|----------------------------------------------|-------------|
-| publish_dispatcher.stack_name                | TODO        |
-| publish_dispatcher.instance_profile          | TODO        |
-| publish_dispatcher.instance_type             | TODO        |
-| publish_dispatcher.min_size                  | TODO        |
-| publish_dispatcher.max_size                  | TODO        |
-| publish_dispatcher.load_balancer.tag_name    | TODO        |
-| publish_dispatcher.tag_name                  | TODO        |
-| publish_dispatcher.elb_health_check          | TODO        |
-| publish_dispatcher.route53_record_set_name   | TODO        |
-| chaos_monkey.stack_name                      | TODO        |
-| chaos_monkey.ami_id                          | TODO        |
-| chaos_monkey.instance_profile                | TODO        |
-| chaos_monkey.instance_type                   | TODO        |
-| chaos_monkey.tag_name                        | TODO        |
-
-## Development
-
-Requirements:
-
-* Install [ShellCheck](https://github.com/koalaman/shellcheck#user-content-installing)
-
-Check shell scripts, validate CloudFormation templates, check Ansible playbooks syntax:
-```
-make lint
-```
