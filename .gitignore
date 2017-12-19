@@ -9,3 +9,4 @@ stage
 *.pyc
 backup/
 output/
+examples/user-config/*/zzz-local.yaml
