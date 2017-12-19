@@ -14,9 +14,12 @@ Stack Builder currently supports the following AEM architectures:
 Installation
 ------------
 
-Install the following required tools:
-* [AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html)
-* [Ansible](http://docs.ansible.com/ansible/intro_installation.html) version 2.2.0.0 or later
+- Install the following required tools:
+  * [Python](https://www.python.org/downloads/) version 2.7 or latest 2.x
+  * [Ruby](https://www.ruby-lang.org/en/) version 2.0.0 or later
+  * [GNU Make](https://www.gnu.org/software/make/)
+- Either clone AEM AWS Stack Builder `git clone https://github.com/shinesolutions/aem-aws-stack-builder.git` or download one of the [released versions](https://github.com/shinesolutions/aem-aws-stack-builder/releases)
+- Resolve the [Python packages](https://pip.readthedocs.io/en/1.1/requirements.html) dependencies by running `make deps`
 
 Usage
 -----
