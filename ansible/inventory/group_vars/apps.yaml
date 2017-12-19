@@ -21,7 +21,7 @@ aem_vpc:
 aem:
   enable_crxde: false
   enable_default_passwords: false
-  enable_deploy_on_init: false  
+  enable_deploy_on_init: false
 
 roles:
   stack_name: aem-roles-stack
@@ -167,14 +167,14 @@ author_dispatcher:
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
   instance_profile: change-me
-  role_stack_prefix: change-me
+  roles_stack_prefix: change-me
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 20
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
   security_group: overwrite-me
-  security_group_stack_prefix: change-me
+  security_groups_stack_prefix: change-me
 
 orchestrator:
   stack_name: aem-orchestrator-stack
