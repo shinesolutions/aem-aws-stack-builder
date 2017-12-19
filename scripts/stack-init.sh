@@ -142,9 +142,6 @@ set -o errexit
 
 run_custom_stage post-common
 
-# Some tests seem to fail because services aren't fully up.
-sleep 30
-
 echo "Testing ${component} component using InSpec..."
 cd "${aws_provisioner_dir}/test/inspec"
 HOME=/root inspec exec "${component}_spec.rb"
