@@ -8,6 +8,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Network Resources Stack Prefix
+
   AuthorPublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for the Host
@@ -23,11 +27,19 @@ Parameters:
 
   AuthorPublishDispatcherInstanceProfileParameter:
     Type: String
-    Description: The Author Publish Dispatcher Instance Profile
+    Description: The Author Publish Dispatcher Instance Profile (Use this OR AuthorPublishDispatcherInstanceProfileStackPrefixParameter)
+
+  AuthorPublishDispatcherInstanceProfileStackPrefixParameter:
+    Type: String
+    Description: The Author Publish Dispatcher Instance Profile Stack Prefix  (Use this OR AuthorPublishDispatcherInstanceProfileParameter)
 
   AuthorPublishDispatcherSecurityGroupParameter:
     Type: String
-    Description: The Author Publish Dispatcher default Security Group Id
+    Description: The Author Publish Dispatcher Security Group Id (Use this OR AuthorPublishDispatcherSecurityGroupStackPrefixParameter)
+
+  AuthorPublishDispatcherSecurityGroupStackPrefixParameter:
+    Type: String
+    Description: The Author Publish Dispatcher Security Group Id Stack Prefix (Use this OR AuthorPublishDispatcherSecurityGroupParameter)
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -44,10 +56,6 @@ Parameters:
   AuthorPublishDispatcherDataVolSizeParameter:
     Type: Number
     Description: Author Publish Dispatcher Instances Data EBS Volume Size
-
-  VPCId:
-    Type: AWS::EC2::VPC::Id
-    Description: The VPC that the Host will reside
 
   AuthorPublishDispatcherSubnet:
     Type: AWS::EC2::Subnet::Id
@@ -81,6 +89,22 @@ Parameters:
     Type: String
     Description: Record Set TTL value
 
+Conditions:
+
+  HasNotInstanceProfileParameterCondition:
+    Fn::Equals:
+      - Ref: AuthorPublishDispatcherInstanceProfileParameter
+      - ""
+
+  HasNotSecurityGroupParameterCondition:
+    Fn::Equals:
+      - Ref: AuthorPublishDispatcherSecurityGroupParameter
+      - ""
+
+  HasNotSubnetParameterCondition:
+    Fn::Equals:
+      - Ref: AuthorPublishDispatcherSubnet
+      - ""
 
 Resources:
 
@@ -109,7 +133,10 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Ref: AuthorPublishDispatcherInstanceProfileParameter
+        Fn::If:
+          - HasNotInstanceProfileParameterCondition
+          - Fn::ImportValue: !Sub ${AuthorPublishDispatcherInstanceProfileStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
+          - Ref: AuthorPublishDispatcherInstanceProfileParameter
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
@@ -121,10 +148,16 @@ Resources:
           Ref: AssociatePublicIpAddressParameter
         DeviceIndex: '0'
         GroupSet:
-        - Ref: AuthorPublishDispatcherSecurityGroupParameter
         - Ref: InboundFromBastionHostSecurityGroupParameter
+        - Fn::If:
+            - HasNotSecurityGroupParameterCondition
+            - Fn::ImportValue: !Sub ${AuthorPublishDispatcherSecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+            - Ref: AuthorPublishDispatcherSecurityGroupParameter
         SubnetId:
-          Ref: AuthorPublishDispatcherSubnet
+          Fn::If:
+            - HasNotSubnetParameterCondition
+            - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetA
+            - Ref: AuthorPublishDispatcherSubnet
       Tags:
       - Key: StackPrefix
         Value:
