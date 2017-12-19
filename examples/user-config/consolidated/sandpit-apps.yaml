@@ -33,7 +33,7 @@ snapshots:
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
-  instance_profile: xyz-aem-author-publish-dispatcher-stack-AuthorPublishDispatcherInstanceProfile-1OLY2OMVZJVAG
+  instance_profile: sandpit-roles-1-aem-roles-stack-AuthorPublishDispatcherInstanceProfile-JP7KQ94NRYV0
   role_stack_prefix: change-me
   instance_type: m4.xlarge
   root_vol_size: 20
