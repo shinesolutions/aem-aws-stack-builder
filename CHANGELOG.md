@@ -7,6 +7,7 @@
 * Replace Serverspec with InSpec for testing #50
 * Remove external package installation during cloud init #43
 * Remove unnecessary sleep during cloud init #51
+* Add JVM memory opts for AEM Author and Publish #49
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
