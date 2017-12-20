@@ -1,54 +1,168 @@
 aem:
   enable_crxde: true
   enable_default_passwords: true
-  enable_deploy_on_init: true
-  author_jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
-  publish_jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+  enable_deploy_on_init: false
 
 aem_vpc:
-  id: vpc-b3ad53d6
-  author_publish_dispatcher_subnet_id: subnet-7d0bf80a
+  id: vpc-2fc3014b
+  author_dispatcher_subnet_a_id: subnet-8562f4e1
+  author_dispatcher_subnet_b_id: subnet-0e2f9178
+  author_subnet_a_id: subnet-8462f4e0
+  author_subnet_b_id: subnet-022f9174
+  chaos_monkey_subnet_a_id: subnet-8662f4e2
+  chaos_monkey_subnet_b_id: subnet-052f9173
+  orchestrator_subnet_a_id: subnet-8662f4e2
+  orchestrator_subnet_b_id: subnet-052f9173
+  publish_dispatcher_elb_subnet_a_id: subnet-8162f4e5
+  publish_dispatcher_elb_subnet_b_id: subnet-002f9176
+  publish_dispatcher_subnet_a_id: subnet-8762f4e3
+  publish_dispatcher_subnet_b_id: subnet-012f9177
+  publish_subnet_a_id: subnet-8062f4e4
+  publish_subnet_b_id: subnet-032f9175
+
+security_groups:
+  stack_name: aem-security-groups-stack
+  secure_shell:
+    inbound_cidr_ip: 10.0.0.0/25
+
+  private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
+
+  publish_dispatcher_elb:
+    tag_name: AEM Publish Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.0.0/25
+
+  publish_dispatcher:
+    tag_name: AEM Publish Dispatcher Security Group
+
+  publish:
+    tag_name: AEM Publish Security Group
+
+  author:
+    tag_name: AEM Author Security Group
+
+  author_elb:
+    tag_name: AEM Author ELB Security Group
+
+  author_dispatcher:
+    tag_name: AEM Author Dispatcher Security Group
+
+  author_dispatcher_elb:
+    tag_name: AEM Author Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.0.0/25
+
+  orchestrator:
+    tag_name: AEM Orchestrator Security Group
+
+  chaos_monkey:
+    tag_name: AEM Chaos Monkey Security Group
 
 compute:
-  key_pair_name: michaelb-sandpit
-  inbound_from_bastion_host_security_group: sg-60cb1005
+  key_pair_name: aem-stack-key-pair
+  inbound_from_bastion_host_security_group: sg-b260abd5
 
 compute_stacks:
-  stack_name: author-publish-dispatcher
+  stack_name: aem-set
 
 s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 1.1.2
-  aem_orchestrator_version:
+  aem_aws_stack_provisioner_version: 0.9.0
+  aem_orchestrator_version: 1.0.0
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
 
 snapshots:
   author:
     use_data_vol_snapshot: 'false'
-    data_vol_snapshot_id: TODO
+    data_vol_snapshot_id: snap-06eea7764113b8844
   publish:
     use_data_vol_snapshot: 'false'
-    data_vol_snapshot_id: TODO
+    data_vol_snapshot_id: snap-06eea7764113b8844
+
+publish_dispatcher:
+  stack_name: aem-publish-dispatcher-stack
+  instance_profile: aem-roles-stack-PublishDispatcherInstanceProfile-FSFBXO7Q2ESY
+  instance_type: t2.micro
+  min_size: 2
+  desired_capacity: 2
+  max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
+  load_balancer:
+    tag_name: AEM Publish Dispatcher Load Balancer
+  tag_name: AEM Publish Dispatcher
+  elb_health_check: HTTPS:443/system/health?tags=shallow
+  elb_scheme: internet-facing
+  allowed_client: '*.*.*.*'
+  certificate_name: aem-stack-builder
+
+publish:
+  stack_name: aem-publish-stack
+  instance_profile: aem-roles-stack-PublishInstanceProfile-MHV78N8CCU6O
+  instance_type: m3.large
+  min_size: 2
+  desired_capacity: 2
+  max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
+  tag_name: AEM Publish
+  jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+
+author:
+  stack_name: aem-author-stack
+  instance_profile: aem-roles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
+  instance_type: m3.large
+  root_vol_size: 20
+  data_vol_size: 20
+  load_balancer:
+    tag_name: AEM Author Load Balancer
+  tag_name: AEM Author
+  elb_health_check: HTTPS:5433/system/health?tags=shallow
+  certificate_name: aem-stack-builder
+  jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+
+author_dispatcher:
+  stack_name: aem-author-dispatcher-stack
+  instance_profile: aem-roles-stack-AuthorDispatcherInstanceProfile-1Q5WZ99PPURIY
+  instance_type: t2.micro
+  min_size: 2
+  desired_capacity: 2
+  max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
+  load_balancer:
+    tag_name: AEM Author Dispatcher Load Balancer
+  tag_name: AEM Author Dispatcher
+  elb_health_check: HTTPS:443/system/health?tags=shallow
+  certificate_name: aem-stack-builder
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
-  instance_profile: sandpit-roles-1-aem-roles-stack-AuthorPublishDispatcherInstanceProfile-JP7KQ94NRYV0
-  roles_stack_prefix: change-me
   instance_type: m4.xlarge
-  root_vol_size: 20
-  data_vol_size: 100
-  tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
-  security_group: sg-60cb1005
-  security_groups_stack_prefix: change-me
+
+orchestrator:
+  stack_name: aem-orchestrator-stack
+  instance_profile: aem-roles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
+  instance_type: t2.small
+  root_vol_size: 20
+  data_vol_size: 20
+  tag_name: AEM Orchestrator
+
+chaos_monkey:
+  stack_name: aem-chaos-monkey-stack
+  instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
+  instance_type: t2.micro
+  root_vol_size: 20
+  tag_name: AEM Chaos Monkey
 
 dns_records:
   stack_name: aem-dns-records
   route53_hosted_zone_name: aem-stack.com.
-  author_publish_dispatcher:
-    record_set_name_prefix: 'aemauthor1-'
-    record_set_name_suffix: ''
-    ttl: 300
+  author:
+    record_set_name: author
+  author_dispatcher:
+    record_set_name: author-dispatcher
+  publish_dispatcher:
+    record_set_name: publish-dispatcher
