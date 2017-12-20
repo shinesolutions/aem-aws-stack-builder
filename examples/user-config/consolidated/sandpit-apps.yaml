@@ -38,14 +38,14 @@ snapshots:
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
   instance_profile: sandpit-roles-1-aem-roles-stack-AuthorPublishDispatcherInstanceProfile-JP7KQ94NRYV0
-  roles_stack_prefix: change-me
+  roles_stack_prefix:
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 100
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
   security_group: sg-60cb1005
-  security_groups_stack_prefix: change-me
+  security_groups_stack_prefix:
 
 dns_records:
   stack_name: aem-dns-records
