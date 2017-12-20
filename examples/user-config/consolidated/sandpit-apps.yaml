@@ -2,6 +2,10 @@ aem:
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: true
+  publish:
+    jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+  author:
+    jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
 
 aem_vpc:
   id: vpc-b3ad53d6
