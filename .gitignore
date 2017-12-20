@@ -9,3 +9,6 @@ stage
 *.pyc
 backup/
 output/
+.*
+*ZZZ*
+~*

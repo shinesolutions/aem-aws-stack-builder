@@ -22,6 +22,10 @@ aem:
   enable_crxde: false
   enable_default_passwords: false
   enable_deploy_on_init: false
+  publish:
+    jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
+  author:
+    jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
 
 roles:
   stack_name: aem-roles-stack
