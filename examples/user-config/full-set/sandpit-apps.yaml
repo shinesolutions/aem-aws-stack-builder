@@ -111,7 +111,6 @@ publish:
   root_vol_size: 20
   data_vol_size: 20
   tag_name: AEM Publish
-  jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
 
 author:
   stack_name: aem-author-stack
@@ -124,7 +123,6 @@ author:
   tag_name: AEM Author
   elb_health_check: HTTPS:5433/system/health?tags=shallow
   certificate_name: aem-stack-builder
-  jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
