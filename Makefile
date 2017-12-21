@@ -152,11 +152,23 @@ create-stack-prerequisites:
 delete-stack-prerequisites:
 	./scripts/delete-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
 
+create-stack-prerequisites-fs2:
+	./scripts/create-stack.sh apps/full-set-2/prerequisites "$(stack_prefix)" "$(config_path)"
+
+delete-stack-prerequisites-fs2:
+	./scripts/delete-stack.sh apps/full-set-2/prerequisites "$(stack_prefix)" "$(config_path)"
+
 create-compute-stacks: create-stack-data
 	./scripts/create-stack.sh apps/compute-stacks  "$(stack_prefix)" "$(config_path)"
 
 delete-compute-stacks: delete-stack-data
 	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
+
+create-compute-stacks-fs2: create-stack-data
+	./scripts/create-stack.sh apps/full-set-2/compute-stacks  "$(stack_prefix)" "$(config_path)"
+
+delete-compute-stacks-fs2: delete-stack-data
+	./scripts/delete-stack.sh apps/full-set-2/compute-stacks "$(stack_prefix)" "$(config_path)"
 
 create-private-cert:
 	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
