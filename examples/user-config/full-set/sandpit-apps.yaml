@@ -168,3 +168,8 @@ dns_records:
     record_set_name: author-dispatcher
   publish_dispatcher:
     record_set_name: publish-dispatcher
+
+prerequisites:
+  stack_name: aem-prerequisites-stack
+
+network_stack_prefix: sandpit
