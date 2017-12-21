@@ -166,6 +166,18 @@ Resources:
           - ","
           - Fn::ImportValue:
               !Sub ${NetworkStackPrefixParameter}-PublishSubnetList
+      MetricCollection:
+        -
+          Granularity: "1Minute"
+          Metrics:
+            - "GroupMinSize"
+            - "GroupMaxSize"
+            - "GroupDesiredCapacity"
+            - "GroupInServiceInstances"
+            - "GroupPendingInstances"
+            - "GroupStandbyInstances"
+            - "GroupTerminatingInstances"
+            - "GroupTotalInstances"
 
 Outputs:
 
