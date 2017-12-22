@@ -8,12 +8,14 @@ aem:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
 
 aem_vpc:
-  id: vpc-b3ad53d6
-  author_publish_dispatcher_subnet_id: subnet-7d0bf80a
+  id: vpc-2fc3014b
+  # author_publish_dispatcher_subnet_id: subnet-8162f4e5
+  author_publish_dispatcher_subnet_id: ""
 
 compute:
   key_pair_name: aem-stack-key-pair
-  inbound_from_bastion_host_security_group: sg-60cb1005
+  # inbound_from_bastion_host_security_group: sg-62153b04 sg-60cb1005
+  inbound_from_bastion_host_security_group: sg-62153b04
 
 compute_stacks:
   stack_name: author-publish-dispatcher
@@ -37,15 +39,18 @@ snapshots:
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
-  instance_profile: sandpit-roles-1-aem-roles-stack-AuthorPublishDispatcherInstanceProfile-JP7KQ94NRYV0
-  roles_stack_prefix:
+  network_stack_prefix: sandpit
+  security_groups_stack_prefix: sandpit
+  # instance_profile: sandpit-roles-1-aem-roles-stack-AuthorPublishDispatcherInstanceProfile-JP7KQ94NRYV0
+  instance_profile:
+  roles_stack_prefix: sandpit
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 100
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
-  security_group: sg-60cb1005
-  security_groups_stack_prefix:
+  # security_group: sg-60cb1005
+  security_group:
 
 dns_records:
   stack_name: aem-dns-records

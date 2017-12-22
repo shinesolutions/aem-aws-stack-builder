@@ -6,3 +6,41 @@ roles:
   author_dispatcher: AEMStackAuthorDispatcherRole
   orchestrator: AEMStackOrchestratorRole
   chaos_monkey: AEMStackChaosMonkeyRole
+
+security_groups:
+  stack_name: aem-security-groups-stack
+  network_stack_prefix: sandpit
+  
+  secure_shell:
+    inbound_cidr_ip: 10.0.0.0/25
+
+  private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
+
+  publish_dispatcher_elb:
+    tag_name: AEM Publish Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.0.0/25
+
+  publish_dispatcher:
+    tag_name: AEM Publish Dispatcher Security Group
+
+  publish:
+    tag_name: AEM Publish Security Group
+
+  author:
+    tag_name: AEM Author Security Group
+
+  author_elb:
+    tag_name: AEM Author ELB Security Group
+
+  author_dispatcher:
+    tag_name: AEM Author Dispatcher Security Group
+
+  author_dispatcher_elb:
+    tag_name: AEM Author Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.0.0/25
+
+  orchestrator:
+    tag_name: AEM Orchestrator Security Group
+
+  chaos_monkey:
+    tag_name: AEM Chaos Monkey Security Group

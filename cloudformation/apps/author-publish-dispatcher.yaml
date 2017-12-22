@@ -12,6 +12,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Network Resources Stack Prefix
 
+  SecurityGroupStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Security Groups Resources Stack Prefix
+
   AuthorPublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for the Host
@@ -35,15 +39,11 @@ Parameters:
 
   AuthorPublishDispatcherSecurityGroupParameter:
     Type: String
-    Description: The Author Publish Dispatcher Security Group Id (Use this OR AuthorPublishDispatcherSecurityGroupStackPrefixParameter)
-
-  AuthorPublishDispatcherSecurityGroupStackPrefixParameter:
-    Type: String
-    Description: The Author Publish Dispatcher Security Group Id Stack Prefix (Use this OR AuthorPublishDispatcherSecurityGroupParameter)
+    Description: The Author Publish Dispatcher Security Group Id (Use this OR SecurityGroupStackPrefixParameter)
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
-    Description: Inbound Bound from Bastion Host Security Group Id
+    Description: Inbound from Bastion Host Security Group Id
 
   ComputeKeyPairNameParameter:
     Type: AWS::EC2::KeyPair::KeyName
@@ -57,8 +57,8 @@ Parameters:
     Type: Number
     Description: Author Publish Dispatcher Instances Data EBS Volume Size
 
-  AuthorPublishDispatcherSubnet:
-    Type: AWS::EC2::Subnet::Id
+  AuthorPublishDispatcherSubnetParameter:
+    Type: String
     Description: Subnet Ids the Host Will be Launched into
 
   DataBucketNameParameter:
@@ -96,14 +96,14 @@ Conditions:
       - Ref: AuthorPublishDispatcherInstanceProfileParameter
       - ""
 
-  HasNotSecurityGroupParameterCondition:
+  HasNotAuthorPublishDispatcherSecurityGroupParameterCondition:
     Fn::Equals:
       - Ref: AuthorPublishDispatcherSecurityGroupParameter
       - ""
 
-  HasNotSubnetParameterCondition:
+  HasNotAuthorPublishDispatcherSubnetParameterCondition:
     Fn::Equals:
-      - Ref: AuthorPublishDispatcherSubnet
+      - Ref: AuthorPublishDispatcherSubnetParameter
       - ""
 
 Resources:
@@ -150,14 +150,14 @@ Resources:
         GroupSet:
         - Ref: InboundFromBastionHostSecurityGroupParameter
         - Fn::If:
-            - HasNotSecurityGroupParameterCondition
-            - Fn::ImportValue: !Sub ${AuthorPublishDispatcherSecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+            - HasNotAuthorPublishDispatcherSecurityGroupParameterCondition
+            - Fn::ImportValue: !Sub ${SecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
             - Ref: AuthorPublishDispatcherSecurityGroupParameter
         SubnetId:
           Fn::If:
-            - HasNotSubnetParameterCondition
-            - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetA
-            - Ref: AuthorPublishDispatcherSubnet
+            - HasNotAuthorPublishDispatcherSubnetParameterCondition
+            - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
+            - Ref: AuthorPublishDispatcherSubnetParameter
       Tags:
       - Key: StackPrefix
         Value:
