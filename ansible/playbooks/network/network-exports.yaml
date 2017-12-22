@@ -16,6 +16,8 @@
         template_parameters:
           StackPrefix: "{{ stack_prefix }}"
           VPCId: "{{ network_exports.VPCId }}"
+          AuthorPublishDispatcherSubnetA: "{{ network_exports.AuthorPublishDispatcherSubnetA }}"
+          AuthorPublishDispatcherSubnetB: "{{ network_exports.AuthorPublishDispatcherSubnetB }}"
           PublishDispatcherELBSubnetA: "{{ network_exports.PublishDispatcherELBSubnetA }}"
           PublishDispatcherELBSubnetB: "{{ network_exports.PublishDispatcherELBSubnetB }}"
           PublishDispatcherSubnetA: "{{ network_exports.PublishDispatcherSubnetA }}"

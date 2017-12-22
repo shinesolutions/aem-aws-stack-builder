@@ -12,6 +12,14 @@ Parameters:
     Type: AWS::EC2::VPC::Id
     Description: AEM VPC Id
 
+  AuthorPublishDispatcherSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Publish Dispatcher Subnet in Availability Zone A
+
+  AuthorPublishDispatcherSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Publish Dispatcher Subnet in Availability Zone B
+
   PublishDispatcherELBSubnetA:
     Type: AWS::EC2::Subnet::Id
     Description: The Publish Dispatcher ELB Subnet in Availability Zone A
@@ -85,6 +93,18 @@ Outputs:
     Export:
       Name: !Sub ${StackPrefix}-VPCId
     Description: AEM VPC Id
+
+  AuthorPublishDispatcherSubnetA:
+    Value: !Ref AuthorPublishDispatcherSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorPublishDispatcherSubnetA
+    Description: The Author Publish Dispatcher Subnet in Availability Zone A
+
+  AuthorPublishDispatcherSubnetB:
+    Value: !Ref AuthorPublishDispatcherSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorPublishDispatcherSubnetB
+    Description: The Author Publish Dispatcher Subnet in Availability Zone B
 
   PublishDispatcherELBSubnetA:
     Value: !Ref PublishDispatcherELBSubnetA
