@@ -24,6 +24,60 @@ validate:
 		aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 
+########################################
+# Shared stacks
+########################################
+
+create-network:
+	./scripts/create-stack.sh network/network "$(stack_prefix)" "$(config_path)"
+
+delete-network:
+	./scripts/delete-stack.sh network/network "$(stack_prefix)" "$(config_path)"
+
+create-network-exports:
+	./scripts/create-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
+
+delete-network-exports:
+	./scripts/delete-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
+
+create-roles:
+	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
+
+delete-roles:
+	./scripts/delete-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
+
+create-security-groups:
+	./scripts/create-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
+
+delete-security-groups:
+	./scripts/delete-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
+
+########################################
+# Consolidated architecture stacks
+########################################
+
+create-consolidated: create-stack-data
+	./scripts/create-stack.sh apps/consolidated/compute-stacks "$(stack_prefix)" "$(config_path)"
+
+delete-consolidated: delete-stack-data
+	./scripts/delete-stack.sh apps/consolidated/compute-stacks "$(stack_prefix)" "$(config_path)"
+
+########################################
+# Utility stacks
+########################################
+
+create-stack-data:
+	./scripts/create-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
+
+delete-stack-data:
+	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
+
+
+
+
+
+
+
 # stacks set management targets
 
 create-set-aem:
@@ -46,18 +100,6 @@ create-vpc:
 
 delete-vpc:
 	./scripts/delete-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
-
-create-network:
-	./scripts/create-stack.sh network/network "$(stack_prefix)" "$(config_path)"
-
-delete-network:
-	./scripts/delete-stack.sh network/network "$(stack_prefix)" "$(config_path)"
-
-create-network-exports:
-	./scripts/create-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
-
-delete-network-exports:
-	./scripts/delete-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
 
 create-nat-gateway:
 	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
@@ -116,35 +158,11 @@ create-publish:
 delete-publish:
 	./scripts/delete-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
 
-create-consolidated: create-stack-data
-	./scripts/create-stack.sh apps/consolidated/compute-stacks "$(stack_prefix)" "$(config_path)"
-
-delete-consolidated: delete-stack-data
-	./scripts/delete-stack.sh apps/consolidated/compute-stacks "$(stack_prefix)" "$(config_path)"
-
-create-roles:
-	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
-
-delete-roles:
-	./scripts/delete-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
-
-create-security-groups:
-	./scripts/create-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
-
-delete-security-groups:
-	./scripts/delete-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
-
 create-dns-records:
 	./scripts/create-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
 
 delete-dns-records:
 	./scripts/delete-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
-
-create-stack-data:
-	./scripts/create-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
-
-delete-stack-data:
-	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
 
 create-stack-prerequisites:
 	./scripts/create-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
