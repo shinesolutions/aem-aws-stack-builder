@@ -56,6 +56,5 @@ dns_records:
   stack_name: aem-dns-records
   route53_hosted_zone_name: aem-stack.com.
   author_publish_dispatcher:
-    record_set_name_prefix: 'aemauthor1-'
-    record_set_name_suffix: ''
+    record_set_name: "aem-consolidated-{{ stack_prefix }}"
     ttl: 300
