@@ -62,6 +62,13 @@ network:
 
   hosted_zone: aem.
 
+bastion:
+  stack_name: aem-bastion-stack
+  key_pair_name: overwrite-me
+  ami_id: ami-ccecf5af
+  subnet_id: overwrite-me
+  security_groups: overwrite-me
+
 #TODO: create a new elastic ip option?
 nat_gateway:
   stack_name: aem-nat-gateway-stack

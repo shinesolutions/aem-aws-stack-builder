@@ -13,10 +13,10 @@
         disable_rollback: true
         template: "../../../cloudformation/network/bastion.yaml"
         template_parameters:
-          BastionImageId: "{{ bastion.ami }}"
-          BastionKeyPairName: "{{ bastion.key_pair_name}}"
-          BastionSubnet: "{{bastion.subnet}}"
-          BastionSecruityGroups: "{{bastion.security_groups}}"
+          BastionImageId: "{{ bastion.ami_id }}"
+          BastionKeyPairName: "{{ bastion.key_pair_name }}"
+          BastionSubnet: "{{ bastion.subnet_id }}"
+          BastionSecurityGroups: "{{ bastion.security_groups }}"
       tags:
       - create
 

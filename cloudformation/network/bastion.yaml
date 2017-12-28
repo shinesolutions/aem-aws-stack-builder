@@ -8,7 +8,7 @@ Parameters:
     Type: String
     Description: Used to Namespace the Exported Resources
     Default: ""
-  
+
   BastionImageId:
     Type: AWS::EC2::Image::Id
     Description: AMI Id used for Bastion Host
@@ -21,7 +21,7 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
     Description: Subnet Ids the Bastion Host Will be Launched into
 
-  BastionSecruityGroups:
+  BastionSecurityGroups:
     Type: List<AWS::EC2::SecurityGroup::Id>
     Description: The Set of Security Groups Attached to the Bastion Host
 
@@ -39,7 +39,7 @@ Resources:
           AssociatePublicIpAddress: true
           DeviceIndex: "0"
           GroupSet:
-            Ref: BastionSecruityGroups
+            Ref: BastionSecurityGroups
           SubnetId:
             Ref: BastionSubnet
       Tags:
