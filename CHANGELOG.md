@@ -9,6 +9,8 @@
 * Remove unnecessary sleep during cloud init #51
 * Add JVM memory opts for AEM Author and Publish #49
 * Fix bastion configuration passing
+* Modify Full-Set architecture stacks pairing to work with network, security_groups, and instance_profile stacks
+* Modify AEM Author instance's https listen port from 5433 to 5432
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support

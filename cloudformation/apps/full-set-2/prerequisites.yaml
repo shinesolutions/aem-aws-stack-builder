@@ -32,6 +32,17 @@ Parameters:
     Type: String
     Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
 
+  AEMASGEventQueueNameParameter:
+    Type: String
+    Description: The AEM Stack Auto Scaling Group Event Quene Name
+
+  AEMASGEventTopicDisplayNameParameter:
+    Type: String
+    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
+
+  AEMASGEventTopicNameParameter:
+    Type: String
+    Description: The AEM Stack Auto Scaling Group Event Topic Name
 
 Resources:
   SecurityGroupStack:
@@ -46,12 +57,16 @@ Resources:
         AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: !Ref AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
         PrivateSubnetInternetOutboundCidrIpParameter: !Ref PrivateSubnetInternetOutboundCidrIpParameter
 
-  RolesStack:
+
+  MessagingStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/roles.yaml
+      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/messaging.yaml
       Parameters:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
+        AEMASGEventQueueNameParameter: !Ref AEMASGEventQueueNameParameter
+        AEMASGEventTopicDisplayNameParameter: !Ref AEMASGEventTopicDisplayNameParameter
+        AEMASGEventTopicNameParameter: !Ref AEMASGEventTopicNameParameter
 
 Outputs:
   SecurityGroupStackName:
@@ -60,8 +75,8 @@ Outputs:
     Export:
       Name: !Sub ${ComputeStackPrefixParameter}-SecurityGroupStackName
 
-  RolesStackName:
-    Description: Roles Stack Name
-    Value: !Ref RolesStack
+  MessagingStackName:
+    Description: Messaging Stack Name
+    Value: !Ref MessagingStack
     Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-RolesStackName
+      Name: !Sub ${ComputeStackPrefixParameter}-MessagingStackName

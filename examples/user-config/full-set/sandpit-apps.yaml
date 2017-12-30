@@ -1,3 +1,7 @@
+security_group_stack_prefix: "{{ stack_prefix }}"
+network_stack_prefix: sandpit
+instance_profile_stack_prefix: sandpit
+
 aem:
   enable_crxde: true
   enable_default_passwords: true
@@ -9,31 +13,31 @@ aem:
 
 aem_vpc:
   id: vpc-2fc3014b
-  author_dispatcher_subnet_a_id: subnet-8562f4e1
-  author_dispatcher_subnet_b_id: subnet-0e2f9178
-  author_subnet_a_id: subnet-8462f4e0
-  author_subnet_b_id: subnet-022f9174
-  chaos_monkey_subnet_a_id: subnet-8662f4e2
-  chaos_monkey_subnet_b_id: subnet-052f9173
-  orchestrator_subnet_a_id: subnet-8662f4e2
-  orchestrator_subnet_b_id: subnet-052f9173
-  publish_dispatcher_elb_subnet_a_id: subnet-8162f4e5
-  publish_dispatcher_elb_subnet_b_id: subnet-002f9176
-  publish_dispatcher_subnet_a_id: subnet-8762f4e3
-  publish_dispatcher_subnet_b_id: subnet-012f9177
-  publish_subnet_a_id: subnet-8062f4e4
-  publish_subnet_b_id: subnet-032f9175
+  # author_dispatcher_subnet_a_id: subnet-8562f4e1
+  # author_dispatcher_subnet_b_id: subnet-0e2f9178
+  # author_subnet_a_id: subnet-8462f4e0
+  # author_subnet_b_id: subnet-022f9174
+  # chaos_monkey_subnet_a_id: subnet-8662f4e2
+  # chaos_monkey_subnet_b_id: subnet-052f9173
+  # orchestrator_subnet_a_id: subnet-8662f4e2
+  # orchestrator_subnet_b_id: subnet-052f9173
+  # publish_dispatcher_elb_subnet_a_id: subnet-8162f4e5
+  # publish_dispatcher_elb_subnet_b_id: subnet-002f9176
+  # publish_dispatcher_subnet_a_id: subnet-8762f4e3
+  # publish_dispatcher_subnet_b_id: subnet-012f9177
+  # publish_subnet_a_id: subnet-8062f4e4
+  # publish_subnet_b_id: subnet-032f9175
 
 security_groups:
   stack_name: aem-security-groups-stack
   secure_shell:
-    inbound_cidr_ip: 10.0.0.0/25
+    inbound_cidr_ip: 10.0.8.128/25
 
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
 
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
-    inbound_cidr_ip: 10.0.0.0/25
+    inbound_cidr_ip: 10.0.8.128/25
 
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
@@ -52,7 +56,7 @@ security_groups:
 
   author_dispatcher_elb:
     tag_name: AEM Author Dispatcher ELB Security Group
-    inbound_cidr_ip: 10.0.0.0/25
+    inbound_cidr_ip: 10.0.8.128/25
 
   orchestrator:
     tag_name: AEM Orchestrator Security Group
@@ -62,7 +66,7 @@ security_groups:
 
 compute:
   key_pair_name: aem-stack-key-pair
-  inbound_from_bastion_host_security_group: sg-b260abd5
+  inbound_from_bastion_host_security_group: sg-62153b04
 
 compute_stacks:
   stack_name: aem-set
@@ -71,7 +75,7 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 0.9.0
+  aem_aws_stack_provisioner_version: 2.2.0
   aem_orchestrator_version: 1.0.0
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
@@ -92,7 +96,7 @@ publish_dispatcher:
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 50
   load_balancer:
     tag_name: AEM Publish Dispatcher Load Balancer
   tag_name: AEM Publish Dispatcher
@@ -104,24 +108,24 @@ publish_dispatcher:
 publish:
   stack_name: aem-publish-stack
   instance_profile: aem-roles-stack-PublishInstanceProfile-MHV78N8CCU6O
-  instance_type: m3.large
+  instance_type: m4.xlarge
   min_size: 2
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 50
   tag_name: AEM Publish
 
 author:
   stack_name: aem-author-stack
   instance_profile: aem-roles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
-  instance_type: m3.large
+  instance_type: m4.xlarge
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 50
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
-  elb_health_check: HTTPS:5433/system/health?tags=shallow
+  elb_health_check: HTTPS:5432/system/health?tags=shallow
   certificate_name: aem-stack-builder
 
 author_dispatcher:
@@ -132,24 +136,19 @@ author_dispatcher:
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 50
   load_balancer:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTPS:443/system/health?tags=shallow
   certificate_name: aem-stack-builder
 
-author_publish_dispatcher:
-  stack_name: aem-author-publish-dispatcher-stack
-  instance_type: m4.xlarge
-  associate_public_ip_address: true
-
 orchestrator:
   stack_name: aem-orchestrator-stack
   instance_profile: aem-roles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
   instance_type: t2.small
   root_vol_size: 20
-  data_vol_size: 20
+  data_vol_size: 50
   tag_name: AEM Orchestrator
 
 chaos_monkey:
@@ -171,5 +170,3 @@ dns_records:
 
 prerequisites:
   stack_name: aem-prerequisites-stack
-
-network_stack_prefix: sandpit

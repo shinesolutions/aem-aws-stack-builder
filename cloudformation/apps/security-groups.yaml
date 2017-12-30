@@ -235,7 +235,6 @@ Resources:
         Ref: PublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '4503'
-
   PublishDispatcherSecurityGroupEgress1:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -295,7 +294,6 @@ Resources:
         Ref: PublishSecurityGroup
       IpProtocol: tcp
       ToPort: '4503'
-
   PublishSecurityGroupIngress1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -318,7 +316,6 @@ Resources:
         Ref: PublishSecurityGroup
       IpProtocol: tcp
       ToPort: '4503'
-
   PublishSecurityGroupIngress3:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -353,7 +350,6 @@ Resources:
         Ref: PublishSecurityGroup
       IpProtocol: tcp
       ToPort: '4503'
-
   PublishSecurityGroupIngress6:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -425,7 +421,7 @@ Resources:
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
-  # Allow tcp inbound from Author ELB Security Group on 4502 and 5433
+  # Allow tcp inbound from Author ELB Security Group on 4502 and 5432
   AuthorSecurityGroupIngress0:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -436,19 +432,18 @@ Resources:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
       ToPort: '4502'
-
   AuthorSecurityGroupIngress1:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: AuthorELBSecurityGroup
-      FromPort: '5433'
+      FromPort: '5432'
       GroupId:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
-      ToPort: '5433'
+      ToPort: '5432'
 
-  # Allow tcp inbound from Author Security Group on 4502, 5433 and 8023 (tarmk cold standby)
+  # Allow tcp inbound from Author Security Group on 4502, 5432 and 8023 (tarmk cold standby)
   AuthorSecurityGroupIngress2:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -459,18 +454,16 @@ Resources:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
       ToPort: '4502'
-
   AuthorSecurityGroupIngress3:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: AuthorSecurityGroup
-      FromPort: '5433'
+      FromPort: '5432'
       GroupId:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
-      ToPort: '5433'
-
+      ToPort: '5432'
   AuthorSecurityGroupIngress4:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -505,7 +498,6 @@ Resources:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
       ToPort: '4503'
-
   AuthorSecurityGroupEgress1:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -517,7 +509,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '5433'
 
-  # Allow tcp outbound to Author Security Group on 4502, 5433 and 8023 (tarmk cold standby)
+  # Allow tcp outbound to Author Security Group on 4502, 5432 and 8023 (tarmk cold standby)
   AuthorSecurityGroupEgress2:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -528,18 +520,16 @@ Resources:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
       ToPort: '4502'
-
   AuthorSecurityGroupEgress3:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorSecurityGroup
-      FromPort: '5433'
+      FromPort: '5432'
       GroupId:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
-      ToPort: '5433'
-
+      ToPort: '5432'
   AuthorSecurityGroupEgress4:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -657,7 +647,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
 
-  # Allow tcp outbound to Author Security Group on 4502 and 5433
+  # Allow tcp outbound to Author Security Group on 4502 and 5432
   AuthorELBSecurityGroupEgress0:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -668,17 +658,16 @@ Resources:
         Ref: AuthorELBSecurityGroup
       IpProtocol: tcp
       ToPort: '4502'
-
   AuthorELBSecurityGroupEgress1:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorSecurityGroup
-      FromPort: '5433'
+      FromPort: '5432'
       GroupId:
         Ref: AuthorELBSecurityGroup
       IpProtocol: tcp
-      ToPort: '5433'
+      ToPort: '5432'
 
   # Author Dispatcher Security Group
   AuthorDispatcherSecurityGroup:
@@ -717,7 +706,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
 
-  # Allow tcp inbound from Author Security Group on 4502 and 5433
+  # Allow tcp inbound from Author Security Group on 4502 and 5432
   AuthorDispatcherSecurityGroupIngress3:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -728,17 +717,16 @@ Resources:
         Ref: AuthorDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '4502'
-
   AuthorDispatcherSecurityGroupIngress4:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       SourceSecurityGroupId:
         Ref: AuthorSecurityGroup
-      FromPort: '5433'
+      FromPort: '5432'
       GroupId:
         Ref: AuthorDispatcherSecurityGroup
       IpProtocol: tcp
-      ToPort: '5433'
+      ToPort: '5432'
 
   # Allow tcp inbound from Secure Shell Cidr on port 22
   AuthorDispatcherSecurityGroupIngress5:
@@ -752,7 +740,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '22'
 
-  # Allow tcp outbound to Author ELB Security Group on 4502 and 5433
+  # Allow tcp outbound to Author ELB Security Group on 80 and 443
   AuthorDipatcherSecurityGroupEgress0:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -763,7 +751,6 @@ Resources:
         Ref: AuthorDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '80'
-
   AuthorDipatcherSecurityGroupEgress1:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -896,7 +883,6 @@ Resources:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
       ToPort: '80'
-
   OrchestratorSecurityGroupEgress2:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -919,7 +905,6 @@ Resources:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
       ToPort: '80'
-
   OrchestratorSecurityGroupEgress4:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -931,18 +916,17 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
 
-  # Allow tcp outbound to Author ELB Security Group on 80 and 443
+  # Allow tcp outbound to Publish Security Group on 4503 and 5433
   OrchestratorSecurityGroupEgress5:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishSecurityGroup
-      FromPort: '4502'
+      FromPort: '4503'
       GroupId:
         Ref: OrchestratorSecurityGroup
       IpProtocol: tcp
-      ToPort: '4502'
-
+      ToPort: '4503'
   OrchestratorSecurityGroupEgress6:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:

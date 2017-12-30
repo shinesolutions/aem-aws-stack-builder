@@ -1,7 +1,7 @@
 ami_ids:
-  author: ami-d0d025b2
-  author_dispatcher: ami-50d12432
-  chaos_monkey: ami-28d4214a
-  orchestrator: ami-28d4214a
-  publish: ami-70df2a12
-  publish_dispatcher: ami-50d12432
+  author: ami-df07f7bd
+  author_dispatcher: ami-22748440
+  chaos_monkey: ami-8e7484ec
+  orchestrator: ami-8e7484ec
+  publish: ami-8406f6e6
+  publish_dispatcher: ami-22748440

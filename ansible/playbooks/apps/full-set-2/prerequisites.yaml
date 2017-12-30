@@ -82,6 +82,9 @@
           AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
           PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internet_outbound_cidr_ip }}"
 
+          AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
+          AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
+          AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
 
       tags:
       - create

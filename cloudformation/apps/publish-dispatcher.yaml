@@ -4,6 +4,14 @@ Description: Create the Compute resources for the AEM Publish Dispatcher
 
 Parameters:
 
+  InstanceProfileStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Instance Profile Stack Prefix
+
+  SecurityGroupStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Security Groups Resources Stack Prefix
+
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -103,7 +111,7 @@ Resources:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherELBSecurityGroup
+          Fn::Sub: ${SecurityGroupStackPrefixParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetA
@@ -133,7 +141,7 @@ Resources:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PublishDispatcherInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-PublishDispatcherInstanceProfile
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false
@@ -143,7 +151,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherSecurityGroup
+          Fn::Sub: ${SecurityGroupStackPrefixParameter}-PublishDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:

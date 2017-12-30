@@ -7,7 +7,7 @@
   tasks:
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../cloudformation/apps
+              aws s3 sync ../../../../cloudformation/apps
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
                   --include "*.yaml" --acl public-read
       tags:
@@ -19,8 +19,10 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../cloudformation/apps/full-set-2/compute-stacks.yaml"
+        template: "../../../../cloudformation/apps/full-set-2/compute-stacks.yaml"
         template_parameters:
+          InstanceProfileStackPrefixParameter: "{{ instance_profile_stack_prefix }}"
+          SecurityGroupStackPrefixParameter: "{{ security_group_stack_prefix }}"
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
@@ -80,10 +82,10 @@
           ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           ChaosMonkeyRootVolSizeParameter: "{{ chaos_monkey.root_vol_size }}"
 
-          Route53HostedZoneNameParameter: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}.{{ dns.apex_domain_name }}"
-          AuthorDNSRecordSetNameParameter: "{{ dns.author.record_set_name }}"
-          AuthorDispatcherDNSRecordSetNameParameter: "{{ dns.author_dispatcher.record_set_name }}"
-          PublishDispatcherDNSRecordSetNameParameter: "{{ dns.publish_dispatcher.record_set_name }}"
+          Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
+          AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
+          AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
+          PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
 
           ImageRootDevice: "{{ ami_root_device_name }}"
 

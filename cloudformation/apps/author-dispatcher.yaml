@@ -4,6 +4,14 @@ Description: Create the Compute resources for the AEM Author Dispatcher
 
 Parameters:
 
+  InstanceProfileStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Instance Profile Stack Prefix
+
+  SecurityGroupStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Security Groups Resources Stack Prefix
+
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -97,7 +105,7 @@ Resources:
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
+          Fn::Sub: ${SecurityGroupStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetA
@@ -127,7 +135,7 @@ Resources:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-AuthorDispatcherInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-AuthorDispatcherInstanceProfile
       ImageId:
         Ref: AuthorDispatcherImageParameter
       InstanceMonitoring: false
@@ -137,7 +145,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherSecurityGroup
+          Fn::Sub: ${SecurityGroupStackPrefixParameter}-AuthorDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:

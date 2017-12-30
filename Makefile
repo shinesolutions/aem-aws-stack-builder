@@ -40,6 +40,24 @@ create-network-exports:
 delete-network-exports:
 	./scripts/delete-stack.sh network/network-exports "$(stack_prefix)" "$(config_path)"
 
+create-vpc:
+	./scripts/create-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
+
+delete-vpc:
+	./scripts/delete-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
+
+create-nat-gateway:
+	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
+
+delete-nat-gateway:
+	./scripts/delete-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
+
+create-bastion:
+	./scripts/create-stack.sh network/bastion "$(stack_prefix)" "$(config_path)"
+
+delete-bastion:
+	./scripts/delete-stack.sh network/bastion "$(stack_prefix)" "$(config_path)"
+
 create-roles:
 	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
 
@@ -61,6 +79,22 @@ create-consolidated: create-stack-data
 
 delete-consolidated: delete-stack-data
 	./scripts/delete-stack.sh apps/consolidated/compute-stacks "$(stack_prefix)" "$(config_path)"
+
+########################################
+# Full Set architecture stacks
+########################################
+
+create-full-set-2-prerequisites:
+	./scripts/create-stack.sh apps/full-set-2/prerequisites "$(stack_prefix)" "$(config_path)"
+
+delete-full-set-2-prerequisites:
+	./scripts/delete-stack.sh apps/full-set-2/prerequisites "$(stack_prefix)" "$(config_path)"
+
+create-full-set-2-compute: create-stack-data
+	./scripts/create-stack.sh apps/full-set-2/compute-stacks  "$(stack_prefix)" "$(config_path)"
+
+delete-full-set-2-compute: delete-stack-data
+	./scripts/delete-stack.sh apps/full-set-2/compute-stacks "$(stack_prefix)" "$(config_path)"
 
 ########################################
 # Utility stacks
@@ -92,26 +126,6 @@ create-set-network:
 delete-set-network:
 	./scripts/delete-network-stacks.sh "$(stack_prefix)" "$(config_path)"
 
-
-# single network stack management targets
-
-create-vpc:
-	./scripts/create-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
-
-delete-vpc:
-	./scripts/delete-stack.sh network/vpc "$(stack_prefix)" "$(config_path)"
-
-create-nat-gateway:
-	./scripts/create-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
-
-delete-nat-gateway:
-	./scripts/delete-stack.sh network/nat-gateway "$(stack_prefix)" "$(config_path)"
-
-create-bastion:
-	./scripts/create-stack.sh network/bastion "$(stack_prefix)" "$(config_path)"
-
-delete-bastion:
-	./scripts/delete-stack.sh network/bastion "$(stack_prefix)" "$(config_path)"
 
 
 # single apps stack management targets
@@ -170,23 +184,12 @@ create-stack-prerequisites:
 delete-stack-prerequisites:
 	./scripts/delete-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
 
-create-stack-prerequisites-fs2:
-	./scripts/create-stack.sh apps/full-set-2/prerequisites "$(stack_prefix)" "$(config_path)"
-
-delete-stack-prerequisites-fs2:
-	./scripts/delete-stack.sh apps/full-set-2/prerequisites "$(stack_prefix)" "$(config_path)"
-
 create-compute-stacks: create-stack-data
 	./scripts/create-stack.sh apps/compute-stacks  "$(stack_prefix)" "$(config_path)"
 
 delete-compute-stacks: delete-stack-data
 	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
 
-create-compute-stacks-fs2: create-stack-data
-	./scripts/create-stack.sh apps/full-set-2/compute-stacks  "$(stack_prefix)" "$(config_path)"
-
-delete-compute-stacks-fs2: delete-stack-data
-	./scripts/delete-stack.sh apps/full-set-2/compute-stacks "$(stack_prefix)" "$(config_path)"
 
 create-private-cert:
 	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"

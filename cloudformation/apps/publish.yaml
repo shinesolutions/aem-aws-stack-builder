@@ -4,6 +4,14 @@ Description: Create the Compute resources for the AEM Publish
 
 Parameters:
 
+  InstanceProfileStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Instance Profile Stack Prefix
+
+  SecurityGroupStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Security Groups Resources Stack Prefix
+
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -105,7 +113,7 @@ Resources:
               - Ref: PublishDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PublishInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-PublishInstanceProfile
       ImageId:
         Ref: PublishImageParameter
       InstanceMonitoring: false
@@ -115,7 +123,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-PublishSecurityGroup
+          Fn::Sub: ${SecurityGroupStackPrefixParameter}-PublishSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:

@@ -2,20 +2,20 @@
 
 aem_vpc:
   id: overwrite-me
-  author_dispatcher_subnet_a_id: overwrite-me
-  author_dispatcher_subnet_b_id: overwrite-me
-  author_subnet_a_id: overwrite-me
-  author_subnet_b_id: overwrite-me
-  chaos_monkey_subnet_a_id: overwrite-me
-  chaos_monkey_subnet_b_id: overwrite-me
-  orchestrator_subnet_a_id: overwrite-me
-  orchestrator_subnet_b_id: overwrite-me
-  publish_dispatcher_elb_subnet_a_id: overwrite-me
-  publish_dispatcher_elb_subnet_b_id: overwrite-me
-  publish_dispatcher_subnet_a_id: overwrite-me
-  publish_dispatcher_subnet_b_id: overwrite-me
-  publish_subnet_a_id: overwrite-me
-  publish_subnet_b_id: overwrite-me
+  # author_dispatcher_subnet_a_id: overwrite-me
+  # author_dispatcher_subnet_b_id: overwrite-me
+  # author_subnet_a_id: overwrite-me
+  # author_subnet_b_id: overwrite-me
+  # chaos_monkey_subnet_a_id: overwrite-me
+  # chaos_monkey_subnet_b_id: overwrite-me
+  # orchestrator_subnet_a_id: overwrite-me
+  # orchestrator_subnet_b_id: overwrite-me
+  # publish_dispatcher_elb_subnet_a_id: overwrite-me
+  # publish_dispatcher_elb_subnet_b_id: overwrite-me
+  # publish_dispatcher_subnet_a_id: overwrite-me
+  # publish_dispatcher_subnet_b_id: overwrite-me
+  # publish_subnet_a_id: overwrite-me
+  # publish_subnet_b_id: overwrite-me
   author_publish_dispatcher_subnet_id: overwrite-me
 
 aem:
@@ -100,7 +100,7 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 2.1.0
+  aem_aws_stack_provisioner_version: 2.2.0
   aem_orchestrator_version: 1.0.0
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
@@ -142,7 +142,7 @@ author:
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
-  elb_health_check: HTTPS:5433/system/health?tags=shallow
+  elb_health_check: HTTPS:5432/system/health?tags=shallow
   certificate_name: overwrite-me
 
 snapshots:

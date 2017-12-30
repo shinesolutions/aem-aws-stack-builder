@@ -4,6 +4,14 @@ Description: Create the Compute resources for the AEM Orchestrator
 
 Parameters:
 
+  InstanceProfileStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Instance Profile Stack Prefix
+
+  SecurityGroupStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Security Groups Resources Stack Prefix
+
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -104,7 +112,7 @@ Resources:
             Ref: OrchestratorDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-OrchestratorInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-OrchestratorInstanceProfile
       ImageId:
         Ref: OrchestratorImageParameter
       InstanceMonitoring: false
@@ -114,7 +122,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorSecurityGroup
+          Fn::Sub: ${SecurityGroupStackPrefixParameter}-OrchestratorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:

@@ -15,6 +15,7 @@
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
+          SecurityGroupStackPrefixParameter: "{{ security_group_stack_prefix }}"
           PublishImageParameter: "{{ ami_ids.publish }}"
           PublishImageRootDevice: "{{ ami_root_device_name }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
