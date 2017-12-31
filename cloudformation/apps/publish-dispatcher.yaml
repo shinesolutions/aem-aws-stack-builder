@@ -206,9 +206,8 @@ Resources:
           - ","
           - Fn::ImportValue:
              !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetList
-      MetricCollection:
-        -
-          Granularity: "1Minute"
+      MetricsCollection:
+        - Granularity: "1Minute"
           Metrics:
             - "GroupMinSize"
             - "GroupMaxSize"
