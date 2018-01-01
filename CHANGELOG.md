@@ -12,11 +12,12 @@
 * Modify Full-Set architecture stacks pairing to work with network, security_groups, and instance_profile stacks
 * Modify AEM Author instance's https listen port from 5433 to 5432
 * Enable AutoScalingGroups metrics collection #56
-* Replace aem_password_reset_version stack fact with stack-provisioner-hieradata #11
+* Replace aem_password_reset_version, aem_orchestrator_version stack facts with stack-provisioner-hieradata #11
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
-* TODO
+* Introduce parent CloudFormation stacks to Full Set architecture
+* Replace configuration file with stack output values for environment parameters
 
 ### 1.1.2
 * Disable generated system user credentials logging #34
