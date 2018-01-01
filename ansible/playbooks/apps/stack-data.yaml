@@ -64,7 +64,6 @@
         proxy_protocol: "{{ proxy.protocol }}"
         proxy_host: "{{ proxy.host }}"
         proxy_port: "{{ proxy.port }}"
-        oak_run_version: "{{ library.oak_run_version }}"
         cron_env_path: "{{ cron.env_path }}"
         cron_https_proxy: "{{ cron.https_proxy }}"
         stack_manager_sns_topic_arn: "{{ stack_manager_sns_topic_arn }}"

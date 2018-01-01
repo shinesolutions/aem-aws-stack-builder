@@ -12,7 +12,7 @@
 * Modify Full-Set architecture stacks pairing to work with network, security_groups, and instance_profile stacks
 * Modify AEM Author instance's https listen port from 5433 to 5432
 * Enable AutoScalingGroups metrics collection #56
-* Replace aem_password_reset_version, aem_orchestrator_version stack facts with stack-provisioner-hieradata #11
+* Move aem_password_reset_version, aem_orchestrator_version, oak_run_version stack facts to stack-provisioner-hieradata config #11
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support

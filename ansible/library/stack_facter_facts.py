@@ -9,7 +9,6 @@ def generate_facts(params):
 proxy_protocol=%s
 proxy_host=%s
 proxy_port=%s
-oak_run_version=%s
 cron_env_path=%s
 cron_https_proxy=%s
 stack_manager_sns_topic_arn=%s
@@ -19,7 +18,6 @@ publish_dispatcher_allowed_client=%s
             params['proxy_protocol'],
             params['proxy_host'],
             params['proxy_port'],
-            params['oak_run_version'],
             params['cron_env_path'],
             params['cron_https_proxy'],
             params['stack_manager_sns_topic_arn'],
@@ -34,7 +32,6 @@ def main():
         proxy_protocol                    = dict(required=True, type='str'),
         proxy_host                        = dict(required=True, type='str'),
         proxy_port                        = dict(required=True, type='str'), # string type to allow empty value when proxy is irrelevant
-        oak_run_version                   = dict(required=True, type='str'),
         cron_env_path                     = dict(required=True, type='str'),
         cron_https_proxy                  = dict(required=True, type='str'),
         stack_manager_sns_topic_arn       = dict(required=True, type='str'),
