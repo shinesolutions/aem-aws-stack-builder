@@ -18,6 +18,7 @@
 * Add Stack Provisioner custom hiera configuration support
 * Introduce parent CloudFormation stacks to Full Set architecture
 * Replace configuration file with stack output values for environment parameters
+* Add Puppet exit code translation in stack-init script
 
 ### 1.1.2
 * Disable generated system user credentials logging #34
