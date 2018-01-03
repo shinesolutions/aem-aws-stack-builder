@@ -4,6 +4,14 @@ Description: Overarching CF Template to Create All AEM Compute Resources Stacks
 
 Parameters:
 
+  InstanceProfileStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Instance Profile Stack Prefix
+
+  SecurityGroupStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Security Groups Resources Stack Prefix
+
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -244,6 +252,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author.yaml
       Parameters:
+        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
+        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorLoadBalancerHealthCheckTargetParameter: !Ref AuthorLoadBalancerHealthCheckTargetParameter
@@ -264,6 +274,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish.yaml
       Parameters:
+        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
+        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishImageParameter: !Ref PublishImageParameter
@@ -287,6 +299,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish-dispatcher.yaml
       Parameters:
+        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
+        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishDispatcherLoadBalancerHealthCheckTargetParameter: !Ref PublishDispatcherLoadBalancerHealthCheckTargetParameter
@@ -310,6 +324,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author-dispatcher.yaml
       Parameters:
+        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
+        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter: !Ref AuthorDispatcherLoadBalancerHealthCheckTargetParameter
@@ -332,6 +348,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/orchestrator.yaml
       Parameters:
+        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
+        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         OrchestratorImageParameter: !Ref OrchestratorImageParameter
@@ -365,6 +383,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/chaos-monkey.yaml
       Parameters:
+        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
+        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         ChaosMonkeyImageParameter: !Ref ChaosMonkeyImageParameter

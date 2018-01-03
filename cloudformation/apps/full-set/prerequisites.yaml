@@ -20,18 +20,6 @@ Parameters:
     Type: String
     Description: AEM Stack Secure Shell Inbound Cidr Ip
 
-  AEMASGEventQueueNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Quene Name
-
-  AEMASGEventTopicDisplayNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
-
-  AEMASGEventTopicNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Topic Name
-
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Type: String
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
@@ -44,6 +32,17 @@ Parameters:
     Type: String
     Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
 
+  AEMASGEventQueueNameParameter:
+    Type: String
+    Description: The AEM Stack Auto Scaling Group Event Quene Name
+
+  AEMASGEventTopicDisplayNameParameter:
+    Type: String
+    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
+
+  AEMASGEventTopicNameParameter:
+    Type: String
+    Description: The AEM Stack Auto Scaling Group Event Topic Name
 
 Resources:
   SecurityGroupStack:
@@ -58,6 +57,7 @@ Resources:
         AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: !Ref AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
         PrivateSubnetInternetOutboundCidrIpParameter: !Ref PrivateSubnetInternetOutboundCidrIpParameter
 
+
   MessagingStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -67,13 +67,6 @@ Resources:
         AEMASGEventQueueNameParameter: !Ref AEMASGEventQueueNameParameter
         AEMASGEventTopicDisplayNameParameter: !Ref AEMASGEventTopicDisplayNameParameter
         AEMASGEventTopicNameParameter: !Ref AEMASGEventTopicNameParameter
-
-  RolesStack:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/roles.yaml
-      Parameters:
-        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
 
 Outputs:
   SecurityGroupStackName:
@@ -87,9 +80,3 @@ Outputs:
     Value: !Ref MessagingStack
     Export:
       Name: !Sub ${ComputeStackPrefixParameter}-MessagingStackName
-
-  RolesStackName:
-    Description: Roles Stack Name
-    Value: !Ref RolesStack
-    Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-RolesStackName
