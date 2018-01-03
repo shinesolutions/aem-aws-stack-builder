@@ -148,11 +148,11 @@ dns_records:
   stack_name: aem-dns-records
   route53_hosted_zone_name: aem-stack.com.
   author:
-    record_set_name: author
+    record_set_name: "{{ stack_prefix }}-author"
   author_dispatcher:
-    record_set_name: author-dispatcher
+    record_set_name: "{{ stack_prefix }}-author-dispatcher"
   publish_dispatcher:
-    record_set_name: publish-dispatcher
+    record_set_name: "{{ stack_prefix }}-publish-dispatcher"
 
 prerequisites:
   stack_name: aem-prerequisites-stack
