@@ -3,7 +3,7 @@ set -o nounset
 set -o errexit
 
 if [ "$#" -lt 4 ]; then
-  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix> <component> <aem_aws_stack_provisioner_version> [local_yaml_file]'
+  echo 'Usage: ./stack-init.sh <data_bucket_name> <stack_prefix> <component> <aem_aws_stack_provisioner_version> [extra_local_yaml_path]'
   exit 1
 fi
 
@@ -92,11 +92,13 @@ if [[ -d data ]]; then
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/conf/" conf/
 fi
 
+# When extra_local.yaml file is provided, the configuration in that file will
+# be appended to the configured local.yaml provisioned using stack-provisioner-hieradata.j2 template
 if [ "$#" -eq 5 ]; then
-  local_yaml_file=$5
+  extra_local_yaml_path=$5
   local_yaml_path="${PWD}/data/local.yaml"
-  echo "Overwriting local AEM Stack Provisioner configuration at ${local_yaml_path}..."
-  cp "${local_yaml_file}" "${local_yaml_path}"
+  echo "Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
+  cat "${extra_local_yaml_path}" | sed -e 's/^[[:space:]]*//' >> "${local_yaml_path}"
 fi
 
 echo "Downloading custom Facter facts..."

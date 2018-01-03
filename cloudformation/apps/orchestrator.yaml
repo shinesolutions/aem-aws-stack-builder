@@ -126,29 +126,21 @@ Resources:
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
-          Fn::Sub: |
-            #!/bin/bash -x
-            source /etc/profile
-            SB_ROOT_DIR="/opt/shinesolutions/aem-aws-stack-builder"
-            mkdir -p ${!SB_ROOT_DIR}
-            YAML_PREFIX="aem_orchestrator::application_properties"
-            YAML_STACKNAME_PREFIX="aws_cloudformation_stack_name"
-            cat > ${!SB_ROOT_DIR}/local.yaml << STACK_NAMES_YAML
-            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_author: "${AuthorStackName}"
-            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_author_dispatcher: "${AuthorDispatcherStackName}"
-            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_publish: "${PublishStackName}"
-            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_publish_dispatcher: "${PublishDispatcherStackName}"
-            ${!YAML_PREFIX}::${!YAML_STACKNAME_PREFIX}_messaging: "${MessagingStackName}"
-            ${!YAML_PREFIX}::aws_sqs_queue_name: "${AEMASGEventQueueName}"
-            STACK_NAMES_YAML
-            aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
-            chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
-            /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh \
-                ${DataBucketNameParameter} \
-                ${ComputeStackPrefixParameter} \
-                orchestrator \
-                ${AemAwsStackProvisionerVersionParameter} \
-                ${!SB_ROOT_DIR}/local.yaml
+          Fn::Sub: "#!/bin/bash -x\n\
+            \ source /etc/profile\n\
+            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+            \ # Configure other stack names in Orchestrator's stack provisioner's local.yaml\n\
+            \ echo '\n\
+            \ aem_orchestrator::application_properties::aws_cloudformation_stack_name_author: \"${AuthorStackName}\"\n\
+            \ aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher: \"${AuthorDispatcherStackName}\"\n\
+            \ aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish: \"${PublishStackName}\"\n\
+            \ aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher: \"${PublishDispatcherStackName}\"\n\
+            \ aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging: \"${MessagingStackName}\"\n\
+            \ aem_orchestrator::application_properties::aws_sqs_queue_name: \"${AEMASGEventQueueName}\"\n\
+            \ ' > /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} orchestrator ${AemAwsStackProvisionerVersionParameter} /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n"
 
   OrchestratorAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
