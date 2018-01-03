@@ -260,8 +260,8 @@ Resources:
         Protocol: HTTPS
         InstancePort: '5432'
         InstanceProtocol: HTTPS
-        SSLCertificateId:
-          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
+        SSLCertificateId: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
+          # Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
