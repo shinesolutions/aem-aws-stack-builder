@@ -80,7 +80,7 @@ publish_dispatcher:
   instance_type: t2.micro
   min_size: 2
   desired_capacity: 2
-  max_size: 2
+  max_size: 4
   root_vol_size: 20
   data_vol_size: 50
   load_balancer:
@@ -90,6 +90,7 @@ publish_dispatcher:
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
   certificate_name: aem-stack-builder
+  cpu_scaling_threshold: 49
 
 publish:
   stack_name: aem-publish-stack
