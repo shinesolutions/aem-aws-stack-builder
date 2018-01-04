@@ -61,6 +61,10 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Desired Capacity
 
+  PublishDispatcherASGCPUScalingParameter:
+    Type: String
+    Description: The CPU threshold that extra Publish Dispatcher instances are scaled up at
+
   PublishDispatcherRootVolSizeParameter:
     Type: Number
     Description: PublishDispatcher Instances Root EBS Volume Size
@@ -161,6 +165,59 @@ Resources:
             \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} publish-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
+
+  PublishDispatcherScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref PublishDispatcherAutoScalingGroup
+      Cooldown: 300
+      ScalingAdjustment: 1
+
+  PublishDispatcherScaleDownPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref PublishDispatcherAutoScalingGroup
+      Cooldown: 300
+      ScalingAdjustment: -1
+
+  PublishDispatcherCPUHighAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Scale up if CPU Avg > $PublishDispatcherASGCPUScalingParameter % for 10 minutes"
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Statistic: Average
+      Period: 120
+      EvaluationPeriods: 5
+      Threshold: !Ref PublishDispatcherASGCPUScalingParameter
+      TreatMissingData: breaching
+      AlarmActions:
+      - Ref: PublishDispatcherScaleUpPolicy
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref PublishDispatcherAutoScalingGroup
+      ComparisonOperator: GreaterThanThreshold            
+
+  PublishDispatcherCPULowAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Scale down if CPU Avg < $PublishDispatcherASGCPUScalingParameter % for 10 minutes"
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Statistic: Average
+      Period: 120
+      EvaluationPeriods: 5
+      Threshold: !Ref PublishDispatcherASGCPUScalingParameter
+      TreatMissingData: notBreaching
+      AlarmActions:
+      - Ref: PublishDispatcherScaleDownPolicy
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value: !Ref PublishDispatcherAutoScalingGroup
+      ComparisonOperator: LessThanThreshold
+
   PublishDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
