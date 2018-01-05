@@ -98,7 +98,7 @@ if [ "$#" -eq 5 ]; then
   extra_local_yaml_path=$5
   local_yaml_path="${PWD}/data/local.yaml"
   echo "Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
-  cat "${extra_local_yaml_path}" | sed -e 's/^[[:space:]]*//' >> "${local_yaml_path}"
+  sed -e 's/^[[:space:]]*//' < "${extra_local_yaml_path}" >> "${local_yaml_path}"
 fi
 
 echo "Downloading custom Facter facts..."

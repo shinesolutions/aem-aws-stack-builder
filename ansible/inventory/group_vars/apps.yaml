@@ -2,20 +2,6 @@
 
 aem_vpc:
   id: overwrite-me
-  # author_dispatcher_subnet_a_id: overwrite-me
-  # author_dispatcher_subnet_b_id: overwrite-me
-  # author_subnet_a_id: overwrite-me
-  # author_subnet_b_id: overwrite-me
-  # chaos_monkey_subnet_a_id: overwrite-me
-  # chaos_monkey_subnet_b_id: overwrite-me
-  # orchestrator_subnet_a_id: overwrite-me
-  # orchestrator_subnet_b_id: overwrite-me
-  # publish_dispatcher_elb_subnet_a_id: overwrite-me
-  # publish_dispatcher_elb_subnet_b_id: overwrite-me
-  # publish_dispatcher_subnet_a_id: overwrite-me
-  # publish_dispatcher_subnet_b_id: overwrite-me
-  # publish_subnet_a_id: overwrite-me
-  # publish_subnet_b_id: overwrite-me
   author_publish_dispatcher_subnet_id: overwrite-me
 
 aem:

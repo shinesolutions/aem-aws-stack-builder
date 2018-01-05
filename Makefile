@@ -96,6 +96,10 @@ create-full-set-compute: create-stack-data
 delete-full-set-compute: delete-stack-data
 	./scripts/delete-stack.sh apps/full-set/compute-stacks "$(stack_prefix)" "$(config_path)"
 
+create-full-set: create-full-set-prerequisites create-full-set-compute
+
+delete-full-set: delete-full-set-compute delete-full-set-prerequisites
+	
 ########################################
 # Utility stacks
 ########################################
