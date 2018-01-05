@@ -138,9 +138,9 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Minimum Size
 
-  PublishDispatcherASGCPUScalingParameter:
-    Type: String
-    Description: The CPU threshold that extra Publish Dispatcher instances are scaled up at
+  PublishDispatcherASGCPUScalingParameters:
+    Type: List<Number>
+    Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances are scaled up/down at
 
   PublishDispatcherRootVolSizeParameter:
     Type: Number
@@ -317,7 +317,7 @@ Resources:
         PublishDispatcherASGMaxSizeParameter: !Ref PublishDispatcherASGMaxSizeParameter
         PublishDispatcherASGMinSizeParameter: !Ref PublishDispatcherASGMinSizeParameter
         PublishDispatcherASGDesiredCapacityParameter: !Ref PublishDispatcherASGDesiredCapacityParameter
-        PublishDispatcherASGCPUScalingParameter: !Ref PublishDispatcherASGCPUScalingParameter
+        PublishDispatcherASGCPUScalingParameters: !Join [",", !Ref PublishDispatcherASGCPUScalingParameters]
         PublishDispatcherRootVolSizeParameter: !Ref PublishDispatcherRootVolSizeParameter
         PublishDispatcherDataVolSizeParameter: !Ref PublishDispatcherDataVolSizeParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter

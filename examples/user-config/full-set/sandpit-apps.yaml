@@ -90,7 +90,11 @@ publish_dispatcher:
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
   certificate_name: aem-stack-builder
-  cpu_scaling_threshold: 49
+  asg_cpu_scaling_threshold: 49
+  asg_cpu_high_period: 300
+  asg_cpu_high_eval_period: 1
+  asg_cpu_low_period: 300
+  asg_cpu_low_eval_period: 2
 
 publish:
   stack_name: aem-publish-stack

@@ -32,6 +32,10 @@ Parameters:
     Type: AWS::EC2::Image::Id
     Description: The Publish Dispatcher Image Id
 
+  PublishDispatcherASGCPUScalingParameters:
+    Type: CommaDelimitedList
+    Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances are scaled up/down at
+
   PublishDispatcherImageRootDevice:
     Type: String
     Description: The root device name for the Publish Dispatcher Image Id
@@ -60,10 +64,6 @@ Parameters:
   PublishDispatcherASGDesiredCapacityParameter:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Desired Capacity
-
-  PublishDispatcherASGCPUScalingParameter:
-    Type: String
-    Description: The CPU threshold that extra Publish Dispatcher instances are scaled up at
 
   PublishDispatcherRootVolSizeParameter:
     Type: Number
@@ -185,13 +185,13 @@ Resources:
   PublishDispatcherCPUHighAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: "Scale up if CPU Avg > $PublishDispatcherASGCPUScalingParameter % for 10 minutes"
+      AlarmDescription: "Scale up if CPU Avg > X % for X minutes"
       MetricName: CPUUtilization
       Namespace: AWS/EC2
       Statistic: Average
-      Period: 300
-      EvaluationPeriods: 2
-      Threshold: !Ref PublishDispatcherASGCPUScalingParameter
+      Period: !Select [1, !Ref PublishDispatcherASGCPUScalingParameters]
+      EvaluationPeriods: !Select [2, !Ref PublishDispatcherASGCPUScalingParameters]
+      Threshold: !Select [0, !Ref PublishDispatcherASGCPUScalingParameters]
       TreatMissingData: breaching
       AlarmActions:
       - Ref: PublishDispatcherScaleUpPolicy
@@ -203,13 +203,13 @@ Resources:
   PublishDispatcherCPULowAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: "Scale down if CPU Avg < $PublishDispatcherASGCPUScalingParameter % for 20 minutes"
+      AlarmDescription: "Scale down if CPU Avg < X % for X minutes"
       MetricName: CPUUtilization
       Namespace: AWS/EC2
       Statistic: Average
-      Period: 300
-      EvaluationPeriods: 4
-      Threshold: !Ref PublishDispatcherASGCPUScalingParameter
+      Period: !Select [3, !Ref PublishDispatcherASGCPUScalingParameters]
+      EvaluationPeriods: !Select [4, !Ref PublishDispatcherASGCPUScalingParameters]
+      Threshold: !Select [0, !Ref PublishDispatcherASGCPUScalingParameters]
       TreatMissingData: breaching
       AlarmActions:
       - Ref: PublishDispatcherScaleDownPolicy
