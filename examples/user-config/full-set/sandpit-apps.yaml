@@ -98,7 +98,7 @@ publish:
   instance_type: m4.xlarge
   min_size: 2
   desired_capacity: 2
-  max_size: 2
+  max_size: 4
   root_vol_size: 20
   data_vol_size: 50
   tag_name: AEM Publish

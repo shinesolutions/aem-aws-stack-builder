@@ -171,7 +171,7 @@ Resources:
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref PublishDispatcherAutoScalingGroup
-      Cooldown: 300
+      Cooldown: 480
       ScalingAdjustment: 1
 
   PublishDispatcherScaleDownPolicy:
@@ -179,7 +179,7 @@ Resources:
     Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref PublishDispatcherAutoScalingGroup
-      Cooldown: 300
+      Cooldown: 480
       ScalingAdjustment: -1
 
   PublishDispatcherCPUHighAlarm:
@@ -189,8 +189,8 @@ Resources:
       MetricName: CPUUtilization
       Namespace: AWS/EC2
       Statistic: Average
-      Period: 120
-      EvaluationPeriods: 5
+      Period: 300
+      EvaluationPeriods: 2
       Threshold: !Ref PublishDispatcherASGCPUScalingParameter
       TreatMissingData: breaching
       AlarmActions:
@@ -207,10 +207,10 @@ Resources:
       MetricName: CPUUtilization
       Namespace: AWS/EC2
       Statistic: Average
-      Period: 120
-      EvaluationPeriods: 5
+      Period: 300
+      EvaluationPeriods: 2
       Threshold: !Ref PublishDispatcherASGCPUScalingParameter
-      TreatMissingData: notBreaching
+      TreatMissingData: breaching
       AlarmActions:
       - Ref: PublishDispatcherScaleDownPolicy
       Dimensions:
@@ -223,6 +223,7 @@ Resources:
     Properties:
       AvailabilityZones:
         Ref: PublishDispatcherASGAvailabilityZoneListParameter
+      Cooldown: 480
       HealthCheckGracePeriod: 1200
       HealthCheckType: ELB
       LaunchConfigurationName:
