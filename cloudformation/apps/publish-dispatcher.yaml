@@ -203,12 +203,12 @@ Resources:
   PublishDispatcherCPULowAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: "Scale down if CPU Avg < $PublishDispatcherASGCPUScalingParameter % for 10 minutes"
+      AlarmDescription: "Scale down if CPU Avg < $PublishDispatcherASGCPUScalingParameter % for 20 minutes"
       MetricName: CPUUtilization
       Namespace: AWS/EC2
       Statistic: Average
       Period: 300
-      EvaluationPeriods: 2
+      EvaluationPeriods: 4
       Threshold: !Ref PublishDispatcherASGCPUScalingParameter
       TreatMissingData: breaching
       AlarmActions:
