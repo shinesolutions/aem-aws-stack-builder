@@ -7,8 +7,8 @@ A set of [Ansible](https://www.ansible.com/) playbooks for building [Adobe Exper
 
 Stack Builder has been designed with a focus on modularity, allowing the separation between network set up (VPC, subnets, etc) and applications set up (AEM Author, Publish, and Dispatcher), while also providing a flexible way to support multiple architectures that run a combination of the following components:
 
-* `author-primary` - contains [AEM Author](https://helpx.adobe.com/experience-manager/6-3/sites/authoring/using/author.html) running in Primary mode
-* `author-standby` - contains [AEM Author](https://helpx.adobe.com/experience-manager/6-3/sites/authoring/using/author.html) running in [Standby](https://helpx.adobe.com/experience-manager/6-3/sites/deploying/using/tarmk-cold-standby.html) mode
+* `author-primary` - contains [AEM Author](https://helpx.adobe.com/experience-manager/6-3/sites/authoring/using/author.html) running in primary mode
+* `author-standby` - contains [AEM Author](https://helpx.adobe.com/experience-manager/6-3/sites/authoring/using/author.html) running in [standby](https://helpx.adobe.com/experience-manager/6-3/sites/deploying/using/tarmk-cold-standby.html) mode
 * `publish` - contains [AEM Publish](https://helpx.adobe.com/experience-manager/6-3/sites/authoring/using/author.html)
 * `author-dispatcher` - contains [AEM Dispatcher](https://helpx.adobe.com/experience-manager/dispatcher/using/dispatcher.html) with author-dispatcher configuration, sitting in front of `author` component
 * `publish-dispatcher` - contains [AEM Dispatcher](https://helpx.adobe.com/experience-manager/dispatcher/using/dispatcher.html) with publish-dispatcher configuration, sitting in front of `publish` component
@@ -64,3 +64,20 @@ Set up consolidated architecture stacks:
 - Create compute stack which contains EC2 instances running AEM:
 
     `make create-consolidated stack_prefix=<consolidated_stack_prefix> config_path=<path/to/config/dir>`.
+
+Set up full set architecture stacks:
+- Configure `network_stack_prefix` with the `<network_stack_prefix>` value from network section above.
+- Create full set prerequisites stack which contains the security groups and messaging SNS SQS:
+
+    `make create-full-set-prerequisites stack_prefix=<stack_prefix> config_path=<path/to/config/dir>`.
+
+  This prerequisites stack must be mapped one to one to a full set compute stack with identical `stack_prefix`.
+- Configure `instance_profile_stack_prefix` with the `<instance_profile_stack_prefix>` value, and `security_groups_stack_prefix` with the `<security_groups_stack_prefix>` value, both provided in the previous steps.
+- Create full set compute stack which contains EC2 resources:
+
+    `make create-full-set-compute stack_prefix=<stack_prefix> config_path=<path/to/config/dir>`.
+
+  Full set prerequisites and compute stacks are separated to make it easier when you want to save cost by terminating the compute stack when unused, and at the same time to speed up environment creation time by not having to recreate the prerequisites.
+- However, if you don't care about reusing the prerequisites stack, you can use this simpler command:
+
+    `make create-full-set stack_prefix=<stack_prefix> config_path=<path/to/config/dir>`.
