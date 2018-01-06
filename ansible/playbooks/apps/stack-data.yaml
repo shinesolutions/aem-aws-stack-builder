@@ -60,6 +60,7 @@
 
     - name: Generate stack Facter facts
       stack_facter_facts:
+        stack_prefix: "{{ stack_prefix }}"
         proxy_enabled: "{{ proxy.enabled }}"
         proxy_protocol: "{{ proxy.protocol }}"
         proxy_host: "{{ proxy.host }}"

@@ -5,7 +5,8 @@ import random
 import string
 
 def generate_facts(params):
-    return """proxy_enabled=%s
+    return """stack_prefix=%s
+proxy_enabled=%s
 proxy_protocol=%s
 proxy_host=%s
 proxy_port=%s
@@ -14,6 +15,7 @@ cron_https_proxy=%s
 stack_manager_sns_topic_arn=%s
 publish_dispatcher_allowed_client=%s
 """ % (
+            params['stack_prefix'],
             str(params['proxy_enabled']).lower(),
             params['proxy_protocol'],
             params['proxy_host'],
@@ -28,6 +30,7 @@ def main():
 
     module = AnsibleModule(
       argument_spec = dict(
+        stack_prefix                      = dict(required=True, type='str'),
         proxy_enabled                     = dict(required=True, type='bool'),
         proxy_protocol                    = dict(required=True, type='str'),
         proxy_host                        = dict(required=True, type='str'),
