@@ -5,7 +5,8 @@ ami_ids:
   chaos_monkey: ami-8e7484ec
   orchestrator: ami-8e7484ec
   publish: ami-8406f6e6
-  publish_dispatcher: ami-22748440
+  publish_dispatcher: ami-e69e6384
+  #publish_dispatcher: ami-22748440
   # AEM 6.3
   # author: ami-5f39ca3d
   # author_dispatcher: ami-b03bc8d2
