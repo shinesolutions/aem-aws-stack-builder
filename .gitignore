@@ -10,3 +10,4 @@ stage
 backup/
 output/
 examples/user-config/*/zzz-local.yaml
+*.swp

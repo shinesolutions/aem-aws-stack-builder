@@ -138,6 +138,10 @@ Parameters:
     Type: String
     Description: The Publish Dispatcher Auto Scaling Group Minimum Size
 
+  PublishDispatcherASGCPUScalingParameters:
+    Type: List<Number>
+    Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances are scaled up/down at
+
   PublishDispatcherRootVolSizeParameter:
     Type: Number
     Description: PublishDispatcher Instances Root EBS Volume Size
@@ -313,6 +317,7 @@ Resources:
         PublishDispatcherASGMaxSizeParameter: !Ref PublishDispatcherASGMaxSizeParameter
         PublishDispatcherASGMinSizeParameter: !Ref PublishDispatcherASGMinSizeParameter
         PublishDispatcherASGDesiredCapacityParameter: !Ref PublishDispatcherASGDesiredCapacityParameter
+        PublishDispatcherASGCPUScalingParameters: !Join [",", !Ref PublishDispatcherASGCPUScalingParameters]
         PublishDispatcherRootVolSizeParameter: !Ref PublishDispatcherRootVolSizeParameter
         PublishDispatcherDataVolSizeParameter: !Ref PublishDispatcherDataVolSizeParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
