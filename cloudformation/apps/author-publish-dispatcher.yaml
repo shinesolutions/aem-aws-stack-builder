@@ -73,6 +73,17 @@ Parameters:
     Type: String
     Description: Add Public IP Address to instance
 
+  Route53HostedZoneNameParameter:
+    Type: String
+    Description: Route53 Hosted Zone Name the Record Set will be Created in
+
+  AuthorPublishDispatcherDNSRecordSetNameParameter:
+    Type: String
+    Description: Author Publish Dispatcher DNS Record Set Name
+
+  DNSRecordSetTTL:
+    Type: String
+    Description: Record Set TTL value
 
 Conditions:
 
@@ -159,3 +170,16 @@ Resources:
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
             \ ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-publish-dispatcher\
             \ ${AemAwsStackProvisionerVersionParameter}\n"
+
+  AuthorPublishDispatcherRoute53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName:
+        Ref: Route53HostedZoneNameParameter
+      Name:
+        Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+      ResourceRecords:
+      - Fn::GetAtt: [AuthorPublishDispatcherInstance, PrivateIp]
+      TTL:
+        Ref: DNSRecordSetTTL
+      Type: A

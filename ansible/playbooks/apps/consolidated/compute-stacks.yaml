@@ -29,6 +29,9 @@
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
           AssociatePublicIpAddressParameter: "{{ author_publish_dispatcher.associate_public_ip_address }}"
+          Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
+          AuthorPublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_publish_dispatcher.record_set_name }}"
+          DNSRecordSetTTL: "{{ dns_records.author_publish_dispatcher.ttl }}"
       tags:
       - create
 
