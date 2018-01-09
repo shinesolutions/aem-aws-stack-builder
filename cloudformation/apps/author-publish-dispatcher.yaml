@@ -77,9 +77,13 @@ Parameters:
     Type: String
     Description: Route53 Hosted Zone Name the Record Set will be Created in
 
-  AuthorPublishDispatcherDNSRecordSetNameParameter:
+  DNSRecordSetPrefixParameter:
     Type: String
-    Description: Author Publish Dispatcher DNS Record Set Name
+    Description: Author Publish Dispatcher DNS Record Set Prefix
+
+  DNSRecordSetSuffixParameter:
+    Type: String
+    Description: Author Publish Dispatcher DNS Record Set Suffix
 
   DNSRecordSetTTL:
     Type: String
@@ -177,7 +181,7 @@ Resources:
       HostedZoneName:
         Ref: Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${DNSRecordSetPrefixParameter}${ComputeStackPrefixParameter}${DNSRecordSetSuffixParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
       - Fn::GetAtt: [AuthorPublishDispatcherInstance, PrivateIp]
       TTL:
