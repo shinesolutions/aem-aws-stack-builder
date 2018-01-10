@@ -58,11 +58,11 @@ create-bastion:
 delete-bastion:
 	./scripts/delete-stack.sh network/bastion "$(stack_prefix)" "$(config_path)"
 
-create-roles:
-	./scripts/create-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
+create-instance-profiles:
+	./scripts/create-stack.sh apps/instance-profiles "$(stack_prefix)" "$(config_path)"
 
-delete-roles:
-	./scripts/delete-stack.sh apps/roles "$(stack_prefix)" "$(config_path)"
+delete-instance-profiles:
+	./scripts/delete-stack.sh apps/instance-profiles "$(stack_prefix)" "$(config_path)"
 
 create-security-groups:
 	./scripts/create-stack.sh apps/security-groups "$(stack_prefix)" "$(config_path)"
@@ -99,7 +99,7 @@ delete-full-set-compute: delete-stack-data
 create-full-set: create-full-set-prerequisites create-full-set-compute
 
 delete-full-set: delete-full-set-compute delete-full-set-prerequisites
-	
+
 ########################################
 # Utility stacks
 ########################################

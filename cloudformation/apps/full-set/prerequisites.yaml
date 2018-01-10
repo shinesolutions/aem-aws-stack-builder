@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Overarching CF Template to Create Roles, Security Groups, and Messaging Resources for AEM Appp Stacks
+Description: Overarching CF Template to Create Security Groups and Messaging Resources for AEM Appp Stacks
 
 Parameters:
 

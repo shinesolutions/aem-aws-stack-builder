@@ -1,4 +1,7 @@
 ---
+network_stack_prefix: overwrite-me
+instance_profile_stack_prefix: overwrite-me
+security_groups_stack_prefix: overwrite-me
 
 aem_vpc:
   id: overwrite-me
@@ -13,14 +16,8 @@ aem:
   author:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
 
-roles:
-  stack_name: aem-roles-stack
-  publish_dispatcher: AEMStackPublishDispatcherRole
-  publish: AEMStackPublishRole
-  author: AEMStackAuthorRole
-  author_dispatcher: AEMStackAuthorDispatcherRole
-  orchestrator: AEMStackOrchestratorRole
-  chaos_monkey: AEMStackChaosMonkeyRole
+instance_profiles:
+  stack_name: aem-instance-profiles-stack
 
 ami_ids:
   author: overwrite-me
@@ -156,15 +153,12 @@ author_dispatcher:
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
-  instance_profile: overwrite-me
-  roles_stack_prefix: overwrite-me
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 20
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
   security_group: overwrite-me
-  security_groups_stack_prefix: overwrite-me
 
 orchestrator:
   stack_name: aem-orchestrator-stack

@@ -1,6 +1,6 @@
-security_group_stack_prefix: "{{ stack_prefix }}"
 network_stack_prefix: sandpit
-instance_profile_stack_prefix: sandpit
+security_groups_stack_prefix: "{{ stack_prefix }}"
+instance_profile_stack_prefix: sandpit-2
 
 aem:
   enable_crxde: true
@@ -76,7 +76,7 @@ snapshots:
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
-  instance_profile: aem-roles-stack-PublishDispatcherInstanceProfile-FSFBXO7Q2ESY
+  instance_profile: aem-instance-profiles-stack-PublishDispatcherInstanceProfile-FSFBXO7Q2ESY
   instance_type: t2.micro
   min_size: 2
   desired_capacity: 2
@@ -93,7 +93,7 @@ publish_dispatcher:
 
 publish:
   stack_name: aem-publish-stack
-  instance_profile: aem-roles-stack-PublishInstanceProfile-MHV78N8CCU6O
+  instance_profile: aem-instance-profiles-stack-PublishInstanceProfile-MHV78N8CCU6O
   instance_type: m4.xlarge
   min_size: 2
   desired_capacity: 2
@@ -104,7 +104,7 @@ publish:
 
 author:
   stack_name: aem-author-stack
-  instance_profile: aem-roles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
+  instance_profile: aem-instance-profiles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 50
@@ -116,7 +116,7 @@ author:
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
-  instance_profile: aem-roles-stack-AuthorDispatcherInstanceProfile-1Q5WZ99PPURIY
+  instance_profile: aem-instance-profiles-stack-AuthorDispatcherInstanceProfile-1Q5WZ99PPURIY
   instance_type: t2.micro
   min_size: 2
   desired_capacity: 2
@@ -131,7 +131,7 @@ author_dispatcher:
 
 orchestrator:
   stack_name: aem-orchestrator-stack
-  instance_profile: aem-roles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
+  instance_profile: aem-instance-profiles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 50
@@ -139,7 +139,7 @@ orchestrator:
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
-  instance_profile: aem-roles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
+  instance_profile: aem-instance-profiles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
   instance_type: t2.micro
   root_vol_size: 20
   tag_name: AEM Chaos Monkey

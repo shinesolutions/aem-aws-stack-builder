@@ -5,13 +5,13 @@
   connection: local
 
   tasks:
-    - name: Create AEM Roles Stack
+    - name: Create AEM Instance Profiles Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ roles.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ instance_profiles.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../cloudformation/apps/roles.yaml"
+        template: "../../../cloudformation/apps/instance-profiles.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
       tags:
@@ -19,7 +19,7 @@
 
     - name: Check if a Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ roles.stack_name }}"
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ instance_profiles.stack_name }}"
             --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -28,7 +28,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ roles.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ instance_profiles.stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -36,7 +36,7 @@
 
     - name: Delete AEM Roles Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ roles.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ instance_profiles.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:

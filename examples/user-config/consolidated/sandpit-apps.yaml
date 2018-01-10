@@ -1,3 +1,7 @@
+security_groups_stack_prefix: "{{ stack_prefix }}"
+network_stack_prefix: sandpit
+instance_profiles_stack_prefix: sandpit-2
+
 aem:
   enable_crxde: true
   enable_default_passwords: true
@@ -39,11 +43,6 @@ snapshots:
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
-  network_stack_prefix: sandpit
-  security_groups_stack_prefix: sandpit
-  # instance_profile: sandpit-roles-1-aem-roles-stack-AuthorPublishDispatcherInstanceProfile-JP7KQ94NRYV0
-  instance_profile:
-  roles_stack_prefix: sandpit
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 100

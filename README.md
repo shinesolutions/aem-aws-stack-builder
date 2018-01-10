@@ -47,11 +47,11 @@ Set up network stacks:
     `make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>`.
 
 Set up shared stacks:
-- Create roles stack which contains the IAM instance profiles and roles:
+- Create instance profiles stack which contains the IAM instance profiles and roles:
 
-    `make create-roles stack_prefix=<roles_stack_prefix> config_path=<path/to/config/dir>`.
+    `make create-instance-profiles stack_prefix=<instance_profiles_stack_prefix> config_path=<path/to/config/dir>`.
 
-- If you don't have the permission to create any IAM resource, you can use the [roles CloudFormation template](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/cloudformation/apps/roles.yaml#L13) as guidance. These roles stack can be shared across multiple compute stacks.
+- If you don't have the permission to create any IAM resource, you can use the [Instance Profiles CloudFormation template](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/cloudformation/apps/instance-profiles.yaml#L13) as guidance. These roles stack can be shared across multiple compute stacks.
 
 Set up consolidated architecture stacks:
 - Configure `security_groups.network_stack_prefix` with the `<network_stack_prefix>` value from network section above.

@@ -29,10 +29,6 @@ Parameters:
     Type: String
     Description: The Author Publish Dispatcher Instance Type
 
-  AuthorPublishDispatcherInstanceProfileParameter:
-    Type: String
-    Description: The Author Publish Dispatcher Instance Profile (Use this OR AuthorPublishDispatcherInstanceProfileStackPrefixParameter)
-
   AuthorPublishDispatcherInstanceProfileStackPrefixParameter:
     Type: String
     Description: The Author Publish Dispatcher Instance Profile Stack Prefix  (Use this OR AuthorPublishDispatcherInstanceProfileParameter)
@@ -87,11 +83,6 @@ Parameters:
 
 Conditions:
 
-  HasNotInstanceProfileParameterCondition:
-    Fn::Equals:
-      - Ref: AuthorPublishDispatcherInstanceProfileParameter
-      - ""
-
   HasNotAuthorPublishDispatcherSecurityGroupParameterCondition:
     Fn::Equals:
       - Ref: AuthorPublishDispatcherSecurityGroupParameter
@@ -129,10 +120,7 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::If:
-          - HasNotInstanceProfileParameterCondition
-          - Fn::ImportValue: !Sub ${AuthorPublishDispatcherInstanceProfileStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
-          - Ref: AuthorPublishDispatcherInstanceProfileParameter
+        Fn::ImportValue: !Sub ${AuthorPublishDispatcherInstanceProfileStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
