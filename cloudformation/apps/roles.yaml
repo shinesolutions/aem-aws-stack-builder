@@ -60,7 +60,7 @@ Resources:
               Resource:
                 - arn:aws:logs:*:*:*
       RoleName:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorPublishDispatcherStackPublishRole
+        Fn::Sub: ${ComputeStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
 
   AuthorPublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
