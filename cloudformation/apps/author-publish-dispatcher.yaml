@@ -113,9 +113,9 @@ Resources:
         DeviceIndex: '0'
         GroupSet:
           - Ref: InboundFromBastionHostSecurityGroupParameter
-          - Ref: !Sub ${SecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+          - Fn::ImportValue: !Sub ${SecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
         SubnetId:
-          - Ref: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
+          Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
       Tags:
       - Key: StackPrefix
         Value:
