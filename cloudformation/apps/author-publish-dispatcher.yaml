@@ -31,11 +31,7 @@ Parameters:
 
   AuthorPublishDispatcherInstanceProfileStackPrefixParameter:
     Type: String
-    Description: The Author Publish Dispatcher Instance Profile Stack Prefix  (Use this OR AuthorPublishDispatcherInstanceProfileParameter)
-
-  AuthorPublishDispatcherSecurityGroupParameter:
-    Type: String
-    Description: The Author Publish Dispatcher Security Group Id (Use this OR SecurityGroupStackPrefixParameter)
+    Description: The Author Publish Dispatcher Instance Profile Stack Prefix
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -52,10 +48,6 @@ Parameters:
   AuthorPublishDispatcherDataVolSizeParameter:
     Type: Number
     Description: Author Publish Dispatcher Instances Data EBS Volume Size
-
-  AuthorPublishDispatcherSubnetParameter:
-    Type: String
-    Description: Subnet Ids the Host Will be Launched into
 
   DataBucketNameParameter:
     Type: String
@@ -80,18 +72,6 @@ Parameters:
   DNSRecordSetTTL:
     Type: String
     Description: Record Set TTL value
-
-Conditions:
-
-  HasNotAuthorPublishDispatcherSecurityGroupParameterCondition:
-    Fn::Equals:
-      - Ref: AuthorPublishDispatcherSecurityGroupParameter
-      - ""
-
-  HasNotAuthorPublishDispatcherSubnetParameterCondition:
-    Fn::Equals:
-      - Ref: AuthorPublishDispatcherSubnetParameter
-      - ""
 
 Resources:
 
@@ -132,16 +112,10 @@ Resources:
           Ref: AssociatePublicIpAddressParameter
         DeviceIndex: '0'
         GroupSet:
-        - Ref: InboundFromBastionHostSecurityGroupParameter
-        - Fn::If:
-            - HasNotAuthorPublishDispatcherSecurityGroupParameterCondition
-            - Fn::ImportValue: !Sub ${SecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
-            - Ref: AuthorPublishDispatcherSecurityGroupParameter
+          - Ref: InboundFromBastionHostSecurityGroupParameter
+          - Ref: !Sub ${SecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
         SubnetId:
-          Fn::If:
-            - HasNotAuthorPublishDispatcherSubnetParameterCondition
-            - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
-            - Ref: AuthorPublishDispatcherSubnetParameter
+          - Ref: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
       Tags:
       - Key: StackPrefix
         Value:

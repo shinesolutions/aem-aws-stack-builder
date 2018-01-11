@@ -1,4 +1,4 @@
-security_groups_stack_prefix: "{{ stack_prefix }}"
+security_groups_stack_prefix: sandpit-2
 network_stack_prefix: sandpit
 instance_profiles_stack_prefix: sandpit-2
 
@@ -48,8 +48,6 @@ author_publish_dispatcher:
   data_vol_size: 100
   tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
-  # security_group: sg-60cb1005
-  security_group:
 
 dns_records:
   stack_name: aem-dns-records
