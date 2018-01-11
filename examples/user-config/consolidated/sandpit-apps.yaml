@@ -13,8 +13,6 @@ aem:
 
 aem_vpc:
   id: vpc-2fc3014b
-  # author_publish_dispatcher_subnet_id: subnet-8162f4e5
-  author_publish_dispatcher_subnet_id: ""
 
 compute:
   key_pair_name: aem-stack-key-pair

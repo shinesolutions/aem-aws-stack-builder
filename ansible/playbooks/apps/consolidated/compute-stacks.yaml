@@ -24,7 +24,6 @@
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"
           AuthorPublishDispatcherDataVolSizeParameter: "{{ author_publish_dispatcher.data_vol_size }}"
-          AuthorPublishDispatcherSubnetParameter: "{{ aem_vpc.author_publish_dispatcher_subnet_id }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
           AssociatePublicIpAddressParameter: "{{ author_publish_dispatcher.associate_public_ip_address }}"
