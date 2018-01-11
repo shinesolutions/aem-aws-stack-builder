@@ -19,7 +19,6 @@
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
           AuthorPublishDispatcherInstanceProfileStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
-          AuthorPublishDispatcherSecurityGroupParameter: "{{ author_publish_dispatcher.security_group }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"
