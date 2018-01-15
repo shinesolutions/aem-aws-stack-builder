@@ -110,11 +110,28 @@ create-stack-data:
 delete-stack-data:
 	./scripts/delete-stack.sh apps/stack-data "$(stack_prefix)" "$(config_path)"
 
+create-snapshots-purge:
+	./scripts/create-stack.sh apps/snapshots-purge "$(stack_prefix)" "$(config_path)"
 
+delete-snapshots-purge:
+	./scripts/delete-stack.sh apps/snapshots-purge "$(stack_prefix)" "$(config_path)"
 
+create-ssm-documents:
+	./scripts/create-stack.sh apps/ssm-documents "$(stack_prefix)" "$(config_path)"
 
+delete-ssm-documents:
+	./scripts/create-stack.sh apps/ssm-documents "$(stack_prefix)" "$(config_path)"
 
+########################################
+# Stack Manager
+########################################
 
+create-stack-manager: create-stack-data create-ssm-documents
+	./scripts/create-stack.sh apps/stack-manager "$(stack_prefix)" "$(config_path)"
+
+delete-stack-manager:
+	./scripts/delete-stack.sh apps/stack-manager "$(stack_prefix)" "$(config_path)"
+	delete-ssm-documents
 
 # stacks set management targets
 

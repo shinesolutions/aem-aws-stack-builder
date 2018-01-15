@@ -207,6 +207,43 @@
       tags:
       - create
 
+    - name: Copy StackManager Lambda script from source bucket to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/aem_stack_manager-{{ library.aem_stack_manager_lambda_version }}.zip"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_stack_manager.zip"
+      tags:
+      - create
+
+    - name: Copy snapshot offline Lambda script from source bucket to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/aem_offline_snapshot-{{ library.aem_offlie_snapshot_lambda_version }}.zip"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_offline_snapshot.zip"
+      tags:
+      - create
+
+    - name: Copy StackManager Task query script from source bucket to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/aem_task_query-{{ library.aem_stack_manager_task_status_lamba_version}}.zip"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_task_query.zip"
+      tags:
+      - create
+
+    - name: Copy snapshots purge Lambda script from source bucket to data bucket when source stack is specified
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/purge_snapshots-{{  library.aem_stack_manager_snapshot_purge_version }}.zip"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/purge_snapshots.zip"
+      tags:
+      - create
+
+
     - name: Delete temporary file containing generated credentials
       file:
         path: ../../../stage/system-users-credentials.json

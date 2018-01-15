@@ -1,0 +1,232 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >-
+  Create the SSM Documents needed to orchestrate AEM in an AWS encivironment.
+
+Parameters:
+  S3BucketAndPrefix:
+    Type: String
+    Default: ''
+    Description: >-
+      The S3 URL (s3://<bucket>/<key_prefix>) for the location of the SSM
+      documents. This should not include a trailing slash.
+
+  DeployArtifactIncludeFile:
+    Type: String
+    Default: AEM-DeployArtifact.yaml
+    Description: >-
+      The name of the file containing the DeployArtifact SSM command.
+
+  DeployArtifactsIncludeFile:
+    Type: String
+    Default: AEM-DeployArtifacts.yaml
+    Description: >-
+      The name of the file containing the DeployArtifacts SSM command.
+
+  ExportPackageIncludeFile:
+    Type: String
+    Default: AEM-ExportPackage.yaml
+    Description: >-
+      The name of the file containing the ExportPackage SSM command.
+
+  ImportPackageIncludeFile:
+    Type: String
+    Default: AEM-ImportPackage.yaml
+    Description: >-
+      The name of the file containing the ImportPackage SSM command.
+
+  PromoteAuthorIncludeFile:
+    Type: String
+    Default: AEM-PromoteAuthor.yaml
+    Description: >-
+      The name of the file containing the PromoteAuthor SSM command.
+
+  ManageServiceIncludeFile:
+    Type: String
+    Default: AEM-ManageService.yaml
+    Description: >-
+      The name of the file containing the ManageService SSM command.
+
+  OfflineCompactionIncludeFile:
+    Type: String
+    Default: AEM-OfflineCompaction.yaml
+    Description: >-
+      The name of the file containing the OfflineCompaction SSM command.
+
+  OfflineSnapshotIncludeFile:
+    Type: String
+    Default: AEM-OfflineSnapshot.yaml
+    Description: >-
+      The name of the file containing the OfflineSnapshot SSM command.
+
+  WaitUntilReadyIncludeFile:
+    Type: String
+    Default: AEM-WaitUntilReady.yaml
+    Description: >-
+      The name of the file containing the WaitUntilReady SSM command.
+
+  EnableCrxdeIncludeFile:
+    Type: String
+    Default: AEM-EnableCrxde.yaml
+    Description: >-
+      The name of the file containing the EnableCrxde SSM command.
+
+  RunAdhocPuppetIncludeFile:
+    Type: String
+    Default: AEM-RunAdhocPuppet.yaml
+    Description: >-
+      The name of the file containing the RunAdhocPuppet SSM command.
+
+Resources:
+  DeployArtifact:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${DeployArtifactIncludeFile}'
+
+  DeployArtifacts:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${DeployArtifactsIncludeFile}'
+
+  ExportPackage:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${ExportPackageIncludeFile}'
+
+  ImportPackage:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${ImportPackageIncludeFile}'
+
+  PromoteAuthor:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${PromoteAuthorIncludeFile}'
+
+  ManageService:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${ManageServiceIncludeFile}'
+
+  OfflineCompaction:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${OfflineCompactionIncludeFile}'
+
+  OfflineSnapshot:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${OfflineSnapshotIncludeFile}'
+
+  WaitUntilReady:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters: !Sub '${S3BucketAndPrefix}/${WaitUntilReadyIncludeFile}'
+
+  EnableCrxde:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters: !Sub '${S3BucketAndPrefix}/${EnableCrxdeIncludeFile}'
+
+  RunAdhocPuppet:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters: !Sub '${S3BucketAndPrefix}/${RunAdhocPuppetIncludeFile}'
+
+Outputs:
+  DeployArtifact:
+    Description: Document name for Deploy Artifact
+    Value: !Ref DeployArtifact
+
+  DeployArtifacts:
+    Description: Document name for Deploy Artifacts
+    Value: !Ref DeployArtifacts
+
+  ExportPackage:
+    Description: Document name for Export Package
+    Value: !Ref ExportPackage
+
+  ImportPackage:
+    Description: Document name for Import Package
+    Value: !Ref ImportPackage
+
+  PromoteAuthor:
+    Description: Documention name for Promote Author
+    Value: !Ref PromoteAuthor
+
+  ManageService:
+    Description: Document name for Manage Service
+    Value: !Ref ManageService
+
+  OfflineCompaction:
+    Description: Document name for Offline Compaction
+    Value: !Ref OfflineCompaction
+
+  OfflineSnapshot:
+    Description: Document name for Offline Snapshot
+    Value: !Ref OfflineSnapshot
+
+  WaitUntilReady:
+    Description: Document name for Wait Until Ready
+    Value: !Ref WaitUntilReady
+
+  EnableCrxde:
+    Description: Document name for Enable Crxde
+    Value: !Ref EnableCrxde
+
+  RunAdhocPuppet:
+    Description: Document name for Run Adhoc Puppet
+    Value: !Ref RunAdhocPuppet

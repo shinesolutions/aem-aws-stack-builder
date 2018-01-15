@@ -1,0 +1,71 @@
+---
+
+- name: Deploy AEM Stack Manager Cloud Native Implementation
+  hosts: all
+  gather_facts: no
+  connection: local
+  force_handlers: True
+  vars:
+    stack_manager_cwd: "{{ playbook_dir }}/../../.."
+    stack_manager_tmp: "{{ playbook_dir }}/../../../stack_manager_tmp"
+
+  tasks:
+    - name: Create A Temp Working Directory
+      file:
+        path: "{{ stack_manager_tmp }}"
+        state: directory
+        mode: 0755
+      notify: Clean Up Temp Folder
+      tags:
+        - create
+
+    - name: Generate CloudFormation Template for SSM Documents
+      shell: >
+          "{{ stack_manager_cwd }}/scripts/stack-manager/generate.sh" >  "{{ stack_manager_tmp }}/ssm_template.json"
+      args:
+        chdir: "{{ stack_manager_cwd }}"
+      tags:
+        - create
+
+    - name: Create SSM Document Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ stack_manager.ssm_stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: false
+        template: "{{ stack_manager_tmp }}/ssm_template.json"
+      tags:
+        - create
+
+    - name: Check if Stack Manager SSM Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{stack_prefix }}-{{ stack_manager.ssm_stack_name }}"
+             --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report SSM Document Stack Problem if Any
+      debug:
+        msg: Stack "{{stack_prefix }}-{{ stack_manager.ssm_stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AEM Stack Manager SSM Document Stack
+      cloudformation:
+        stack_name: "{{stack_prefix }}-{{ stack_manager.ssm_stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+        - delete
+
+  handlers:
+    - name: Clean Up Temp Folder
+      file:
+        path: "{{ stack_manager_tmp }}"
+        state: absent

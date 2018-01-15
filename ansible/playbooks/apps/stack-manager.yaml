@@ -1,0 +1,108 @@
+---
+
+- name: Deploy AEM Stack Manager Cloud Native Implementation
+  hosts: all
+  gather_facts: no
+  connection: local
+  force_handlers: True
+  vars:
+    stack_manager_cwd: "{{ playbook_dir }}/../../.."
+    stack_manager_tmp: "{{ playbook_dir }}/../../../stack_manager_tmp"
+
+  tasks:
+    - name: Create A Temp Working Directory
+      file:
+        path: "{{ stack_manager_tmp }}"
+        state: directory
+        mode: 0755
+      notify: Clean Up Temp Folder
+      tags:
+        - create
+
+    - name: >
+        Create AEM Stack Manager Resources
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ stack_manager.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: false
+        template: "{{ stack_manager_cwd }}/cloudformation/apps/stack-manager.yaml"
+        template_parameters:
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
+          AemAwsStackManagerVersion: "{{ stack_manager.version}}"
+          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+      register: stack_info
+      tags:
+        - create
+
+    - name: Create Stack Manager Task and SSM Document Name Mapping File
+      command: >
+        python "{{ stack_manager_cwd }}"/scripts/stack-manager/output_task_doc_mapping.py
+               "{{ stack_prefix }}"
+               "{{ stack_manager.ssm_stack_name }}"
+               "{{ stack_manager_tmp }}"/task_doc_mapping.json
+      tags:
+        - create
+
+    - name: Update config.json template to the stack output
+      shell:  >-
+        jq --slurpfile mapping "{{ stack_manager_tmp }}"/task_doc_mapping.json \
+           --arg statusarn "{{ stack_info.stack_outputs.TaskStatusTopicArn }}" \
+           --arg role "{{ stack_info.stack_outputs.SSMServiceRoleArn}}" \
+           --arg bucket "{{ s3.data_bucket_name }}" \
+           --arg backuparn "{{ stack_info.stack_outputs.BackupTopicArn}}" \
+           --arg dbtable "{{ stack_info.stack_outputs.AemStackManagerTableName }}" \
+        '."document_mapping"=$mapping[0]|'\
+        '."ec2_run_command"."status-topic-arn"=$statusarn|'\
+        '."ec2_run_command"."ssm-service-role-arn"=$role|'\
+        '."ec2_run_command"."cmd-output-bucket"=$bucket|'\
+        '."ec2_run_command"."dynamodb-table"=$dbtable|'\
+        '."offline_snapshot"."sns-topic-arn"=$backuparn' \
+           "{{ stack_manager_cwd }}"/scripts/stack-manager/lambda/config.json.template  >  "{{ stack_manager_tmp }}"/config.json
+      when: stack_info|succeeded
+      tags:
+       - create
+
+    - name: Upload config.json to S3
+      s3:
+         bucket: "{{ s3.data_bucket_name }}"
+         mode: put
+         src: "{{ stack_manager_tmp }}/config.json"
+         object: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/config.json"
+      when: stack_info|succeeded
+      tags:
+       - create
+
+    - name: Check if Stack Manager Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ stack_manager.stack_name }}"
+             --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Manager Problem if Any
+      debug:
+        msg: Stack "{{stack_prefix }}-{{ stack_manager.stack_name }} does not exist or some other errors occured 
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AEM Stack Manager Stack
+      cloudformation:
+        stack_name: "{{stack_prefix }}-{{ stack_manager.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+        - delete
+
+  handlers:
+    - name: Clean Up Temp Folder
+      file:
+        path: "{{ stack_manager_tmp }}"
+        state: absent

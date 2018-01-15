@@ -14,6 +14,9 @@
         template: "../../../cloudformation/apps/instance-profiles.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          AEMStackManagerVersion: "{{ stack_manager.version }}"
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
       tags:
       - create
 
