@@ -521,7 +521,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - "s3:*"
-                Resource: !Sub "arn:aws:s3:::${DataBucketNameParameter}/${ComputeStackPrefixParameter}/${S3DataStackManagerPrefix}/*"
+                Resource: !Sub "arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/*"
               - Effect: Allow
                 Action:
                   - ssm:SendCommand
