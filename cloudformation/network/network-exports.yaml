@@ -52,6 +52,14 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
     Description: The Author Subnet in Availability Zone B
 
+  AuthorDispatcherELBSubnetA:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Dispatcher ELB Subnet in Availability Zone A
+
+  AuthorDispatcherELBSubnetB:
+    Type: AWS::EC2::Subnet::Id
+    Description: The Author Dispatcher ELB Subnet in Availability Zone B
+
   AuthorDispatcherSubnetA:
     Type: AWS::EC2::Subnet::Id
     Description: The Author Dispatcher Subnet in Availability Zone A
@@ -105,6 +113,12 @@ Outputs:
     Export:
       Name: !Sub ${StackPrefix}-AuthorPublishDispatcherSubnetB
     Description: The Author Publish Dispatcher Subnet in Availability Zone B
+
+  AuthorPublishDispatcherSubnetList:
+    Value: !Sub ${AuthorPublishDispatcherSubnetA},${AuthorPublishDispatcherSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorPublishDispatcherSubnetList
+    Description: The Author Publish Dispatcher Subnet List
 
   PublishDispatcherELBSubnetA:
     Value: !Ref PublishDispatcherELBSubnetA
@@ -177,6 +191,24 @@ Outputs:
     Export:
       Name: !Sub ${StackPrefix}-AuthorSubnetList
     Description: The Author Subnet List
+
+  AuthorDispatcherELBSubnetA:
+    Value: !Ref AuthorDispatcherELBSubnetA
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherELBSubnetA
+    Description: The Author Dispatcher ELB Subnet in Availability Zone A
+
+  AuthorDispatcherELBSubnetB:
+    Value: !Ref AuthorDispatcherELBSubnetB
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherELBSubnetB
+    Description: The Author Dispatcher ELB Subnet in Availability Zone B
+
+  AuthorDispatcherELBSubnetList:
+    Value: !Sub ${AuthorDispatcherELBSubnetA},${AuthorDispatcherELBSubnetB}
+    Export:
+      Name: !Sub ${StackPrefix}-AuthorDispatcherELBSubnetList
+    Description: The Author Dispatcher ELB Subnet List
 
   AuthorDispatcherSubnetA:
     Value: !Ref AuthorDispatcherSubnetA
