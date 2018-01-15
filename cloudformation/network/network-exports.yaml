@@ -99,173 +99,212 @@ Outputs:
   VPCId:
     Value: !Ref VPCId
     Export:
-      Name: !Sub ${StackPrefix}-VPCId
+      Name:
+        Fn::Sub: ${StackPrefix}-VPCId
     Description: AEM VPC Id
 
   AuthorPublishDispatcherSubnetA:
     Value: !Ref AuthorPublishDispatcherSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-AuthorPublishDispatcherSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnetA
     Description: The Author Publish Dispatcher Subnet in Availability Zone A
 
   AuthorPublishDispatcherSubnetB:
     Value: !Ref AuthorPublishDispatcherSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-AuthorPublishDispatcherSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnetB
     Description: The Author Publish Dispatcher Subnet in Availability Zone B
 
   AuthorPublishDispatcherSubnetList:
-    Value: !Sub ${AuthorPublishDispatcherSubnetA},${AuthorPublishDispatcherSubnetB}
+    Value:
+      Fn::Sub: ${AuthorPublishDispatcherSubnetA},${AuthorPublishDispatcherSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-AuthorPublishDispatcherSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnetList
     Description: The Author Publish Dispatcher Subnet List
 
   PublishDispatcherELBSubnetA:
     Value: !Ref PublishDispatcherELBSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetA
     Description: The Publish Dispatcher ELB Subnet in Availability Zone A
 
   PublishDispatcherELBSubnetB:
     Value: !Ref PublishDispatcherELBSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetB
     Description: The Publish Dispatcher ELB Subnet in Availability Zone B
 
   PublishDispatcherELBSubnetList:
-    Value: !Sub ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
+    Value:
+      Fn::Sub: ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-PublishDispatcherELBSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetList
     Description: The Publish Dispatcher ELB Subnet List
 
   PublishDispatcherSubnetA:
     Value: !Ref PublishDispatcherSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetA
     Description: The Publish Dispatcher Subnet in Availability Zone A
 
   PublishDispatcherSubnetB:
     Value: !Ref PublishDispatcherSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetB
     Description: The Publish Dispatcher Subnet in Availability Zone B
 
   PublishDispatcherSubnetList:
-    Value: !Sub ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
+    Value:
+      Fn::Sub: ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-PublishDispatcherSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetList
     Description: The Publish Dispatcher Subnet List
 
   PublishSubnetA:
     Value: !Ref PublishSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-PublishSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishSubnetA
     Description: The Publish Subnet in Availability Zone A
 
   PublishSubnetB:
     Value: !Ref PublishSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-PublishSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishSubnetB
     Description: The Publish Subnet in Availability Zone B
 
   PublishSubnetList:
-    Value: !Sub ${PublishSubnetA},${PublishSubnetB}
+    Value:
+      Fn::Sub: ${PublishSubnetA},${PublishSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-PublishSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-PublishSubnetList
     Description: The Publish Subnet List
 
   AuthorSubnetA:
     Value: !Ref AuthorSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-AuthorSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorSubnetA
     Description: The Author Subnet in Availability Zone A
 
   AuthorSubnetB:
     Value: !Ref AuthorSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-AuthorSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorSubnetB
     Description: The Author Subnet in Availability Zone B
 
   AuthorSubnetList:
-    Value: !Sub ${AuthorSubnetA},${AuthorSubnetB}
+    Value:
+      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-AuthorSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorSubnetList
     Description: The Author Subnet List
 
   AuthorDispatcherELBSubnetA:
     Value: !Ref AuthorDispatcherELBSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-AuthorDispatcherELBSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetA
     Description: The Author Dispatcher ELB Subnet in Availability Zone A
 
   AuthorDispatcherELBSubnetB:
     Value: !Ref AuthorDispatcherELBSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-AuthorDispatcherELBSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetB
     Description: The Author Dispatcher ELB Subnet in Availability Zone B
 
   AuthorDispatcherELBSubnetList:
-    Value: !Sub ${AuthorDispatcherELBSubnetA},${AuthorDispatcherELBSubnetB}
+    Value:
+      Fn::Sub: ${AuthorDispatcherELBSubnetA},${AuthorDispatcherELBSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-AuthorDispatcherELBSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetList
     Description: The Author Dispatcher ELB Subnet List
 
   AuthorDispatcherSubnetA:
     Value: !Ref AuthorDispatcherSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetA
     Description: The Author Dispatcher Subnet in Availability Zone A
 
   AuthorDispatcherSubnetB:
     Value: !Ref AuthorDispatcherSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetB
     Description: The Author Dispatcher Subnet in Availability Zone B
 
   AuthorDispatcherSubnetList:
-    Value: !Sub ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
+    Value:
+      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-AuthorDispatcherSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetList
     Description: The Author Dispatcher Subnet List
 
   ToolSubnetA:
     Value: !Ref ToolSubnetA
     Export:
-      Name: !Sub ${StackPrefix}-ToolSubnetA
+      Name:
+        Fn::Sub: ${StackPrefix}-ToolSubnetA
     Description: The Tool Subnet in Availability Zone A
 
   ToolSubnetB:
     Value: !Ref ToolSubnetB
     Export:
-      Name: !Sub ${StackPrefix}-ToolSubnetB
+      Name:
+        Fn::Sub: ${StackPrefix}-ToolSubnetB
     Description: The Tool Subnet in Availability Zone B
 
   ToolSubnetList:
-    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Value:
+      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-ToolSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-ToolSubnetList
     Description: The Tool Subnet List
 
   OrchestratorSubnetList:
-    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Value:
+      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-OrchestratorSubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-OrchestratorSubnetList
     Description: The Orchestrator Subnet List
 
   ChaosMonkeySubnetList:
-    Value: !Sub ${ToolSubnetA}, ${ToolSubnetB}
+    Value:
+      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
     Export:
-      Name: !Sub ${StackPrefix}-ChaosMonkeySubnetList
+      Name:
+        Fn::Sub: ${StackPrefix}-ChaosMonkeySubnetList
     Description: The ChaosMonkey Subnet List
 
   PublicRouteTable:
     Value: !Ref PublicRouteTable
     Export:
-      Name: !Sub ${StackPrefix}-PublicRouteTable
+      Name:
+        Fn::Sub: ${StackPrefix}-PublicRouteTable
     Description: The Public Route Table for AEM Stack VPC
 
   PrivateRouteTable:
     Value: !Ref PrivateRouteTable
     Export:
-      Name: !Sub ${StackPrefix}-PrivateRouteTable
+      Name:
+        Fn::Sub: ${StackPrefix}-PrivateRouteTable
     Description: The Private Route Table for AEM Stack VPC
