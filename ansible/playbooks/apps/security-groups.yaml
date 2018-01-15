@@ -18,6 +18,7 @@
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
           AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
+          AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_publish_dispatcher.inbound_cidr_ip }}"
           PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internet_outbound_cidr_ip }}"
       tags:
       - create
