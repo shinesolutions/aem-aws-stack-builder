@@ -28,6 +28,7 @@
           PublishDispatcherASGMaxSizeParameter: "{{ publish_dispatcher.max_size }}"
           PublishDispatcherASGMinSizeParameter: "{{ publish_dispatcher.min_size }}"
           PublishDispatcherASGDesiredCapacityParameter: "{{ publish_dispatcher.desired_capacity }}"
+          PublishDispatcherASGCPUScalingParameters: "{{ publish_dispatcher.asg_cpu_scaling_threshold }}, {{ publish_dispatcher.asg_cpu_high_period }}, {{ publish_dispatcher.asg_cpu_high_eval_period }}, {{ publish_dispatcher.asg_cpu_low_period }}, {{ publish_dispatcher.asg_cpu_low_eval_period }}"
           PublishDispatcherRootVolSizeParameter: "{{ publish_dispatcher.root_vol_size }}"
           PublishDispatcherDataVolSizeParameter: "{{ publish_dispatcher.data_vol_size }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
