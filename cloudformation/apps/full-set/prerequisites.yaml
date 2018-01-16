@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Overarching CF Template to Create Roles, Security Groups, and Messaging Resources for AEM Appp Stacks
+Description: Overarching CF Template to Create Security Groups and Messaging Resources for AEM Appp Stacks
 
 Parameters:
 
@@ -48,7 +48,7 @@ Resources:
   SecurityGroupStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/security-groups.yaml
+      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/full-set/security-groups.yaml
       Parameters:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter

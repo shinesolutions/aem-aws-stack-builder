@@ -1,15 +1,10 @@
-roles:
-  stack_name: aem-roles-stack
-  publish_dispatcher: AEMStackPublishDispatcherRole
-  publish: AEMStackPublishRole
-  author: AEMStackAuthorRole
-  author_dispatcher: AEMStackAuthorDispatcherRole
-  orchestrator: AEMStackOrchestratorRole
-  chaos_monkey: AEMStackChaosMonkeyRole
+network_stack_prefix: sandpit
+
+instance_profiles:
+  stack_name: aem-instance-profiles-stack
 
 security_groups:
   stack_name: aem-security-groups-stack
-  network_stack_prefix: sandpit
 
   secure_shell:
     inbound_cidr_ip: 10.0.8.128/25
@@ -38,6 +33,10 @@ security_groups:
   author_dispatcher_elb:
     tag_name: AEM Author Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
+
+  author_publish_dispatcher:
+    tag_name: AEM Author Publish Dispatcher Security Group
+    inbound_cidr_ip: 0.0.0.0/0
 
   orchestrator:
     tag_name: AEM Orchestrator Security Group

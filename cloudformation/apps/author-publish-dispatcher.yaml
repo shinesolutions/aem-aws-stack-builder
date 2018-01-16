@@ -29,17 +29,9 @@ Parameters:
     Type: String
     Description: The Author Publish Dispatcher Instance Type
 
-  AuthorPublishDispatcherInstanceProfileParameter:
-    Type: String
-    Description: The Author Publish Dispatcher Instance Profile (Use this OR AuthorPublishDispatcherInstanceProfileStackPrefixParameter)
-
   AuthorPublishDispatcherInstanceProfileStackPrefixParameter:
     Type: String
-    Description: The Author Publish Dispatcher Instance Profile Stack Prefix  (Use this OR AuthorPublishDispatcherInstanceProfileParameter)
-
-  AuthorPublishDispatcherSecurityGroupParameter:
-    Type: String
-    Description: The Author Publish Dispatcher Security Group Id (Use this OR SecurityGroupStackPrefixParameter)
+    Description: The Author Publish Dispatcher Instance Profile Stack Prefix
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -57,10 +49,6 @@ Parameters:
     Type: Number
     Description: Author Publish Dispatcher Instances Data EBS Volume Size
 
-  AuthorPublishDispatcherSubnetParameter:
-    Type: String
-    Description: Subnet Ids the Host Will be Launched into
-
   DataBucketNameParameter:
     Type: String
     Description: Bucket name that stores Stack data files
@@ -77,34 +65,13 @@ Parameters:
     Type: String
     Description: Route53 Hosted Zone Name the Record Set will be Created in
 
-  DNSRecordSetPrefixParameter:
+  AuthorPublishDispatcherDNSRecordSetNameParameter:
     Type: String
-    Description: Author Publish Dispatcher DNS Record Set Prefix
-
-  DNSRecordSetSuffixParameter:
-    Type: String
-    Description: Author Publish Dispatcher DNS Record Set Suffix
+    Description: Author Publish Dispatcher DNS Record Set Name
 
   DNSRecordSetTTL:
     Type: String
     Description: Record Set TTL value
-
-Conditions:
-
-  HasNotInstanceProfileParameterCondition:
-    Fn::Equals:
-      - Ref: AuthorPublishDispatcherInstanceProfileParameter
-      - ""
-
-  HasNotAuthorPublishDispatcherSecurityGroupParameterCondition:
-    Fn::Equals:
-      - Ref: AuthorPublishDispatcherSecurityGroupParameter
-      - ""
-
-  HasNotAuthorPublishDispatcherSubnetParameterCondition:
-    Fn::Equals:
-      - Ref: AuthorPublishDispatcherSubnetParameter
-      - ""
 
 Resources:
 
@@ -133,10 +100,7 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::If:
-          - HasNotInstanceProfileParameterCondition
-          - Fn::ImportValue: !Sub ${AuthorPublishDispatcherInstanceProfileStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
-          - Ref: AuthorPublishDispatcherInstanceProfileParameter
+        Fn::ImportValue: !Sub ${AuthorPublishDispatcherInstanceProfileStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
@@ -148,16 +112,10 @@ Resources:
           Ref: AssociatePublicIpAddressParameter
         DeviceIndex: '0'
         GroupSet:
-        - Ref: InboundFromBastionHostSecurityGroupParameter
-        - Fn::If:
-            - HasNotAuthorPublishDispatcherSecurityGroupParameterCondition
-            - Fn::ImportValue: !Sub ${SecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
-            - Ref: AuthorPublishDispatcherSecurityGroupParameter
+          - Ref: InboundFromBastionHostSecurityGroupParameter
+          - Fn::ImportValue: !Sub ${SecurityGroupStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
         SubnetId:
-          Fn::If:
-            - HasNotAuthorPublishDispatcherSubnetParameterCondition
-            - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
-            - Ref: AuthorPublishDispatcherSubnetParameter
+          Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
       Tags:
       - Key: StackPrefix
         Value:
@@ -181,7 +139,7 @@ Resources:
       HostedZoneName:
         Ref: Route53HostedZoneNameParameter
       Name:
-        Fn::Sub: ${DNSRecordSetPrefixParameter}${ComputeStackPrefixParameter}${DNSRecordSetSuffixParameter}.${Route53HostedZoneNameParameter}
+        Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
       - Fn::GetAtt: [AuthorPublishDispatcherInstance, PrivateIp]
       TTL:

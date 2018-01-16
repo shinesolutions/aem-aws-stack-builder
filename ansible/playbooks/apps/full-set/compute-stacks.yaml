@@ -22,7 +22,7 @@
         template: "../../../../cloudformation/apps/full-set/compute-stacks.yaml"
         template_parameters:
           InstanceProfileStackPrefixParameter: "{{ instance_profile_stack_prefix }}"
-          SecurityGroupStackPrefixParameter: "{{ security_group_stack_prefix }}"
+          SecurityGroupStackPrefixParameter: "{{ security_groups_stack_prefix }}"
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

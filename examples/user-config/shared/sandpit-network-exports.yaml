@@ -11,6 +11,8 @@ network_exports:
   PublishSubnetB: subnet-032f9175
   AuthorSubnetA: subnet-b451bad3
   AuthorSubnetB: subnet-022f9174
+  AuthorDispatcherELBSubnetA: subnet-8162f4e5
+  AuthorDispatcherELBSubnetB: subnet-002f9176
   AuthorDispatcherSubnetA: subnet-8562f4e1
   AuthorDispatcherSubnetB: subnet-0e2f9178
   ToolSubnetA: subnet-8662f4e2

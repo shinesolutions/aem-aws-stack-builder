@@ -15,7 +15,7 @@
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
-          SecurityGroupStackPrefixParameter: "{{ security_group_stack_prefix }}"
+          SecurityGroupStackPrefixParameter: "{{ security_groups_stack_prefix }}"
           OrchestratorImageParameter: "{{ ami_ids.orchestrator }}"
           OrchestratorImageRootDevice: "{{ ami_root_device_name }}"
           OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
