@@ -21,9 +21,9 @@ except:
 log = logging.getLogger(__name__)
 
 def find_autoscaling_group(client, component, stack_prefix):
-  count_found = 0
   groups = client.describe_auto_scaling_groups()['AutoScalingGroups']
   for group in groups:
+    count_found = 0
     for tag in group['Tags']:
       if (tag['Key'] == 'StackPrefix' and tag['Value'] == stack_prefix) or \
           (tag['Key'] == 'Component' and tag['Value'] == component):
@@ -32,6 +32,7 @@ def find_autoscaling_group(client, component, stack_prefix):
           return group
         else:
           count_found += 1
+  raise ValueError('No Autoscaling Group found for stack_prefix: {} and component: {}.'.format(stack_prefix, component))
 
 def update_snapshot_id(launch_config, device_name, snapshot_id):
   launch_config.pop('LaunchConfigurationARN')
@@ -169,5 +170,4 @@ def main():
 if __name__ == '__main__':
   main()
 
-# AWS_PROFILE=sandpit python autoscaling-update-snapshot.py -c publish -s snap-1234567890abcdef1 -sp sandpit-ramses001 -d /dev/sdb
-
+# AWS_PROFILE=sandpit python update-snapshot-id-in-launch-conf.py -c publish -s snap-1234567890abcdef1 -sp sandpit-ramses001 -d /dev/sdb
