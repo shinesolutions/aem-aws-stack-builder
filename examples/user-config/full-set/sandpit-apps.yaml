@@ -1,6 +1,6 @@
 network_stack_prefix: sandpit
 security_groups_stack_prefix: "{{ stack_prefix }}"
-instance_profile_stack_prefix: "{{ stack_prefix }}"
+instance_profile_stack_prefix: sandpit-2
 
 aem:
   enable_crxde: true
@@ -51,7 +51,7 @@ security_groups:
     tag_name: AEM Chaos Monkey Security Group
 
 compute:
-  key_pair_name: michaelb-sandpit
+  key_pair_name: aem-stack-key-pair
   inbound_from_bastion_host_security_group: sg-62153b04
 
 compute_stacks:
@@ -160,7 +160,7 @@ prerequisites:
 
 stack_manager:
   ssm_stack_name: aem-stack-manager-ssm
-  stack_name: aem-stack-manager-v2
+  stack_name: aem-stack-manager
   s3_prefix: stack-manager
 
 snapshots_purge:
@@ -171,8 +171,3 @@ snapshots_purge:
   LiveSnapshotsPurgeInput:  '"SnapshotType": "live", "Age": "1d"'
   OfflineSnapshotsPurgeInput:  '"SnapshotType": "offline", "Age": "1w"'
   OrchestrationSnapshotsPurgeInput: '"SnapshotType": "orchestration", "Age": "4h"'
-  OfflineSnapshotsPurgeSchedule: 'cron(15 19 ? * SUN *)'
-  OrchestrationSnapshotsPurgeSchedule: 'cron(5 0/4 * * ? *)'
-  LiveSnapshotsPurgeInterval:  '"1d"'
-  OfflineSnapshotsPurgeInterval:  '"1w"'
-  OrchestrationSnapshotsPurgeInterval: '"4h"'
