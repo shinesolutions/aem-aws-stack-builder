@@ -48,7 +48,7 @@ Resources:
   SecurityGroupStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/security-groups.yaml
+      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/full-set/security-groups.yaml
       Parameters:
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
