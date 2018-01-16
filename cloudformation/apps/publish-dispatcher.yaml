@@ -114,8 +114,10 @@ Resources:
           Fn::Sub: ${SecurityGroupStackPrefixParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetA
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetB
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              Fn::Sub: ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetList
       Tags:
       - Key: Name
         Value: AEM Publish Dispatcher Load Balancer

@@ -1,4 +1,4 @@
-network_stack_prefix: sandpit
+network_stack_prefix: sandpit-2
 security_groups_stack_prefix: "{{ stack_prefix }}"
 instance_profile_stack_prefix: sandpit-2
 
@@ -21,9 +21,6 @@ security_groups:
 
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
 
-  author_publish_dispatcher:
-    inbound_cidr_ip: 10.0.8.128/25
-
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
@@ -45,6 +42,9 @@ security_groups:
 
   author_dispatcher_elb:
     tag_name: AEM Author Dispatcher ELB Security Group
+    inbound_cidr_ip: 10.0.8.128/25
+
+  author_publish_dispatcher:
     inbound_cidr_ip: 10.0.8.128/25
 
   orchestrator:

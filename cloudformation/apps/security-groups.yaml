@@ -28,7 +28,7 @@ Parameters:
 
   AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
     Type: String
-    Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
+    Description: AEM Author Publish Dispatcher ELB Security Group Inbound Cidr Ip
 
   PrivateSubnetInternetOutboundCidrIpParameter:
     Type: String

@@ -162,7 +162,8 @@ Resources:
           Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
-        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetA
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-AuthorSubnetA
       Tags:
       - Key: StackPrefix
         Value:
@@ -214,7 +215,8 @@ Resources:
           Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
-        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetB
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-AuthorSubnetB
       Tags:
       - Key: StackPrefix
         Value:
@@ -268,8 +270,10 @@ Resources:
           Fn::Sub: ${SecurityGroupStackPrefixParameter}-AuthorELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetA
-        - Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorSubnetB
+        Fn::Split:
+          - ","
+          - Fn::ImportValue:
+              Fn::Sub: ${NetworkStackPrefixParameter}-AuthorSubnetList
       Tags:
       - Key: Name
         Value: AEM Author Load Balancer
