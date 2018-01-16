@@ -207,12 +207,21 @@
       tags:
       - create
     
+
+    - name: Check aem-stack-manager-cloud exists
+      stat:
+        path: ../../../stage/aem-stack-manager-cloud.zip
+      register: check_aem_stack_manager_cloud_result
+      tags:
+      - create
+
     - name: Download aem-stack-manager-cloud libray
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "library/aem-stack-manager-cloud-{{  library.aem_stack_manager_version }}.zip"
         dest: ../../../stage/aem-stack-manager-cloud.zip
         mode: get
+      when: check_aem_stack_manager_cloud_result.exists == False
       tags:
       - create
 

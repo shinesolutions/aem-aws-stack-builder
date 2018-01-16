@@ -10,14 +10,6 @@ Parameters:
       Type: String
       Description: The AEM Stack Compute Resources Stack Prefix
 
-  DataBucketNameParameter:
-    Type: String
-    Description: Bucket name that stores Stack data file
-
-  S3DataStackManagerPrefix:
-    Type: String
-    Description: Prefix within the Bucket to Locate Files
-
 Resources:
 
 
@@ -434,7 +426,7 @@ Resources:
   AEMStackManagerSnapshotLambdaServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${ComputeStackPrefixParameter}-aem-snap-purge-lambda-sr
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMSnapPurgeLambdaRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -457,77 +449,6 @@ Resources:
                   - "ec2:Describe*"
                   - ec2:DeleteSnapshot
                 Resource: "*"
-
-  StackmanagerSSMServiceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ssm.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-      Policies:
-        - PolicyName: AemBackupPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "s3:*"
-                Resource:
-                  - !Sub "arn:aws:s3:::${DataBucketNameParameter}/SSMOutput/*"
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManagerSSMRole
-
-  AEMStackManagerLambdaServiceRole:
-    Type: AWS::IAM::Role
-    DependsOn: StackmanagerSSMServiceRole
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies:
-        - PolicyName: StackManagerPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "ec2:Describe*"
-                  - ec2:CreateTags
-                  - ec2:DeleteTags
-                  - "autoscaling:Describe*"
-                  - autoscaling:UpdateAutoScalingGroup
-                  - autoscaling:EnterStandby
-                  - autoscaling:ExitStandby
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - "s3:*"
-                Resource: !Sub "arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/*"
-              - Effect: Allow
-                Action:
-                  - ssm:SendCommand
-                  - ssm:CancelCommand
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - iam:PassRole
-                Resource: !GetAtt StackmanagerSSMServiceRole.Arn
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManagerLambdaRole
 
 Outputs:
 
@@ -597,38 +518,7 @@ Outputs:
   AEMStackManagerSnapshotLambdaServiceRoleName:
     Value:
       Ref: AEMStackManagerSnapshotLambdaServiceRole
-    Description: AEM StackManager Snapshot Lambda Service Role Name 
+    Description: AEM StackManager Snapshot Lambda Service Role Name
     Export:
       Name:
         Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName
-
-
-  AEMStackManagerLambdaServiceRoleArn:
-    Value: !GetAtt AEMStackManagerLambdaServiceRole.Arn
-    Description: The Sack Manager Lambda Service Role ARN
-    Export:
-      Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-
-  AEMStackManagerLambdaServiceRoleName:
-    Value:
-      Ref: AEMStackManagerLambdaServiceRole
-    Description: The Sack Manager Lambda Service Role Name 
-    Export:
-      Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerLambdaServiceRoleName
-
-  AEMStackManagerSSMServiceRoleArn:
-    Value: !GetAtt StackmanagerSSMServiceRole.Arn
-    Description: The Staxk Manager SSM Service Role ARN
-    Export:
-      Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSSMServiceRoleArn
-
-  AEMStackManagerSSMServiceRoleName:
-    Value:
-      Ref: StackmanagerSSMServiceRole
-    Description: The Sack Manager Lambda Service Role Name 
-    Export:
-      Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSSMServiceRoleName
