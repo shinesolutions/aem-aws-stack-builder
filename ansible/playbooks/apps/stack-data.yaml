@@ -206,43 +206,110 @@
       when: custom_provisioner_stat_result.stat.exists == True
       tags:
       - create
-
-    - name: Copy StackManager Lambda script from source bucket to data bucket
-      s3_copy_object:
-        src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/aem_stack_manager-{{ library.aem_stack_manager_lambda_version }}.zip"
-        dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_stack_manager.zip"
+    
+    - name: Download aem-stack-manager-cloud libray
+      aws_s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "library/aem-stack-manager-cloud-{{  library.aem_stack_manager_version }}.zip"
+        dest: ../../../stage/aem-stack-manager-cloud.zip
+        mode: get
       tags:
       - create
 
-    - name: Copy snapshot offline Lambda script from source bucket to data bucket
-      s3_copy_object:
-        src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/aem_offline_snapshot-{{ library.aem_offlie_snapshot_lambda_version }}.zip"
-        dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_offline_snapshot.zip"
+    - name: Unpack aem-stack-manager-cloud library to stage directory
+      unarchive: 
+        src: ../../../stage/aem-stack-manager-cloud.zip
+        dest: ../../../stage/
       tags:
       - create
 
-    - name: Copy StackManager Task query script from source bucket to data bucket
-      s3_copy_object:
-        src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/aem_task_query-{{ library.aem_stack_manager_task_status_lamba_version}}.zip"
-        dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_task_query.zip"
+    - name: Zip AEM Stack Manager Lambda Implementation
+      command: >
+        zip -j "../../../stage/aem_stack_manager.zip" "../../../stage/aem-stack-manager-cloud/lambda/aem_stack_manager.py"
       tags:
       - create
 
-    - name: Copy snapshots purge Lambda script from source bucket to data bucket when source stack is specified
-      s3_copy_object:
-        src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "library/purge_snapshots-{{  library.aem_stack_manager_snapshot_purge_version }}.zip"
-        dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/purge_snapshots.zip"
+    - name: Zip AEM Offline Snapshot Lambda Implementation
+      shell: >
+        zip -j "../../../stage/aem_offline_snapshot.zip" "../../../stage/aem-stack-manager-cloud/lambda/aem_offline_snapshot.py"
       tags:
       - create
 
+    - name: Zip AEM Task Status Query Lambda Implementation
+      shell: >
+        zip -j "../../../stage/aem_task_query.zip" "../../../stage/aem-stack-manager-cloud/lambda/aem_task_query.py"
+      tags:
+      - create
+
+    - name: Zip AEM Snapshots Purge Lambda Implementation
+      shell: >
+        zip -j "../../../stage/purge_snapshots.zip" "../../../stage/aem-stack-manager-cloud/lambda/purge_snapshots.py"
+      tags:
+      - create
+
+    - name: Upload AEM Stack Manager Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_stack_manager.zip"
+        src: ../../../stage/aem_stack_manager.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Upload AEM Offline Snapshot Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_offline_snapshot.zip"
+        src: ../../../stage/aem_offline_snapshot.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Upload AEM Task Status Query Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_task_query.zip"
+        src: ../../../stage/aem_task_query.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Upload AEM Snapshots Purge Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/purge_snapshots.zip"
+        src: ../../../stage/purge_snapshots.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Delete ZIP AEM Stack Manager Lambda Implementation
+      file:
+        path: ../../../stage/aem_stack_manager.zip
+        state: absent
+      tags:
+        - delete
+
+    - name: Delete ZIP AEM Offline Snapshot Lambda Implementation
+      file:
+        path: ../../../stage/aem_offline_snapshot.zip
+        state: absent
+      tags:
+        - delete
+
+    - name: Delete ZIP AEM Task Status Query Lambda Implementation
+      file:
+        path: ../../../stage/aem_task_query.zip
+        state: absent
+      tags:
+        - delete
+
+    - name: Delete AEM Snapshots Purge Lambda Implementation
+      file: 
+        path: ../../../stage/purge_snapshots.zip
+        state: absent
+      tags:
+        - delete
 
     - name: Delete temporary file containing generated credentials
       file:

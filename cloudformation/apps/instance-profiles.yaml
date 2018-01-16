@@ -10,10 +10,6 @@ Parameters:
       Type: String
       Description: The AEM Stack Compute Resources Stack Prefix
 
-  AEMStackManagerVersion:
-      Type: String
-      Description: AEM Stack Manager Version
-
   DataBucketNameParameter:
     Type: String
     Description: Bucket name that stores Stack data file
@@ -438,7 +434,7 @@ Resources:
   AEMStackManagerSnapshotLambdaServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${ComputeStackPrefixParameter}-aem-snap-purge${AEMStackManagerVersion}-lambda-sr
+      RoleName: !Sub ${ComputeStackPrefixParameter}-aem-snap-purge-lambda-sr
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -485,7 +481,7 @@ Resources:
                   - "s3:*"
                 Resource:
                   - !Sub "arn:aws:s3:::${DataBucketNameParameter}/SSMOutput/*"
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManager${AEMStackManagerVersion}SSMRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManagerSSMRole
 
   AEMStackManagerLambdaServiceRole:
     Type: AWS::IAM::Role
@@ -531,7 +527,7 @@ Resources:
                 Action:
                   - iam:PassRole
                 Resource: !GetAtt StackmanagerSSMServiceRole.Arn
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManager${AEMStackManagerVersion}LambdaRole
+      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManagerLambdaRole
 
 Outputs:
 

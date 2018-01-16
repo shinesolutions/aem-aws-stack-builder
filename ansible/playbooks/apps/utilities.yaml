@@ -17,7 +17,6 @@
         template_parameters:
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-          AemAwsStackManagerVersion: "{{ stack_manager.version}}"
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           LiveSnapshotsPurgeSchedule: "{{ snapshots_purge.LiveSnapshotsPurgeSchedule}}"
           OfflineSnapshotsPurgeSchedule: "{{ snapshots_purge.OfflineSnapshotsPurgeSchedule }}"

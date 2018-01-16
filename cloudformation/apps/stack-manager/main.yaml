@@ -13,10 +13,6 @@ Parameters:
     Type: String
     Description: Prefix within the Bucket to Locate Files
 
-  AemAwsStackManagerVersion:
-    Type: String
-    Description: AEM Stack Manager Version
-
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -62,7 +58,7 @@ Resources:
           ProvisionedThroughput: 
             ReadCapacityUnits: 1 
             WriteCapacityUnits: 1
-      TableName: !Sub ${ComputeStackPrefixParameter}-AemStackManagerTable${AemAwsStackManagerVersion}
+      TableName: !Sub ${ComputeStackPrefixParameter}-AemStackManagerTable
       TimeToLiveSpecification:
         AttributeName: !Ref DynamoDBTTLAttribute
         Enabled: True
@@ -98,13 +94,13 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: AEM Stack Manager Topic
-      TopicName: !Sub ${ComputeStackPrefixParameter}-AemStackManager${AemAwsStackManagerVersion}
+      TopicName: !Sub ${ComputeStackPrefixParameter}-AemStackManager
 
   TaskStatusTopic:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: !Sub AEM Stack Manager Topic
-      TopicName: !Sub ${ComputeStackPrefixParameter}-AemStackManagerStatus${AemAwsStackManagerVersion}
+      TopicName: !Sub ${ComputeStackPrefixParameter}-AemStackManagerStatus
 
   StackManagerLambdaSSMPolicy:
     Type: AWS::IAM::ManagedPolicy
@@ -128,7 +124,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: AEM Stack Manager Function
-      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemStackManager${AemAwsStackManagerVersion}
+      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemStackManager
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/aem_stack_manager.zip
@@ -174,7 +170,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: AEM Task Status Query
-      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemTaskQuery${AemAwsStackManagerVersion}
+      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemTaskQuery
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/aem_task_query.zip
@@ -262,13 +258,13 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: AEM Backup
-      TopicName: !Sub ${ComputeStackPrefixParameter}-AemOfflineBackup${AemAwsStackManagerVersion}
+      TopicName: !Sub ${ComputeStackPrefixParameter}-AemOfflineBackup
 
   OfflineBackupLambada:
     Type: AWS::Lambda::Function
     Properties:
       Description: AEM Offline Backup Function
-      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemOfflineBackup${AemAwsStackManagerVersion}
+      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemOfflineBackup
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/aem_offline_snapshot.zip
@@ -351,7 +347,7 @@ Resources:
             Resource:
               - !Ref OfflineBackupTopic
               - !Ref TaskStatusTopic
-      ManagedPolicyName: !Sub ${ComputeStackPrefixParameter}-AEMStackManager${AemAwsStackManagerVersion}SSMPolicy
+      ManagedPolicyName: !Sub ${ComputeStackPrefixParameter}-AEMStackManagerSSMPolicy
 
 Outputs:
   StackManagerTopciArn:

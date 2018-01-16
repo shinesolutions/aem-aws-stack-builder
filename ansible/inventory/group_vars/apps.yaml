@@ -87,10 +87,7 @@ library:
   aem_orchestrator_version: 1.0.0
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
-  aem_stack_manager_lambda_version: 0.0.1
-  aem_offlie_snapshot_lambda_version: 0.0.1
-  aem_stack_manager_task_status_lamba_version: 0.0.1
-  aem_stack_manager_snapshot_purge_version: 0.0.1
+  aem_stack_manager_version: 2.0.0
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack

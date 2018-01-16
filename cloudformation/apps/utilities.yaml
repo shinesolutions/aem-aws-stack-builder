@@ -11,10 +11,6 @@ Parameters:
     Type: String
     Description: Prefix within the Bucket to Locate Files
 
-  AemAwsStackManagerVersion:
-    Type: String
-    Description: AEM Stack Manager Version
-
   ComputeStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
@@ -54,7 +50,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: Function to Purge AEM Old Snapshots
-      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemSnapshotsPurge${AemAwsStackManagerVersion}
+      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemSnapshotsPurge
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/purge_snapshots.zip
