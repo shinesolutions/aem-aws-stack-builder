@@ -129,3 +129,15 @@
       ignore_errors: True
       tags:
         - delete
+    
+    - name: Delete Simian Army SimpleDB domain
+      delete_sdb_domain:
+        sdb_domain_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+        sdb_region: "{{ aws.region }}"
+    
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
+
+
