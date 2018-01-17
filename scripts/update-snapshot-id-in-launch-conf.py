@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys, os, logging, argparse, socket, textwrap, boto3
+import base64
 
 __version__='0.1'
 try:
@@ -32,7 +33,7 @@ def find_autoscaling_group(client, component, stack_prefix):
           return group
         else:
           count_found += 1
-  raise ValueError('No Autoscaling Group found for stack_prefix: {} and component: {}.'.format(stack_prefix, component))
+  raise ValueError('No Autoscaling Group found for stack_prefix: \'{}\' and component: \'{}\'.'.format(stack_prefix, component))
 
 def update_snapshot_id(launch_config, device_name, snapshot_id):
   launch_config.pop('LaunchConfigurationARN')
@@ -44,10 +45,13 @@ def update_snapshot_id(launch_config, device_name, snapshot_id):
     if device['DeviceName'] == device_name:
       ebs = device['Ebs']
       ebs['SnapshotId'] = snapshot_id
+      return
+  raise ValueError('No Device found: \'{}\' in launch configuration \'{}\''.format(device_name, launch_config['LaunchConfigurationName']))
 
 def find_launch_conf(client, launch_conf_name):
   launch_conf = \
   client.describe_launch_configurations(LaunchConfigurationNames=[launch_conf_name])['LaunchConfigurations'][0]
+  launch_conf['UserData'] = base64.b64decode(launch_conf['UserData'])
   log.debug('Launch Configuration to update: %r', launch_conf)
   return launch_conf
 
