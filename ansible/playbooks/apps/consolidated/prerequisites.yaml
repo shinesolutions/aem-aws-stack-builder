@@ -1,0 +1,74 @@
+---
+
+- name: AEM Consolidated Prerequisite Resources Creation and Deletion Tasks
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: Ensure data bucket exists
+      s3_bucket:
+        region: "{{ aws.region }}"
+        name: "{{ s3.data_bucket_name }}"
+        state: present
+      tags:
+      - create
+
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../../cloudformation/apps
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml" --acl public-read
+      tags:
+        - create
+
+    - name: Create AEM App Prerequisite Resources Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../../cloudformation/apps/consolidated/prerequisites.yaml"
+        template_parameters:
+          PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_publish_dispatcher.inbound_cidr_ip }}"
+          SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
+      tags:
+      - create
+
+    - name: Check if a Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
+             --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ prerequisites.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AEM App Prerequisite Resources Stacks
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
+
+    - name: Delete All Stack Data
+      command: >
+              aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"
+               --recursive --region "{{ aws.region }}"
+      tags:
+      - delete

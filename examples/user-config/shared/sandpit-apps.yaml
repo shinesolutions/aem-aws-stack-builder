@@ -6,11 +6,6 @@ instance_profiles:
 security_groups:
   stack_name: aem-security-groups-stack
 
-  secure_shell:
-    inbound_cidr_ip: 10.0.8.128/25
-
-  private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
-
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25

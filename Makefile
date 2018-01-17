@@ -74,11 +74,21 @@ delete-security-groups:
 # Consolidated architecture stacks
 ########################################
 
-create-consolidated: create-stack-data
-	./scripts/create-stack.sh apps/consolidated/compute-stacks "$(stack_prefix)" "$(config_path)"
+create-consolidated-prerequisites:
+	./scripts/create-stack.sh apps/consolidated/prerequisites "$(stack_prefix)" "$(config_path)"
 
-delete-consolidated: delete-stack-data
-	./scripts/delete-stack.sh apps/consolidated/compute-stacks "$(stack_prefix)" "$(config_path)"
+delete-consolidated-prerequisites:
+	./scripts/delete-stack.sh apps/consolidated/prerequisites "$(stack_prefix)" "$(config_path)"
+
+create-consolidated-main: create-stack-data
+	./scripts/create-stack.sh apps/consolidated/main "$(stack_prefix)" "$(config_path)"
+
+delete-consolidated-main: delete-stack-data
+	./scripts/delete-stack.sh apps/consolidated/main "$(stack_prefix)" "$(config_path)"
+
+create-consolidated: create-consolidated-prerequisites create-consolidated-main
+
+delete-consolidated: delete-consolidated-prerequisites delete-consolidated-main
 
 ########################################
 # Full Set architecture stacks

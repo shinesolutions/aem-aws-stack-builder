@@ -1,5 +1,5 @@
 ---
-- name: AEM Author Publish Dispatcher CloudFormation Stack
+- name: AEM Consolidated Main Creation and Deletion Tasks
   hosts: all
   gather_facts: no
   connection: local
@@ -7,18 +7,18 @@
   tasks:
     - name: Create AEM Author Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../cloudformation/apps/author-publish-dispatcher.yaml"
+        template: "../../../../cloudformation/apps/consolidated/main.yaml"
         template_parameters:
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           SecurityGroupStackPrefixParameter: "{{ security_groups_stack_prefix }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
-          AuthorPublishDispatcherInstanceProfileStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
+          InstanceProfilesStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"
@@ -34,7 +34,7 @@
 
     - name: Check if a Stack Exists
       command: >
-            aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}"
+            aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
                 --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -43,7 +43,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -51,7 +51,7 @@
 
     - name: Delete AEM Author Publish Dispatcher Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ author_publish_dispatcher.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:

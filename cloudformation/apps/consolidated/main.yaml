@@ -12,6 +12,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Network Resources Stack Prefix
 
+  InstanceProfilesStackPrefixParameter:
+    Type: String
+    Description: The Author Instance Profiles Resources Stack Prefix
+
   SecurityGroupStackPrefixParameter:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
@@ -28,10 +32,6 @@ Parameters:
   AuthorPublishDispatcherInstanceTypeParameter:
     Type: String
     Description: The Author Publish Dispatcher Instance Type
-
-  AuthorPublishDispatcherInstanceProfileStackPrefixParameter:
-    Type: String
-    Description: The Author Publish Dispatcher Instance Profile Stack Prefix
 
   InboundFromBastionHostSecurityGroupParameter:
     Type: String
@@ -75,7 +75,6 @@ Parameters:
 
 Resources:
 
-
   AuthorPublishDispatcherInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -100,7 +99,7 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${AuthorPublishDispatcherInstanceProfileStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:

@@ -46,24 +46,25 @@ Set up network stacks:
 
     `make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>`.
 
-Set up shared stacks:
-- Create instance profiles stack which contains the IAM instance profiles and roles:
+###AEM Consolidated Architecture
 
-    `make create-instance-profiles stack_prefix=<instance_profiles_stack_prefix> config_path=<path/to/config/dir>`.
+- Set up [configuration file for AEM Consolidated architecture]().
+- Create consolidated prerequisites stack which contains the instance profiles and security groups:
 
-- If you don't have the permission to create any IAM resource, you can use the [Instance Profiles CloudFormation template](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/cloudformation/apps/instance-profiles.yaml#L13) as guidance. These roles stack can be shared across multiple compute stacks.
+    `make create-consolidated-prerequisites stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>`.
 
-Set up consolidated architecture stacks:
-- Configure `security_groups.network_stack_prefix` with the `<network_stack_prefix>` value from network section above.
-- Create security groups stack which contains the security groups ingress and egress:
+  This consolidated prerequisites stack can be shared across multiple consolidated main stacks in order to speed up the main stack creation time. Do not share a single consolidated prerequisites stack with multiple consolidated main stacks when running in production.
+- Configure `instance_profiles_stack_prefix` and `security_groups_stack_prefix` with the `<consolidated_prerequisites_stack_prefix>` value.
+- Create consolidated main stack which contains the EC2 instance and DNS record:
 
-    `make create-security-groups stack_prefix=<security_groups_stack_prefix> config_path=<path/to/config/dir>`.
+    `make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> config_path=<path/to/config/dir>`.
 
-  This security groups stack can be shared across multiple compute stacks to speed up compute stack creation time. Do not share a single security groups stack with multiple compute stacks when running in production.
-- Configure `author_publish_dispatcher.roles_stack_prefix` with the `<roles_stack_prefix>` value, and `author_publish_dispatcher.security_groups_stack_prefix` with the `<security_groups_stack_prefix>` value, both provided in the previous steps.
-- Create compute stack which contains EC2 instances running AEM:
+  This consolidated main stack uses the instance profiles and security groups that are defined in the consolidated prerequisites stack.
 
-    `make create-consolidated stack_prefix=<consolidated_stack_prefix> config_path=<path/to/config/dir>`.
+
+
+
+
 
 Set up full set architecture stacks:
 - Configure `network_stack_prefix` with the `<network_stack_prefix>` value from network section above.

@@ -1,6 +1,11 @@
 network_stack_prefix: sandpit-2
-security_groups_stack_prefix: sandpit-3
-instance_profiles_stack_prefix: sandpit-2
+security_groups_stack_prefix: sandpit-conpre-1
+instance_profiles_stack_prefix: sandpit-conpre-1
+
+main:
+  stack_name: aem-consolidated-main-stack
+prerequisites:
+  stack_name: aem-consolidated-prerequisites-stack
 
 aem:
   enable_crxde: true
@@ -17,6 +22,8 @@ aem_vpc:
 security_groups:
   stack_name: aem-security-groups-stack
   author_publish_dispatcher:
+    inbound_cidr_ip: 10.0.8.128/25
+  secure_shell:
     inbound_cidr_ip: 10.0.8.128/25
 
 compute:
@@ -45,7 +52,6 @@ snapshots:
     data_vol_snapshot_id: TODO
 
 author_publish_dispatcher:
-  stack_name: aem-author-publish-dispatcher-stack
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 100

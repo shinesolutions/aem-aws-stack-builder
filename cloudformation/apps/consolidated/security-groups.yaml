@@ -1,0 +1,97 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create Security Groups for the AEM Stack
+
+Parameters:
+
+  PrerequisitesStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Network Resources Stack Prefix
+
+  SecureShellInboundCidrIpParameter:
+    Type: String
+    Description: AEM Stack Secure Shell Inbound Cidr Ip
+
+  AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
+    Type: String
+    Description: AEM Author Publish Dispatcher ELB Security Group Inbound Cidr Ip
+
+Resources:
+
+  # Author Publish Dispatcher Security Group
+  AuthorPublishDispatcherSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: AEM Author Publish Dispatcher Security Group
+      Tags:
+      - Key: Name
+        Value: AEM Author Publish Dispatcher Security Group
+      - Key: StackPrefix
+        Value:
+          Ref: PrerequisitesStackPrefixParameter
+      VpcId:
+        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
+
+  # Allow tcp inbound on ports 80
+  AuthorPublishDispatcherSecurityGroupIngress0:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp:
+        Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
+      FromPort: '80'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+
+  # Allow tcp inbound on ports 443
+  AuthorPublishDispatcherSecurityGroupIngress1:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp:
+        Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+
+  # Allow tcp inbound on ports 4502, 4503
+  AuthorPublishDispatcherSecurityGroupIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp:
+        Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
+      FromPort: '4502'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4503'
+
+  # Allow tcp inbound on ports 5432, 5433
+  AuthorPublishDispatcherSecurityGroupIngress3:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp:
+        Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
+      FromPort: '5432'
+      GroupId:
+        Ref: AuthorPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+
+Outputs:
+
+  AuthorPublishDispatcherSecurityGroup:
+    Value:
+      Ref: AuthorPublishDispatcherSecurityGroup
+    Description: The Author Publish Dispatcher Security Group
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
