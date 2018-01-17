@@ -48,10 +48,15 @@ def update_snapshot_id(launch_config, device_name, snapshot_id):
       return
   raise ValueError('No Device found: \'{}\' in launch configuration \'{}\''.format(device_name, launch_config['LaunchConfigurationName']))
 
+def decode_user_data(launch_conf):
+  user_data = launch_conf['UserData']
+  if user_data is not None:
+    launch_conf['UserData'] = base64.b64decode(user_data)
+
 def find_launch_conf(client, launch_conf_name):
   launch_conf = \
   client.describe_launch_configurations(LaunchConfigurationNames=[launch_conf_name])['LaunchConfigurations'][0]
-  launch_conf['UserData'] = base64.b64decode(launch_conf['UserData'])
+  decode_user_data(launch_conf)
   log.debug('Launch Configuration to update: %r', launch_conf)
   return launch_conf
 
