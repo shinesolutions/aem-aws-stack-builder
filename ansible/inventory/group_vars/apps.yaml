@@ -61,6 +61,10 @@ security_groups:
     tag_name: AEM Author Dispatcher ELB Security Group
     inbound_cidr_ip: overwrite-me
 
+  author_publish_dispatcher:
+    tag_name: AEM Author Publish Dispatcher Security Group
+    inbound_cidr_ip: overwrite-me
+
   orchestrator:
     tag_name: AEM Orchestrator Security Group
 

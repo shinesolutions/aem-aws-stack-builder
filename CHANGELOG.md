@@ -15,6 +15,8 @@
 * Move aem_password_reset_version, aem_orchestrator_version, oak_run_version stack facts to stack-provisioner-hieradata config #11
 * Modify cloud-init's extra local.yaml config to be appended to base local.yaml
 * Added Repo aem-stack-manager-cloud to aem-aws-stack-builder repo #63
+* Added feature for Publish Dispatcher to scale up/down if CPU is above/under configured threshold #26 
+* Introduce AuthorPublishDispatcherSubnetList and AuthorDispatcherELBSubnetList to network-exports #64
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support

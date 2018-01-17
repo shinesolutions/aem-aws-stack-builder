@@ -1,5 +1,5 @@
-security_groups_stack_prefix: sandpit-2
-network_stack_prefix: sandpit
+network_stack_prefix: sandpit-2
+security_groups_stack_prefix: sandpit-3
 instance_profiles_stack_prefix: sandpit-2
 
 aem:
@@ -13,6 +13,11 @@ aem:
 
 aem_vpc:
   id: vpc-2fc3014b
+
+security_groups:
+  stack_name: aem-security-groups-stack
+  author_publish_dispatcher:
+    inbound_cidr_ip: 10.0.8.128/25
 
 compute:
   key_pair_name: aem-stack-key-pair
