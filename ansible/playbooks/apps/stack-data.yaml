@@ -221,7 +221,7 @@
         object: "library/aem-stack-manager-cloud-{{  library.aem_stack_manager_version }}.zip"
         dest: ../../../stage/aem-stack-manager-cloud.zip
         mode: get
-      when: check_aem_stack_manager_cloud_result.exists == False
+      when: check_aem_stack_manager_cloud_result.stat.exists == False
       tags:
       - create
 
@@ -292,33 +292,50 @@
       tags:
       - create
 
+    - name: Delete ZIP AEM Stack Manager Cloud Artifact
+      ignore_errors: True
+      file: 
+        path: ../../../stage/aem-stack-manager-cloud.zip
+        state: absent
+      tags:
+        - delete
+        - create
+
     - name: Delete ZIP AEM Stack Manager Lambda Implementation
+      ignore_errors: True
       file:
         path: ../../../stage/aem_stack_manager.zip
         state: absent
       tags:
         - delete
+        - create
 
     - name: Delete ZIP AEM Offline Snapshot Lambda Implementation
+      ignore_errors: True
       file:
         path: ../../../stage/aem_offline_snapshot.zip
         state: absent
       tags:
         - delete
+        - create
 
     - name: Delete ZIP AEM Task Status Query Lambda Implementation
+      ignore_errors: True
       file:
         path: ../../../stage/aem_task_query.zip
         state: absent
       tags:
         - delete
+        - create
 
     - name: Delete AEM Snapshots Purge Lambda Implementation
+      ignore_errors: True
       file: 
         path: ../../../stage/purge_snapshots.zip
         state: absent
       tags:
         - delete
+        - create
 
     - name: Delete temporary file containing generated credentials
       file:
