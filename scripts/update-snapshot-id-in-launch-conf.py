@@ -35,28 +35,31 @@ def find_autoscaling_group(client, component, stack_prefix):
           count_found += 1
   raise ValueError('No Autoscaling Group found for stack_prefix: \'{}\' and component: \'{}\'.'.format(stack_prefix, component))
 
-def update_snapshot_id(launch_config, device_name, snapshot_id):
-  launch_config.pop('LaunchConfigurationARN')
-  launch_config.pop('CreatedTime')
-  launch_config.pop('KernelId')
-  launch_config.pop('RamdiskId')
-  devices = launch_config['BlockDeviceMappings']
+def update_snapshot_id(launch_conf, device_name, snapshot_id):
+  devices = launch_conf['BlockDeviceMappings']
   for device in devices:
     if device['DeviceName'] == device_name:
       ebs = device['Ebs']
       ebs['SnapshotId'] = snapshot_id
       return
-  raise ValueError('No Device found: \'{}\' in launch configuration \'{}\''.format(device_name, launch_config['LaunchConfigurationName']))
+  raise ValueError('No Device found: \'{}\' in launch configuration \'{}\''.format(device_name, launch_conf['LaunchConfigurationName']))
 
 def decode_user_data(launch_conf):
   user_data = launch_conf['UserData']
   if user_data is not None:
     launch_conf['UserData'] = base64.b64decode(user_data)
 
+def sanitize_for_create_launch_conf(launch_conf):
+  decode_user_data(launch_conf)
+  launch_conf.pop('LaunchConfigurationARN')
+  launch_conf.pop('CreatedTime')
+  launch_conf.pop('KernelId')
+  launch_conf.pop('RamdiskId')
+
 def find_launch_conf(client, launch_conf_name):
   launch_conf = \
   client.describe_launch_configurations(LaunchConfigurationNames=[launch_conf_name])['LaunchConfigurations'][0]
-  decode_user_data(launch_conf)
+  sanitize_for_create_launch_conf(launch_conf)
   log.debug('Launch Configuration to update: %r', launch_conf)
   return launch_conf
 
@@ -69,30 +72,30 @@ def update_autoscaling_group(client, group_name, launch_conf_name):
     LaunchConfigurationName=launch_conf_name
   )
 
-def create_launch_conf(client, launch_config, new_launch_config_name):
-  launch_config['LaunchConfigurationName'] = new_launch_config_name
-  client.create_launch_configuration(**launch_config)
+def create_launch_conf(client, launch_conf, new_launch_conf_name):
+  launch_conf['LaunchConfigurationName'] = new_launch_conf_name
+  client.create_launch_configuration(**launch_conf)
 
-def repoint_autoscaling_group(client, group_name, launch_config, new_launch_config_name):
-  create_launch_conf(client, launch_config, new_launch_config_name)
-  update_autoscaling_group(client, group_name, new_launch_config_name)
+def repoint_autoscaling_group(client, group_name, launch_conf, new_launch_conf_name):
+  create_launch_conf(client, launch_conf, new_launch_conf_name)
+  update_autoscaling_group(client, group_name, new_launch_conf_name)
 
 def update_snapshot_id_to_launch_conf(snapshot_id, component, stack_prefix, device_name):
   client = boto3.client('autoscaling')
   group = find_autoscaling_group(client, component, stack_prefix)
   group_name = group['AutoScalingGroupName']
   launch_conf_name = group['LaunchConfigurationName']
-  temp_launch_config_name = launch_conf_name + "-temp"
-  launch_config = find_launch_conf(client, launch_conf_name)
-  update_snapshot_id(launch_config, device_name, snapshot_id)
+  temp_launch_conf_name = launch_conf_name + "-temp"
+  launch_conf = find_launch_conf(client, launch_conf_name)
+  update_snapshot_id(launch_conf, device_name, snapshot_id)
   # create a temp Launch conf and point the autoscaling group to it
-  repoint_autoscaling_group(client, group_name, launch_config, temp_launch_config_name)
+  repoint_autoscaling_group(client, group_name, launch_conf, temp_launch_conf_name)
   # delete old launch conf
   delete_launch_conf(client, launch_conf_name)
   # create a the new Launch conf (with the same old name) and point the autoscaling group to it
-  repoint_autoscaling_group(client, group_name, launch_config, launch_conf_name)
+  repoint_autoscaling_group(client, group_name, launch_conf, launch_conf_name)
   # delete the temp launch conf
-  delete_launch_conf(client, temp_launch_config_name)
+  delete_launch_conf(client, temp_launch_conf_name)
 
 def set_logging_level(quiet, verbose):
   level_adj = (quiet - verbose) * 10
