@@ -52,9 +52,9 @@ Parameters:
   UseAuthorDataVolSnapshotParameter:
     Type: String
     AllowedValues: [true, false]
-    Description: Wheather to use the Author Snapshot Data Volume.
+    Description: Whether to use the Author Snapshot Data Volume.
 
-  AuthorDataVolSnapshotParamater:
+  AuthorDataVolSnapshotParameter:
     Type: String
     Description: The Author Data Volume Snapshot Id
 
@@ -115,7 +115,7 @@ Resources:
             Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
       AlarmDescription: Multiple Author Instances have Enterered into Service
       AlarmName:
-        Fn::Sub: ${ComputeStackPrefixParameter}-MultiAuthorInstnaceAlarm
+        Fn::Sub: ${ComputeStackPrefixParameter}-MultiAuthorInstanceAlarm
       ComparisonOperator: GreaterThanThreshold
       MetricName: HealthyHostCount
       Namespace: AWS/ELB
@@ -147,7 +147,7 @@ Resources:
           SnapshotId:
             Fn::If:
               - UseAuthorDataVolSnapshotCondition
-              - Ref: AuthorDataVolSnapshotParamater
+              - Ref: AuthorDataVolSnapshotParameter
               - Ref: AWS::NoValue
       IamInstanceProfile:
         Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-AuthorInstanceProfile
@@ -200,7 +200,7 @@ Resources:
           SnapshotId:
             Fn::If:
               - UseAuthorDataVolSnapshotCondition
-              - Ref: AuthorDataVolSnapshotParamater
+              - Ref: AuthorDataVolSnapshotParameter
               - Ref: AWS::NoValue
       IamInstanceProfile:
         Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-AuthorInstanceProfile
