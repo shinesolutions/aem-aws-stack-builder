@@ -1,6 +1,4 @@
-version ?= 1.1.1
-
-# development targets
+version ?= 2.1.0
 
 ci: clean deps lint package
 
@@ -149,101 +147,10 @@ delete-stack-manager: delete-ssm-documents
 	./scripts/delete-stack.sh apps/stack-manager/main "$(stack_prefix)" "$(config_path)"
 	./scripts/delete-stack.sh apps/stack-manager/instance-profiles "$(stack_prefix)" "$(config_path)"
 
-# stacks set management targets
-
-create-set-aem:
-	./scripts/create-aem-stacks.sh "$(stack_prefix)" "$(config_path)"
-
-delete-set-aem:
-	./scripts/delete-aem-stacks.sh "$(stack_prefix)" "$(config_path)"
-
-create-set-network:
-	./scripts/create-network-stacks.sh "$(stack_prefix)" "$(config_path)"
-
-delete-set-network:
-	./scripts/delete-network-stacks.sh "$(stack_prefix)" "$(config_path)"
-
-
-
-# single apps stack management targets
-
-create-author-dispatcher:
-	./scripts/create-stack.sh apps/author-dispatcher "$(stack_prefix)" "$(config_path)"
-
-delete-author-dispatcher:
-	./scripts/delete-stack.sh apps/author-dispatcher "$(stack_prefix)" "$(config_path)"
-
-create-author:
-	./scripts/create-stack.sh apps/author "$(stack_prefix)" "$(config_path)"
-
-delete-author:
-	./scripts/delete-stack.sh apps/author "$(stack_prefix)" "$(config_path)"
-
-create-chaos-monkey:
-	./scripts/create-stack.sh apps/chaos-monkey "$(stack_prefix)" "$(config_path)"
-
-delete-chaos-monkey:
-	./scripts/delete-stack.sh apps/chaos-monkey "$(stack_prefix)" "$(config_path)"
-
-create-messaging:
-	./scripts/create-stack.sh apps/messaging "$(stack_prefix)" "$(config_path)"
-
-delete-messaging:
-	./scripts/delete-stack.sh apps/messaging "$(stack_prefix)" "$(config_path)"
-
-create-orchestrator:
-	./scripts/create-stack.sh apps/orchestrator "$(stack_prefix)" "$(config_path)"
-
-delete-orchestrator:
-	./scripts/delete-stack.sh apps/orchestrator "$(stack_prefix)" "$(config_path)"
-
-create-publish-dispatcher:
-	./scripts/create-stack.sh apps/publish-dispatcher "$(stack_prefix)" "$(config_path)"
-
-delete-publish-dispatcher:
-	./scripts/delete-stack.sh apps/publish-dispatcher "$(stack_prefix)" "$(config_path)"
-
-create-publish:
-	./scripts/create-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
-
-delete-publish:
-	./scripts/delete-stack.sh apps/publish "$(stack_prefix)" "$(config_path)"
-
-create-dns-records:
-	./scripts/create-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
-
-delete-dns-records:
-	./scripts/delete-stack.sh apps/dns-records "$(stack_prefix)" "$(config_path)"
-
-create-stack-prerequisites:
-	./scripts/create-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
-
-delete-stack-prerequisites:
-	./scripts/delete-stack.sh apps/prerequisites "$(stack_prefix)" "$(config_path)"
-
-create-compute-stacks: create-stack-data
-	./scripts/create-stack.sh apps/compute-stacks  "$(stack_prefix)" "$(config_path)"
-
-delete-compute-stacks: delete-stack-data
-	./scripts/delete-stack.sh apps/compute-stacks "$(stack_prefix)" "$(config_path)"
-
-
-create-private-cert:
-	./scripts/create-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
-
-delete-private-cert:
-	./scripts/delete-stack.sh apps/cert-private  "$(stack_prefix)" "$(config_path)"
-
-create-public-cert:
-	./scripts/create-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
-
-delete-public-cert:
-	./scripts/delete-stack.sh apps/cert-public  "$(stack_prefix)" "$(config_path)"
+# utility targets
 
 library-upload:
 	./scripts/create-stack.sh apps/library-upload "$(stack_prefix)" "$(config_path)"
-
-# utility targets
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME=aem-stack-builder
