@@ -206,7 +206,7 @@
       when: custom_provisioner_stat_result.stat.exists == True
       tags:
       - create
-    
+
 
     - name: Check aem-stack-manager-cloud exists
       stat:
@@ -216,7 +216,7 @@
       - create
 
     - name: Download aem-stack-manager-cloud libray
-      aws_s3:
+      s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "library/aem-stack-manager-cloud-{{  library.aem_stack_manager_version }}.zip"
         dest: ../../../stage/aem-stack-manager-cloud.zip
@@ -226,7 +226,7 @@
       - create
 
     - name: Unpack aem-stack-manager-cloud library to stage directory
-      unarchive: 
+      unarchive:
         src: ../../../stage/aem-stack-manager-cloud.zip
         dest: ../../../stage/
       tags:
@@ -294,7 +294,7 @@
 
     - name: Delete ZIP AEM Stack Manager Cloud Artifact
       ignore_errors: True
-      file: 
+      file:
         path: ../../../stage/aem-stack-manager-cloud.zip
         state: absent
       tags:
@@ -330,7 +330,7 @@
 
     - name: Delete AEM Snapshots Purge Lambda Implementation
       ignore_errors: True
-      file: 
+      file:
         path: ../../../stage/purge_snapshots.zip
         state: absent
       tags:

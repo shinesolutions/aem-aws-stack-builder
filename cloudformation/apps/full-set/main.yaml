@@ -65,7 +65,7 @@ Parameters:
     AllowedValues: [true, false]
     Description: Wheather to use the Author Snapshot Data Volume.
 
-  AuthorDataVolSnapshotParamater:
+  AuthorDataVolSnapshotParameter:
     Type: String
     Description: The Author Data Volume Snapshot Id
 
@@ -110,7 +110,7 @@ Parameters:
     AllowedValues: [true, false]
     Description: Wheather to use the Publish Snapshot Data Volume.
 
-  PublishDataVolSnapshotParamater:
+  PublishDataVolSnapshotParameter:
     Type: String
     Description: The Publish Data Volume Snapshot Id
 
@@ -273,7 +273,7 @@ Resources:
         AuthorRootVolSizeParameter: !Ref AuthorRootVolSizeParameter
         AuthorDataVolSizeParameter: !Ref AuthorDataVolSizeParameter
         UseAuthorDataVolSnapshotParameter: !Ref UseAuthorDataVolSnapshotParameter
-        AuthorDataVolSnapshotParamater: !Ref AuthorDataVolSnapshotParamater
+        AuthorDataVolSnapshotParameter: !Ref AuthorDataVolSnapshotParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter: !Ref AemAwsStackProvisionerVersionParameter
@@ -299,7 +299,7 @@ Resources:
         PublishRootVolSizeParameter: !Ref PublishRootVolSizeParameter
         PublishDataVolSizeParameter: !Ref PublishDataVolSizeParameter
         UsePublishDataVolSnapshotParameter: !Ref UsePublishDataVolSnapshotParameter
-        PublishDataVolSnapshotParamater: !Ref PublishDataVolSnapshotParamater
+        PublishDataVolSnapshotParameter: !Ref PublishDataVolSnapshotParameter
         InboundFromBastionHostSecurityGroupParameter: !Ref InboundFromBastionHostSecurityGroupParameter
         DataBucketNameParameter: !Ref DataBucketNameParameter
         AemAwsStackProvisionerVersionParameter:  !Ref AemAwsStackProvisionerVersionParameter

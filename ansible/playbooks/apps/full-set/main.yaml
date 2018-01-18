@@ -38,7 +38,7 @@
           AuthorRootVolSizeParameter: "{{ author.root_vol_size }}"
           AuthorDataVolSizeParameter: "{{ author.data_vol_size }}"
           UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot }}"
-          AuthorDataVolSnapshotParamater: "{{ snapshots.author.data_vol_snapshot_id }}"
+          AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"
 
           PublishImageParameter: "{{ ami_ids.publish }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
@@ -49,7 +49,7 @@
           PublishRootVolSizeParameter: "{{ publish.root_vol_size }}"
           PublishDataVolSizeParameter: "{{ publish.data_vol_size }}"
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
-          PublishDataVolSnapshotParamater: "{{ snapshots.publish.data_vol_snapshot_id }}"
+          PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
 
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
           PublishDispatcherLoadBalancerSchemeParameter: "{{ publish_dispatcher.elb_scheme }}"

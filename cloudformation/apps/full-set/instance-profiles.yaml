@@ -365,7 +365,7 @@ Resources:
   AEMStackManagerSnapshotLambdaServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMSnapPurgeLambdaRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMSnapPurgeLambdaRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -379,7 +379,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: !Sub ${ComputeStackPrefixParameter}-SnapshotsPurgeLambdaPolicy
+        - PolicyName: !Sub ${PrerequisitesStackPrefixParameter}-SnapshotsPurgeLambdaPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -437,14 +437,14 @@ Outputs:
     Description: The Chaos Monkey Instance Profile
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-ChaosMonkeyInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
 
   AEMStackManagerSnapshotLambdaServiceRoleArn:
     Value: !GetAtt AEMStackManagerSnapshotLambdaServiceRole.Arn
     Description: The Sack Manager Lambda Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
 
   AEMStackManagerSnapshotLambdaServiceRoleName:
     Value:
@@ -452,4 +452,4 @@ Outputs:
     Description: AEM StackManager Snapshot Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName

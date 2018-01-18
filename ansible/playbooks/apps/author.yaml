@@ -26,7 +26,7 @@
           AuthorRootVolSizeParameter: "{{ author.root_vol_size }}"
           AuthorDataVolSizeParameter: "{{ author.data_vol_size }}"
           UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot }}"
-          AuthorDataVolSnapshotParamater: "{{ snapshots.author.data_vol_snapshot_id }}"
+          AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"

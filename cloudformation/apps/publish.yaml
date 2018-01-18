@@ -70,7 +70,7 @@ Parameters:
     AllowedValues: [true, false]
     Description: Wheather to use the Publish Snapshot Data Volume.
 
-  PublishDataVolSnapshotParamater:
+  PublishDataVolSnapshotParameter:
     Type: String
     Description: The Publish Data Volume Snapshot Id
 
@@ -114,7 +114,7 @@ Resources:
           SnapshotId:
             Fn::If:
               - UsePublishDataVolSnapshotCondition
-              - Ref: PublishDataVolSnapshotParamater
+              - Ref: PublishDataVolSnapshotParameter
               - Ref: AWS::NoValue
       IamInstanceProfile:
         Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-PublishInstanceProfile
