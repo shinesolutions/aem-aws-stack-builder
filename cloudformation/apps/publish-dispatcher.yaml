@@ -4,11 +4,15 @@ Description: Create the Compute resources for the AEM Publish Dispatcher
 
 Parameters:
 
-  InstanceProfileStackPrefixParameter:
+  InstanceProfilesStackPrefixParameter:
     Type: String
     Description: The AEM Stack Instance Profile Stack Prefix
 
-  SecurityGroupStackPrefixParameter:
+  MessagingStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Messaging Stack Prefix
+
+  SecurityGroupsStackPrefixParameter:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
@@ -115,7 +119,7 @@ Resources:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupStackPrefixParameter}-PublishDispatcherELBSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         Fn::Split:
@@ -147,7 +151,7 @@ Resources:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-PublishDispatcherInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-PublishDispatcherInstanceProfile
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false
@@ -157,7 +161,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupStackPrefixParameter}-PublishDispatcherSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -200,7 +204,7 @@ Resources:
       Dimensions:
       - Name: AutoScalingGroupName
         Value: !Ref PublishDispatcherAutoScalingGroup
-      ComparisonOperator: GreaterThanThreshold            
+      ComparisonOperator: GreaterThanThreshold
 
   PublishDispatcherCPULowAlarm:
     Type: AWS::CloudWatch::Alarm
@@ -246,7 +250,7 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic
+            Fn::Sub: ${MessagingStackPrefixParameter}-AEMASGEventTopic
       Tags:
         - Key: Name
           Value: AEM Publish Dispatcher

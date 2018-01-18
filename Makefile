@@ -88,7 +88,7 @@ delete-consolidated-main: delete-stack-data
 
 create-consolidated: create-consolidated-prerequisites create-consolidated-main
 
-delete-consolidated: delete-consolidated-prerequisites delete-consolidated-main
+delete-consolidated: delete-consolidated-main delete-consolidated-prerequisites
 
 ########################################
 # Full Set architecture stacks
@@ -100,15 +100,15 @@ create-full-set-prerequisites:
 delete-full-set-prerequisites:
 	./scripts/delete-stack.sh apps/full-set/prerequisites "$(stack_prefix)" "$(config_path)"
 
-create-full-set-compute: create-stack-data
-	./scripts/create-stack.sh apps/full-set/compute-stacks  "$(stack_prefix)" "$(config_path)"
+create-full-set-main: create-stack-data
+	./scripts/create-stack.sh apps/full-set/main  "$(stack_prefix)" "$(config_path)"
 
-delete-full-set-compute: delete-stack-data
-	./scripts/delete-stack.sh apps/full-set/compute-stacks "$(stack_prefix)" "$(config_path)"
+delete-full-set-main: delete-stack-data
+	./scripts/delete-stack.sh apps/full-set/main "$(stack_prefix)" "$(config_path)"
 
-create-full-set: create-full-set-prerequisites create-full-set-compute
+create-full-set: create-full-set-prerequisites create-full-set-main
 
-delete-full-set: delete-full-set-compute delete-full-set-prerequisites
+delete-full-set: delete-full-set-main delete-full-set-prerequisites
 
 ########################################
 # Utility stacks

@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Create the Compute resources for the AEM Author Publish Dispatcher
+Description: Create AEM Consolidated Compute Resources Stacks
 
 Parameters:
 

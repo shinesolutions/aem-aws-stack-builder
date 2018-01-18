@@ -6,71 +6,11 @@ Description:
 
 Parameters:
 
-  ComputeStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
       Type: String
-      Description: The AEM Stack Compute Resources Stack Prefix
+      Description: The AEM Stack Prerequisite Resources Stack Prefix
 
 Resources:
-
-
-  AuthorPublishDispatcherRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - ec2.amazonaws.com
-          Action:
-          - sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
-      Policies:
-      - PolicyName: AuthorPublishDispatcherRolePolicy
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - ec2:Describe*
-                - ec2:CreateTags
-                - ec2:AttachVolume
-                - ec2:CreateVolume
-                - ec2:DetachVolume
-                - ec2:CreateSnapshot
-                - ec2:ModifyInstanceAttribute
-                - autoscaling:CreateLaunchConfiguration
-                - autoscaling:DescribeLaunchConfigurations
-                - autoscaling:UpdateAutoScalingGroup
-                - autoscaling:CreateOrUpdateTags
-                - cloudwatch:PutMetricData
-              Resource: "*"
-            - Effect: Allow
-              Action:
-                - s3:Get*
-                - s3:List*
-                - s3:Put*
-              Resource: "*"
-            - Effect: Allow
-              Action:
-                - logs:*
-              Resource:
-                - arn:aws:logs:*:*:*
-      RoleName:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
-
-  AuthorPublishDispatcherInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: /
-      Roles:
-      - Ref: AuthorPublishDispatcherRole
-  # Currently, AWS only supports one Role per InstanceProfile
-  # Hence, we can't have roles from (Author, Publish, Dispatcher) in InstanceProfile
-  # See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-roles
 
   PublishDispatcherRole:
     Type: AWS::IAM::Role
@@ -112,7 +52,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackPublishDispatcherRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackPublishDispatcherRole
 
   PublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -120,7 +60,6 @@ Resources:
       Path: /
       Roles:
         - Ref: PublishDispatcherRole
-
 
   PublishRole:
     Type: AWS::IAM::Role
@@ -164,7 +103,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackPublishRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackPublishRole
 
   PublishInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -215,7 +154,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackAuthorRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackAuthorRole
 
 
   AuthorInstanceProfile:
@@ -261,7 +200,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackAuthorDispatcherRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackAuthorDispatcherRole
 
 
   AuthorDispatcherInstanceProfile:
@@ -339,7 +278,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackOrchestratorRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackOrchestratorRole
 
 
   OrchestratorInstanceProfile:
@@ -413,7 +352,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackChaosMonkeyRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackChaosMonkeyRole
 
 
   ChaosMonkeyInstanceProfile:
@@ -425,21 +364,13 @@ Resources:
 
 Outputs:
 
-  AuthorPublishDispatcherInstanceProfile:
-    Value:
-      Ref: AuthorPublishDispatcherInstanceProfile
-    Description: The Author Publish Dispatcher Instance Profile
-    Export:
-      Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
-
   PublishDispatcherInstanceProfile:
     Value:
       Ref: PublishDispatcherInstanceProfile
     Description: The Publish Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
 
   PublishInstanceProfile:
     Value:
@@ -447,7 +378,7 @@ Outputs:
     Description: The Publish Instance Profile
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-PublishInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishInstanceProfile
 
   AuthorInstanceProfile:
     Value:
@@ -455,7 +386,7 @@ Outputs:
     Description: The Author Instance Profile
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
 
   AuthorDispatcherInstanceProfile:
     Value:
@@ -463,7 +394,7 @@ Outputs:
     Description: The Author Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherInstanceProfile
 
   OrchestratorInstanceProfile:
     Value:
@@ -471,7 +402,7 @@ Outputs:
     Description: The Orchestrator Instance Profile
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorInstanceProfile
 
   ChaosMonkeyInstanceProfile:
     Value:
@@ -479,4 +410,4 @@ Outputs:
     Description: The Chaos Monkey Instance Profile
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-ChaosMonkeyInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile

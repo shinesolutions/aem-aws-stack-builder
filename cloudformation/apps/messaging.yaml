@@ -6,7 +6,7 @@ Description:
 
 Parameters:
 
-  ComputeStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -66,7 +66,7 @@ Resources:
   AlarmNotificationTopic:
     Type: AWS::SNS::Topic
     Properties:
-      DisplayName: !Sub ${ComputeStackPrefixParameter}-alarm-notification-topic
+      DisplayName: !Sub ${PrerequisitesStackPrefixParameter}-alarm-notification-topic
 
 Outputs:
 
@@ -80,7 +80,7 @@ Outputs:
     Description: The AEM ASG Event Queue Name
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventQueueName
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName
 
 
   AEMASGEventTopic:
@@ -89,7 +89,7 @@ Outputs:
     Description: The AEM ASG Event Topic
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AEMASGEventTopic
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
 
   AlarmNotificationTopic:
     Value:
@@ -97,4 +97,4 @@ Outputs:
     Description: The AEM Alarm Notification Topic
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic

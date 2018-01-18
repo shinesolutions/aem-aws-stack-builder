@@ -46,9 +46,9 @@ Set up network stacks:
 
     `make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>`.
 
-###AEM Consolidated Architecture
+### Consolidated AEM Architecture
 
-- Set up [configuration file for AEM Consolidated architecture]().
+- Set up [configuration file for Consolidated architecture]().
 - Create consolidated prerequisites stack which contains the instance profiles and security groups:
 
     `make create-consolidated-prerequisites stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>`.
@@ -60,25 +60,24 @@ Set up network stacks:
     `make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> config_path=<path/to/config/dir>`.
 
   This consolidated main stack uses the instance profiles and security groups that are defined in the consolidated prerequisites stack.
+- However, if you don't care about reusing the prerequisites stack, you can use the following simpler command:
 
+    `make create-consolidated stack_prefix=<fullset_stack_prefix> config_path=<path/to/config/dir>`.
 
+### Full-Set AEM Architecture
 
-
-
-
-Set up full set architecture stacks:
-- Configure `network_stack_prefix` with the `<network_stack_prefix>` value from network section above.
+- Set up [configuration file for Full-Set architecture]().
 - Create full set prerequisites stack which contains the security groups and messaging SNS SQS:
 
-    `make create-full-set-prerequisites stack_prefix=<stack_prefix> config_path=<path/to/config/dir>`.
+    `make create-full-set-prerequisites stack_prefix=<fullset_prerequisites_stack_prefix> config_path=<path/to/config/dir>`.
 
-  This prerequisites stack must be mapped one to one to a full set compute stack with identical `stack_prefix`.
-- Configure `instance_profile_stack_prefix` with the `<instance_profile_stack_prefix>` value, and `security_groups_stack_prefix` with the `<security_groups_stack_prefix>` value, both provided in the previous steps.
-- Create full set compute stack which contains EC2 resources:
+  This full-set prerequisites stack must be mapped one to one to a full-set main stack.
+- Configure `instance_profile_stack_prefix`, `messaging_stack_prefix`, and `security_groups_stack_prefix` with the `<fullset_prerequisites_stack_prefix>` value.
+- Create full-set main stack which contains the EC2 instance and DNS records:
 
-    `make create-full-set-compute stack_prefix=<stack_prefix> config_path=<path/to/config/dir>`.
+    `make create-full-set-main stack_prefix=<fullset_main_stack_prefix> config_path=<path/to/config/dir>`.
 
-  Full set prerequisites and compute stacks are separated to make it easier when you want to save cost by terminating the compute stack when unused, and at the same time to speed up environment creation time by not having to recreate the prerequisites.
-- However, if you don't care about reusing the prerequisites stack, you can use this simpler command:
+  Full-set prerequisites and main stacks are separated in order to allow you to save cost by terminating the main stack when unused, and at the same time to speed up environment creation time by not having to recreate the prerequisites.
+- However, if you don't care about reusing the prerequisites stack, you can use the following simpler command:
 
-    `make create-full-set stack_prefix=<stack_prefix> config_path=<path/to/config/dir>`.
+    `make create-full-set stack_prefix=<fullset_stack_prefix> config_path=<path/to/config/dir>`.

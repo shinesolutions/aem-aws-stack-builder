@@ -1,14 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Overarching CF Template to Create All AEM Compute Resources Stacks
+Description: Overarching CF Template to Create AEM Full-Set Compute Resources Stacks
 
 Parameters:
 
-  InstanceProfileStackPrefixParameter:
+  InstanceProfilesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Instance Profile Stack Prefix
+    Description: The AEM Stack Instance Profiles Stack Prefix
 
-  SecurityGroupStackPrefixParameter:
+  MessagingStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Messaging Stack Prefix
+
+  SecurityGroupsStackPrefixParameter:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
@@ -256,8 +260,9 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author.yaml
       Parameters:
-        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
-        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
+        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
+        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
+        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorLoadBalancerHealthCheckTargetParameter: !Ref AuthorLoadBalancerHealthCheckTargetParameter
@@ -278,8 +283,9 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish.yaml
       Parameters:
-        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
-        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
+        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
+        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
+        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishImageParameter: !Ref PublishImageParameter
@@ -303,8 +309,9 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/publish-dispatcher.yaml
       Parameters:
-        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
-        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
+        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
+        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
+        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishDispatcherLoadBalancerHealthCheckTargetParameter: !Ref PublishDispatcherLoadBalancerHealthCheckTargetParameter
@@ -329,8 +336,9 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/author-dispatcher.yaml
       Parameters:
-        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
-        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
+        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
+        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
+        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter: !Ref AuthorDispatcherLoadBalancerHealthCheckTargetParameter
@@ -353,8 +361,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/orchestrator.yaml
       Parameters:
-        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
-        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
+        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
+        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         OrchestratorImageParameter: !Ref OrchestratorImageParameter
@@ -372,9 +380,9 @@ Resources:
         PublishStackName: !Ref PublishStack
         PublishDispatcherStackName: !Ref PublishDispatcherStack
         MessagingStackName:
-          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-MessagingStackName
+          Fn::ImportValue: !Sub ${MessagingStackPrefixParameter}-MessagingStackName
         AEMASGEventQueueName:
-          Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-AEMASGEventQueueName
+          Fn::ImportValue: !Sub ${MessagingStackPrefixParameter}-AEMASGEventQueueName
 
   ChaosMonkeyStack:
     Type: AWS::CloudFormation::Stack
@@ -388,8 +396,8 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/chaos-monkey.yaml
       Parameters:
-        InstanceProfileStackPrefixParameter: !Ref InstanceProfileStackPrefixParameter
-        SecurityGroupStackPrefixParameter: !Ref SecurityGroupStackPrefixParameter
+        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
+        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
         ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         ChaosMonkeyImageParameter: !Ref ChaosMonkeyImageParameter

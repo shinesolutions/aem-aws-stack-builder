@@ -13,16 +13,17 @@
       tags:
         - create
 
-    - name: Create AEM App Compute Resources Stack
+    - name: Create AEM App Main Resources Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../cloudformation/apps/full-set/compute-stacks.yaml"
+        template: "../../../../cloudformation/apps/full-set/main.yaml"
         template_parameters:
-          InstanceProfileStackPrefixParameter: "{{ instance_profile_stack_prefix }}"
-          SecurityGroupStackPrefixParameter: "{{ security_groups_stack_prefix }}"
+          InstanceProfilesStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
+          MessagingStackPrefixParameter: "{{ messaging_stack_prefix }}"
+          SecurityGroupsStackPrefixParameter: "{{ security_groups_stack_prefix }}"
           ComputeStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"

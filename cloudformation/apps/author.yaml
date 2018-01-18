@@ -4,11 +4,15 @@ Description: Create the Compute resources for the AEM Author
 
 Parameters:
 
-  InstanceProfileStackPrefixParameter:
+  InstanceProfilesStackPrefixParameter:
     Type: String
     Description: The AEM Stack Instance Profile Stack Prefix
 
-  SecurityGroupStackPrefixParameter:
+  MessagingStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Messaging Stack Prefix
+
+  SecurityGroupsStackPrefixParameter:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
@@ -84,7 +88,7 @@ Resources:
       ActionsEnabled: true
       AlarmActions:
         - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
+            Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
       AlarmName:
         Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSyncDelayAlarm
@@ -109,10 +113,10 @@ Resources:
       ActionsEnabled: true
       AlarmActions:
         - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
+            Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
       OKActions:
         - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
+            Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
       AlarmDescription: Multiple Author Instances have Enterered into Service
       AlarmName:
         Fn::Sub: ${ComputeStackPrefixParameter}-MultiAuthorInstnaceAlarm
@@ -150,7 +154,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-AuthorInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -159,7 +163,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue:
@@ -203,7 +207,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParamater
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfileStackPrefixParameter}-AuthorInstanceProfile
+        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -212,7 +216,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue:
@@ -267,7 +271,7 @@ Resources:
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupStackPrefixParameter}-AuthorELBSecurityGroup
+          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         Fn::Split:

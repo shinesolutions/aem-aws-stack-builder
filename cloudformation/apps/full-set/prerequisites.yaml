@@ -4,9 +4,9 @@ Description: Overarching CF Template to Create Security Groups and Messaging Res
 
 Parameters:
 
-  ComputeStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   NetworkStackPrefixParameter:
     Type: String
@@ -45,38 +45,73 @@ Parameters:
     Description: The AEM Stack Auto Scaling Group Event Topic Name
 
 Resources:
-  SecurityGroupStack:
+
+  InstanceProfilesStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/full-set/security-groups.yaml
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/full-set/instance-profiles.yaml
       Parameters:
-        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
-        NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
-        SecureShellInboundCidrIpParameter: !Ref SecureShellInboundCidrIpParameter
-        PublishDispatcherELBSecurityGroupInboundCidrIpParameter: !Ref PublishDispatcherELBSecurityGroupInboundCidrIpParameter
-        AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: !Ref AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
-        PrivateSubnetInternetOutboundCidrIpParameter: !Ref PrivateSubnetInternetOutboundCidrIpParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+
+  SecurityGroupsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/full-set/security-groups.yaml
+      Parameters:
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        SecureShellInboundCidrIpParameter:
+          Ref: SecureShellInboundCidrIpParameter
+        PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+          Ref: PublishDispatcherELBSecurityGroupInboundCidrIpParameter
+        AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
+          Ref: AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
+        PrivateSubnetInternetOutboundCidrIpParameter:
+          Ref: PrivateSubnetInternetOutboundCidrIpParameter
 
 
   MessagingStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${ComputeStackPrefixParameter}/messaging.yaml
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/messaging.yaml
       Parameters:
-        ComputeStackPrefixParameter: !Ref ComputeStackPrefixParameter
-        AEMASGEventQueueNameParameter: !Ref AEMASGEventQueueNameParameter
-        AEMASGEventTopicDisplayNameParameter: !Ref AEMASGEventTopicDisplayNameParameter
-        AEMASGEventTopicNameParameter: !Ref AEMASGEventTopicNameParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        AEMASGEventQueueNameParameter:
+          Ref: AEMASGEventQueueNameParameter
+        AEMASGEventTopicDisplayNameParameter:
+          Ref: AEMASGEventTopicDisplayNameParameter
+        AEMASGEventTopicNameParameter:
+          Ref: AEMASGEventTopicNameParameter
 
 Outputs:
-  SecurityGroupStackName:
-    Description: Security Group Stack Name
-    Value: !Ref SecurityGroupStack
+
+  InstanceProfilesStackName:
+    Description: Instance Profiles Stack Name
+    Value:
+      Ref: InstanceProfilesStack
     Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-SecurityGroupStackName
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-InstanceProfilesStackName
+
+  SecurityGroupsStackName:
+    Description: Security Groups Stack Name
+    Value:
+      Ref: SecurityGroupsStack
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SecurityGroupsStackName
 
   MessagingStackName:
     Description: Messaging Stack Name
-    Value: !Ref MessagingStack
+    Value:
+      Ref: MessagingStack
     Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-MessagingStackName
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-MessagingStackName

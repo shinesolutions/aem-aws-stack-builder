@@ -1,6 +1,7 @@
 network_stack_prefix: sandpit-2
-security_groups_stack_prefix: "{{ stack_prefix }}"
-instance_profile_stack_prefix: sandpit-2
+security_groups_stack_prefix: sandpit-fullpre-3
+instance_profiles_stack_prefix: sandpit-fullpre-3
+messaging_stack_prefix: sandpit-fullpre-3
 
 aem:
   enable_crxde: true

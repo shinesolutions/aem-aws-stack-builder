@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create Roles for AEM Stack
+  Create Instance Profiles for AEM Stack
 
 Parameters:
 
