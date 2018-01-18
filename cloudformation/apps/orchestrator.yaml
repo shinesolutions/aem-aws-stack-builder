@@ -12,7 +12,7 @@ Parameters:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -138,9 +138,9 @@ Resources:
             \ aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging: \"${MessagingStackName}\"\n\
             \ aem_orchestrator::application_properties::aws_sqs_queue_name: \"${AEMASGEventQueueName}\"\n\
             \ ' > /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} orchestrator ${AemAwsStackProvisionerVersionParameter} /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} orchestrator ${AemAwsStackProvisionerVersionParameter} /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n"
 
   OrchestratorAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -159,7 +159,7 @@ Resources:
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:
-          Ref: ComputeStackPrefixParameter
+          Ref: MainStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
         Value: orchestrator
@@ -193,5 +193,5 @@ Outputs:
       Ref: OrchestratorAutoScalingGroup
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-OrchestratorAutoScalingGroup
+        Fn::Sub: ${MainStackPrefixParameter}-OrchestratorAutoScalingGroup
     Description: The Orchestrator Auto Scaling Group

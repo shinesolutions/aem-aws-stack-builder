@@ -16,7 +16,7 @@ Parameters:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -114,7 +114,7 @@ Resources:
         InstancePort: '443'
         InstanceProtocol: HTTPS
         SSLCertificateId: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
-          # Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
+          # Fn::ImportValue: !Sub ${MainStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
@@ -131,7 +131,7 @@ Resources:
         Value: AEM Publish Dispatcher Load Balancer
       - Key: StackPrefix
         Value:
-          Ref: ComputeStackPrefixParameter
+          Ref: MainStackPrefixParameter
 
   PublishDispatcherLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -168,9 +168,9 @@ Resources:
           Fn::Sub: "#!/bin/bash -x\n\
             \ source /etc/profile\n\
             \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} publish-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} publish-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
 
   PublishDispatcherScaleUpPolicy:
     Type: AWS::AutoScaling::ScalingPolicy
@@ -257,7 +257,7 @@ Resources:
           PropagateAtLaunch: true
         - Key: StackPrefix
           Value:
-            Ref: ComputeStackPrefixParameter
+            Ref: MainStackPrefixParameter
           PropagateAtLaunch: true
         - Key: Component
           Value: publish-dispatcher
@@ -288,14 +288,14 @@ Outputs:
     Value:
       Ref: PublishDispatcherLoadBalancer
     Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancer
+      Name: !Sub ${MainStackPrefixParameter}-PublishDispatcherLoadBalancer
     Description: The Publish Dispatcher Load Balancer
 
   PublishDispatcherLoadBalancerDNSName:
     Value:
       Fn::GetAtt: [PublishDispatcherLoadBalancer, DNSName]
     Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
+      Name: !Sub ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
     Description: The Publish Dispatcher Load Balancer DNSName
 
   PublishDispatcherLaunchConfiguration:
@@ -308,5 +308,5 @@ Outputs:
       Ref: PublishDispatcherAutoScalingGroup
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherAutoScalingGroup
+        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup
     Description: The Publish Dispatcher Auto Scaling Group

@@ -16,7 +16,7 @@ Parameters:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -91,7 +91,7 @@ Resources:
             Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
       AlarmName:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorSyncDelayAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
       MetricName: GenericJMX.delay.seconds_since_last_success
       Namespace: collectd
@@ -102,7 +102,7 @@ Resources:
       Dimensions:
       - Name: PluginInstance
         Value:
-          Fn::Sub: ${ComputeStackPrefixParameter}-standby-status
+          Fn::Sub: ${MainStackPrefixParameter}-standby-status
       - Name: Host
         Value:
           Ref: AuthorStandbyInstance
@@ -119,7 +119,7 @@ Resources:
             Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
       AlarmDescription: Multiple Author Instances have Enterered into Service
       AlarmName:
-        Fn::Sub: ${ComputeStackPrefixParameter}-MultiAuthorInstanceAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-MultiAuthorInstanceAlarm
       ComparisonOperator: GreaterThanThreshold
       MetricName: HealthyHostCount
       Namespace: AWS/ELB
@@ -171,7 +171,7 @@ Resources:
       Tags:
       - Key: StackPrefix
         Value:
-          Ref: ComputeStackPrefixParameter
+          Ref: MainStackPrefixParameter
       - Key: Name
         Value: AEM Author - Primary
       - Key: Component
@@ -181,9 +181,9 @@ Resources:
           Fn::Sub: "#!/bin/bash -x\n\
             \ source /etc/profile\n\
             \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-primary ${AemAwsStackProvisionerVersionParameter}\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-primary ${AemAwsStackProvisionerVersionParameter}\n"
 
   AuthorStandbyInstance:
     Type: AWS::EC2::Instance
@@ -224,7 +224,7 @@ Resources:
       Tags:
       - Key: StackPrefix
         Value:
-          Ref: ComputeStackPrefixParameter
+          Ref: MainStackPrefixParameter
       - Key: Name
         Value: AEM Author - Standby
       - Key: Component
@@ -237,9 +237,9 @@ Resources:
           Fn::Sub: "#!/bin/bash -x\n\
             \ source /etc/profile\n\
             \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-standby ${AemAwsStackProvisionerVersionParameter}\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-standby ${AemAwsStackProvisionerVersionParameter}\n"
 
   AuthorLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
@@ -267,7 +267,7 @@ Resources:
         InstancePort: '5432'
         InstanceProtocol: HTTPS
         SSLCertificateId: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
-          # Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
+          # Fn::ImportValue: !Sub ${MainStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
@@ -283,7 +283,7 @@ Resources:
         Value: AEM Author Load Balancer
       - Key: StackPrefix
         Value:
-          Ref: ComputeStackPrefixParameter
+          Ref: MainStackPrefixParameter
 
 Outputs:
 
@@ -307,7 +307,7 @@ Outputs:
       Fn::GetAtt: [AuthorLoadBalancer, DNSName]
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorLoadBalancerDNSName
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancerDNSName
     Description: The Author Load Balancer
 
   AuthorSyncDelayAlarm:

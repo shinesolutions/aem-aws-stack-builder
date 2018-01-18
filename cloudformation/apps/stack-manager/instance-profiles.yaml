@@ -6,7 +6,7 @@ Description:
 
 Parameters:
 
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
       Type: String
       Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -43,7 +43,7 @@ Resources:
                   - "s3:*"
                 Resource:
                   - !Sub "arn:aws:s3:::${DataBucketNameParameter}/SSMOutput/*"
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManagerSSMRole
+      RoleName: !Sub ${MainStackPrefixParameter}-AEMStackManagerSSMRole
 
   AEMStackManagerLambdaServiceRole:
     Type: AWS::IAM::Role
@@ -89,7 +89,7 @@ Resources:
                 Action:
                   - iam:PassRole
                 Resource: !GetAtt StackmanagerSSMServiceRole.Arn
-      RoleName: !Sub ${ComputeStackPrefixParameter}-AEMStackManagerLambdaRole
+      RoleName: !Sub ${MainStackPrefixParameter}-AEMStackManagerLambdaRole
 
 Outputs:
 
@@ -98,7 +98,7 @@ Outputs:
     Description: The Sack Manager Lambda Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
 
   AEMStackManagerLambdaServiceRoleName:
     Value:
@@ -106,19 +106,19 @@ Outputs:
     Description: The Sack Manager Lambda Service Role Name 
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerLambdaServiceRoleName
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
 
   AEMStackManagerSSMServiceRoleArn:
     Value: !GetAtt StackmanagerSSMServiceRole.Arn
     Description: The Staxk Manager SSM Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSSMServiceRoleArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn
 
   AEMStackManagerSSMServiceRoleName:
     Value:
       Ref: StackmanagerSSMServiceRole
-    Description: The Sack Manager Lambda Service Role Name 
+    Description: The Sack Manager Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSSMServiceRoleName
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleName

@@ -13,7 +13,7 @@
         disable_rollback: true
         template: "../../../../cloudformation/apps/consolidated/main.yaml"
         template_parameters:
-          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          MainStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           SecurityGroupStackPrefixParameter: "{{ security_groups_stack_prefix }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"

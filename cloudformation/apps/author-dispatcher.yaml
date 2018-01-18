@@ -16,7 +16,7 @@ Parameters:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -106,7 +106,7 @@ Resources:
         InstancePort: '443'
         InstanceProtocol: HTTPS
         SSLCertificateId: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
-          # Fn::ImportValue: !Sub ${ComputeStackPrefixParameter}-PrvWildcardCertificateARN
+          # Fn::ImportValue: !Sub ${MainStackPrefixParameter}-PrvWildcardCertificateARN
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
@@ -122,7 +122,7 @@ Resources:
           Value: AEM Author Dispatcher Load Balancer
         - Key: StackPrefix
           Value:
-            Ref: ComputeStackPrefixParameter
+            Ref: MainStackPrefixParameter
 
   AuthorDispatcherLaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -159,9 +159,9 @@ Resources:
           Fn::Sub: "#!/bin/bash -x\n\
             \ source /etc/profile\n\
             \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} author-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
 
   AuthorDispatcherAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -195,7 +195,7 @@ Resources:
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:
-          Ref: ComputeStackPrefixParameter
+          Ref: MainStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
         Value: author-dispatcher
@@ -223,7 +223,7 @@ Outputs:
     Value:
       Ref: AuthorDispatcherLoadBalancer
     Export:
-      Name: !Sub ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancer
+      Name: !Sub ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer
     Description: The Author Dispatcher Load Balancer
 
   AuthorDispatcherLoadBalancerDNSName:
@@ -231,7 +231,7 @@ Outputs:
       Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
     Description: The Author Dispatcher Load Balancer
 
   AuthorDispatcherLaunchConfiguration:
@@ -244,5 +244,5 @@ Outputs:
       Ref: AuthorDispatcherAutoScalingGroup
     Export:
       Name:
-        Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherAutoScalingGroup
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup
     Description: The Author Dispatcher Auto Scaling Group

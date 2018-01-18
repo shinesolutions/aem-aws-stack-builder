@@ -13,7 +13,7 @@
         disable_rollback: true
         template: "{{ playbook_dir }}/../../../../cloudformation/apps/stack-manager/instance-profiles.yaml"
         template_parameters:
-          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          MainStackPrefixParameter: "{{ stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
       tags:

@@ -18,7 +18,7 @@
         template_parameters:
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          MainStackPrefixParameter: "{{ stack_prefix }}"
       register: stack_info
       tags:
         - create

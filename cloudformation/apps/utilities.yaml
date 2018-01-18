@@ -11,7 +11,7 @@ Parameters:
     Type: String
     Description: Prefix within the Bucket to Locate Files
 
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -50,7 +50,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: Function to Purge AEM Old Snapshots
-      FunctionName: !Sub ${ComputeStackPrefixParameter}-AemSnapshotsPurge
+      FunctionName: !Sub ${MainStackPrefixParameter}-AemSnapshotsPurge
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/purge_snapshots.zip
@@ -58,7 +58,7 @@ Resources:
       MemorySize: 128
       Role: 
         Fn::ImportValue:
-          Fn::Sub: ${ComputeStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
       Runtime: python2.7
       Timeout: 300
 

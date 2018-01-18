@@ -24,7 +24,7 @@
           InstanceProfilesStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
           MessagingStackPrefixParameter: "{{ messaging_stack_prefix }}"
           SecurityGroupsStackPrefixParameter: "{{ security_groups_stack_prefix }}"
-          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          MainStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
 

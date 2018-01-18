@@ -12,7 +12,7 @@ Parameters:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
 
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -88,9 +88,9 @@ Resources:
           Fn::Sub: "#!/bin/bash -x\n\
             \ source /etc/profile\n\
             \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${ComputeStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
             \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${ComputeStackPrefixParameter} chaos-monkey ${AemAwsStackProvisionerVersionParameter}\n"
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} chaos-monkey ${AemAwsStackProvisionerVersionParameter}\n"
 
   ChaosMonkeyAutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -109,7 +109,7 @@ Resources:
         PropagateAtLaunch: true
       - Key: StackPrefix
         Value:
-          Ref: ComputeStackPrefixParameter
+          Ref: MainStackPrefixParameter
         PropagateAtLaunch: true
       - Key: Component
         Value: chaos-monkey
@@ -117,22 +117,22 @@ Resources:
       - Key: OrchestratorASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${ComputeStackPrefixParameter}-OrchestratorAutoScalingGroup"
+            Fn::Sub: "${MainStackPrefixParameter}-OrchestratorAutoScalingGroup"
         PropagateAtLaunch: true
       - Key: PublisherASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${ComputeStackPrefixParameter}-PublishAutoScalingGroup"
+            Fn::Sub: "${MainStackPrefixParameter}-PublishAutoScalingGroup"
         PropagateAtLaunch: true
       - Key: PublisherDispatcherASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${ComputeStackPrefixParameter}-PublishDispatcherAutoScalingGroup"
+            Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup"
         PropagateAtLaunch: true
       - Key: AuthorDispatcherASG
         Value:
           Fn::ImportValue:
-            Fn::Sub: "${ComputeStackPrefixParameter}-AuthorDispatcherAutoScalingGroup"
+            Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup"
         PropagateAtLaunch: true
       VPCZoneIdentifier:
         Fn::Split:

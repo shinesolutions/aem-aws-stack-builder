@@ -7,7 +7,7 @@ Description: >-
   us-east-1 region.
 
 Parameters:
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -56,4 +56,4 @@ Outputs:
     Description: The generated certificate's ARN
     Export:
       Name:
-        !Sub ${ComputeStackPrefixParameter}-PubWildcardCertificateARN
+        !Sub ${MainStackPrefixParameter}-PubWildcardCertificateARN
