@@ -206,6 +206,136 @@
       when: custom_provisioner_stat_result.stat.exists == True
       tags:
       - create
+    
+
+    - name: Check aem-stack-manager-cloud exists
+      stat:
+        path: ../../../stage/aem-stack-manager-cloud.zip
+      register: check_aem_stack_manager_cloud_result
+      tags:
+      - create
+
+    - name: Download aem-stack-manager-cloud libray
+      aws_s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "library/aem-stack-manager-cloud-{{  library.aem_stack_manager_version }}.zip"
+        dest: ../../../stage/aem-stack-manager-cloud.zip
+        mode: get
+      when: check_aem_stack_manager_cloud_result.stat.exists == False
+      tags:
+      - create
+
+    - name: Unpack aem-stack-manager-cloud library to stage directory
+      unarchive: 
+        src: ../../../stage/aem-stack-manager-cloud.zip
+        dest: ../../../stage/
+      tags:
+      - create
+
+    - name: Zip AEM Stack Manager Lambda Implementation
+      command: >
+        zip -j "../../../stage/aem_stack_manager.zip" "../../../stage/aem-stack-manager-cloud/lambda/aem_stack_manager.py"
+      tags:
+      - create
+
+    - name: Zip AEM Offline Snapshot Lambda Implementation
+      shell: >
+        zip -j "../../../stage/aem_offline_snapshot.zip" "../../../stage/aem-stack-manager-cloud/lambda/aem_offline_snapshot.py"
+      tags:
+      - create
+
+    - name: Zip AEM Task Status Query Lambda Implementation
+      shell: >
+        zip -j "../../../stage/aem_task_query.zip" "../../../stage/aem-stack-manager-cloud/lambda/aem_task_query.py"
+      tags:
+      - create
+
+    - name: Zip AEM Snapshots Purge Lambda Implementation
+      shell: >
+        zip -j "../../../stage/purge_snapshots.zip" "../../../stage/aem-stack-manager-cloud/lambda/purge_snapshots.py"
+      tags:
+      - create
+
+    - name: Upload AEM Stack Manager Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_stack_manager.zip"
+        src: ../../../stage/aem_stack_manager.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Upload AEM Offline Snapshot Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_offline_snapshot.zip"
+        src: ../../../stage/aem_offline_snapshot.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Upload AEM Task Status Query Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/aem_task_query.zip"
+        src: ../../../stage/aem_task_query.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Upload AEM Snapshots Purge Lambda Implementation
+      s3:
+        bucket: "{{ s3.data_bucket_name }}"
+        object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/purge_snapshots.zip"
+        src: ../../../stage/purge_snapshots.zip
+        mode: put
+      tags:
+      - create
+
+    - name: Delete ZIP AEM Stack Manager Cloud Artifact
+      ignore_errors: True
+      file: 
+        path: ../../../stage/aem-stack-manager-cloud.zip
+        state: absent
+      tags:
+        - delete
+        - create
+
+    - name: Delete ZIP AEM Stack Manager Lambda Implementation
+      ignore_errors: True
+      file:
+        path: ../../../stage/aem_stack_manager.zip
+        state: absent
+      tags:
+        - delete
+        - create
+
+    - name: Delete ZIP AEM Offline Snapshot Lambda Implementation
+      ignore_errors: True
+      file:
+        path: ../../../stage/aem_offline_snapshot.zip
+        state: absent
+      tags:
+        - delete
+        - create
+
+    - name: Delete ZIP AEM Task Status Query Lambda Implementation
+      ignore_errors: True
+      file:
+        path: ../../../stage/aem_task_query.zip
+        state: absent
+      tags:
+        - delete
+        - create
+
+    - name: Delete AEM Snapshots Purge Lambda Implementation
+      ignore_errors: True
+      file: 
+        path: ../../../stage/purge_snapshots.zip
+        state: absent
+      tags:
+        - delete
+        - create
 
     - name: Delete temporary file containing generated credentials
       file:
