@@ -68,6 +68,25 @@ Resources:
     Properties:
       DisplayName: !Sub ${PrerequisitesStackPrefixParameter}-alarm-notification-topic
 
+  AEMASGEventQueueLengthHighAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Alarm if queue length avg > 10 for 2 minutes"
+      MetricName: ApproximateNumberOfMessagesVisible
+      Namespace: AWS/SQS
+      Statistic: Average
+      Period: 60
+      EvaluationPeriods: 2
+      Threshold: 10
+      TreatMissingData: ignore
+      ActionsEnabled: true
+      AlarmActions:
+        - Ref: ${ComputeStackPrefixParameter}-AlarmNotificationTopic
+      Dimensions:
+        - Name: QueueName
+          Value: !Ref AEMASGEventQueueNameParameter
+      ComparisonOperator: GreaterThanThreshold
+
 Outputs:
 
   AEMAutoScalingGroupEventQueue:
