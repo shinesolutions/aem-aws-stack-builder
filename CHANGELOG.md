@@ -17,6 +17,7 @@
 * Added feature for Publish Dispatcher to scale up/down if CPU is above/under configured threshold #26
 * Introduce AuthorPublishDispatcherSubnetList and AuthorDispatcherELBSubnetList to network-exports #64
 * Introduce Consolidated architecture stacks
+* Add alarm for queue size of ASG events in Full Set architecture #70
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
