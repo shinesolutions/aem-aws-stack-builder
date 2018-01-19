@@ -14,7 +14,7 @@ def delete_sdb_domain():
   
     client = boto3.client('sdb')
 
-    client.delete_domain(DomainName="module.params[sdb_domain_name]")
+    client.delete_domain(DomainName="module.params['sdb_domain_name']")
 
 def main():
 
