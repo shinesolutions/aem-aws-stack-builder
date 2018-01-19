@@ -5,20 +5,16 @@
 from ansible.module_utils.basic import *
 import boto3
 
-def delete_sdb_domain()
+def delete_sdb_domain():
+    module_args = dict(
+    sdb_domain_name=dict(required=True, type='str'),
+    )
 
-fields = dict(
-    sdb_domain_name=dict(required=True, type='str')
-  )
-
-  module = AnsibleModule(argument_spec=fields)
+    module = AnsibleModule(argument_spec=module_args)
   
-  client = boto3.client('sdb')
-  
-  response = client.delete_domain(DomainName='module.params['sdb_domain_name']')  
-    
-  module.exit_json(changed = False, meta = response)
+    client = boto3.client('sdb')
 
+    client.delete_domain(DomainName="module.params[sdb_domain_name]")
 
 def main():
 
@@ -26,8 +22,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
 
 
