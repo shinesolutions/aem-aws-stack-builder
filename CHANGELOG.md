@@ -19,6 +19,7 @@
 * Introduce AuthorPublishDispatcherSubnetList and AuthorDispatcherELBSubnetList to network-exports #64
 * Introduce Consolidated architecture stacks
 * Add alarm for queue size of ASG events in Full Set architecture #70
+* Fix bug JVM Memory option not configurable for Author standby instance #72
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
