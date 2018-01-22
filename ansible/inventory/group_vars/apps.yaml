@@ -14,11 +14,11 @@ aem:
   publish:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
     jmxremote:
-      port: 59185
+      port: 59183
   author:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
     jmxremote:
-      port: 59185
+      port: 59182
 
 instance_profiles:
   stack_name: aem-instance-profiles-stack
