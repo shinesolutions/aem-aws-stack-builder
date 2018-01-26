@@ -1,0 +1,6 @@
+main:
+  stack_name: aem-stack-manager-main-stack
+
+stack_manager:
+  ssm_stack_name: aem-stack-manager-ssm
+  s3_prefix: stack-manager

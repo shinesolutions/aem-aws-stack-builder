@@ -6,9 +6,9 @@ Description:
 
 Parameters:
 
-  PrerequisitesStackPrefixParameter:
+  SecurityGroupsStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Description: The AEM Stack SecurityGroups Resources Stack Prefix
 
   NetworkStackPrefixParameter:
     Type: String
@@ -34,7 +34,7 @@ Resources:
         Value: AEM Author Publish Dispatcher Security Group
       - Key: StackPrefix
         Value:
-          Ref: PrerequisitesStackPrefixParameter
+          Ref: SecurityGroupsStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -94,4 +94,4 @@ Outputs:
     Description: The Author Publish Dispatcher Security Group
     Export:
       Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup

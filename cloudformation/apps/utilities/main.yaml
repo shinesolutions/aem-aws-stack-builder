@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: AWS Lambada Function to Purge AEM Old Snapshots with Default Schedule Using AWS Events
+Description: AWS Lambda Function to Purge AEM Old Snapshots with Default Schedule Using AWS Events
 
 Parameters:
   DataBucketNameParameter:
@@ -56,7 +56,7 @@ Resources:
         S3Key: !Sub ${S3DataStackManagerPrefix}/purge_snapshots.zip
       Handler: purge_snapshots.handler
       MemorySize: 128
-      Role: 
+      Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
       Runtime: python2.7

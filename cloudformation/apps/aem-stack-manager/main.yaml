@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Overarching CF Template to Create AEM Stack Manager Resources Stacks
+
+Parameters:
+
+  MainStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Main Resources Stack Prefix
+
+  DataBucketNameParameter:
+    Type: String
+    Description: Bucket name that stores Stack data file
+
+  S3DataStackManagerPrefix:
+    Type: String
+    Description: Prefix within the Bucket to Locate Files
+
+  DynamoDBTTLAttribute:
+    Type: String
+    Default: 'ttl'
+
+Resources:
+
+  InstanceProfilesStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles.yaml
+      Parameters:
+        InstanceProfilesStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        S3DataStackManagerPrefix:
+          Ref: S3DataStackManagerPrefix
+
+  StackManagerStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - InstanceProfilesStack
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-manager.yaml
+      Parameters:
+        StackManagerStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        S3DataStackManagerPrefix:
+          Ref: S3DataStackManagerPrefix
+        DynamoDBTTLAttribute:
+          Ref: DynamoDBTTLAttribute

@@ -11,11 +11,11 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../cloudformation/apps/consolidated/main.yaml"
+        template: "../../../../../cloudformation/apps/aem/consolidated/main.yaml"
         template_parameters:
           MainStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
-          SecurityGroupStackPrefixParameter: "{{ security_groups_stack_prefix }}"
+          SecurityGroupsStackPrefixParameter: "{{ security_groups_stack_prefix }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
           InstanceProfilesStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"

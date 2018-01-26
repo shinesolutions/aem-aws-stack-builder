@@ -7,7 +7,7 @@
   tasks:
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../../cloudformation/apps
+              aws s3 sync ../../../../../cloudformation/apps/aem/full-set
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
                   --include "*.yaml" --acl public-read
       tags:
@@ -15,11 +15,11 @@
 
     - name: Create AEM App Main Resources Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../cloudformation/apps/full-set/main.yaml"
+        template: "../../../../../cloudformation/apps/aem/full-set/main.yaml"
         template_parameters:
           InstanceProfilesStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
           MessagingStackPrefixParameter: "{{ messaging_stack_prefix }}"
@@ -96,7 +96,7 @@
 
     - name: Check if a Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -105,7 +105,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ compute_stacks.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -113,7 +113,7 @@
 
     - name: Delete AEM App Compute Resources Stacks
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ compute_stacks.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:

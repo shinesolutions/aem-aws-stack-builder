@@ -6,9 +6,9 @@ Description:
 
 Parameters:
 
-  PrerequisitesStackPrefixParameter:
+  MessagingStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
+    Description: The AEM Stack Messaging Resources Stack Prefix
 
   AEMASGEventQueueNameParameter:
     Type: String
@@ -66,7 +66,7 @@ Resources:
   AlarmNotificationTopic:
     Type: AWS::SNS::Topic
     Properties:
-      DisplayName: !Sub ${PrerequisitesStackPrefixParameter}-alarm-notification-topic
+      DisplayName: !Sub ${MessagingStackPrefixParameter}-alarm-notification-topic
 
   # AEMASGEventQueueLengthHighAlarm:
   #   Type: AWS::CloudWatch::Alarm
@@ -81,7 +81,7 @@ Resources:
   #     TreatMissingData: ignore
   #     ActionsEnabled: true
   #     AlarmActions:
-  #       - Ref: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+  #       - Ref: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
   #     Dimensions:
   #       - Name: QueueName
   #         Value: !Ref AEMASGEventQueueNameParameter
@@ -99,7 +99,7 @@ Outputs:
     Description: The AEM ASG Event Queue Name
     Export:
       Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName
+        Fn::Sub: ${MessagingStackPrefixParameter}-AEMASGEventQueueName
 
   AEMASGEventTopic:
     Value:
@@ -107,7 +107,7 @@ Outputs:
     Description: The AEM ASG Event Topic
     Export:
       Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
+        Fn::Sub: ${MessagingStackPrefixParameter}-AEMASGEventTopic
 
   AlarmNotificationTopic:
     Value:
@@ -115,4 +115,4 @@ Outputs:
     Description: The AEM Alarm Notification Topic
     Export:
       Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+        Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic

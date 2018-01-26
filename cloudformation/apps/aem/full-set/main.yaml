@@ -1,9 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: Overarching CF Template to Create AEM Full-Set Compute Resources Stacks
+Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 
 Parameters:
 
+  MainStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+    
   InstanceProfilesStackPrefixParameter:
     Type: String
     Description: The AEM Stack Instance Profiles Stack Prefix
@@ -15,10 +19,6 @@ Parameters:
   SecurityGroupsStackPrefixParameter:
     Type: String
     Description: The AEM Stack Security Groups Resources Stack Prefix
-
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
 
   NetworkStackPrefixParameter:
     Type: String

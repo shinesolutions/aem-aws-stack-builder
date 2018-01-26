@@ -1,9 +1,8 @@
 #!/bin/bash
-set -o nounset
 set -o errexit
 
-if [[ "$#" -lt 2 ]] || [[ "$#" -gt 3 ]]; then
-  echo "Usage: ${0} <stack_type> <stack_prefix> [config_path]"
+if [[ "$#" -lt 3 ]] || [[ "$#" -gt 4 ]]; then
+  echo "Usage: ${0} <stack_type> <config_path> <stack_prefix> [prerequisites_stack_prefix]"
   exit 1
 fi
 
@@ -19,17 +18,16 @@ else
 fi
 
 stack_type="${1}"
-stack_prefix="${2}"
+stack_prefix="${3}"
+prerequisites_stack_prefix="${4}"
 
 config_paths=()
-if [[ "$#" -eq 3 ]]; then
-  IFS=':' read -ra temp_config_paths <<< "${3}"
-  for p in "${temp_config_paths[@]}"; do
-    if [[ -n "${p}" ]]; then
-      config_paths+=( "${p}" )
-    fi
-  done
-fi
+IFS=':' read -ra temp_config_paths <<< "${2}"
+for p in "${temp_config_paths[@]}"; do
+  if [[ -n "${p}" ]]; then
+    config_paths+=( "${p}" )
+  fi
+done
 
 run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
 log_path=logs/$stack_prefix/$run_id-${tag}-$(echo "$stack_type" | sed 's/\//-/g').log
@@ -37,7 +35,7 @@ log_path=logs/$stack_prefix/$run_id-${tag}-$(echo "$stack_type" | sed 's/\//-/g'
 # Construct Ansible extra_vars flags. If `config_path` is set, all files
 # directly under the directory with extension `.yaml` or `.yml` will be added.
 # The search for config files _will not_ descend into subdirectories.
-extra_vars=(--extra-vars "stack_prefix=$stack_prefix")
+extra_vars=(--extra-vars "stack_prefix=$stack_prefix prerequisites_stack_prefix=$prerequisites_stack_prefix")
 if [[ ${#config_paths[@]} -gt 0 ]]; then
   OIFS="${IFS}"
   IFS=$'\n'

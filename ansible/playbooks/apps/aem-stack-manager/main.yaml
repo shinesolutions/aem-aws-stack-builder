@@ -1,0 +1,87 @@
+---
+
+- name: AEM Stack Managers Main Resources Creation and Deletion Tasks
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: Ensure data bucket exists
+      s3_bucket:
+        region: "{{ aws.region }}"
+        name: "{{ s3.data_bucket_name }}"
+        state: present
+      tags:
+      - create
+
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../../cloudformation/apps/aem-stack-manager
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml" --acl public-read
+      tags:
+        - create
+
+    - name: Create AEM Stack Manager Main Resources Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../../cloudformation/apps/aem-stack-manager/main.yaml"
+        template_parameters:
+          MainStackPrefixParameter: "{{ stack_prefix }}"
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
+      tags:
+      - create
+
+    # - name: Create Stack Manager Task and SSM Document Name Mapping File
+    #   command: >
+    #     python "{{ playbook_dir }}"/../../../../stage/aem-stack-manager-cloud/scripts/create_config.py
+    #            "{{ stack_prefix }}"
+    #            "{{ stack_manager.ssm_stack_name }}"
+    #            "{{ s3.data_bucket_name }}"
+    #            "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
+    #            "{{ stack_info.stack_outputs.TaskStatusTopicArn }}"
+    #            "{{ stack_info.stack_outputs.SSMServiceRoleArn }}"
+    #            "{{ s3.data_bucket_name }}"
+    #            "{{ stack_info.stack_outputs.BackupTopicArn }}"
+    #            "{{ stack_info.stack_outputs.AemStackManagerTableName }}"
+    #   tags:
+    #     - create
+
+    - name: Check if a Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
+             --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: True
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AEM Stack Manager Main Resources Stacks
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
+
+    - name: Delete All Stack Data
+      command: >
+              aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"
+               --recursive --region "{{ aws.region }}"
+      tags:
+      - delete

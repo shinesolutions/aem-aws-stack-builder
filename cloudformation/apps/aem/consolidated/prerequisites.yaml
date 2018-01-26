@@ -30,18 +30,18 @@ Resources:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/consolidated/instance-profiles.yaml
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles.yaml
       Parameters:
-        PrerequisitesStackPrefixParameter:
+        InstanceProfilesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
 
   SecurityGroupsStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/consolidated/security-groups.yaml
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
       Parameters:
-        PrerequisitesStackPrefixParameter:
+        SecurityGroupsStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
         NetworkStackPrefixParameter:
           Ref: NetworkStackPrefixParameter
