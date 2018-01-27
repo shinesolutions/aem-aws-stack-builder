@@ -1,8 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
-Description: AWS Lambda Function to Purge AEM Old Snapshots with Default Schedule Using AWS Events
+Description: AWS Lambda Functions for utility tasks with Default Schedule Using AWS Events
 
 Parameters:
+
+  UtilitiesStackPrefixParameter:
+    Type: String
+    Description: The Utilities Resources Stack Prefix
+
   DataBucketNameParameter:
     Type: String
     Description: Bucket Name that Stores Files Used by the Function
@@ -10,10 +15,6 @@ Parameters:
   S3DataStackManagerPrefix:
     Type: String
     Description: Prefix within the Bucket to Locate Files
-
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
 
   LiveSnapshotsPurgeSchedule:
     Type: String
@@ -50,7 +51,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: Function to Purge AEM Old Snapshots
-      FunctionName: !Sub ${MainStackPrefixParameter}-AemSnapshotsPurge
+      FunctionName: !Sub ${UtilitiesStackPrefixParameter}-AemSnapshotsPurge
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/purge_snapshots.zip
@@ -58,7 +59,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
+          Fn::Sub: ${UtilitiesStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
       Timeout: 300
 
@@ -88,7 +89,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: Delete AEM Live Snapshots Regularly
-      Name: !Sub ${AWS::StackName}-LiveSnapshotsPurge
+      Name: !Sub ${UtilitiesStackPrefixParameter}-LiveSnapshotsPurge
       ScheduleExpression: !Ref LiveSnapshotsPurgeSchedule
       State: ENABLED
       Targets:
@@ -108,7 +109,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: Delete AEM Offline Snapshots Regularly
-      Name: !Sub ${AWS::StackName}-OfflineSnapshotsPurge
+      Name: !Sub ${UtilitiesStackPrefixParameter}-OfflineSnapshotsPurge
       ScheduleExpression: !Ref OfflineSnapshotsPurgeSchedule
       State: ENABLED
       Targets:
@@ -129,7 +130,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: Delete AEM Orchestration Snapshot Regularly
-      Name: !Sub ${AWS::StackName}-OrchestrationSnapshotsPurge
+      Name: !Sub ${UtilitiesStackPrefixParameter}-OrchestrationSnapshotsPurge
       ScheduleExpression: !Ref OrchestrationSnapshotsPurgeSchedule
       State: ENABLED
       Targets:
@@ -145,8 +146,8 @@ Resources:
       Principal: events.amazonaws.com
       SourceArn: !GetAtt OrchestrationSnapshotsPurgeRule.Arn
 
-
 Outputs:
+  
   PurgeSnapshotFunctionName:
     Description: Lambda Function Name for Snapshot Purge Function
     Value: !Ref SnapshotsPurgeLambdaFunction

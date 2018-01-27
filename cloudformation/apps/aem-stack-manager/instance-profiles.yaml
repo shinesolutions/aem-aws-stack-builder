@@ -2,7 +2,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  Create Roles for AEM Stack Manager
+  Create Instance Profiles for AEM Stack Manager
 
 Parameters:
 
@@ -121,4 +121,4 @@ Outputs:
     Description: The Stack Manager Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-StackManagerSSMServiceRoleName
+        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AemStackManagerSSMServiceRoleName

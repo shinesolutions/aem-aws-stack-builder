@@ -20,6 +20,36 @@ Parameters:
     Type: String
     Default: 'ttl'
 
+  LiveSnapshotsPurgeSchedule:
+    Type: String
+    Description: CloudWatch Event Rule Schedule to Purge Old Live Snapshots
+    Default: cron(10 20 1/3 * ? *)
+
+  OfflineSnapshotsPurgeSchedule:
+    Type: String
+    Description: CloudWatch Event Rule Schedule to Purge Old Offline Snapshots
+    Default: cron(15 19 ? * SUN *)
+
+  OrchestrationSnapshotsPurgeSchedule:
+    Type: String
+    Description: CloudWatch Event Rule Schedule to Purge Old Orchestration Snapshots
+    Default: cron(5 0/4 * * ? *)
+
+  LiveSnapshotsPurgeInput:
+    Type: String
+    Description: Parameters for Purging Live Snapshot in JSON Formatted String
+    Default: '"SnapshotType": "live", "Age": "1d"'
+
+  OfflineSnapshotsPurgeInput:
+    Type: String
+    Description: Parameters for Purging Offline Snapshot in JSON Formatted String
+    Default: '"SnapshotType": "offline", "Age": "1w"'
+
+  OrchestrationSnapshotsPurgeInput:
+    Type: String
+    Description: Parameters for Purging Orchestration Snapshot in JSON Formatted String
+    Default: '"SnapshotType": "orchestration", "Age": "4h"'
+
 Resources:
 
   InstanceProfilesStack:
@@ -51,3 +81,30 @@ Resources:
           Ref: S3DataStackManagerPrefix
         DynamoDBTTLAttribute:
           Ref: DynamoDBTTLAttribute
+
+  UtilitiesStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn:
+      - InstanceProfilesStack
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/utilities.yaml
+      Parameters:
+        UtilitiesStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        S3DataStackManagerPrefix:
+          Ref: S3DataStackManagerPrefix
+        LiveSnapshotsPurgeSchedule:
+          Ref: LiveSnapshotsPurgeSchedule
+        OfflineSnapshotsPurgeSchedule:
+          Ref: OfflineSnapshotsPurgeSchedule
+        OrchestrationSnapshotsPurgeSchedule:
+          Ref: OrchestrationSnapshotsPurgeSchedule
+        LiveSnapshotsPurgeInput:
+          Ref: LiveSnapshotsPurgeInput
+        OfflineSnapshotsPurgeInput:
+          Ref: OfflineSnapshotsPurgeInput
+        OrchestrationSnapshotsPurgeInput:
+          Ref: OrchestrationSnapshotsPurgeInput

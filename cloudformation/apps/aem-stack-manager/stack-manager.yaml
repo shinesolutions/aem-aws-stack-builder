@@ -336,7 +336,7 @@ Resources:
       Path: /
       Roles:
         - Fn::ImportValue:
-            Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerSSMServiceRoleName
+            Fn::Sub: ${StackManagerStackPrefixParameter}-AemStackManagerSSMServiceRoleName
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -349,28 +349,39 @@ Resources:
       ManagedPolicyName: !Sub ${StackManagerStackPrefixParameter}-AEMStackManagerSSMPolicy
 
 Outputs:
-  StackManagerTopciArn:
+
+  StackManagerTopicArn:
     Description: AEM stack manager SNS topic Arn
     Value: !Ref StackManagerTopic
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerTopicArn
 
   BackupTopicArn:
     Description: SNS topic Arn used to orchestrate offline backup
     Value: !Ref OfflineBackupTopic
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-BackupTopicArn
+
 
   TaskStatusTopicArn:
-    Description: SNS toptic Arn to notifiy status of stack manager functions
+    Description: SNS topic Arn to notifiy status of stack manager functions
     Value: !Ref TaskStatusTopic
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-TaskStatusTopicArn
 
   AemStackManagerTableName:
     Description: DynamoDB table name for AEM stack manager
     Value: !Ref StackManagerTable
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-AemStackManagerTableName
 
   TaskStatusQueryLambda:
-    Description: Task status quer lambda function name
+    Description: Task status query lambda function name
     Value: !Ref QueryLambdaFunction
-
-  SSMServiceRoleArn:
-    Description: Value needed by Ansible
-    Value:
-      Fn::ImportValue:
-        Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerSSMServiceRoleArn
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-TaskStatusQueryLambda
