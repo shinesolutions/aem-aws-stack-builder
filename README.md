@@ -50,7 +50,7 @@ Set up network stacks:
 
 ### AEM Full-Set Architecture
 
-![](https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png | width=500)
+<img width="800" alt="AEM Full-Set Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png"/>
 
 Set up [configuration file for Full-Set architecture]().
 
@@ -70,7 +70,7 @@ Create main stack which contains EC2 and Route53 resources:
 
 ### AEM Consolidated Architecture
 
-![](https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-consolidated.png | width=500)
+<img width="500" alt="AEM Consolidated Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-consolidated.png"/>
 
 Set up [configuration file for Consolidated architecture]().
 
