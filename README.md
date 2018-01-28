@@ -17,7 +17,7 @@ Stack Builder has been designed with a focus on modularity, allowing the separat
 * `author-publish-dispatcher` - contains AEM Author, AEM Publish, and AEM Dispatcher
 
 Stack Builder currently supports the following AEM architectures:
-* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - runs AEM Author, Publish, and Dispatcher on separate EC2 instances with auto-recovery and auto-scaling support, suitable for all types (e.g. production, staging, testing, and development) of environments
+* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - runs AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
 * Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - runs AEM Author, Publish, and Dispatcher on a single EC2 instance, suitable for development environments
 
 Installation
@@ -50,6 +50,8 @@ Set up network stacks:
 
 ### AEM Full-Set Architecture
 
+![](https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png | width=500)
+
 Set up [configuration file for Full-Set architecture]().
 
 The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
@@ -67,6 +69,8 @@ Create main stack which contains EC2 and Route53 resources:
     `make create-full-set-main stack_prefix=<fullset_main_stack_prefix> prerequisites_stack_prefix=<fullset_prerequisites_stack_prefix> config_path=<path/to/config/dir>`
 
 ### AEM Consolidated Architecture
+
+![](https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-consolidated.png | width=500)
 
 Set up [configuration file for Consolidated architecture]().
 
