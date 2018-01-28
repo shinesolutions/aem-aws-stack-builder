@@ -33,6 +33,8 @@ Installation
 Usage
 -----
 
+### Network
+
 Set up common resources and configuration:
 - Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
 - Create [configuration file](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
@@ -46,25 +48,7 @@ Set up network stacks:
 
     `make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>`.
 
-### Consolidated AEM Architecture
-
-- Set up [configuration file for Consolidated architecture]().
-- Create consolidated prerequisites stack which contains the instance profiles and security groups:
-
-    `make create-consolidated-prerequisites stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>`.
-
-  This consolidated prerequisites stack can be shared across multiple consolidated main stacks in order to speed up the main stack creation time. Do not share a single consolidated prerequisites stack with multiple consolidated main stacks when running in production.
-- Configure `instance_profiles_stack_prefix` and `security_groups_stack_prefix` with the `<consolidated_prerequisites_stack_prefix>` value.
-- Create consolidated main stack which contains the EC2 instance and DNS record:
-
-    `make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> config_path=<path/to/config/dir>`.
-
-  This consolidated main stack uses the instance profiles and security groups that are defined in the consolidated prerequisites stack.
-- However, if you don't care about reusing the prerequisites stack, you can use the following simpler command:
-
-    `make create-consolidated stack_prefix=<fullset_stack_prefix> config_path=<path/to/config/dir>`.
-
-### Full-Set AEM Architecture
+### AEM Full-Set Architecture
 
 Set up [configuration file for Full-Set architecture]().
 
@@ -81,3 +65,21 @@ Create prerequisites stack which contains the instance profiles, security groups
 Create main stack which contains EC2 and Route53 resources:
 
     `make create-full-set-main stack_prefix=<fullset_main_stack_prefix> prerequisites_stack_prefix=<fullset_prerequisites_stack_prefix> config_path=<path/to/config/dir>`
+
+### AEM Consolidated Architecture
+
+Set up [configuration file for Consolidated architecture]().
+
+The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
+
+    `make create-consolidated stack_prefix=<consolidated_stack_prefix> config_path=<path/to/config/dir>`
+
+It is also possible to separate the prerequisites from the main stacks. A use case scenario for this set up is when you want to reuse the same prerequisites stack for multiple main stacks. Please note that having a one to many mapping between prerequisites stack to multiple main stacks is only applicable for development environments, and not for production.
+
+Create prerequisites stack which contains the instance profiles and security groups:
+
+    `make create-consolidated-prerequisites stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>`
+
+Create main stack which contains EC2 and Route53 resources:
+
+    `make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> prerequisites_stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>`
