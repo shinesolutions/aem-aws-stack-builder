@@ -1,0 +1,387 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: Create AWS Lambda Implementation of AEM Stack Mananger Resources
+
+Parameters:
+
+  StackManagerStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Manager Resources Stack Prefix
+
+  DataBucketNameParameter:
+    Type: String
+    Description: Bucket Name that Stores Files Used by the Function
+
+  S3DataStackManagerPrefix:
+    Type: String
+    Description: Prefix within the Bucket to Locate Files
+
+  DynamoDBTTLAttribute:
+    Type: String
+    Default: 'ttl'
+
+Resources:
+  StackManagerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: command_id
+          AttributeType: S
+        -
+          AttributeName: externalId
+          AttributeType: S
+        -
+          AttributeName: timestamp
+          AttributeType: S
+
+      KeySchema:
+        -
+          AttributeName: command_id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      GlobalSecondaryIndexes:
+        -
+          IndexName: ExternalQuery
+          KeySchema:
+            - AttributeName: externalId
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+              - state
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+      TableName: !Sub ${StackManagerStackPrefixParameter}-AemStackManagerTable
+      TimeToLiveSpecification:
+        AttributeName: !Ref DynamoDBTTLAttribute
+        Enabled: True
+
+  StackManagerLambdaPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    DependsOn: StackManagerTable
+    Properties:
+      Description: "Lambda Policy for StackManagerLambdaServiceRole"
+      Path: /
+      Roles:
+        - Fn::ImportValue:
+            Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleName
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:GetItem
+              - dynamodb:UpdateItem
+              - dynamodb:UpdateTimeToLive
+            Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}
+          - Effect: Allow
+            Action:
+              - dynamodb:Query
+            Resource:
+              - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}/index/
+      ManagedPolicyName: !Sub ${StackManagerStackPrefixParameter}-StackManagerLambdaPolicy
+
+  StackManagerTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: AEM Stack Manager Topic
+      TopicName: !Sub ${StackManagerStackPrefixParameter}-AemStackManager
+
+  TaskStatusTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Sub AEM Stack Manager Topic
+      TopicName: !Sub ${StackManagerStackPrefixParameter}-AemStackManagerStatus
+
+  StackManagerLambdaSSMPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    DependsOn: TaskStatusTopic
+    Properties:
+      Description: "Lambda SSM policy for StackManagerLambdaServiceRole"
+      Path: /
+      Roles:
+        - Fn::ImportValue:
+            Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleName
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sns:Publish
+            Resource: !Ref TaskStatusTopic
+      ManagedPolicyName: !Sub ${StackManagerStackPrefixParameter}-StackManagerLambdaSSMPolicy
+
+  ManagerLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: AEM Stack Manager Function
+      FunctionName: !Sub ${StackManagerStackPrefixParameter}-AemStackManager
+      Code:
+        S3Bucket: !Ref DataBucketNameParameter
+        S3Key: !Sub ${S3DataStackManagerPrefix}/aem_stack_manager.zip
+      Environment:
+        Variables:
+          LOG_LEVEL: "20"
+          S3_BUCKET: !Ref DataBucketNameParameter
+          S3_PREFIX: !Ref S3DataStackManagerPrefix
+      Handler: aem_stack_manager.sns_message_processor
+      MemorySize: 128
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+      Runtime: python2.7
+      Timeout: 15
+
+  InitialVersion:
+    Type: AWS::Lambda::Version
+    DependsOn: ManagerLambdaFunction
+    Properties:
+      Description: Initial Version to Start With
+      FunctionName: !Ref ManagerLambdaFunction
+
+  LambdaDevAlias:
+    Type: AWS::Lambda::Alias
+    DependsOn: ManagerLambdaFunction
+    Properties:
+      Description: Lambda Alias for Development Use
+      FunctionName: !Ref ManagerLambdaFunction
+      FunctionVersion: "$LATEST"
+      Name: dev
+
+  LambdaProdAlias:
+    Type: AWS::Lambda::Alias
+    DependsOn: InitialVersion
+    Properties:
+      Description: Lambda Alias for Production Use
+      FunctionName: !Ref ManagerLambdaFunction
+      FunctionVersion: !GetAtt InitialVersion.Version
+      Name: prod
+
+  QueryLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: AEM Task Status Query
+      FunctionName: !Sub ${StackManagerStackPrefixParameter}-AemTaskQuery
+      Code:
+        S3Bucket: !Ref DataBucketNameParameter
+        S3Key: !Sub ${S3DataStackManagerPrefix}/aem_task_query.zip
+      Environment:
+        Variables:
+          LOG_LEVEL: "20"
+          S3_BUCKET: !Ref DataBucketNameParameter
+          S3_PREFIX: !Ref S3DataStackManagerPrefix
+      Handler: aem_task_query.handler
+      MemorySize: 128
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+      Runtime: python2.7
+      Timeout: 15
+
+  QueryInitialVersion:
+    Type: AWS::Lambda::Version
+    DependsOn: QueryLambdaFunction
+    Properties:
+      Description: Initial Version to Start With
+      FunctionName: !Ref QueryLambdaFunction
+
+  QueryLambdaDevAlias:
+    Type: AWS::Lambda::Alias
+    DependsOn: QueryLambdaFunction
+    Properties:
+      Description: Lambda Alias for Development Use
+      FunctionName: !Ref QueryLambdaFunction
+      FunctionVersion: "$LATEST"
+      Name: dev
+
+  QueryLambdaProdAlias:
+    Type: AWS::Lambda::Alias
+    DependsOn: QueryInitialVersion
+    Properties:
+      Description: Lambda Alias for Production Use
+      FunctionName: !Ref QueryLambdaFunction
+      FunctionVersion: !GetAtt QueryInitialVersion.Version
+      Name: prod
+
+  ManagerTopicPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - StackManagerTopic
+      - LambdaProdAlias
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref LambdaProdAlias
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref StackManagerTopic
+
+  ManagerTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn:
+      - StackManagerTopic
+      - LambdaProdAlias
+    Properties:
+      Endpoint: !Ref LambdaProdAlias
+      Protocol: lambda
+      TopicArn: !Ref StackManagerTopic
+
+  SatusTopicPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - LambdaProdAlias
+      - TaskStatusTopic
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref LambdaProdAlias
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref TaskStatusTopic
+
+  StatusTopicSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn:
+      - LambdaProdAlias
+      - TaskStatusTopic
+    Properties:
+      Endpoint: !Ref LambdaProdAlias
+      Protocol: lambda
+      TopicArn: !Ref TaskStatusTopic
+
+  OfflineBackupTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: AEM Backup
+      TopicName: !Sub ${StackManagerStackPrefixParameter}-AemOfflineBackup
+
+  OfflineBackupLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: AEM Offline Backup Function
+      FunctionName: !Sub ${StackManagerStackPrefixParameter}-AemOfflineBackup
+      Code:
+        S3Bucket: !Ref DataBucketNameParameter
+        S3Key: !Sub ${S3DataStackManagerPrefix}/aem_offline_snapshot.zip
+      Environment:
+        Variables:
+          LOG_LEVEL: "20"
+          S3_BUCKET: !Ref DataBucketNameParameter
+          S3_PREFIX: !Ref S3DataStackManagerPrefix
+      Handler: aem_offline_snapshot.sns_message_processor
+      MemorySize: 128
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+      Runtime: python2.7
+      Timeout: 15
+
+  BackupInitialVersion:
+    Type: AWS::Lambda::Version
+    DependsOn: OfflineBackupLambda
+    Properties:
+      Description: Initial Version to Start With
+      FunctionName: !Ref OfflineBackupLambda
+
+  BackupLambdaDevAlias:
+    Type: AWS::Lambda::Alias
+    DependsOn: OfflineBackupLambda
+    Properties:
+      Description: Lambda Alias for Development Use
+      FunctionName: !Ref OfflineBackupLambda
+      FunctionVersion: "$LATEST"
+      Name: dev
+
+  BackupLambdaProdAlias:
+    Type: AWS::Lambda::Alias
+    DependsOn:
+      - OfflineBackupLambda
+      - BackupInitialVersion
+    Properties:
+      Description: Lambda Alias for Production Use
+      FunctionName: !Ref OfflineBackupLambda
+      FunctionVersion: !GetAtt BackupInitialVersion.Version
+      Name: prod
+
+  BackupLambdaPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+      - BackupLambdaProdAlias
+      - OfflineBackupTopic
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref BackupLambdaProdAlias
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref OfflineBackupTopic
+
+  BackupSNSSubscription:
+    Type: AWS::SNS::Subscription
+    DependsOn:
+      - BackupLambdaProdAlias
+      - OfflineBackupTopic
+    Properties:
+      Endpoint: !Ref BackupLambdaProdAlias
+      Protocol: lambda
+      TopicArn: !Ref OfflineBackupTopic
+
+  StackManagerSSMPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: "Policy for StackManagerSSMRole"
+      Path: /
+      Roles:
+        - Fn::ImportValue:
+            Fn::Sub: ${StackManagerStackPrefixParameter}-AemStackManagerSSMServiceRoleName
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - sns:Publish
+            Resource:
+              - !Ref OfflineBackupTopic
+              - !Ref TaskStatusTopic
+      ManagedPolicyName: !Sub ${StackManagerStackPrefixParameter}-AEMStackManagerSSMPolicy
+
+Outputs:
+
+  StackManagerTopicArn:
+    Description: AEM stack manager SNS topic Arn
+    Value: !Ref StackManagerTopic
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerTopicArn
+
+  BackupTopicArn:
+    Description: SNS topic Arn used to orchestrate offline backup
+    Value: !Ref OfflineBackupTopic
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-BackupTopicArn
+
+
+  TaskStatusTopicArn:
+    Description: SNS topic Arn to notifiy status of stack manager functions
+    Value: !Ref TaskStatusTopic
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-TaskStatusTopicArn
+
+  AemStackManagerTableName:
+    Description: DynamoDB table name for AEM stack manager
+    Value: !Ref StackManagerTable
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-AemStackManagerTableName
+
+  TaskStatusQueryLambda:
+    Description: Task status query lambda function name
+    Value: !Ref QueryLambdaFunction
+    Export:
+      Name:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-TaskStatusQueryLambda

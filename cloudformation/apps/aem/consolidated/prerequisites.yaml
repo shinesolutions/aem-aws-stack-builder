@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: Overarching CF Template to Create Prerequisites Resources for AEM Consolidated Stacks
+
+Parameters:
+
+  PrerequisitesStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Prerequisites Resources Stack Prefix
+
+  NetworkStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Network Resources Stack Prefix
+
+  DataBucketNameParameter:
+    Type: String
+    Description: Bucket name that stores Stack data files
+
+  AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
+    Type: String
+    Description: AEM Author Publish Dispatcher Security Group Inbound Cidr Ip
+
+  SecureShellInboundCidrIpParameter:
+    Type: String
+    Description: AEM Stack Secure Shell Inbound Cidr Ip
+
+Resources:
+
+  InstanceProfilesStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles.yaml
+      Parameters:
+        InstanceProfilesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+
+  SecurityGroupsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
+      Parameters:
+        SecurityGroupsStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        SecureShellInboundCidrIpParameter:
+          Ref: SecureShellInboundCidrIpParameter
+        AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
+          Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
+
+Outputs:
+
+  InstanceProfilesStackName:
+    Description: Instance Profiles Stack Name
+    Value:
+      Ref: InstanceProfilesStack
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-InstanceProfilesStackName
+
+  SecurityGroupsStackName:
+    Description: Security Groups Stack Name
+    Value:
+      Ref: SecurityGroupsStack
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SecurityGroupsStackName

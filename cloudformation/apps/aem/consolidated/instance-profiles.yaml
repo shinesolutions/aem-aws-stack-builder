@@ -1,0 +1,82 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  Create Instance Profiles for AEM Stack
+
+Parameters:
+
+  InstanceProfilesStackPrefixParameter:
+      Type: String
+      Description: The AEM Instance Profiles Resources Stack Prefix
+
+Resources:
+
+  AuthorPublishDispatcherRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Policies:
+      - PolicyName: AuthorPublishDispatcherRolePolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - ec2:Describe*
+                - ec2:CreateTags
+                - ec2:AttachVolume
+                - ec2:CreateVolume
+                - ec2:DetachVolume
+                - ec2:CreateSnapshot
+                - ec2:ModifyInstanceAttribute
+                - autoscaling:CreateLaunchConfiguration
+                - autoscaling:DescribeLaunchConfigurations
+                - autoscaling:UpdateAutoScalingGroup
+                - autoscaling:CreateOrUpdateTags
+                - cloudwatch:PutMetricData
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - s3:Get*
+                - s3:List*
+                - s3:Put*
+              Resource: "*"
+            - Effect: Allow
+              Action:
+                - logs:*
+              Resource:
+                - arn:aws:logs:*:*:*
+      RoleName:
+        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
+
+  # Currently, AWS only supports one Role per InstanceProfile
+  # Hence, we can't have roles from (Author, Publish, Dispatcher) in InstanceProfile
+  # See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-roles
+  AuthorPublishDispatcherInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - Ref: AuthorPublishDispatcherRole
+
+Outputs:
+
+  AuthorPublishDispatcherInstanceProfile:
+    Value:
+      Ref: AuthorPublishDispatcherInstanceProfile
+    Description: The Author Publish Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile

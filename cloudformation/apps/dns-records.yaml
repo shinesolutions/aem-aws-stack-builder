@@ -4,7 +4,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description:   Create DNS Record Set in Route53 for AEM App Stacks
 
 Parameters:
-  ComputeStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
 
@@ -34,7 +34,7 @@ Resources:
         Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-AuthorLoadBalancerDNSName
+            Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancerDNSName
       TTL: 300
       Type: CNAME
 
@@ -46,7 +46,7 @@ Resources:
         Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
+            Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
 
@@ -58,6 +58,6 @@ Resources:
         Fn::Sub: ${PublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
         - Fn::ImportValue:
-            Fn::Sub: ${ComputeStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
+            Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME

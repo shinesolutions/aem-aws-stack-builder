@@ -12,7 +12,7 @@
         state: present
         template: "../../../cloudformation/apps/cert-private.yaml"
         template_parameters:
-          ComputeStackPrefixParameter: "{{ stack_prefix }}"
+          MainStackPrefixParameter: "{{ stack_prefix }}"
           ApexDomainParameter: "{{ dns.apex_domain_name  | regex_replace('(.*)\\.', '\\1') }}"
           StackSubdomainParameter: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}"
           BlueGreenSubdomainParameter: "{{ dns.blue_green_sub_domain }}.{{ dns.stack_sub_domain }}"
