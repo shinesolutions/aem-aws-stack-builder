@@ -19,6 +19,7 @@
 * Introduce AuthorPublishDispatcherSubnetList and AuthorDispatcherELBSubnetList to network-exports #64
 * Introduce Consolidated architecture stacks
 * Add alarm for queue size of ASG events in Full Set architecture #70
+* Add variable declaration to configure jmxremote port for Author and Publish
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
