@@ -1,15 +1,15 @@
 ami_ids:
   # AEM 6.2
-  author: ami-df07f7bd
-  author_dispatcher: ami-22748440
+  author: ami-c2c53ba0
+  author_dispatcher: ami-18c43a7a
   chaos_monkey: ami-8e7484ec
   orchestrator: ami-8e7484ec
-  publish: ami-8406f6e6
-  publish_dispatcher: ami-22748440
+  publish: ami-96c53bf4
+  publish_dispatcher: ami-18c43a7a
   # AEM 6.3
-  # author: ami-5f39ca3d
-  # author_dispatcher: ami-b03bc8d2
+  # author: ami-4ac33d28
+  # author_dispatcher: ami-40c53b22
   # chaos_monkey: ami-c73ac9a5
   # orchestrator: ami-c73ac9a5
-  # publish: ami-7238cb10
-  # publish_dispatcher: ami-b03bc8d2
+  # publish: ami-be3ac4dc
+  # publish_dispatcher: ami-40c53b22
