@@ -23,6 +23,13 @@
       tags:
         - create
 
+    - name: Upload CloudFormation DNS Records Templates to S3
+      command: >
+              aws s3 cp ../../../../cloudformation/apps/dns-records.yaml
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}/
+      tags:
+        - create
+
     - name: Create AEM Stack Manager Main Resources Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
