@@ -13,6 +13,8 @@ aem_curator::config_author_primary::jmxremote_port: {{ aem.author.jmxremote.port
 
 aem_curator::config_author_standby::jmxremote_port: {{ aem.author.jmxremote.port }}
 
+aem_curator::config_author_standby::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
+
 aem_curator::config_publish::aem_password_reset_version: {{ library.aem_password_reset_version }}
 aem_curator::config_publish::enable_crxde: {{ aem.enable_crxde }}
 aem_curator::config_publish::enable_default_passwords: {{ aem.enable_default_passwords }}
