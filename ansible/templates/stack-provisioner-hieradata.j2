@@ -22,3 +22,7 @@ aem_curator::config_publish::jvm_mem_opts: {{ aem.publish.jvm_mem_opts }}
 aem_curator::config_publish::jmxremote_port: {{ aem.publish.jmxremote.port }}
 
 aem_curator::config_aem_tools::oak_run_version: '{{ library.oak_run_version }}'
+
+aem_curator::config_author_primary::aem_version: '{{ aem.version }}'
+aem_curator::config_author_standby::aem_version: '{{ aem.version }}'
+aem_curator::action_promote_author_standby_to_primary::aem_version: '{{ aem.version }}'
