@@ -54,7 +54,7 @@ echo "  ${extra_vars[*]}"
 mkdir -p "logs/$stack_prefix"
 echo "Start ${action_verb} $stack_prefix $stack_type stack"
 ANSIBLE_LOG_PATH=$log_path \
-  ansible-playbook -vvvvv ansible/playbooks/"$stack_type".yaml \
+  ansible-playbook -v ansible/playbooks/"$stack_type".yaml \
   -i ansible/inventory/hosts \
   --module-path ansible/library/ \
   --tags "${tag}" \
