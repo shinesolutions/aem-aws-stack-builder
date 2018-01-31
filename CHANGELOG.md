@@ -22,6 +22,7 @@
 * Fix bug JVM Memory option not configurable for Author standby instance #72
 * Add variable declaration to configure jmxremote port for Author and Publish
 * Add aem.version configuration
+* Add CW Alarm to monitor auto scaling messaging queue
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
