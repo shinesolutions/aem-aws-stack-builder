@@ -21,6 +21,7 @@
 * Add alarm for queue size of ASG events in Full Set architecture #70
 * Fix bug JVM Memory option not configurable for Author standby instance #72
 * Add variable declaration to configure jmxremote port for Author and Publish
+* Add aem.version configuration
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support

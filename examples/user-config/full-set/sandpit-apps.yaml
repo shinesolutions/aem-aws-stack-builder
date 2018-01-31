@@ -11,17 +11,18 @@ prerequisites:
   stack_name: aem-prerequisites-stack
 
 aem:
+  version: '6.2'
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: false
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jmxremote:
-      port: 54502
+      port: 59183
   author:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jmxremote:
-      port: 54503
+      port: 59182
 
 aem_vpc:
   id: vpc-2fc3014b
@@ -73,8 +74,8 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 2.3.0
-  aem_orchestrator_version: 1.0.1-SNAPSHOT
+  aem_aws_stack_provisioner_version: 2.4.0
+  aem_orchestrator_version: 1.0.1
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
   aem_stack_manager_version: 2.0.0
