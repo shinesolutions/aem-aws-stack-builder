@@ -25,7 +25,7 @@
 
     - name: Create AEM Stack Manager Main Resources Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}-manager"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
