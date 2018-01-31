@@ -1,0 +1,5 @@
+ami_ids:
+  # AEM 6.2
+  author_publish_dispatcher: ami-1d4bb27f
+  # AEM 6.3
+  # author_publish_dispatcher: ami-e74ab385

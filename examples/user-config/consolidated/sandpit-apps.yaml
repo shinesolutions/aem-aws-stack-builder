@@ -8,6 +8,20 @@ main:
 prerequisites:
   stack_name: aem-consolidated-prerequisites-stack
 
+aem:
+  version: '6.2'
+  enable_crxde: true
+  enable_default_passwords: true
+  enable_deploy_on_init: true
+  publish:
+    jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+    jmxremote:
+      port: 59183
+  author:
+    jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+    jmxremote:
+      port: 59182
+
 aem_vpc:
   id: vpc-2fc3014b
 
