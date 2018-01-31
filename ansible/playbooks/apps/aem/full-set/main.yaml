@@ -130,3 +130,12 @@
       ignore_errors: True
       tags:
         - delete
+        
+    - name: Delete Simian Army SimpleDB domain
+      delete_sdb_domain:
+        sdb_domain_name: "SIMIAN_ARMY_{{ stack_prefix }}"
+    
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
