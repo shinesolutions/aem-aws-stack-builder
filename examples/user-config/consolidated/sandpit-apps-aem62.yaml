@@ -1,0 +1,16 @@
+ami_ids:
+  author_publish_dispatcher: ami-1d4bb27f
+
+aem:
+  version: '6.2'
+  enable_crxde: true
+  enable_default_passwords: true
+  enable_deploy_on_init: true
+  publish:
+    jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+    jmxremote:
+      port: 59183
+  author:
+    jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
+    jmxremote:
+      port: 59182
