@@ -23,6 +23,7 @@
 * Add variable declaration to configure jmxremote port for Author and Publish
 * Add aem.version configuration
 * Add CW Alarm to monitor auto scaling messaging queue
+* Add Collectd proxy configuration support
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
