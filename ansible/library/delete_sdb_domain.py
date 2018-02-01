@@ -18,6 +18,14 @@ def main():
     )
 
     delete_sdb_domain(module.params['sdb_domain_name'])
+    
+    result = dict(
+        changed=False,
+        original_message='',
+        message=''
+    )
+    
+    module.exit_json(**result)
 
 if __name__ == '__main__':
     main()
