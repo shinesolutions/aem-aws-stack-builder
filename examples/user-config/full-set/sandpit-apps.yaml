@@ -171,6 +171,10 @@ dns_records:
   publish_dispatcher:
     record_set_name: "{{ stack_prefix }}-publish-dispatcher"
 
+messaging:
+  alarm_notification:
+    contact_email: user@example.com
+
 stack_manager:
   ssm_stack_name: aem-stack-manager-ssm
   stack_name: aem-stack-manager

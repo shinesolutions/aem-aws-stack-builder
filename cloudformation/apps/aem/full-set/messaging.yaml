@@ -22,6 +22,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Topic Name
 
+  AEMCWEventNotificationEmail:
+    Type: String
+    Descriptiopn: The EMail adress for sending CW Alarm messages
+
 Resources:
 
   AEMAutoScalingGroupEventQueue:
@@ -67,6 +71,9 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: !Sub ${MessagingStackPrefixParameter}-alarm-notification-topic
+    Subscription:
+      Endpoint: !Ref AEMCWEventNotificationEmail
+      Protocol: email
 
   # AEMASGEventQueueLengthHighAlarm:
   #   Type: AWS::CloudWatch::Alarm
