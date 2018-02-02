@@ -75,24 +75,24 @@ Resources:
       Endpoint: !Ref AEMCWEventNotificationEmail
       Protocol: email
 
-  # AEMASGEventQueueLengthHighAlarm:
-  #   Type: AWS::CloudWatch::Alarm
-  #   Properties:
-  #     AlarmDescription: "Alarm if queue length avg > 10 for 2 minutes"
-  #     MetricName: ApproximateNumberOfMessagesVisible
-  #     Namespace: AWS/SQS
-  #     Statistic: Average
-  #     Period: 60
-  #     EvaluationPeriods: 2
-  #     Threshold: 10
-  #     TreatMissingData: ignore
-  #     ActionsEnabled: true
-  #     AlarmActions:
-  #       - Ref: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
-  #     Dimensions:
-  #       - Name: QueueName
-  #         Value: !Ref AEMASGEventQueueNameParameter
-  #     ComparisonOperator: GreaterThanThreshold
+  AEMASGEventQueueLengthHighAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "Alarm if queue length avg > 10 for 2 minutes"
+      MetricName: ApproximateNumberOfMessagesVisible
+      Namespace: AWS/SQS
+      Statistic: Average
+      Period: 60
+      EvaluationPeriods: 2
+      Threshold: 10
+      TreatMissingData: ignore
+      ActionsEnabled: true
+      AlarmActions:
+        - Ref: AlarmNotificationTopic
+      Dimensions:
+        - Name: QueueName
+          Value: !Ref AEMASGEventQueueNameParameter
+      ComparisonOperator: GreaterThanThreshold
 
 Outputs:
 
