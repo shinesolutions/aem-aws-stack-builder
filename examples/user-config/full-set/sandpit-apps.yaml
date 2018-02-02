@@ -171,6 +171,14 @@ dns_records:
   publish_dispatcher:
     record_set_name: "{{ stack_prefix }}-publish-dispatcher"
 
+messaging:
+  stack_name: aem-messaging-stack
+  asg_event_sqs_queue_name: aem-asg-event-queue
+  asg_event_sns_topic_name: aem-asg-event-topic
+  asg_event_sns_topic_display_name: AEM ASG Event Topic
+  alarm_notification:
+    contact_email: user@example.com
+
 stack_manager:
   ssm_stack_name: aem-stack-manager-ssm
   stack_name: aem-stack-manager

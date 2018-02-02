@@ -44,6 +44,10 @@ Parameters:
     Type: String
     Description: The AEM Stack Auto Scaling Group Event Topic Name
 
+  AEMCWEventNotificationEmail:
+    Type: String
+    Descriptiopn: The EMail adress for sending CW Alarm messages
+
 Resources:
 
   InstanceProfilesStack:
@@ -88,6 +92,8 @@ Resources:
           Ref: AEMASGEventTopicDisplayNameParameter
         AEMASGEventTopicNameParameter:
           Ref: AEMASGEventTopicNameParameter
+        AEMCWEventNotificationEmail:
+          Ref: AEMCWEventNotificationEmail
 
 Outputs:
 
