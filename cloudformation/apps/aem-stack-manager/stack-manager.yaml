@@ -385,3 +385,9 @@ Outputs:
     Export:
       Name:
         Fn::Sub: ${StackManagerStackPrefixParameter}-TaskStatusQueryLambda
+
+  SSMServiceRoleArn:
+    Description: Value is needed by Ansible
+    Value:
+      Fn::ImportValue:
+        Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerSSMServiceRoleArn

@@ -23,16 +23,9 @@
       tags:
         - create
 
-    - name: Upload CloudFormation DNS Records Templates to S3
-      command: >
-              aws s3 cp ../../../../cloudformation/apps/dns-records.yaml
-                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}/
-      tags:
-        - create
-
     - name: Create AEM Stack Manager Main Resources Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}-manager"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -75,21 +68,21 @@
       tags:
         - create
 
-    #
-    # - name: Create Stack Manager Task and SSM Document Name Mapping File
-    #   command: >
-    #     "python {{ playbook_dir }}/../../../../stage/aem-stack-manager-cloud/scripts/create_config.py"
-    #            "{{ stack_prefix }}"
-    #            "{{ main.ssm_stack_name }}"
-    #            "{{ s3.data_bucket_name }}"
-    #            "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-    #            "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
-    #            "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
-    #            "{{ s3.data_bucket_name }}"
-    #            "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
-    #            "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
-    #   tags:
-    #     - create
+    
+    - name: Create Stack Manager Task and SSM Document Name Mapping File
+      command: >
+        python "{{ playbook_dir }}"/../../../../stage/aem-stack-manager-cloud/scripts/create_config.py
+               "{{ stack_prefix }}"
+               "{{ main.ssm_stack_name }}"
+               "{{ s3.data_bucket_name }}"
+               "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
+               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
+               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.SSMServiceRoleArn }}"
+               "{{ s3.data_bucket_name }}"
+               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
+               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
+      tags:
+        - create
 
     - name: Check if a Stack Exists
       command: >
