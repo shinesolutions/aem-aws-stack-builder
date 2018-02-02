@@ -24,7 +24,7 @@ Parameters:
 
   AEMCWEventNotificationEmail:
     Type: String
-    Descriptiopn: The EMail adress for sending CW Alarm messages
+    Description: The EMail adress for sending CW Alarm messages
 
 Resources:
 
