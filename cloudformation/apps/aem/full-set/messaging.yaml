@@ -72,8 +72,8 @@ Resources:
     Properties:
       DisplayName: !Sub ${MessagingStackPrefixParameter}-alarm-notification-topic
     Subscription:
-      Endpoint: !Ref AEMCWEventNotificationEmail
-      Protocol: email
+      - Endpoint: !Ref AEMCWEventNotificationEmail
+        Protocol: email
 
   # AEMASGEventQueueLengthHighAlarm:
   #   Type: AWS::CloudWatch::Alarm
