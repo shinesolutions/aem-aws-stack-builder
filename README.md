@@ -17,8 +17,14 @@ Stack Builder has been designed with a focus on modularity, allowing the separat
 * `author-publish-dispatcher` - contains AEM Author, AEM Publish, and AEM Dispatcher
 
 Stack Builder currently supports the following AEM architectures:
-* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - runs AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
-* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - runs AEM Author, Publish, and Dispatcher on a single EC2 instance, suitable for development environments
+* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - includes AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
+* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - includes AEM Author, Publish, and Dispatcher on a single EC2 instance, suitable for development environments
+
+Other than the above AEM architectures, Stack Builder also provides the following utilities:
+* Stack Manager([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-stack-manager.png)) - includes [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud), set of AWS Lambda functions that will execute AEM functionalities via an SSM agent
+* Network - includes CloudFormation templates for creating VPC, subnets, and some sample NAT Gateway and Bastion set up
+
+Please note that even though AEM AWS Stack Builder is specific for AWS, we would like to support other cloud provider(s) as well and contributions are welcome. If you have a need to run AEM on other technology stacks, please start a discussion by creating a GitHub issue or email us at [opensource@shinesolutions.com](mailto://opensource@shinesolutions.com).
 
 Installation
 ------------
