@@ -133,7 +133,7 @@ class config:
                     "cmd-output-bucket": s3bucketssmoutput,\
                     "cmd-output-prefix": s3prefixssmoutput,\
                     "status-topic-arn": taskstatustopicarn,\
-                    "ssm-service-role-arn": taskstatustopicarn,\
+                    "ssm-service-role-arn": ssmservicerolearn,\
                     "dynamodb-table": dynamodbtablename\
                     }}
             
