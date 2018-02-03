@@ -134,7 +134,7 @@ class config:
                     "cmd-output-prefix": s3prefixssmoutput,\
                     "status-topic-arn": taskstatustopicarn,\
                     "ssm-service-role-arn": taskstatustopicarn,\
-                    "dynamodbtablename": dynamodbtablename\
+                    "dynamodb-table": dynamodbtablename\
                     }}
             
         # Create dict for task mapping
