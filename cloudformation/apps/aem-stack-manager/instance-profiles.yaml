@@ -42,7 +42,7 @@ Resources:
                 Action:
                   - "s3:*"
                 Resource:
-                  - !Sub "arn:aws:s3:::${DataBucketNameParameter}/SSMOutput/*"
+                  - !Sub "arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/SSMOutput/*"
       RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackManagerSSMRole
 
   AEMStackManagerLambdaServiceRole:
