@@ -69,18 +69,19 @@
         - create
 
     
-    - name: Create Stack Manager Task and SSM Document Name Mapping File
-      command: >
-        python "{{ playbook_dir }}"/../../../../stage/aem-stack-manager-cloud/scripts/create_config.py
-               "{{ stack_prefix }}"
-               "{{ main.ssm_stack_name }}"
-               "{{ s3.data_bucket_name }}"
-               "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
-               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.SSMServiceRoleArn }}"
-               "{{ s3.data_bucket_name }}"
-               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
-               "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
+    - name: Create Stack Manager configuration
+      stack_manager_config:
+        AEM_stack_name: "{{ stack_prefix }}"
+        SSM_stack_name: "{{ main.ssm_stack_name }}"
+        S3Bucket: "{{ s3.data_bucket_name }}"
+        S3Folder: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
+        TaskStatusTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
+        SSMServiceRoleArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.SSMServiceRoleArn }}"
+        S3BucketSSMOutput: "{{ s3.data_bucket_name }}"
+        S3PrefixSSMOutput: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/SSMOutput"
+        BackupTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
+        DynamoDBTableName: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
+        state: present
       tags:
         - create
 
