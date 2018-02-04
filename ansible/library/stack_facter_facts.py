@@ -6,20 +6,12 @@ import string
 
 def generate_facts(params):
     return """stack_prefix=%s
-proxy_enabled=%s
-proxy_protocol=%s
-proxy_host=%s
-proxy_port=%s
 cron_env_path=%s
 cron_https_proxy=%s
 stack_manager_sns_topic_arn=%s
 publish_dispatcher_allowed_client=%s
 """ % (
             params['stack_prefix'],
-            str(params['proxy_enabled']).lower(),
-            params['proxy_protocol'],
-            params['proxy_host'],
-            params['proxy_port'],
             params['cron_env_path'],
             params['cron_https_proxy'],
             params['stack_manager_sns_topic_arn'],
@@ -31,10 +23,6 @@ def main():
     module = AnsibleModule(
       argument_spec = dict(
         stack_prefix                      = dict(required=True, type='str'),
-        proxy_enabled                     = dict(required=True, type='bool'),
-        proxy_protocol                    = dict(required=True, type='str'),
-        proxy_host                        = dict(required=True, type='str'),
-        proxy_port                        = dict(required=True, type='str'), # string type to allow empty value when proxy is irrelevant
         cron_env_path                     = dict(required=True, type='str'),
         cron_https_proxy                  = dict(required=True, type='str'),
         stack_manager_sns_topic_arn       = dict(required=True, type='str'),
