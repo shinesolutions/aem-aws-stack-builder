@@ -39,18 +39,17 @@ Installation
 Usage
 -----
 
+- Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
+
 ### Network
 
-Set up common resources and configuration:
-- Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
-- Create [configuration file](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
+Set up [configuration file for network]((https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)).
 
-Set up network stacks:
-- Create VPC, subnets, along with other network resources:
+Create VPC, subnets, along with other network resources:
 
     make create-network stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
 
-- Alternatively, if you don't have the permission to create network resources, you can create a network-exports stack that contains your subnets. TODO:
+Alternatively, if you don't have the permission to create network resources, you can create a network-exports stack that contains the details of your subnets.
 
     make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
 
