@@ -24,9 +24,6 @@ aem:
     jmxremote:
       port: 59182
 
-aem_vpc:
-  id: vpc-2fc3014b
-
 compute:
   key_pair_name: aem-stack-key-pair
   inbound_from_bastion_host_security_group: sg-62153b04

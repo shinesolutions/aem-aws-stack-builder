@@ -22,9 +22,6 @@ aem:
     jmxremote:
       port: 59182
 
-aem_vpc:
-  id: vpc-2fc3014b
-
 security_groups:
   stack_name: aem-security-groups-stack
   author_publish_dispatcher:

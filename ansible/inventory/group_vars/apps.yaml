@@ -3,10 +3,6 @@ network_stack_prefix: overwrite-me
 instance_profile_stack_prefix: overwrite-me
 security_groups_stack_prefix: overwrite-me
 
-aem_vpc:
-  id: overwrite-me
-  author_publish_dispatcher_subnet_id: overwrite-me
-
 aem:
   enable_crxde: false
   enable_default_passwords: false
