@@ -65,12 +65,12 @@ translate_puppet_exit_code() {
 echo "Initialising AEM Stack Builder provisioning..."
 
 # List down version numbers of utility tools
-aws --version
-facter --version
-hiera --version
-puppet --version
-python --version
-ruby --version
+echo "AWS CLI version: $(aws --version)"
+echo "Facter version: $(facter --version)"
+echo "Hiera version: $(hiera --version)"
+echo "Puppet version: $(puppet --version)"
+echo "Python version: $(python --version)"
+echo "Ruby version: $(ruby --version)"
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
   echo "Downloading Custom Stack Provisioner..."
