@@ -87,7 +87,7 @@
 
     - name: Check if a Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}-manager"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -96,7 +96,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}-manager" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -104,7 +104,7 @@
 
     - name: Delete AEM Stack Manager Main Resources Stacks
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}-manager"
         region: "{{ aws.region }}"
         state: absent
       when:
