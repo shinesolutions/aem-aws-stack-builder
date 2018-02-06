@@ -6,9 +6,9 @@ Description:
 
 Parameters:
 
-  InstanceProfilesStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Instance Profiles Resources Stack Prefix
+    Description: The AEM Stack Main Resources Stack Prefix
 
   DataBucketNameParameter:
     Type: String
@@ -43,7 +43,7 @@ Resources:
                   - "s3:*"
                 Resource:
                   - !Sub "arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/SSMOutput/*"
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackManagerSSMRole
+      RoleName: !Sub ${MainStackPrefixParameter}-AEMStackManagerSSMRole
 
   AEMStackManagerLambdaServiceRole:
     Type: AWS::IAM::Role
@@ -89,7 +89,7 @@ Resources:
                 Action:
                   - iam:PassRole
                 Resource: !GetAtt StackmanagerSSMServiceRole.Arn
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackManagerLambdaRole
+      RoleName: !Sub ${MainStackPrefixParameter}-AEMStackManagerLambdaRole
 
 Outputs:
 
@@ -98,7 +98,7 @@ Outputs:
     Description: The Stack Manager Lambda Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
 
   AEMStackManagerLambdaServiceRoleName:
     Value:
@@ -106,14 +106,14 @@ Outputs:
     Description: The Stack Manager Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-StackManagerLambdaServiceRoleName
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
 
   AEMStackManagerSSMServiceRoleArn:
     Value: !GetAtt StackmanagerSSMServiceRole.Arn
     Description: The Stack Manager SSM Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-StackManagerSSMServiceRoleArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn
 
   AEMStackManagerSSMServiceRoleName:
     Value:
@@ -121,4 +121,4 @@ Outputs:
     Description: The Stack Manager Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AemStackManagerSSMServiceRoleName
+        Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerSSMServiceRoleName

@@ -4,9 +4,9 @@ Description: AWS Lambda Functions for utility tasks with Default Schedule Using 
 
 Parameters:
 
-  UtilitiesStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
-    Description: The Utilities Resources Stack Prefix
+    Description: The AEM Stack Main Resources Stack Prefix
 
   DataBucketNameParameter:
     Type: String
@@ -51,7 +51,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: Function to Purge AEM Old Snapshots
-      FunctionName: !Sub ${UtilitiesStackPrefixParameter}-AemSnapshotsPurge
+      FunctionName: !Sub ${MainStackPrefixParameter}-AemSnapshotsPurge
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/purge_snapshots.zip
@@ -59,7 +59,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::ImportValue:
-          Fn::Sub: ${UtilitiesStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
       Timeout: 300
 
@@ -89,7 +89,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: Delete AEM Live Snapshots Regularly
-      Name: !Sub ${UtilitiesStackPrefixParameter}-LiveSnapshotsPurge
+      Name: !Sub ${MainStackPrefixParameter}-LiveSnapshotsPurge
       ScheduleExpression: !Ref LiveSnapshotsPurgeSchedule
       State: ENABLED
       Targets:
@@ -109,7 +109,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: Delete AEM Offline Snapshots Regularly
-      Name: !Sub ${UtilitiesStackPrefixParameter}-OfflineSnapshotsPurge
+      Name: !Sub ${MainStackPrefixParameter}-OfflineSnapshotsPurge
       ScheduleExpression: !Ref OfflineSnapshotsPurgeSchedule
       State: ENABLED
       Targets:
@@ -130,7 +130,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: Delete AEM Orchestration Snapshot Regularly
-      Name: !Sub ${UtilitiesStackPrefixParameter}-OrchestrationSnapshotsPurge
+      Name: !Sub ${MainStackPrefixParameter}-OrchestrationSnapshotsPurge
       ScheduleExpression: !Ref OrchestrationSnapshotsPurgeSchedule
       State: ENABLED
       Targets:
@@ -147,7 +147,7 @@ Resources:
       SourceArn: !GetAtt OrchestrationSnapshotsPurgeRule.Arn
 
 Outputs:
-  
+
   PurgeSnapshotFunctionName:
     Description: Lambda Function Name for Snapshot Purge Function
     Value: !Ref SnapshotsPurgeLambdaFunction

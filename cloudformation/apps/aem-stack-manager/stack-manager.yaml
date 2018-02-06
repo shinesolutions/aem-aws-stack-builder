@@ -5,9 +5,9 @@ Description: Create AWS Lambda Implementation of AEM Stack Mananger Resources
 
 Parameters:
 
-  StackManagerStackPrefixParameter:
+  MainStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Manager Resources Stack Prefix
+    Description: The AEM Stack Main Resources Stack Prefix
 
   DataBucketNameParameter:
     Type: String
@@ -58,7 +58,7 @@ Resources:
           ProvisionedThroughput:
             ReadCapacityUnits: 1
             WriteCapacityUnits: 1
-      TableName: !Sub ${StackManagerStackPrefixParameter}-AemStackManagerTable
+      TableName: !Sub ${MainStackPrefixParameter}-AemStackManagerTable
       TimeToLiveSpecification:
         AttributeName: !Ref DynamoDBTTLAttribute
         Enabled: True
@@ -71,7 +71,7 @@ Resources:
       Path: /
       Roles:
         - Fn::ImportValue:
-            Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleName
+            Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -88,19 +88,19 @@ Resources:
               - dynamodb:Query
             Resource:
               - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}/index/
-      ManagedPolicyName: !Sub ${StackManagerStackPrefixParameter}-StackManagerLambdaPolicy
+      ManagedPolicyName: !Sub ${MainStackPrefixParameter}-StackManagerLambdaPolicy
 
   StackManagerTopic:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: AEM Stack Manager Topic
-      TopicName: !Sub ${StackManagerStackPrefixParameter}-AemStackManager
+      TopicName: !Sub ${MainStackPrefixParameter}-AemStackManager
 
   TaskStatusTopic:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: !Sub AEM Stack Manager Topic
-      TopicName: !Sub ${StackManagerStackPrefixParameter}-AemStackManagerStatus
+      TopicName: !Sub ${MainStackPrefixParameter}-AemStackManagerStatus
 
   StackManagerLambdaSSMPolicy:
     Type: AWS::IAM::ManagedPolicy
@@ -110,7 +110,7 @@ Resources:
       Path: /
       Roles:
         - Fn::ImportValue:
-            Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleName
+            Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -118,13 +118,13 @@ Resources:
             Action:
               - sns:Publish
             Resource: !Ref TaskStatusTopic
-      ManagedPolicyName: !Sub ${StackManagerStackPrefixParameter}-StackManagerLambdaSSMPolicy
+      ManagedPolicyName: !Sub ${MainStackPrefixParameter}-StackManagerLambdaSSMPolicy
 
   ManagerLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       Description: AEM Stack Manager Function
-      FunctionName: !Sub ${StackManagerStackPrefixParameter}-AemStackManager
+      FunctionName: !Sub ${MainStackPrefixParameter}-AemStackManager
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/aem_stack_manager.zip
@@ -137,7 +137,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::ImportValue:
-          Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
       Timeout: 15
 
@@ -170,7 +170,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Description: AEM Task Status Query
-      FunctionName: !Sub ${StackManagerStackPrefixParameter}-AemTaskQuery
+      FunctionName: !Sub ${MainStackPrefixParameter}-AemTaskQuery
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/aem_task_query.zip
@@ -183,7 +183,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::ImportValue:
-          Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
       Timeout: 15
 
@@ -258,13 +258,13 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: AEM Backup
-      TopicName: !Sub ${StackManagerStackPrefixParameter}-AemOfflineBackup
+      TopicName: !Sub ${MainStackPrefixParameter}-AemOfflineBackup
 
   OfflineBackupLambda:
     Type: AWS::Lambda::Function
     Properties:
       Description: AEM Offline Backup Function
-      FunctionName: !Sub ${StackManagerStackPrefixParameter}-AemOfflineBackup
+      FunctionName: !Sub ${MainStackPrefixParameter}-AemOfflineBackup
       Code:
         S3Bucket: !Ref DataBucketNameParameter
         S3Key: !Sub ${S3DataStackManagerPrefix}/aem_offline_snapshot.zip
@@ -277,7 +277,7 @@ Resources:
       MemorySize: 128
       Role:
         Fn::ImportValue:
-          Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
       Timeout: 15
 
@@ -336,7 +336,7 @@ Resources:
       Path: /
       Roles:
         - Fn::ImportValue:
-            Fn::Sub: ${StackManagerStackPrefixParameter}-AemStackManagerSSMServiceRoleName
+            Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerSSMServiceRoleName
       PolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -346,7 +346,7 @@ Resources:
             Resource:
               - !Ref OfflineBackupTopic
               - !Ref TaskStatusTopic
-      ManagedPolicyName: !Sub ${StackManagerStackPrefixParameter}-AEMStackManagerSSMPolicy
+      ManagedPolicyName: !Sub ${MainStackPrefixParameter}-AEMStackManagerSSMPolicy
 
 Outputs:
 
@@ -355,14 +355,14 @@ Outputs:
     Value: !Ref StackManagerTopic
     Export:
       Name:
-        Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerTopicArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerTopicArn
 
   BackupTopicArn:
     Description: SNS topic Arn used to orchestrate offline backup
     Value: !Ref OfflineBackupTopic
     Export:
       Name:
-        Fn::Sub: ${StackManagerStackPrefixParameter}-BackupTopicArn
+        Fn::Sub: ${MainStackPrefixParameter}-BackupTopicArn
 
 
   TaskStatusTopicArn:
@@ -370,24 +370,24 @@ Outputs:
     Value: !Ref TaskStatusTopic
     Export:
       Name:
-        Fn::Sub: ${StackManagerStackPrefixParameter}-TaskStatusTopicArn
+        Fn::Sub: ${MainStackPrefixParameter}-TaskStatusTopicArn
 
   AemStackManagerTableName:
     Description: DynamoDB table name for AEM stack manager
     Value: !Ref StackManagerTable
     Export:
       Name:
-        Fn::Sub: ${StackManagerStackPrefixParameter}-AemStackManagerTableName
+        Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerTableName
 
   TaskStatusQueryLambda:
     Description: Task status query lambda function name
     Value: !Ref QueryLambdaFunction
     Export:
       Name:
-        Fn::Sub: ${StackManagerStackPrefixParameter}-TaskStatusQueryLambda
+        Fn::Sub: ${MainStackPrefixParameter}-TaskStatusQueryLambda
 
   SSMServiceRoleArn:
     Description: Value is needed by Ansible
     Value:
       Fn::ImportValue:
-        Fn::Sub: ${StackManagerStackPrefixParameter}-StackManagerSSMServiceRoleArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn

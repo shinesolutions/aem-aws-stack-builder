@@ -58,7 +58,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter:
+        MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
@@ -73,7 +73,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-manager.yaml
       Parameters:
-        StackManagerStackPrefixParameter:
+        MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
@@ -90,7 +90,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/utilities.yaml
       Parameters:
-        UtilitiesStackPrefixParameter:
+        MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
