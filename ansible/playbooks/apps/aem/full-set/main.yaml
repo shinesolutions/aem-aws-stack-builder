@@ -127,6 +127,4 @@
       when:
         "stack_query.rc == 0"
       tags:
-      # temporarily excluded from delete action until
-      # https://github.com/shinesolutions/puppet-simianarmy/issues/3 is fixed
-      - deleteEXCLUDE
+      - delete
