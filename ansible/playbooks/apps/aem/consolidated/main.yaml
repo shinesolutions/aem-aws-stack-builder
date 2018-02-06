@@ -13,12 +13,11 @@
         disable_rollback: true
         template: "../../../../../cloudformation/apps/aem/consolidated/main.yaml"
         template_parameters:
+          PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
-          SecurityGroupsStackPrefixParameter: "{{ security_groups_stack_prefix }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
-          InstanceProfilesStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"

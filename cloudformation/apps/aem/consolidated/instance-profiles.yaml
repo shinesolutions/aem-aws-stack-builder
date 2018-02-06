@@ -6,9 +6,9 @@ Description:
 
 Parameters:
 
-  InstanceProfilesStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
       Type: String
-      Description: The AEM Instance Profiles Resources Stack Prefix
+      Description: The AEM Prerequisite Resources Stack Prefix
 
 Resources:
 
@@ -59,7 +59,7 @@ Resources:
               Resource:
                 - arn:aws:logs:*:*:*
       RoleName:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
 
   # Currently, AWS only supports one Role per InstanceProfile
   # Hence, we can't have roles from (Author, Publish, Dispatcher) in InstanceProfile
@@ -79,4 +79,4 @@ Outputs:
     Description: The Author Publish Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile

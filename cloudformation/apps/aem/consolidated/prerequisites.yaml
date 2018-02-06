@@ -6,7 +6,7 @@ Parameters:
 
   PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Prerequisites Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   NetworkStackPrefixParameter:
     Type: String
@@ -32,7 +32,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter:
+        PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
 
   SecurityGroupsStack:
@@ -41,7 +41,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
       Parameters:
-        SecurityGroupsStackPrefixParameter:
+        PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
         NetworkStackPrefixParameter:
           Ref: NetworkStackPrefixParameter

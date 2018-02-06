@@ -12,13 +12,9 @@ Parameters:
     Type: String
     Description: The AEM Stack Network Resources Stack Prefix
 
-  InstanceProfilesStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The Author Instance Profiles Resources Stack Prefix
-
-  SecurityGroupsStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Security Groups Resources Stack Prefix
+    Description: The AEM Prerequisite Resources Stack Prefix
 
   AuthorPublishDispatcherImageParameter:
     Type: AWS::EC2::Image::Id
@@ -99,7 +95,7 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
+        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
@@ -112,7 +108,7 @@ Resources:
         DeviceIndex: '0'
         GroupSet:
           - Ref: InboundFromBastionHostSecurityGroupParameter
-          - Fn::ImportValue: !Sub ${SecurityGroupsStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+          - Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
         SubnetId:
           Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
       Tags:

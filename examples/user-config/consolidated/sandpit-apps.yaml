@@ -1,6 +1,4 @@
 network_stack_prefix: sandpit-2
-security_groups_stack_prefix: "{{ prerequisites_stack_prefix }}"
-instance_profiles_stack_prefix: "{{ prerequisites_stack_prefix }}"
 
 main:
   stack_name: aem-consolidated-main-stack
