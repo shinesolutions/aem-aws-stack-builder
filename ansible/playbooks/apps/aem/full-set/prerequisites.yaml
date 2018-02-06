@@ -42,6 +42,7 @@
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
           AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
+          SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
 
       tags:
       - create

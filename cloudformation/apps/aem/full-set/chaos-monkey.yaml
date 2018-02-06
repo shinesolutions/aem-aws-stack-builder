@@ -4,13 +4,9 @@ Description: Create the Compute resources for the AEM Chaos Monkey
 
 Parameters:
 
-  InstanceProfilesStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Instance Profile Stack Prefix
-
-  SecurityGroupsStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Security Groups Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   MainStackPrefixParameter:
     Type: String
@@ -71,7 +67,7 @@ Resources:
             Ref: ChaosMonkeyRootVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-ChaosMonkeyInstanceProfile
+        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
       ImageId:
         Ref: ChaosMonkeyImageParameter
       InstanceMonitoring: false
@@ -81,7 +77,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-ChaosMonkeySecurityGroup
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeySecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:

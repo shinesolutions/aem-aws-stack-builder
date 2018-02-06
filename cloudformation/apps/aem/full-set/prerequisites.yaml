@@ -48,6 +48,10 @@ Parameters:
     Type: String
     Description: The EMail adress for sending CW Alarm messages
 
+  SSLCertificateARNParameter:
+    Type: String
+    Description: SSL Certificate ARN
+
 Resources:
 
   InstanceProfilesStack:
@@ -56,7 +60,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter:
+        PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
 
   SecurityGroupsStack:
@@ -65,7 +69,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
       Parameters:
-        SecurityGroupsStackPrefixParameter:
+        PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
         NetworkStackPrefixParameter:
           Ref: NetworkStackPrefixParameter
@@ -84,7 +88,7 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/messaging.yaml
       Parameters:
-        MessagingStackPrefixParameter:
+        PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
         AEMASGEventQueueNameParameter:
           Ref: AEMASGEventQueueNameParameter
@@ -120,3 +124,11 @@ Outputs:
     Export:
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-MessagingStackName
+
+  SSLCertificateARN:
+    Description: SSL Certificate ARN
+    Value:
+      Ref: SSLCertificateARNParameter
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN

@@ -18,7 +18,15 @@ lint:
 
 validate:
 	for template in cloudformation/*/*.yaml; do \
-		echo "checking template $${template} ...."; \
+		echo "Checking template $${template} ...."; \
+		aws cloudformation validate-template --template-body "file://$$template"; \
+	done
+	for template in cloudformation/*/*/*.yaml; do \
+		echo "Checking template $${template} ...."; \
+		aws cloudformation validate-template --template-body "file://$$template"; \
+	done
+	for template in cloudformation/*/*/*/*.yaml; do \
+		echo "Checking template $${template} ...."; \
 		aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 

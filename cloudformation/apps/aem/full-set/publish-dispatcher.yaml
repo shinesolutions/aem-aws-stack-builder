@@ -4,17 +4,9 @@ Description: Create the Compute resources for the AEM Publish Dispatcher
 
 Parameters:
 
-  InstanceProfilesStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Instance Profile Stack Prefix
-
-  MessagingStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Messaging Stack Prefix
-
-  SecurityGroupsStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Security Groups Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   MainStackPrefixParameter:
     Type: String
@@ -113,13 +105,14 @@ Resources:
         Protocol: HTTPS
         InstancePort: '443'
         InstanceProtocol: HTTPS
-        SSLCertificateId: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
-          # Fn::ImportValue: !Sub ${MainStackPrefixParameter}-PrvWildcardCertificateARN
+        SSLCertificateId:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
       Scheme:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishDispatcherELBSecurityGroup
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         Fn::Split:
@@ -151,7 +144,7 @@ Resources:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-PublishDispatcherInstanceProfile
+        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false
@@ -161,7 +154,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishDispatcherSecurityGroup
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -250,7 +243,7 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${MessagingStackPrefixParameter}-AEMASGEventTopic
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
       Tags:
         - Key: Name
           Value: AEM Publish Dispatcher

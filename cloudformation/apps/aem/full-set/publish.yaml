@@ -4,17 +4,9 @@ Description: Create the Compute resources for the AEM Publish
 
 Parameters:
 
-  InstanceProfilesStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Instance Profile Stack Prefix
-
-  MessagingStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Messaging Stack Prefix
-
-  SecurityGroupsStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Security Groups Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   MainStackPrefixParameter:
     Type: String
@@ -117,7 +109,7 @@ Resources:
               - Ref: PublishDataVolSnapshotParameter
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-PublishInstanceProfile
+        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-PublishInstanceProfile
       ImageId:
         Ref: PublishImageParameter
       InstanceMonitoring: false
@@ -127,7 +119,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishSecurityGroup
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
@@ -161,7 +153,7 @@ Resources:
         - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
         TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${MessagingStackPrefixParameter}-AEMASGEventTopic
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
       Tags:
       - Key: Name
         Value: AEM Publish

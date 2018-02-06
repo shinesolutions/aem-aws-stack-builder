@@ -7,18 +7,10 @@ Parameters:
   MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
-    
-  InstanceProfilesStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Instance Profiles Stack Prefix
 
-  MessagingStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Messaging Stack Prefix
-
-  SecurityGroupsStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Security Groups Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   NetworkStackPrefixParameter:
     Type: String
@@ -260,9 +252,7 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/author.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
-        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
-        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
+        PrerequisitesStackPrefixParameter: !Ref PrerequisitesStackPrefixParameter
         MainStackPrefixParameter: !Ref MainStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorLoadBalancerHealthCheckTargetParameter: !Ref AuthorLoadBalancerHealthCheckTargetParameter
@@ -283,9 +273,7 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
-        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
-        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
+        PrerequisitesStackPrefixParameter: !Ref PrerequisitesStackPrefixParameter
         MainStackPrefixParameter: !Ref MainStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishImageParameter: !Ref PublishImageParameter
@@ -309,9 +297,7 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish-dispatcher.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
-        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
-        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
+        PrerequisitesStackPrefixParameter: !Ref PrerequisitesStackPrefixParameter
         MainStackPrefixParameter: !Ref MainStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         PublishDispatcherLoadBalancerHealthCheckTargetParameter: !Ref PublishDispatcherLoadBalancerHealthCheckTargetParameter
@@ -336,9 +322,7 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/author-dispatcher.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
-        MessagingStackPrefixParameter: !Ref MessagingStackPrefixParameter
-        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
+        PrerequisitesStackPrefixParameter: !Ref PrerequisitesStackPrefixParameter
         MainStackPrefixParameter: !Ref MainStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter: !Ref AuthorDispatcherLoadBalancerHealthCheckTargetParameter
@@ -361,8 +345,7 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/orchestrator.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
-        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
+        PrerequisitesStackPrefixParameter: !Ref PrerequisitesStackPrefixParameter
         MainStackPrefixParameter: !Ref MainStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         OrchestratorImageParameter: !Ref OrchestratorImageParameter
@@ -380,9 +363,9 @@ Resources:
         PublishStackName: !Ref PublishStack
         PublishDispatcherStackName: !Ref PublishDispatcherStack
         MessagingStackName:
-          Fn::ImportValue: !Sub ${MessagingStackPrefixParameter}-MessagingStackName
+          Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-MessagingStackName
         AEMASGEventQueueName:
-          Fn::ImportValue: !Sub ${MessagingStackPrefixParameter}-AEMASGEventQueueName
+          Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName
 
   ChaosMonkeyStack:
     Type: AWS::CloudFormation::Stack
@@ -396,8 +379,7 @@ Resources:
     Properties:
       TemplateURL: !Sub https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/chaos-monkey.yaml
       Parameters:
-        InstanceProfilesStackPrefixParameter: !Ref InstanceProfilesStackPrefixParameter
-        SecurityGroupsStackPrefixParameter: !Ref SecurityGroupsStackPrefixParameter
+        PrerequisitesStackPrefixParameter: !Ref PrerequisitesStackPrefixParameter
         MainStackPrefixParameter: !Ref MainStackPrefixParameter
         NetworkStackPrefixParameter: !Ref NetworkStackPrefixParameter
         ChaosMonkeyImageParameter: !Ref ChaosMonkeyImageParameter

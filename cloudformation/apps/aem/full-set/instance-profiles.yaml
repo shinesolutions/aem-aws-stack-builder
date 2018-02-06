@@ -6,9 +6,9 @@ Description:
 
 Parameters:
 
-  InstanceProfilesStackPrefixParameter:
-      Type: String
-      Description: The AEM Stack Instance Profiles Resources Stack Prefix
+  PrerequisitesStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
 Resources:
 
@@ -52,7 +52,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackPublishDispatcherRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackPublishDispatcherRole
 
   PublishDispatcherInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -103,7 +103,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackPublishRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackPublishRole
 
   PublishInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -154,7 +154,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackAuthorRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackAuthorRole
 
 
   AuthorInstanceProfile:
@@ -200,7 +200,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackAuthorDispatcherRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackAuthorDispatcherRole
 
 
   AuthorDispatcherInstanceProfile:
@@ -278,7 +278,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackOrchestratorRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackOrchestratorRole
 
 
   OrchestratorInstanceProfile:
@@ -352,7 +352,7 @@ Resources:
                   - logs:*
                 Resource:
                   - arn:aws:logs:*:*:*
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMStackChaosMonkeyRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMStackChaosMonkeyRole
 
 
   ChaosMonkeyInstanceProfile:
@@ -365,7 +365,7 @@ Resources:
   AEMStackManagerSnapshotLambdaServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !Sub ${InstanceProfilesStackPrefixParameter}-AEMSnapPurgeLambdaRole
+      RoleName: !Sub ${PrerequisitesStackPrefixParameter}-AEMSnapPurgeLambdaRole
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -379,7 +379,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: !Sub ${InstanceProfilesStackPrefixParameter}-SnapshotsPurgeLambdaPolicy
+        - PolicyName: !Sub ${PrerequisitesStackPrefixParameter}-SnapshotsPurgeLambdaPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -397,7 +397,7 @@ Outputs:
     Description: The Publish Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-PublishDispatcherInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
 
   PublishInstanceProfile:
     Value:
@@ -405,7 +405,7 @@ Outputs:
     Description: The Publish Instance Profile
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-PublishInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishInstanceProfile
 
   AuthorInstanceProfile:
     Value:
@@ -413,7 +413,7 @@ Outputs:
     Description: The Author Instance Profile
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AuthorInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
 
   AuthorDispatcherInstanceProfile:
     Value:
@@ -421,7 +421,7 @@ Outputs:
     Description: The Author Dispatcher Instance Profile
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-AuthorDispatcherInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherInstanceProfile
 
   OrchestratorInstanceProfile:
     Value:
@@ -429,7 +429,7 @@ Outputs:
     Description: The Orchestrator Instance Profile
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-OrchestratorInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorInstanceProfile
 
   ChaosMonkeyInstanceProfile:
     Value:
@@ -437,14 +437,14 @@ Outputs:
     Description: The Chaos Monkey Instance Profile
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-ChaosMonkeyInstanceProfile
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
 
   AEMStackManagerSnapshotLambdaServiceRoleArn:
     Value: !GetAtt AEMStackManagerSnapshotLambdaServiceRole.Arn
     Description: The Stack Manager Lambda Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
 
   AEMStackManagerSnapshotLambdaServiceRoleName:
     Value:
@@ -452,4 +452,4 @@ Outputs:
     Description: AEM StackManager Snapshot Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${InstanceProfilesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName

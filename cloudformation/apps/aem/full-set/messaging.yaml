@@ -6,9 +6,9 @@ Description:
 
 Parameters:
 
-  MessagingStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Messaging Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   AEMASGEventQueueNameParameter:
     Type: String
@@ -70,7 +70,7 @@ Resources:
   AlarmNotificationTopic:
     Type: AWS::SNS::Topic
     Properties:
-      DisplayName: !Sub ${MessagingStackPrefixParameter}-alarm-notification-topic
+      DisplayName: !Sub ${PrerequisitesStackPrefixParameter}-alarm-notification-topic
       Subscription:
         - Endpoint: !Ref AEMCWEventNotificationEmail
           Protocol: email
@@ -106,7 +106,7 @@ Outputs:
     Description: The AEM ASG Event Queue Name
     Export:
       Name:
-        Fn::Sub: ${MessagingStackPrefixParameter}-AEMASGEventQueueName
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName
 
   AEMASGEventTopic:
     Value:
@@ -114,7 +114,7 @@ Outputs:
     Description: The AEM ASG Event Topic
     Export:
       Name:
-        Fn::Sub: ${MessagingStackPrefixParameter}-AEMASGEventTopic
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
 
   AlarmNotificationTopic:
     Value:
@@ -122,4 +122,4 @@ Outputs:
     Description: The AEM Alarm Notification Topic
     Export:
       Name:
-        Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic

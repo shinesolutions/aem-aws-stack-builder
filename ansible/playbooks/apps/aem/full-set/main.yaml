@@ -21,17 +21,13 @@
         disable_rollback: true
         template: "../../../../../cloudformation/apps/aem/full-set/main.yaml"
         template_parameters:
-          InstanceProfilesStackPrefixParameter: "{{ instance_profiles_stack_prefix }}"
-          MessagingStackPrefixParameter: "{{ messaging_stack_prefix }}"
-          SecurityGroupsStackPrefixParameter: "{{ security_groups_stack_prefix }}"
+          PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
-
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
-
           AuthorLoadBalancerHealthCheckTargetParameter: "{{ author.elb_health_check }}"
           AuthorImageParameter: "{{ ami_ids.author }}"
           AuthorInstanceTypeParameter: "{{ author.instance_type }}"
@@ -39,7 +35,6 @@
           AuthorDataVolSizeParameter: "{{ author.data_vol_size }}"
           UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot }}"
           AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"
-
           PublishImageParameter: "{{ ami_ids.publish }}"
           PublishInstanceTypeParameter: "{{ publish.instance_type }}"
           PublishASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
@@ -50,7 +45,6 @@
           PublishDataVolSizeParameter: "{{ publish.data_vol_size }}"
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
-
           PublishDispatcherLoadBalancerHealthCheckTargetParameter: "{{ publish_dispatcher.elb_health_check }}"
           PublishDispatcherLoadBalancerSchemeParameter: "{{ publish_dispatcher.elb_scheme }}"
           PublishDispatcherImageParameter: "{{ ami_ids.publish_dispatcher }}"
@@ -62,7 +56,6 @@
           PublishDispatcherASGCPUScalingParameters: "{{ publish_dispatcher.asg_cpu_scaling_threshold }}, {{ publish_dispatcher.asg_cpu_high_period }}, {{ publish_dispatcher.asg_cpu_high_eval_period }}, {{ publish_dispatcher.asg_cpu_low_period }}, {{ publish_dispatcher.asg_cpu_low_eval_period }}"
           PublishDispatcherRootVolSizeParameter: "{{ publish_dispatcher.root_vol_size }}"
           PublishDispatcherDataVolSizeParameter: "{{ publish_dispatcher.data_vol_size }}"
-
           AuthorDispatcherLoadBalancerHealthCheckTargetParameter: "{{ author_dispatcher.elb_health_check }}"
           AuthorDispatcherImageParameter: "{{ ami_ids.author_dispatcher }}"
           AuthorDispatcherInstanceTypeParameter: "{{ author_dispatcher.instance_type }}"
@@ -72,23 +65,19 @@
           AuthorDispatcherASGDesiredCapacityParameter: "{{ author_dispatcher.desired_capacity }}"
           AuthorDispatcherRootVolSizeParameter: "{{ author_dispatcher.root_vol_size }}"
           AuthorDispatcherDataVolSizeParameter: "{{ author_dispatcher.data_vol_size }}"
-
           OrchestratorImageParameter: "{{ ami_ids.orchestrator }}"
           OrchestratorInstanceTypeParameter: "{{ orchestrator.instance_type }}"
           OrchestratorASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           OrchestratorRootVolSizeParameter: "{{ orchestrator.root_vol_size }}"
           OrchestratorDataVolSizeParameter: "{{ orchestrator.data_vol_size }}"
-
           ChaosMonkeyImageParameter: "{{ ami_ids.chaos_monkey }}"
           ChaosMonkeyInstanceTypeParameter: "{{ chaos_monkey.instance_type }}"
           ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_a }}, {{ aws.availability_zone_b }}"
           ChaosMonkeyRootVolSizeParameter: "{{ chaos_monkey.root_vol_size }}"
-
           Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
           AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
-
           ImageRootDevice: "{{ ami_root_device_name }}"
 
       tags:

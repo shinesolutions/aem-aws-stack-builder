@@ -4,17 +4,9 @@ Description: Create the Compute resources for the AEM Author
 
 Parameters:
 
-  InstanceProfilesStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Instance Profile Stack Prefix
-
-  MessagingStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Messaging Stack Prefix
-
-  SecurityGroupsStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Security Groups Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   MainStackPrefixParameter:
     Type: String
@@ -88,7 +80,7 @@ Resources:
       ActionsEnabled: true
       AlarmActions:
         - Fn::ImportValue:
-            Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
       AlarmName:
         Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
@@ -113,10 +105,10 @@ Resources:
       ActionsEnabled: true
       AlarmActions:
         - Fn::ImportValue:
-            Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
       OKActions:
         - Fn::ImportValue:
-            Fn::Sub: ${MessagingStackPrefixParameter}-AlarmNotificationTopic
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
       AlarmDescription: Multiple Author Instances have Enterered into Service
       AlarmName:
         Fn::Sub: ${MainStackPrefixParameter}-MultiAuthorInstanceAlarm
@@ -154,7 +146,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParameter
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-AuthorInstanceProfile
+        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -163,7 +155,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorSecurityGroup
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue:
@@ -207,7 +199,7 @@ Resources:
               - Ref: AuthorDataVolSnapshotParameter
               - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${InstanceProfilesStackPrefixParameter}-AuthorInstanceProfile
+        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -216,7 +208,7 @@ Resources:
         Ref: ComputeKeyPairNameParameter
       SecurityGroupIds:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorSecurityGroup
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue:
@@ -266,12 +258,13 @@ Resources:
         Protocol: HTTPS
         InstancePort: '5432'
         InstanceProtocol: HTTPS
-        SSLCertificateId: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
-          # Fn::ImportValue: !Sub ${MainStackPrefixParameter}-PrvWildcardCertificateARN
+        SSLCertificateId:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
-          Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorELBSecurityGroup
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorELBSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         Fn::Split:

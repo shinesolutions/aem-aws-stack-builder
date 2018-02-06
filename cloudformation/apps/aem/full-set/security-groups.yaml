@@ -6,9 +6,9 @@ Description:
 
 Parameters:
 
-  SecurityGroupsStackPrefixParameter:
+  PrerequisitesStackPrefixParameter:
     Type: String
-    Description: The AEM Stack Security Groups Resources Stack Prefix
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
 
   NetworkStackPrefixParameter:
     Type: String
@@ -42,7 +42,7 @@ Resources:
           Value: AEM Publish Dispatcher ELB Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -103,7 +103,7 @@ Resources:
           Value: AEM Publish Dispatcher Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -220,7 +220,7 @@ Resources:
           Value: AEM Publish Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -358,7 +358,7 @@ Resources:
           Value: AEM Author Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -538,7 +538,7 @@ Resources:
           Value: AEM Author ELB Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -620,7 +620,7 @@ Resources:
           Value: AEM Author Dispatcher Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -736,7 +736,7 @@ Resources:
           Value: AEM Author Dispatcher ELB Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -797,7 +797,7 @@ Resources:
           Value: AEM Orchestrator Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -889,7 +889,7 @@ Resources:
           Value: AEM Chaos Monkey Security Group
         - Key: StackPrefix
           Value:
-            Ref: SecurityGroupsStackPrefixParameter
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
 
@@ -936,7 +936,7 @@ Outputs:
     Description: The Publish Dispatcher ELB Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishDispatcherELBSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherELBSecurityGroup
 
   PublishDispatcherSecurityGroup:
     Value:
@@ -944,7 +944,7 @@ Outputs:
     Description: The Publish Dispatcher Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishDispatcherSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherSecurityGroup
 
   PublishSecurityGroup:
     Value:
@@ -952,7 +952,7 @@ Outputs:
     Description: The Publish Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-PublishSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishSecurityGroup
 
   AuthorSecurityGroup:
     Value:
@@ -960,7 +960,7 @@ Outputs:
     Description: The Author Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorSecurityGroup
 
   AuthorELBSecurityGroup:
     Value:
@@ -968,7 +968,7 @@ Outputs:
     Description: The Author ELB Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorELBSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorELBSecurityGroup
 
   AuthorDispatcherSecurityGroup:
     Value:
@@ -976,7 +976,7 @@ Outputs:
     Description: The Author Dispatcher Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorDispatcherSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherSecurityGroup
 
   AuthorDispatcherELBSecurityGroup:
     Value:
@@ -984,7 +984,7 @@ Outputs:
     Description: The Author Dispatcher ELB Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
 
   OrchestratorSecurityGroup:
     Value:
@@ -992,7 +992,7 @@ Outputs:
     Description: The Orchestrator Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-OrchestratorSecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorSecurityGroup
 
   ChaosMonkeySecurityGroup:
     Value:
@@ -1000,4 +1000,4 @@ Outputs:
     Description: The Chaos Monkey Security Group
     Export:
       Name:
-        Fn::Sub: ${SecurityGroupsStackPrefixParameter}-ChaosMonkeySecurityGroup
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeySecurityGroup
