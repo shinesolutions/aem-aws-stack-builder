@@ -68,9 +68,10 @@
       tags:
         - create
 
-    
+
     - name: Create Stack Manager configuration
       stack_manager_config:
+        region: "{{ aws.region }}"
         AEM_stack_name: "{{ stack_prefix }}"
         SSM_stack_name: "{{ main.ssm_stack_name }}"
         S3Bucket: "{{ s3.data_bucket_name }}"
