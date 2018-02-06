@@ -122,8 +122,8 @@
 
     - name: Delete Simian Army SimpleDB domain
       delete_sdb_domain:
-        sdb_domain_name: "SIMIAN_ARMY_{{ stack_prefix }}"
-
+        domain_name: "SIMIAN_ARMY_{{ stack_prefix }}"
+        region: "{{ aws.region }}"
       when:
         "stack_query.rc == 0"
       tags:
