@@ -6,6 +6,12 @@ main:
 prerequisites:
   stack_name: aem-consolidated-prerequisites-stack
 
+proxy:
+  enabled: false
+  protocol:
+  host:
+  port:
+
 aem:
   version: '6.2'
   enable_crxde: true

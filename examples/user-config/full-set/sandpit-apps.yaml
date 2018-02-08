@@ -7,8 +7,17 @@ main:
 prerequisites:
   stack_name: aem-prerequisites-stack
 
+proxy:
+  enabled: false
+  protocol:
+  host:
+  port:
+    
 aem:
+  # AEM 6.2
   version: '6.2'
+  # AEM 6.3
+  # version: '6.3'
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: false
