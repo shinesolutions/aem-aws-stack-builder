@@ -30,6 +30,7 @@
 * Introduce parent CloudFormation stacks to Full Set architecture
 * Replace configuration file with stack output values for environment parameters
 * Add Puppet exit code translation in stack-init script
+* Add shortcode support to CloudFormation template global tagging
 
 ### 1.1.2
 * Disable generated system user credentials logging #34
