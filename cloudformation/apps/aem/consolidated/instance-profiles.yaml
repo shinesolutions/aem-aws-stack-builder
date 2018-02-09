@@ -1,82 +1,69 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
-
-Description:
-  Create Instance Profiles for AEM Stack
-
-Parameters:
-
-  PrerequisitesStackPrefixParameter:
-      Type: String
-      Description: The AEM Prerequisite Resources Stack Prefix
-
-Resources:
-
-  AuthorPublishDispatcherRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - ec2.amazonaws.com
-          Action:
-          - sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
-      Policies:
-      - PolicyName: AuthorPublishDispatcherRolePolicy
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Action:
-                - ec2:Describe*
-                - ec2:CreateTags
-                - ec2:AttachVolume
-                - ec2:CreateVolume
-                - ec2:DetachVolume
-                - ec2:CreateSnapshot
-                - ec2:ModifyInstanceAttribute
-                - autoscaling:CreateLaunchConfiguration
-                - autoscaling:DescribeLaunchConfigurations
-                - autoscaling:UpdateAutoScalingGroup
-                - autoscaling:CreateOrUpdateTags
-                - cloudwatch:PutMetricData
-              Resource: "*"
-            - Effect: Allow
-              Action:
-                - s3:Get*
-                - s3:List*
-                - s3:Put*
-              Resource: "*"
-            - Effect: Allow
-              Action:
-                - logs:*
-              Resource:
-                - arn:aws:logs:*:*:*
-      RoleName:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
-
-  # Currently, AWS only supports one Role per InstanceProfile
-  # Hence, we can't have roles from (Author, Publish, Dispatcher) in InstanceProfile
-  # See http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-roles
-  AuthorPublishDispatcherInstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: /
-      Roles:
-      - Ref: AuthorPublishDispatcherRole
-
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Instance Profiles for AEM Stack
 Outputs:
-
   AuthorPublishDispatcherInstanceProfile:
-    Value:
-      Ref: AuthorPublishDispatcherInstanceProfile
     Description: The Author Publish Dispatcher Instance Profile
     Export:
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
+    Value:
+      Ref: AuthorPublishDispatcherInstanceProfile
+Parameters:
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Prerequisite Resources Stack Prefix
+    Type: String
+Resources:
+  AuthorPublishDispatcherInstanceProfile:
+    Properties:
+      Path: /
+      Roles:
+      - Ref: AuthorPublishDispatcherRole
+    Type: AWS::IAM::InstanceProfile
+  AuthorPublishDispatcherRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - ec2:Describe*
+            - ec2:CreateTags
+            - ec2:AttachVolume
+            - ec2:CreateVolume
+            - ec2:DetachVolume
+            - ec2:CreateSnapshot
+            - ec2:ModifyInstanceAttribute
+            - autoscaling:CreateLaunchConfiguration
+            - autoscaling:DescribeLaunchConfigurations
+            - autoscaling:UpdateAutoScalingGroup
+            - autoscaling:CreateOrUpdateTags
+            - cloudwatch:PutMetricData
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - s3:Get*
+            - s3:List*
+            - s3:Put*
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - logs:*
+            Effect: Allow
+            Resource:
+            - arn:aws:logs:*:*:*
+          Version: '2012-10-17'
+        PolicyName: AuthorPublishDispatcherRolePolicy
+      RoleName:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
+    Type: AWS::IAM::Role

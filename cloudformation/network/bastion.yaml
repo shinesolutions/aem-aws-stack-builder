@@ -1,33 +1,24 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
-
+AWSTemplateFormatVersion: '2010-09-09'
 Description: Create a Bastion Host inside AEM VPC
-
 Parameters:
-  StackPrefix:
-    Type: String
-    Description: Used to Namespace the Exported Resources
-    Default: ""
-
   BastionImageId:
-    Type: AWS::EC2::Image::Id
     Description: AMI Id used for Bastion Host
-
+    Type: AWS::EC2::Image::Id
   BastionKeyPairName:
-    Type: AWS::EC2::KeyPair::KeyName
     Description: Key Pair Name for the Bastion Host
-
-  BastionSubnet:
-    Type: AWS::EC2::Subnet::Id
-    Description: Subnet Ids the Bastion Host Will be Launched into
-
+    Type: AWS::EC2::KeyPair::KeyName
   BastionSecurityGroups:
-    Type: List<AWS::EC2::SecurityGroup::Id>
     Description: The Set of Security Groups Attached to the Bastion Host
-
+    Type: List<AWS::EC2::SecurityGroup::Id>
+  BastionSubnet:
+    Description: Subnet Ids the Bastion Host Will be Launched into
+    Type: AWS::EC2::Subnet::Id
+  StackPrefix:
+    Default: ''
+    Description: Used to Namespace the Exported Resources
+    Type: String
 Resources:
   Bastion:
-    Type: "AWS::EC2::Instance"
     Properties:
       ImageId:
         Ref: BastionImageId
@@ -35,14 +26,13 @@ Resources:
       KeyName:
         Ref: BastionKeyPairName
       NetworkInterfaces:
-        -
-          AssociatePublicIpAddress: true
-          DeviceIndex: "0"
-          GroupSet:
-            Ref: BastionSecurityGroups
-          SubnetId:
-            Ref: BastionSubnet
+      - AssociatePublicIpAddress: true
+        DeviceIndex: '0'
+        GroupSet:
+          Ref: BastionSecurityGroups
+        SubnetId:
+          Ref: BastionSubnet
       Tags:
-        -
-          Key: Name
-          Value: bastion
+      - Key: Name
+        Value: bastion
+    Type: AWS::EC2::Instance

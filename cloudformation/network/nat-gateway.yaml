@@ -1,43 +1,34 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
-
-Description:
-  Create Nat Gateway and add to private Route Table for AEM Stack
-
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Nat Gateway and add to private Route Table for AEM Stack
+Outputs:
+  Ec2NatGateway:
+    Description: The Nat-Gatway for the AEM Stack
+    Value:
+      Ref: Ec2NatGateway
 Parameters:
-
-  StackPrefix:
-    Type: String
-    Description: Used to Namespace the Exported Resources
-    Default: ""
-
   Ec2NatGatewayElasticIpAllocationIdParameter:
-    Type: String
     Default: eipalloc-32711957
     Description: The EC2 Nat Gateway Elastic Ip Allocation Id
-
+    Type: String
+  StackPrefix:
+    Default: ''
+    Description: Used to Namespace the Exported Resources
+    Type: String
 Resources:
-
   Ec2NatGateway:
-    Type: AWS::EC2::NatGateway
     Properties:
       AllocationId:
         Ref: Ec2NatGatewayElasticIpAllocationIdParameter
       SubnetId:
-        Fn::ImportValue: !Sub ${StackPrefix}-PublishDispatcherELBSubnetA
-
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetA
+    Type: AWS::EC2::NatGateway
   PrivateInternetGatewayRoute:
-    Type: AWS::EC2::Route
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId:
         Ref: Ec2NatGateway
       RouteTableId:
-        Fn::ImportValue: !Sub  ${StackPrefix}-PrivateRouteTable
-
-Outputs:
-
-  Ec2NatGateway:
-    Value:
-      Ref: Ec2NatGateway
-    Description: The Nat-Gatway for the AEM Stack
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-PrivateRouteTable
+    Type: AWS::EC2::Route

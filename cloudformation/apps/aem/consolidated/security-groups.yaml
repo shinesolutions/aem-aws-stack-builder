@@ -1,32 +1,28 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
-
-Description:
-  Create Security Groups for the AEM Stack
-
-Parameters:
-
-  PrerequisitesStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
-
-  NetworkStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Network Resources Stack Prefix
-
-  SecureShellInboundCidrIpParameter:
-    Type: String
-    Description: AEM Stack Secure Shell Inbound Cidr Ip
-
-  AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
-    Type: String
-    Description: AEM Author Publish Dispatcher ELB Security Group Inbound Cidr Ip
-
-Resources:
-
-  # Author Publish Dispatcher Security Group
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Security Groups for the AEM Stack
+Outputs:
   AuthorPublishDispatcherSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+    Description: The Author Publish Dispatcher Security Group
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+    Value:
+      Ref: AuthorPublishDispatcherSecurityGroup
+Parameters:
+  AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
+    Description: AEM Author Publish Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  SecureShellInboundCidrIpParameter:
+    Description: AEM Stack Secure Shell Inbound Cidr Ip
+    Type: String
+Resources:
+  AuthorPublishDispatcherSecurityGroup:
     Properties:
       GroupDescription: AEM Author Publish Dispatcher Security Group
       Tags:
@@ -36,11 +32,10 @@ Resources:
         Value:
           Ref: PrerequisitesStackPrefixParameter
       VpcId:
-        Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-VPCId
-
-  # Allow tcp inbound on ports 80
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+    Type: AWS::EC2::SecurityGroup
   AuthorPublishDispatcherSecurityGroupIngress0:
-    Type: AWS::EC2::SecurityGroupIngress
     Properties:
       CidrIp:
         Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
@@ -49,10 +44,8 @@ Resources:
         Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '80'
-
-  # Allow tcp inbound on ports 443
-  AuthorPublishDispatcherSecurityGroupIngress1:
     Type: AWS::EC2::SecurityGroupIngress
+  AuthorPublishDispatcherSecurityGroupIngress1:
     Properties:
       CidrIp:
         Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
@@ -61,10 +54,8 @@ Resources:
         Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '443'
-
-  # Allow tcp inbound on ports 4502, 4503
-  AuthorPublishDispatcherSecurityGroupIngress2:
     Type: AWS::EC2::SecurityGroupIngress
+  AuthorPublishDispatcherSecurityGroupIngress2:
     Properties:
       CidrIp:
         Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
@@ -73,10 +64,8 @@ Resources:
         Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '4503'
-
-  # Allow tcp inbound on ports 5432, 5433
-  AuthorPublishDispatcherSecurityGroupIngress3:
     Type: AWS::EC2::SecurityGroupIngress
+  AuthorPublishDispatcherSecurityGroupIngress3:
     Properties:
       CidrIp:
         Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
@@ -85,13 +74,4 @@ Resources:
         Ref: AuthorPublishDispatcherSecurityGroup
       IpProtocol: tcp
       ToPort: '5433'
-
-Outputs:
-
-  AuthorPublishDispatcherSecurityGroup:
-    Value:
-      Ref: AuthorPublishDispatcherSecurityGroup
-    Description: The Author Publish Dispatcher Security Group
-    Export:
-      Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+    Type: AWS::EC2::SecurityGroupIngress

@@ -1,11 +1,11 @@
 ami_ids:
   # AEM 6.2
-  author: ami-1b9f6479
-  author_dispatcher: ami-069e6564
-  chaos_monkey: ami-839a61e1
-  orchestrator: ami-839a61e1
-  publish: ami-d89e65ba
-  publish_dispatcher: ami-069e6564
+  author: ami-a77982c5
+  author_dispatcher: ami-bd23d8df
+  chaos_monkey: ami-cb2cd7a9
+  orchestrator: ami-cb2cd7a9
+  publish: ami-377e8555
+  publish_dispatcher: ami-bd23d8df
   # AEM 6.3
   # author: ami-759c6717
   # author_dispatcher: ami-e1996283

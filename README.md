@@ -40,10 +40,12 @@ Usage
 -----
 
 - Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
+- Create [configuration file](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
+- Set up the configuration files by running `make config config_path=<path/to/config/dir>`
 
 ### Network
 
-Set up [configuration file for network]((https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)).
+Ensure [configuration file for network]() has been set up.
 
 Create VPC, subnets, along with other network resources:
 
@@ -57,7 +59,7 @@ Alternatively, if you don't have the permission to create network resources, you
 
 <img width="800" alt="AEM Full-Set Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png"/>
 
-Set up [configuration file for AEM Full-Set architecture]().
+Ensure [configuration file for AEM Full-Set architecture]() has been set up.
 
 The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
 
@@ -77,7 +79,7 @@ Create main stack which contains EC2 and Route53 resources:
 
 <img width="500" alt="AEM Consolidated Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-consolidated.png"/>
 
-Set up [configuration file for AEM Consolidated architecture]().
+Ensure [configuration file for AEM Consolidated architecture]() has been set up.
 
 The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
 
@@ -97,7 +99,7 @@ Create main stack which contains EC2 and Route53 resources:
 
 <img width="600" alt="AEM Stack Manager Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-stack-manager.png"/>
 
-Set up [configuration file for AEM Stack Manager]().
+Ensure [configuration file for AEM Stack Manager]() has been set up.
 
 Create AEM Stack Manager stacks:
 

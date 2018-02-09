@@ -1,64 +1,55 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
-
-Description:   Create DNS Record Set in Route53 for AEM App Stacks
-
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create DNS Record Set in Route53 for AEM App Stacks
 Parameters:
-  
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
-
-  Route53HostedZoneNameParameter:
-    Type: String
-    Description: Route53 Hosted Zone Name the Record Set will be Created in
-
   AuthorDNSRecordSetNameParameter:
-    Type: String
     Description: Author DNS Record Set Name
-
+    Type: String
   AuthorDispatcherDNSRecordSetNameParameter:
-    Type: String
     Description: AuthorDispatcher DNS Record Set Name
-
-  PublishDispatcherDNSRecordSetNameParameter:
     Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  PublishDispatcherDNSRecordSetNameParameter:
     Description: PublishDispatcher DNS Record Set Name
-
+    Type: String
+  Route53HostedZoneNameParameter:
+    Description: Route53 Hosted Zone Name the Record Set will be Created in
+    Type: String
 Resources:
-
-  AuthorRoute53RecordSet:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneName: !Ref Route53HostedZoneNameParameter
-      Name:
-        Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
-      ResourceRecords:
-        - Fn::ImportValue:
-            Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancerDNSName
-      TTL: 300
-      Type: CNAME
-
   AuthorDispatcherRoute53RecordSet:
-    Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneName: !Ref Route53HostedZoneNameParameter
+      HostedZoneName:
+        Ref: Route53HostedZoneNameParameter
       Name:
         Fn::Sub: ${AuthorDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
-        - Fn::ImportValue:
-            Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
-
-  PublishDispatcherRoute53RecordSet:
     Type: AWS::Route53::RecordSet
+  AuthorRoute53RecordSet:
     Properties:
-      HostedZoneName: !Ref Route53HostedZoneNameParameter
+      HostedZoneName:
+        Ref: Route53HostedZoneNameParameter
+      Name:
+        Fn::Sub: ${AuthorDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+      ResourceRecords:
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancerDNSName
+      TTL: 300
+      Type: CNAME
+    Type: AWS::Route53::RecordSet
+  PublishDispatcherRoute53RecordSet:
+    Properties:
+      HostedZoneName:
+        Ref: Route53HostedZoneNameParameter
       Name:
         Fn::Sub: ${PublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
-        - Fn::ImportValue:
-            Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
+    Type: AWS::Route53::RecordSet
