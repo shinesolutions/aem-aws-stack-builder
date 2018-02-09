@@ -1,124 +1,115 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
-
-Description:
-  Create Instance Profiles for AEM Stack Manager
-
-Parameters:
-
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Main Resources Stack Prefix
-
-  DataBucketNameParameter:
-    Type: String
-    Description: Bucket name that stores Stack data file
-
-  S3DataStackManagerPrefix:
-    Type: String
-    Description: Prefix within the Bucket to Locate Files
-
-Resources:
-
-  StackmanagerSSMServiceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ssm.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-      Policies:
-        - PolicyName: AemBackupPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "s3:*"
-                Resource:
-                  - !Sub "arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/SSMOutput/*"
-      RoleName: !Sub ${MainStackPrefixParameter}-AEMStackManagerSSMRole
-
-  AEMStackManagerLambdaServiceRole:
-    Type: AWS::IAM::Role
-    DependsOn: StackmanagerSSMServiceRole
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      Policies:
-        - PolicyName: StackManagerPolicy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "ec2:Describe*"
-                  - ec2:CreateTags
-                  - ec2:DeleteTags
-                  - "autoscaling:Describe*"
-                  - autoscaling:UpdateAutoScalingGroup
-                  - autoscaling:EnterStandby
-                  - autoscaling:ExitStandby
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - "s3:*"
-                Resource: !Sub "arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/*"
-              - Effect: Allow
-                Action:
-                  - ssm:SendCommand
-                  - ssm:CancelCommand
-                Resource: "*"
-              - Effect: Allow
-                Action:
-                  - iam:PassRole
-                Resource: !GetAtt StackmanagerSSMServiceRole.Arn
-      RoleName: !Sub ${MainStackPrefixParameter}-AEMStackManagerLambdaRole
-
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Instance Profiles for AEM Stack Manager
 Outputs:
-
   AEMStackManagerLambdaServiceRoleArn:
-    Value: !GetAtt AEMStackManagerLambdaServiceRole.Arn
     Description: The Stack Manager Lambda Service Role ARN
     Export:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-
-  AEMStackManagerLambdaServiceRoleName:
     Value:
-      Ref: AEMStackManagerLambdaServiceRole
+      Fn::GetAtt: AEMStackManagerLambdaServiceRole.Arn
+  AEMStackManagerLambdaServiceRoleName:
     Description: The Stack Manager Lambda Service Role Name
     Export:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
-
+    Value:
+      Ref: AEMStackManagerLambdaServiceRole
   AEMStackManagerSSMServiceRoleArn:
-    Value: !GetAtt StackmanagerSSMServiceRole.Arn
     Description: The Stack Manager SSM Service Role ARN
     Export:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn
-
-  AEMStackManagerSSMServiceRoleName:
     Value:
-      Ref: StackmanagerSSMServiceRole
+      Fn::GetAtt: StackmanagerSSMServiceRole.Arn
+  AEMStackManagerSSMServiceRoleName:
     Description: The Stack Manager Lambda Service Role Name
     Export:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerSSMServiceRoleName
+    Value:
+      Ref: StackmanagerSSMServiceRole
+Parameters:
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data file
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Main Resources Stack Prefix
+    Type: String
+  S3DataStackManagerPrefix:
+    Description: Prefix within the Bucket to Locate Files
+    Type: String
+Resources:
+  AEMStackManagerLambdaServiceRole:
+    DependsOn: StackmanagerSSMServiceRole
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - ec2:Describe*
+            - ec2:CreateTags
+            - ec2:DeleteTags
+            - autoscaling:Describe*
+            - autoscaling:UpdateAutoScalingGroup
+            - autoscaling:EnterStandby
+            - autoscaling:ExitStandby
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - s3:*
+            Effect: Allow
+            Resource:
+              Fn::Sub: arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/*
+          - Action:
+            - ssm:SendCommand
+            - ssm:CancelCommand
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - iam:PassRole
+            Effect: Allow
+            Resource:
+              Fn::GetAtt: StackmanagerSSMServiceRole.Arn
+          Version: 2012-10-17
+        PolicyName: StackManagerPolicy
+      RoleName:
+        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerLambdaRole
+    Type: AWS::IAM::Role
+  StackmanagerSSMServiceRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - ssm.amazonaws.com
+        Version: 2012-10-17
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - s3:*
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/SSMOutput/*
+          Version: 2012-10-17
+        PolicyName: AemBackupPolicy
+      RoleName:
+        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerSSMRole
+    Type: AWS::IAM::Role

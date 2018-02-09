@@ -1,137 +1,211 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
 Description: Create the Compute resources for the AEM Publish Dispatcher
-
-Parameters:
-
-  PrerequisitesStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
-
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
-
-  NetworkStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Network Resources Stack Prefix
-
-  PublishDispatcherLoadBalancerHealthCheckTargetParameter:
-    Type: String
-    Description: AEM Publish Dispatcher ELB Health Check Target
-
-  PublishDispatcherLoadBalancerSchemeParameter:
-    Type: String
-    Description: AEM Publish Dispatcher ELB Scheme
-
-  PublishDispatcherImageParameter:
-    Type: AWS::EC2::Image::Id
-    Description: The Publish Dispatcher Image Id
-
-  PublishDispatcherImageRootDevice:
-    Type: String
-    Description: The root device name for the Publish Dispatcher Image Id
-    Default: /dev/sda1
-
-  PublishDispatcherInstanceTypeParameter:
-    Type: String
-    Description: The Publish Dispatcher Instance Type
-
-  ComputeKeyPairNameParameter:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: The Compute Resources Key Pair Name
-
-  PublishDispatcherASGAvailabilityZoneListParameter:
-    Type: List<AWS::EC2::AvailabilityZone::Name>
-    Description: The Publish Dispatcher Availability Zone List
-
-  PublishDispatcherASGMaxSizeParameter:
-    Type: String
-    Description: The Publish Dispatcher Auto Scaling Group Maximum Size
-
-  PublishDispatcherASGMinSizeParameter:
-    Type: String
-    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
-
-  PublishDispatcherASGDesiredCapacityParameter:
-    Type: String
-    Description: The Publish Dispatcher Auto Scaling Group Desired Capacity
-
-  PublishDispatcherASGCPUScalingParameters:
-    Type: CommaDelimitedList
-    Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances are scaled up/down at
-
-  PublishDispatcherRootVolSizeParameter:
-    Type: Number
-    Description: PublishDispatcher Instances Root EBS Volume Size
-
-  PublishDispatcherDataVolSizeParameter:
-    Type: Number
-    Description: PublishDispatcher Instances Root EBS Volume Size
-
-  InboundFromBastionHostSecurityGroupParameter:
-    Type: String
-    Description: Inbound Bound from Bastion Host Security Group Id
-
-  DataBucketNameParameter:
-    Type: String
-    Description: Bucket name that stores Stack data files
-
-  AemAwsStackProvisionerVersionParameter:
-    Type: String
-    Description: AEM AWS Stack Provisioner version number
-
-Resources:
-
+Outputs:
+  PublishDispatcherAutoScalingGroup:
+    Description: The Publish Dispatcher Auto Scaling Group
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup
+    Value:
+      Ref: PublishDispatcherAutoScalingGroup
+  PublishDispatcherLaunchConfiguration:
+    Description: The Publish Dispatcher Launch Configuration
+    Value:
+      Ref: PublishDispatcherLaunchConfiguration
   PublishDispatcherLoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Description: The Publish Dispatcher Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancer
+    Value:
+      Ref: PublishDispatcherLoadBalancer
+  PublishDispatcherLoadBalancerDNSName:
+    Description: The Publish Dispatcher Load Balancer DNSName
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
+    Value:
+      Fn::GetAtt:
+      - PublishDispatcherLoadBalancer
+      - DNSName
+Parameters:
+  AemAwsStackProvisionerVersionParameter:
+    Description: AEM AWS Stack Provisioner version number
+    Type: String
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  InboundFromBastionHostSecurityGroupParameter:
+    Description: Inbound Bound from Bastion Host Security Group Id
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  PublishDispatcherASGAvailabilityZoneListParameter:
+    Description: The Publish Dispatcher Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PublishDispatcherASGCPUScalingParameters:
+    Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances
+      are scaled up/down at
+    Type: CommaDelimitedList
+  PublishDispatcherASGDesiredCapacityParameter:
+    Description: The Publish Dispatcher Auto Scaling Group Desired Capacity
+    Type: String
+  PublishDispatcherASGMaxSizeParameter:
+    Description: The Publish Dispatcher Auto Scaling Group Maximum Size
+    Type: String
+  PublishDispatcherASGMinSizeParameter:
+    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
+    Type: String
+  PublishDispatcherDataVolSizeParameter:
+    Description: PublishDispatcher Instances Root EBS Volume Size
+    Type: Number
+  PublishDispatcherImageParameter:
+    Description: The Publish Dispatcher Image Id
+    Type: AWS::EC2::Image::Id
+  PublishDispatcherImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the Publish Dispatcher Image Id
+    Type: String
+  PublishDispatcherInstanceTypeParameter:
+    Description: The Publish Dispatcher Instance Type
+    Type: String
+  PublishDispatcherLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Publish Dispatcher ELB Health Check Target
+    Type: String
+  PublishDispatcherLoadBalancerSchemeParameter:
+    Description: AEM Publish Dispatcher ELB Scheme
+    Type: String
+  PublishDispatcherRootVolSizeParameter:
+    Description: PublishDispatcher Instances Root EBS Volume Size
+    Type: Number
+Resources:
+  PublishDispatcherAutoScalingGroup:
     Properties:
-      ConnectionDrainingPolicy:
-        Enabled: true
-        Timeout: 300
-      CrossZone: true
-      HealthCheck:
-        Target:
-          Ref: PublishDispatcherLoadBalancerHealthCheckTargetParameter
-        HealthyThreshold: '2'
-        UnhealthyThreshold: '10'
-        Interval: '30'
-        Timeout: '5'
-      Listeners:
-      - LoadBalancerPort: '80'
-        InstancePort: '80'
-        Protocol: HTTP
-      - LoadBalancerPort: '443'
-        Protocol: HTTPS
-        InstancePort: '443'
-        InstanceProtocol: HTTPS
-        SSLCertificateId:
+      AvailabilityZones:
+        Ref: PublishDispatcherASGAvailabilityZoneListParameter
+      Cooldown: 480
+      DesiredCapacity:
+        Ref: PublishDispatcherASGDesiredCapacityParameter
+      HealthCheckGracePeriod: 1200
+      HealthCheckType: ELB
+      LaunchConfigurationName:
+        Ref: PublishDispatcherLaunchConfiguration
+      LoadBalancerNames:
+      - Ref: PublishDispatcherLoadBalancer
+      MaxSize:
+        Ref: PublishDispatcherASGMaxSizeParameter
+      MetricsCollection:
+      - Granularity: 1Minute
+        Metrics:
+        - GroupMinSize
+        - GroupMaxSize
+        - GroupDesiredCapacity
+        - GroupInServiceInstances
+        - GroupPendingInstances
+        - GroupStandbyInstances
+        - GroupTerminatingInstances
+        - GroupTotalInstances
+      MinSize:
+        Ref: PublishDispatcherASGMinSizeParameter
+      NotificationConfigurations:
+      - NotificationTypes:
+        - autoscaling:EC2_INSTANCE_LAUNCH
+        - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+        - autoscaling:EC2_INSTANCE_TERMINATE
+        - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        TopicARN:
           Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
-      Scheme:
-        Ref: PublishDispatcherLoadBalancerSchemeParameter
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherELBSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
-      Subnets:
-        Fn::Split:
-          - ","
-          - Fn::ImportValue:
-              Fn::Sub: ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetList
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
       Tags:
       - Key: Name
-        Value: AEM Publish Dispatcher Load Balancer
+        PropagateAtLaunch: true
+        Value: AEM Publish Dispatcher
       - Key: StackPrefix
+        PropagateAtLaunch: true
         Value:
           Ref: MainStackPrefixParameter
-
+      - Key: Component
+        PropagateAtLaunch: true
+        Value: publish-dispatcher
+      - Key: ApplicationDescriptorUrl
+        PropagateAtLaunch: true
+        Value: PLACEHOLDER
+      VPCZoneIdentifier:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-PublishDispatcherSubnetList
+    Type: AWS::AutoScaling::AutoScalingGroup
+  PublishDispatcherCPUHighAlarm:
+    Properties:
+      AlarmActions:
+      - Ref: PublishDispatcherScaleUpPolicy
+      AlarmDescription: Scale up if CPU Avg > X % for X minutes
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value:
+          Ref: PublishDispatcherAutoScalingGroup
+      EvaluationPeriods:
+        Fn::Select:
+          - 2
+          - Ref: PublishDispatcherASGCPUScalingParameters
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period:
+        Fn::Select:
+          - 1
+          - Ref: PublishDispatcherASGCPUScalingParameters
+      Statistic: Average
+      Threshold:
+        Fn::Select:
+          - 0
+          - Ref: PublishDispatcherASGCPUScalingParameters
+      TreatMissingData: breaching
+    Type: AWS::CloudWatch::Alarm
+  PublishDispatcherCPULowAlarm:
+    Properties:
+      AlarmActions:
+      - Ref: PublishDispatcherScaleDownPolicy
+      AlarmDescription: Scale down if CPU Avg < X % for X minutes
+      ComparisonOperator: LessThanThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value:
+          Ref: PublishDispatcherAutoScalingGroup
+      EvaluationPeriods:
+        Fn::Select:
+          - 4
+          - Ref: PublishDispatcherASGCPUScalingParameters
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period:
+        Fn::Select:
+          - 3
+          - Ref: PublishDispatcherASGCPUScalingParameters
+      Statistic: Average
+      Threshold:
+        Fn::Select:
+          - 0
+          - Ref: PublishDispatcherASGCPUScalingParameters
+      TreatMissingData: breaching
+    Type: AWS::CloudWatch::Alarm
   PublishDispatcherLaunchConfiguration:
-    Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: !Ref PublishDispatcherImageRootDevice
+      - DeviceName:
+          Ref: PublishDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -144,7 +218,8 @@ Resources:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
+        Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
       ImageId:
         Ref: PublishDispatcherImageParameter
       InstanceMonitoring: false
@@ -158,148 +233,68 @@ Resources:
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n\
-            \ source /etc/profile\n\
-            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} publish-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
-
-  PublishDispatcherScaleUpPolicy:
-    Type: AWS::AutoScaling::ScalingPolicy
+          Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
+            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} publish-dispatcher\
+            \ ${AemAwsStackProvisionerVersionParameter}\n"
+    Type: AWS::AutoScaling::LaunchConfiguration
+  PublishDispatcherLoadBalancer:
     Properties:
-      AdjustmentType: ChangeInCapacity
-      AutoScalingGroupName: !Ref PublishDispatcherAutoScalingGroup
-      Cooldown: 480
-      ScalingAdjustment: 1
-
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      HealthCheck:
+        HealthyThreshold: '2'
+        Interval: '30'
+        Target:
+          Ref: PublishDispatcherLoadBalancerHealthCheckTargetParameter
+        Timeout: '5'
+        UnhealthyThreshold: '10'
+      Listeners:
+      - InstancePort: '80'
+        LoadBalancerPort: '80'
+        Protocol: HTTP
+      - InstancePort: '443'
+        InstanceProtocol: HTTPS
+        LoadBalancerPort: '443'
+        Protocol: HTTPS
+        SSLCertificateId:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
+      Scheme:
+        Ref: PublishDispatcherLoadBalancerSchemeParameter
+      SecurityGroups:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherELBSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
+      Subnets:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-PublishDispatcherELBSubnetList
+      Tags:
+      - Key: Name
+        Value: AEM Publish Dispatcher Load Balancer
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
   PublishDispatcherScaleDownPolicy:
-    Type: AWS::AutoScaling::ScalingPolicy
     Properties:
       AdjustmentType: ChangeInCapacity
-      AutoScalingGroupName: !Ref PublishDispatcherAutoScalingGroup
+      AutoScalingGroupName:
+        Ref: PublishDispatcherAutoScalingGroup
       Cooldown: 480
       ScalingAdjustment: -1
-
-  PublishDispatcherCPUHighAlarm:
-    Type: AWS::CloudWatch::Alarm
+    Type: AWS::AutoScaling::ScalingPolicy
+  PublishDispatcherScaleUpPolicy:
     Properties:
-      AlarmDescription: "Scale up if CPU Avg > X % for X minutes"
-      MetricName: CPUUtilization
-      Namespace: AWS/EC2
-      Statistic: Average
-      Period: !Select [1, !Ref PublishDispatcherASGCPUScalingParameters]
-      EvaluationPeriods: !Select [2, !Ref PublishDispatcherASGCPUScalingParameters]
-      Threshold: !Select [0, !Ref PublishDispatcherASGCPUScalingParameters]
-      TreatMissingData: breaching
-      AlarmActions:
-      - Ref: PublishDispatcherScaleUpPolicy
-      Dimensions:
-      - Name: AutoScalingGroupName
-        Value: !Ref PublishDispatcherAutoScalingGroup
-      ComparisonOperator: GreaterThanThreshold
-
-  PublishDispatcherCPULowAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      AlarmDescription: "Scale down if CPU Avg < X % for X minutes"
-      MetricName: CPUUtilization
-      Namespace: AWS/EC2
-      Statistic: Average
-      Period: !Select [3, !Ref PublishDispatcherASGCPUScalingParameters]
-      EvaluationPeriods: !Select [4, !Ref PublishDispatcherASGCPUScalingParameters]
-      Threshold: !Select [0, !Ref PublishDispatcherASGCPUScalingParameters]
-      TreatMissingData: breaching
-      AlarmActions:
-      - Ref: PublishDispatcherScaleDownPolicy
-      Dimensions:
-      - Name: AutoScalingGroupName
-        Value: !Ref PublishDispatcherAutoScalingGroup
-      ComparisonOperator: LessThanThreshold
-
-  PublishDispatcherAutoScalingGroup:
-    Type: AWS::AutoScaling::AutoScalingGroup
-    Properties:
-      AvailabilityZones:
-        Ref: PublishDispatcherASGAvailabilityZoneListParameter
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName:
+        Ref: PublishDispatcherAutoScalingGroup
       Cooldown: 480
-      HealthCheckGracePeriod: 1200
-      HealthCheckType: ELB
-      LaunchConfigurationName:
-        Ref: PublishDispatcherLaunchConfiguration
-      LoadBalancerNames:
-      - Ref: PublishDispatcherLoadBalancer
-      MaxSize:
-        Ref: PublishDispatcherASGMaxSizeParameter
-      MinSize:
-        Ref: PublishDispatcherASGMinSizeParameter
-      DesiredCapacity:
-        Ref: PublishDispatcherASGDesiredCapacityParameter
-      NotificationConfigurations:
-      - NotificationTypes:
-        - autoscaling:EC2_INSTANCE_LAUNCH
-        - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
-        - autoscaling:EC2_INSTANCE_TERMINATE
-        - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
-        TopicARN:
-          Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
-      Tags:
-        - Key: Name
-          Value: AEM Publish Dispatcher
-          PropagateAtLaunch: true
-        - Key: StackPrefix
-          Value:
-            Ref: MainStackPrefixParameter
-          PropagateAtLaunch: true
-        - Key: Component
-          Value: publish-dispatcher
-          PropagateAtLaunch: true
-        - Key: ApplicationDescriptorUrl
-          Value: PLACEHOLDER
-          PropagateAtLaunch: true
-      VPCZoneIdentifier:
-        Fn::Split:
-          - ","
-          - Fn::ImportValue:
-             !Sub ${NetworkStackPrefixParameter}-PublishDispatcherSubnetList
-      MetricsCollection:
-        - Granularity: "1Minute"
-          Metrics:
-            - "GroupMinSize"
-            - "GroupMaxSize"
-            - "GroupDesiredCapacity"
-            - "GroupInServiceInstances"
-            - "GroupPendingInstances"
-            - "GroupStandbyInstances"
-            - "GroupTerminatingInstances"
-            - "GroupTotalInstances"
-
-Outputs:
-
-  PublishDispatcherLoadBalancer:
-    Value:
-      Ref: PublishDispatcherLoadBalancer
-    Export:
-      Name: !Sub ${MainStackPrefixParameter}-PublishDispatcherLoadBalancer
-    Description: The Publish Dispatcher Load Balancer
-
-  PublishDispatcherLoadBalancerDNSName:
-    Value:
-      Fn::GetAtt: [PublishDispatcherLoadBalancer, DNSName]
-    Export:
-      Name: !Sub ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
-    Description: The Publish Dispatcher Load Balancer DNSName
-
-  PublishDispatcherLaunchConfiguration:
-    Value:
-      Ref: PublishDispatcherLaunchConfiguration
-    Description: The Publish Dispatcher Launch Configuration
-
-  PublishDispatcherAutoScalingGroup:
-    Value:
-      Ref: PublishDispatcherAutoScalingGroup
-    Export:
-      Name:
-        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup
-    Description: The Publish Dispatcher Auto Scaling Group
+      ScalingAdjustment: 1
+    Type: AWS::AutoScaling::ScalingPolicy

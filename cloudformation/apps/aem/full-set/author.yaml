@@ -1,134 +1,138 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
-Description: Create the Compute resources for the AEM Author
-
-Parameters:
-
-  PrerequisitesStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
-
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
-
-  NetworkStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Network Resources Stack Prefix
-
-  AuthorLoadBalancerHealthCheckTargetParameter:
-    Type: String
-    Description: AEM Author ELB Health Check Target
-
-  AuthorImageParameter:
-    Type: AWS::EC2::Image::Id
-    Description: The Author Image Id
-
-  AuthorImageRootDevice:
-    Type: String
-    Description: The root device name for the Author Image Id
-    Default: /dev/sda1
-
-  AuthorInstanceTypeParameter:
-    Type: String
-    Description: The Author Instance Type
-
-  ComputeKeyPairNameParameter:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: The Compute Resources Key Pair Name
-
-  AuthorRootVolSizeParameter:
-    Type: Number
-    Description: Author Instances Root EBS Volume Size
-
-  AuthorDataVolSizeParameter:
-    Type: Number
-    Description: Author Instances Data EBS Volume Size
-
-  UseAuthorDataVolSnapshotParameter:
-    Type: String
-    AllowedValues: [true, false]
-    Description: Whether to use the Author Snapshot Data Volume.
-
-  AuthorDataVolSnapshotParameter:
-    Type: String
-    Description: The Author Data Volume Snapshot Id
-
-  InboundFromBastionHostSecurityGroupParameter:
-    Type: String
-    Description: Inbound Bound from Bastion Host Security Group Id
-
-  DataBucketNameParameter:
-    Type: String
-    Description: Bucket name that stores Stack data files
-
-  AemAwsStackProvisionerVersionParameter:
-    Type: String
-    Description: AEM AWS Stack Provisioner version number
-
 Conditions:
   UseAuthorDataVolSnapshotCondition:
     Fn::Equals:
-      - Ref: UseAuthorDataVolSnapshotParameter
-      - true
-
-Resources:
-
-  AuthorSyncDelayAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      ActionsEnabled: true
-      AlarmActions:
-        - Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
-      AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
-      ComparisonOperator: GreaterThanThreshold
-      MetricName: GenericJMX.delay.seconds_since_last_success
-      Namespace: collectd
-      Period: 60
-      EvaluationPeriods: 5
-      Statistic: Maximum
-      Threshold: 60
-      Dimensions:
-      - Name: PluginInstance
-        Value:
-          Fn::Sub: ${MainStackPrefixParameter}-standby-status
-      - Name: Host
-        Value:
-          Ref: AuthorStandbyInstance
-
-  MultiAuthorInstanceAlarm:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      ActionsEnabled: true
-      AlarmActions:
-        - Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      OKActions:
-        - Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      AlarmDescription: Multiple Author Instances have Enterered into Service
-      AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-MultiAuthorInstanceAlarm
-      ComparisonOperator: GreaterThanThreshold
-      MetricName: HealthyHostCount
-      Namespace: AWS/ELB
-      EvaluationPeriods: 1
-      Period: 60
-      Statistic: Maximum
-      Threshold: 1
-      Dimensions:
-        - Name: LoadBalancerName
-          Value:
-            Ref: AuthorLoadBalancer
-
+    - Ref: UseAuthorDataVolSnapshotParameter
+    - true
+Description: Create the Compute resources for the AEM Author
+Outputs:
+  AuthorLoadBalancer:
+    Description: The Author Load Balancer
+    Value:
+      Ref: AuthorLoadBalancer
+  AuthorLoadBalancerDNSName:
+    Description: The Author Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancerDNSName
+    Value:
+      Fn::GetAtt:
+      - AuthorLoadBalancer
+      - DNSName
   AuthorPrimaryInstance:
-    Type: AWS::EC2::Instance
+    Description: The Author Primary Instance
+    Value:
+      Ref: AuthorPrimaryInstance
+  AuthorStandbyInstance:
+    Description: The Author Standby Instance
+    Value:
+      Ref: AuthorStandbyInstance
+  AuthorSyncDelayAlarm:
+    Description: The Author Sync Delay Alarm
+    Value:
+      Ref: AuthorSyncDelayAlarm
+Parameters:
+  AemAwsStackProvisionerVersionParameter:
+    Description: AEM AWS Stack Provisioner version number
+    Type: String
+  AuthorDataVolSizeParameter:
+    Description: Author Instances Data EBS Volume Size
+    Type: Number
+  AuthorDataVolSnapshotParameter:
+    Description: The Author Data Volume Snapshot Id
+    Type: String
+  AuthorImageParameter:
+    Description: The Author Image Id
+    Type: AWS::EC2::Image::Id
+  AuthorImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the Author Image Id
+    Type: String
+  AuthorInstanceTypeParameter:
+    Description: The Author Instance Type
+    Type: String
+  AuthorLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Author ELB Health Check Target
+    Type: String
+  AuthorRootVolSizeParameter:
+    Description: Author Instances Root EBS Volume Size
+    Type: Number
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  InboundFromBastionHostSecurityGroupParameter:
+    Description: Inbound Bound from Bastion Host Security Group Id
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  UseAuthorDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Whether to use the Author Snapshot Data Volume.
+    Type: String
+Resources:
+  AuthorLoadBalancer:
+    Properties:
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      HealthCheck:
+        HealthyThreshold: '2'
+        Interval: '30'
+        Target:
+          Ref: AuthorLoadBalancerHealthCheckTargetParameter
+        Timeout: '5'
+        UnhealthyThreshold: '2'
+      Instances:
+      - Ref: AuthorPrimaryInstance
+      - Ref: AuthorStandbyInstance
+      Listeners:
+      - InstancePort: '4502'
+        LoadBalancerPort: '80'
+        Protocol: HTTP
+      - InstancePort: '5432'
+        InstanceProtocol: HTTPS
+        LoadBalancerPort: '443'
+        Protocol: HTTPS
+        SSLCertificateId:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
+      Scheme: internal
+      SecurityGroups:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorELBSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
+      Subnets:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-AuthorSubnetList
+      Tags:
+      - Key: Name
+        Value: AEM Author Load Balancer
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+      - Key: Project
+        Value: Open Source AEM Platform
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+  AuthorPrimaryInstance:
     Properties:
       BlockDeviceMappings:
-      - DeviceName: !Ref AuthorImageRootDevice
+      - DeviceName:
+          Ref: AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -137,16 +141,17 @@ Resources:
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
+          SnapshotId:
+            Fn::If:
+            - UseAuthorDataVolSnapshotCondition
+            - Ref: AuthorDataVolSnapshotParameter
+            - Ref: AWS::NoValue
           VolumeSize:
             Ref: AuthorDataVolSizeParameter
           VolumeType: gp2
-          SnapshotId:
-            Fn::If:
-              - UseAuthorDataVolSnapshotCondition
-              - Ref: AuthorDataVolSnapshotParameter
-              - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
+        Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -170,18 +175,18 @@ Resources:
         Value: author-primary
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n\
-            \ source /etc/profile\n\
-            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-primary ${AemAwsStackProvisionerVersionParameter}\n"
-
-  AuthorStandbyInstance:
+          Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
+            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-primary\
+            \ ${AemAwsStackProvisionerVersionParameter}\n"
     Type: AWS::EC2::Instance
+  AuthorStandbyInstance:
     Properties:
       BlockDeviceMappings:
-      - DeviceName: !Ref AuthorImageRootDevice
+      - DeviceName:
+          Ref: AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -190,16 +195,17 @@ Resources:
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
+          SnapshotId:
+            Fn::If:
+            - UseAuthorDataVolSnapshotCondition
+            - Ref: AuthorDataVolSnapshotParameter
+            - Ref: AWS::NoValue
           VolumeSize:
             Ref: AuthorDataVolSizeParameter
           VolumeType: gp2
-          SnapshotId:
-            Fn::If:
-              - UseAuthorDataVolSnapshotCondition
-              - Ref: AuthorDataVolSnapshotParameter
-              - Ref: AWS::NoValue
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
+        Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
       ImageId:
         Ref: AuthorImageParameter
       InstanceType:
@@ -223,87 +229,64 @@ Resources:
         Value: author-standby
       - Key: AuthorPrimaryHost
         Value:
-          Fn::GetAtt: [ AuthorPrimaryInstance, PrivateIp ]
+          Fn::GetAtt:
+          - AuthorPrimaryInstance
+          - PrivateIp
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n\
-            \ source /etc/profile\n\
-            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-standby ${AemAwsStackProvisionerVersionParameter}\n"
-
-  AuthorLoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
-    Properties:
-      ConnectionDrainingPolicy:
-        Enabled: true
-        Timeout: 300
-      CrossZone: true
-      HealthCheck:
-        Target:
-          Ref: AuthorLoadBalancerHealthCheckTargetParameter
-        HealthyThreshold: '2'
-        UnhealthyThreshold: '2'
-        Interval: '30'
-        Timeout: '5'
-      Instances:
-      - Ref: AuthorPrimaryInstance
-      - Ref: AuthorStandbyInstance
-      Listeners:
-      - LoadBalancerPort: '80'
-        InstancePort: '4502'
-        Protocol: HTTP
-      - LoadBalancerPort: '443'
-        Protocol: HTTPS
-        InstancePort: '5432'
-        InstanceProtocol: HTTPS
-        SSLCertificateId:
-          Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
-      Scheme: internal
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorELBSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
-      Subnets:
-        Fn::Split:
-          - ","
-          - Fn::ImportValue:
-              Fn::Sub: ${NetworkStackPrefixParameter}-AuthorSubnetList
-      Tags:
-      - Key: Name
-        Value: AEM Author Load Balancer
-      - Key: StackPrefix
-        Value:
-          Ref: MainStackPrefixParameter
-
-Outputs:
-
-  AuthorPrimaryInstance:
-    Value:
-      Ref: AuthorPrimaryInstance
-    Description: The Author Primary Instance
-
-  AuthorStandbyInstance:
-    Value:
-      Ref: AuthorStandbyInstance
-    Description: The Author Standby Instance
-
-  AuthorLoadBalancer:
-    Value:
-      Ref: AuthorLoadBalancer
-    Description: The Author Load Balancer
-
-  AuthorLoadBalancerDNSName:
-    Value:
-      Fn::GetAtt: [AuthorLoadBalancer, DNSName]
-    Export:
-      Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancerDNSName
-    Description: The Author Load Balancer
-
+          Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
+            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-standby\
+            \ ${AemAwsStackProvisionerVersionParameter}\n"
+    Type: AWS::EC2::Instance
   AuthorSyncDelayAlarm:
-    Value:
-      Ref: AuthorSyncDelayAlarm
-    Description: The Author Sync Delay Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: Monitors the sync delay between the Author Standby and the
+        Author Primary
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: PluginInstance
+        Value:
+          Fn::Sub: ${MainStackPrefixParameter}-standby-status
+      - Name: Host
+        Value:
+          Ref: AuthorStandbyInstance
+      EvaluationPeriods: 5
+      MetricName: GenericJMX.delay.seconds_since_last_success
+      Namespace: collectd
+      Period: 60
+      Statistic: Maximum
+      Threshold: 60
+    Type: AWS::CloudWatch::Alarm
+  MultiAuthorInstanceAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: Multiple Author Instances have Enterered into Service
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-MultiAuthorInstanceAlarm
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: AuthorLoadBalancer
+      EvaluationPeriods: 1
+      MetricName: HealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Maximum
+      Threshold: 1
+    Type: AWS::CloudWatch::Alarm

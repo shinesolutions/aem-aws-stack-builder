@@ -1,95 +1,84 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
-Description: Overarching CF Template to Create Security Groups and Messaging Resources for AEM Appp Stacks
-
-Parameters:
-
-  PrerequisitesStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
-
-  NetworkStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Network Resources Stack Prefix
-
-  DataBucketNameParameter:
-    Type: String
-    Description: Bucket name that stores Stack data files
-
-  SecureShellInboundCidrIpParameter:
-    Type: String
-    Description: AEM Stack Secure Shell Inbound Cidr Ip
-
-  PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
-    Type: String
-    Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
-
-  AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
-    Type: String
-    Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
-
-  PrivateSubnetInternetOutboundCidrIpParameter:
-    Type: String
-    Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
-
-  AEMASGEventQueueNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Quene Name
-
-  AEMASGEventTopicDisplayNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
-
-  AEMASGEventTopicNameParameter:
-    Type: String
-    Description: The AEM Stack Auto Scaling Group Event Topic Name
-
-  AEMCWEventNotificationEmail:
-    Type: String
-    Description: The EMail adress for sending CW Alarm messages
-
-  SSLCertificateARNParameter:
-    Type: String
+Description: Overarching CF Template to Create Security Groups and Messaging Resources
+  for AEM Appp Stacks
+Outputs:
+  InstanceProfilesStackName:
+    Description: Instance Profiles Stack Name
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-InstanceProfilesStackName
+    Value:
+      Ref: InstanceProfilesStack
+  MessagingStackName:
+    Description: Messaging Stack Name
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-MessagingStackName
+    Value:
+      Ref: MessagingStack
+  SSLCertificateARN:
     Description: SSL Certificate ARN
-
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
+    Value:
+      Ref: SSLCertificateARNParameter
+  SecurityGroupsStackName:
+    Description: Security Groups Stack Name
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SecurityGroupsStackName
+    Value:
+      Ref: SecurityGroupsStack
+Parameters:
+  AEMASGEventQueueNameParameter:
+    Description: The AEM Stack Auto Scaling Group Event Quene Name
+    Type: String
+  AEMASGEventTopicDisplayNameParameter:
+    Description: The AEM Stack Auto Scaling Group Event Topic Display Name
+    Type: String
+  AEMASGEventTopicNameParameter:
+    Description: The AEM Stack Auto Scaling Group Event Topic Name
+    Type: String
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
+    Type: String
+  AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  PrivateSubnetInternetOutboundCidrIpParameter:
+    Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
+    Type: String
+  PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
+  SSLCertificateARNParameter:
+    Description: SSL Certificate ARN
+    Type: String
+  SecureShellInboundCidrIpParameter:
+    Description: AEM Stack Secure Shell Inbound Cidr Ip
+    Type: String
 Resources:
-
   InstanceProfilesStack:
-    Type: AWS::CloudFormation::Stack
     Properties:
+      Parameters:
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles.yaml
-      Parameters:
-        PrerequisitesStackPrefixParameter:
-          Ref: PrerequisitesStackPrefixParameter
-
-  SecurityGroupsStack:
     Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
-      Parameters:
-        PrerequisitesStackPrefixParameter:
-          Ref: PrerequisitesStackPrefixParameter
-        NetworkStackPrefixParameter:
-          Ref: NetworkStackPrefixParameter
-        SecureShellInboundCidrIpParameter:
-          Ref: SecureShellInboundCidrIpParameter
-        PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
-          Ref: PublishDispatcherELBSecurityGroupInboundCidrIpParameter
-        AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
-          Ref: AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
-        PrivateSubnetInternetOutboundCidrIpParameter:
-          Ref: PrivateSubnetInternetOutboundCidrIpParameter
-
   MessagingStack:
-    Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/messaging.yaml
       Parameters:
-        PrerequisitesStackPrefixParameter:
-          Ref: PrerequisitesStackPrefixParameter
         AEMASGEventQueueNameParameter:
           Ref: AEMASGEventQueueNameParameter
         AEMASGEventTopicDisplayNameParameter:
@@ -98,37 +87,26 @@ Resources:
           Ref: AEMASGEventTopicNameParameter
         AEMCWEventNotificationEmail:
           Ref: AEMCWEventNotificationEmail
-
-Outputs:
-
-  InstanceProfilesStackName:
-    Description: Instance Profiles Stack Name
-    Value:
-      Ref: InstanceProfilesStack
-    Export:
-      Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-InstanceProfilesStackName
-
-  SecurityGroupsStackName:
-    Description: Security Groups Stack Name
-    Value:
-      Ref: SecurityGroupsStack
-    Export:
-      Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SecurityGroupsStackName
-
-  MessagingStackName:
-    Description: Messaging Stack Name
-    Value:
-      Ref: MessagingStack
-    Export:
-      Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-MessagingStackName
-
-  SSLCertificateARN:
-    Description: SSL Certificate ARN
-    Value:
-      Ref: SSLCertificateARNParameter
-    Export:
-      Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/messaging.yaml
+    Type: AWS::CloudFormation::Stack
+  SecurityGroupsStack:
+    Properties:
+      Parameters:
+        AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
+          Ref: AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        PrivateSubnetInternetOutboundCidrIpParameter:
+          Ref: PrivateSubnetInternetOutboundCidrIpParameter
+        PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+          Ref: PublishDispatcherELBSecurityGroupInboundCidrIpParameter
+        SecureShellInboundCidrIpParameter:
+          Ref: SecureShellInboundCidrIpParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
+    Type: AWS::CloudFormation::Stack

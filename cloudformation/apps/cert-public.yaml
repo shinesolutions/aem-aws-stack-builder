@@ -1,59 +1,53 @@
----
 AWSTemplateFormatVersion: 2010-09-09
-
-Description: >-
-  Create a wildcard and blue-green certificate for an AEM application stack. To
-  be used with CloudFront. This certificate must be provisioned in the
-  us-east-1 region.
-
-Parameters:
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
-
-  ApexDomainParameter:
-    Type: String
-    Description: >-
-      The top-level domain name ( like example.com ) that is appended to the
-      subdomains names specified in StackSubdomainParameter and
-      BlueGreenSubdomainParameter.
-
-  StackSubdomainParameter:
-    Type: String
-    Description: >-
-      The subdomain portion of the Route53 Hosted Zone used for this
-      application stack.
-
-  BlueGreenSubdomainParameter:
-    Type: String
-    Description: >-
-      The subdomain portion of the DNS name used for blue-green deployments.
-      This is the CNAME ( under ApexZoneParameter ) that is changed when
-      switching between stacks. This is managed outside this CloudFormation
-      stack, but we need it here to add it to the TLS certificate.
-
-Resources:
-  WildcardCertificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: !Join [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
-      SubjectAlternativeNames:
-        - !Join [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
-        - !Join [ '.', [ !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
-        - !Join [ '.', [ !Ref BlueGreenSubdomainParameter, !Ref ApexDomainParameter ]]
-      DomainValidationOptions:
-        - DomainName: !Join  [ '.', [ '*', !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
-          ValidationDomain: !Ref ApexDomainParameter
-        - DomainName: !Join  [ '.', [ !Ref StackSubdomainParameter, !Ref ApexDomainParameter ]]
-          ValidationDomain: !Ref ApexDomainParameter
-        - DomainName: !Join  [ '.', [ !Ref BlueGreenSubdomainParameter, !Ref ApexDomainParameter ]]
-          ValidationDomain: !Ref ApexDomainParameter
-
+Description: Create a wildcard and blue-green certificate for an AEM application stack.
+  To be used with CloudFront. This certificate must be provisioned in the us-east-1
+  region.
 Outputs:
   WildcardCertificateARN:
-    Value:
-      Ref: WildcardCertificate
     Description: The generated certificate's ARN
     Export:
       Name:
-        !Sub ${MainStackPrefixParameter}-PubWildcardCertificateARN
+        Fn::Sub: ${MainStackPrefixParameter}-PubWildcardCertificateARN
+    Value:
+      Ref: WildcardCertificate
+Parameters:
+  ApexDomainParameter:
+    Description: The top-level domain name ( like example.com ) that is appended to
+      the subdomains names specified in StackSubdomainParameter and BlueGreenSubdomainParameter.
+    Type: String
+  BlueGreenSubdomainParameter:
+    Description: The subdomain portion of the DNS name used for blue-green deployments.
+      This is the CNAME ( under ApexZoneParameter ) that is changed when switching
+      between stacks. This is managed outside this CloudFormation stack, but we need
+      it here to add it to the TLS certificate.
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  StackSubdomainParameter:
+    Description: The subdomain portion of the Route53 Hosted Zone used for this application
+      stack.
+    Type: String
+Resources:
+  WildcardCertificate:
+    Properties:
+      DomainName:
+        Fn::Join: '[''.'', []]'
+      DomainValidationOptions:
+      - DomainName:
+          Fn::Join: '[''.'', []]'
+        ValidationDomain:
+          Ref: ApexDomainParameter
+      - DomainName:
+          Fn::Join: '[''.'', []]'
+        ValidationDomain:
+          Ref: ApexDomainParameter
+      - DomainName:
+          Fn::Join: '[''.'', []]'
+        ValidationDomain:
+          Ref: ApexDomainParameter
+      SubjectAlternativeNames:
+      - Fn::Join: '[''.'', []]'
+      - Fn::Join: '[''.'', []]'
+      - Fn::Join: '[''.'', []]'
+    Type: AWS::CertificateManager::Certificate

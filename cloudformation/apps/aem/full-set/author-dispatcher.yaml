@@ -1,128 +1,146 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
 Description: Create the Compute resources for the AEM Author Dispatcher
-
-Parameters:
-
-  PrerequisitesStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
-
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Compute Resources Stack Prefix
-
-  NetworkStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Network Resources Stack Prefix
-
-  AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
-    Type: String
-    Description: AEM Author Dispatcher ELB Health Check Target
-
-  AuthorDispatcherImageParameter:
-    Type: AWS::EC2::Image::Id
-    Description: The Author Dispatcher Image Id
-
-  AuthorDispatcherImageRootDevice:
-    Type: String
-    Description: The root device name for the Author Dispatcher Image Id
-    Default: /dev/sda1
-
-  AuthorDispatcherInstanceTypeParameter:
-    Type: String
-    Description: The Author Dispatcher Instance Type
-
-  ComputeKeyPairNameParameter:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: The Compute Resources Key Pair Name
-
-  AuthorDispatcherASGAvailabilityZoneListParameter:
-    Type: List<AWS::EC2::AvailabilityZone::Name>
-    Description: The Author Dispatcher Availability Zone List
-
-  AuthorDispatcherASGMaxSizeParameter:
-    Type: String
-    Description: The Author Dispatcher Auto Scaling Group Maximum Size
-
-  AuthorDispatcherASGMinSizeParameter:
-    Type: String
-    Description: The Author Dispatcher Auto Scaling Group Minimum Size
-
-  AuthorDispatcherASGDesiredCapacityParameter:
-    Type: String
-    Description: The Author Dispatcher Auto Scaling Desired Capacity
-
-  AuthorDispatcherRootVolSizeParameter:
-    Type: Number
-    Description: Author Dispatcher Instances Root EBS Volume Size
-
-  AuthorDispatcherDataVolSizeParameter:
-    Type: Number
-    Description: Author Dispatcher Instances Data EBS Volume Size
-
-  InboundFromBastionHostSecurityGroupParameter:
-    Type: String
-    Description: Inbound Bound from Bastion Host Security Group Id
-
-  DataBucketNameParameter:
-    Type: String
-    Description: Bucket name that stores Stack data files
-
-  AemAwsStackProvisionerVersionParameter:
-    Type: String
-    Description: AEM AWS Stack Provisioner version number
-
-Resources:
-
-  AuthorDispatcherLoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
-    Properties:
-      ConnectionDrainingPolicy:
-        Enabled: true
-        Timeout: 300
-      CrossZone: true
-      HealthCheck:
-        Target:
-          Ref: AuthorDispatcherLoadBalancerHealthCheckTargetParameter
-        HealthyThreshold: '2'
-        UnhealthyThreshold: '2'
-        Interval: '30'
-        Timeout: '5'
-      Listeners:
-      - LoadBalancerPort: '80'
-        InstancePort: '80'
-        Protocol: HTTP
-      - LoadBalancerPort: '443'
-        Protocol: HTTPS
-        InstancePort: '443'
-        InstanceProtocol: HTTPS
-        SSLCertificateId:
-          Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
-      Scheme: internal
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
-      Subnets:
-        Fn::Split:
-          - ","
-          - Fn::ImportValue:
-              Fn::Sub: ${NetworkStackPrefixParameter}-AuthorDispatcherELBSubnetList
-      Tags:
-        - Key: Name
-          Value: AEM Author Dispatcher Load Balancer
-        - Key: StackPrefix
-          Value:
-            Ref: MainStackPrefixParameter
-
+Outputs:
+  AuthorDispatcherAutoScalingGroup:
+    Description: The Author Dispatcher Auto Scaling Group
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup
+    Value:
+      Ref: AuthorDispatcherAutoScalingGroup
   AuthorDispatcherLaunchConfiguration:
-    Type: AWS::AutoScaling::LaunchConfiguration
+    Description: The Author Dispatcher Launch Configuration
+    Value:
+      Ref: AuthorDispatcherLaunchConfiguration
+  AuthorDispatcherLoadBalancer:
+    Description: The Author Dispatcher Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer
+    Value:
+      Ref: AuthorDispatcherLoadBalancer
+  AuthorDispatcherLoadBalancerDNSName:
+    Description: The Author Dispatcher Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
+    Value:
+      Fn::GetAtt:
+      - AuthorDispatcherLoadBalancer
+      - DNSName
+Parameters:
+  AemAwsStackProvisionerVersionParameter:
+    Description: AEM AWS Stack Provisioner version number
+    Type: String
+  AuthorDispatcherASGAvailabilityZoneListParameter:
+    Description: The Author Dispatcher Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  AuthorDispatcherASGDesiredCapacityParameter:
+    Description: The Author Dispatcher Auto Scaling Desired Capacity
+    Type: String
+  AuthorDispatcherASGMaxSizeParameter:
+    Description: The Author Dispatcher Auto Scaling Group Maximum Size
+    Type: String
+  AuthorDispatcherASGMinSizeParameter:
+    Description: The Author Dispatcher Auto Scaling Group Minimum Size
+    Type: String
+  AuthorDispatcherDataVolSizeParameter:
+    Description: Author Dispatcher Instances Data EBS Volume Size
+    Type: Number
+  AuthorDispatcherImageParameter:
+    Description: The Author Dispatcher Image Id
+    Type: AWS::EC2::Image::Id
+  AuthorDispatcherImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the Author Dispatcher Image Id
+    Type: String
+  AuthorDispatcherInstanceTypeParameter:
+    Description: The Author Dispatcher Instance Type
+    Type: String
+  AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Author Dispatcher ELB Health Check Target
+    Type: String
+  AuthorDispatcherRootVolSizeParameter:
+    Description: Author Dispatcher Instances Root EBS Volume Size
+    Type: Number
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  InboundFromBastionHostSecurityGroupParameter:
+    Description: Inbound Bound from Bastion Host Security Group Id
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+Resources:
+  AuthorDispatcherAutoScalingGroup:
+    Properties:
+      AvailabilityZones:
+        Ref: AuthorDispatcherASGAvailabilityZoneListParameter
+      DesiredCapacity:
+        Ref: AuthorDispatcherASGDesiredCapacityParameter
+      HealthCheckGracePeriod: 900
+      HealthCheckType: ELB
+      LaunchConfigurationName:
+        Ref: AuthorDispatcherLaunchConfiguration
+      LoadBalancerNames:
+      - Ref: AuthorDispatcherLoadBalancer
+      MaxSize:
+        Ref: AuthorDispatcherASGMaxSizeParameter
+      MetricsCollection:
+      - Granularity: 1Minute
+        Metrics:
+        - GroupMinSize
+        - GroupMaxSize
+        - GroupDesiredCapacity
+        - GroupInServiceInstances
+        - GroupPendingInstances
+        - GroupStandbyInstances
+        - GroupTerminatingInstances
+        - GroupTotalInstances
+      MinSize:
+        Ref: AuthorDispatcherASGMinSizeParameter
+      NotificationConfigurations:
+      - NotificationTypes:
+        - autoscaling:EC2_INSTANCE_LAUNCH
+        - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+        - autoscaling:EC2_INSTANCE_TERMINATE
+        - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        TopicARN:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
+      Tags:
+      - Key: Name
+        PropagateAtLaunch: true
+        Value: AEM Author Dispatcher
+      - Key: StackPrefix
+        PropagateAtLaunch: true
+        Value:
+          Ref: MainStackPrefixParameter
+      - Key: Component
+        PropagateAtLaunch: true
+        Value: author-dispatcher
+      VPCZoneIdentifier:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetList
+    Type: AWS::AutoScaling::AutoScalingGroup
+  AuthorDispatcherLaunchConfiguration:
     Properties:
       AssociatePublicIpAddress: false
       BlockDeviceMappings:
-      - DeviceName: !Ref AuthorDispatcherImageRootDevice
+      - DeviceName:
+          Ref: AuthorDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
@@ -135,7 +153,8 @@ Resources:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorDispatcherInstanceProfile
+        Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherInstanceProfile
       ImageId:
         Ref: AuthorDispatcherImageParameter
       InstanceMonitoring: false
@@ -149,93 +168,51 @@ Resources:
       - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n\
-            \ source /etc/profile\n\
-            \ mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-dispatcher ${AemAwsStackProvisionerVersionParameter}\n"
-
-  AuthorDispatcherAutoScalingGroup:
-    Type: AWS::AutoScaling::AutoScalingGroup
+          Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
+            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-dispatcher\
+            \ ${AemAwsStackProvisionerVersionParameter}\n"
+    Type: AWS::AutoScaling::LaunchConfiguration
+  AuthorDispatcherLoadBalancer:
     Properties:
-      AvailabilityZones:
-        Ref: AuthorDispatcherASGAvailabilityZoneListParameter
-      HealthCheckGracePeriod: 900
-      HealthCheckType: ELB
-      LaunchConfigurationName:
-        Ref: AuthorDispatcherLaunchConfiguration
-      LoadBalancerNames:
-      - Ref: AuthorDispatcherLoadBalancer
-      MaxSize:
-        Ref: AuthorDispatcherASGMaxSizeParameter
-      MinSize:
-        Ref: AuthorDispatcherASGMinSizeParameter
-      DesiredCapacity:
-        Ref: AuthorDispatcherASGDesiredCapacityParameter
-      NotificationConfigurations:
-      - NotificationTypes:
-        - autoscaling:EC2_INSTANCE_LAUNCH
-        - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
-        - autoscaling:EC2_INSTANCE_TERMINATE
-        - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
-        TopicARN:
+      ConnectionDrainingPolicy:
+        Enabled: true
+        Timeout: 300
+      CrossZone: true
+      HealthCheck:
+        HealthyThreshold: '2'
+        Interval: '30'
+        Target:
+          Ref: AuthorDispatcherLoadBalancerHealthCheckTargetParameter
+        Timeout: '5'
+        UnhealthyThreshold: '2'
+      Listeners:
+      - InstancePort: '80'
+        LoadBalancerPort: '80'
+        Protocol: HTTP
+      - InstancePort: '443'
+        InstanceProtocol: HTTPS
+        LoadBalancerPort: '443'
+        Protocol: HTTPS
+        SSLCertificateId:
           Fn::ImportValue:
-            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
+      Scheme: internal
+      SecurityGroups:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
+      - Ref: InboundFromBastionHostSecurityGroupParameter
+      Subnets:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-AuthorDispatcherELBSubnetList
       Tags:
       - Key: Name
-        Value: AEM Author Dispatcher
-        PropagateAtLaunch: true
+        Value: AEM Author Dispatcher Load Balancer
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-        PropagateAtLaunch: true
-      - Key: Component
-        Value: author-dispatcher
-        PropagateAtLaunch: true
-      VPCZoneIdentifier:
-        Fn::Split:
-          - ","
-          - Fn::ImportValue:
-             !Sub ${NetworkStackPrefixParameter}-AuthorDispatcherSubnetList
-      MetricsCollection:
-        - Granularity: "1Minute"
-          Metrics:
-            - "GroupMinSize"
-            - "GroupMaxSize"
-            - "GroupDesiredCapacity"
-            - "GroupInServiceInstances"
-            - "GroupPendingInstances"
-            - "GroupStandbyInstances"
-            - "GroupTerminatingInstances"
-            - "GroupTotalInstances"
-
-Outputs:
-
-  AuthorDispatcherLoadBalancer:
-    Value:
-      Ref: AuthorDispatcherLoadBalancer
-    Export:
-      Name: !Sub ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer
-    Description: The Author Dispatcher Load Balancer
-
-  AuthorDispatcherLoadBalancerDNSName:
-    Value:
-      Fn::GetAtt: [AuthorDispatcherLoadBalancer, DNSName]
-    Export:
-      Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerDNSName
-    Description: The Author Dispatcher Load Balancer
-
-  AuthorDispatcherLaunchConfiguration:
-    Value:
-      Ref: AuthorDispatcherLaunchConfiguration
-    Description: The Author Dispatcher Launch Configuration
-
-  AuthorDispatcherAutoScalingGroup:
-    Value:
-      Ref: AuthorDispatcherAutoScalingGroup
-    Export:
-      Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup
-    Description: The Author Dispatcher Auto Scaling Group
+    Type: AWS::ElasticLoadBalancing::LoadBalancer

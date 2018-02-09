@@ -1,78 +1,57 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
 Description: Create AEM Consolidated Main Resources Stacks
-
 Parameters:
-
-  MainStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Main Resources Stack Prefix
-
-  NetworkStackPrefixParameter:
-    Type: String
-    Description: The AEM Stack Network Resources Stack Prefix
-
-  PrerequisitesStackPrefixParameter:
-    Type: String
-    Description: The AEM Prerequisite Resources Stack Prefix
-
-  AuthorPublishDispatcherImageParameter:
-    Type: AWS::EC2::Image::Id
-    Description: AMI Id used for the Host
-
-  AuthorPublishDispatcherImageRootDevice:
-    Type: String
-    Description: The root device name for the Author Publish Dispatcher Image Id
-    Default: /dev/sda1
-
-  AuthorPublishDispatcherInstanceTypeParameter:
-    Type: String
-    Description: The Author Publish Dispatcher Instance Type
-
-  InboundFromBastionHostSecurityGroupParameter:
-    Type: String
-    Description: Inbound from Bastion Host Security Group Id
-
-  ComputeKeyPairNameParameter:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: The Compute Resources Key Pair Name
-
-  AuthorPublishDispatcherRootVolSizeParameter:
-    Type: Number
-    Description: Author Publish Dispatcher Instances Root EBS Volume Size
-
-  AuthorPublishDispatcherDataVolSizeParameter:
-    Type: Number
-    Description: Author Publish Dispatcher Instances Data EBS Volume Size
-
-  DataBucketNameParameter:
-    Type: String
-    Description: Bucket name that stores Stack data files
-
   AemAwsStackProvisionerVersionParameter:
-    Type: String
     Description: AEM AWS Stack Provisioner version number
-
+    Type: String
   AssociatePublicIpAddressParameter:
-    Type: String
     Description: Add Public IP Address to instance
-
-  Route53HostedZoneNameParameter:
     Type: String
-    Description: Route53 Hosted Zone Name the Record Set will be Created in
-
   AuthorPublishDispatcherDNSRecordSetNameParameter:
-    Type: String
     Description: Author Publish Dispatcher DNS Record Set Name
-
-  DNSRecordSetTTL:
     Type: String
+  AuthorPublishDispatcherDataVolSizeParameter:
+    Description: Author Publish Dispatcher Instances Data EBS Volume Size
+    Type: Number
+  AuthorPublishDispatcherImageParameter:
+    Description: AMI Id used for the Host
+    Type: AWS::EC2::Image::Id
+  AuthorPublishDispatcherImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the Author Publish Dispatcher Image Id
+    Type: String
+  AuthorPublishDispatcherInstanceTypeParameter:
+    Description: The Author Publish Dispatcher Instance Type
+    Type: String
+  AuthorPublishDispatcherRootVolSizeParameter:
+    Description: Author Publish Dispatcher Instances Root EBS Volume Size
+    Type: Number
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DNSRecordSetTTL:
     Description: Record Set TTL value
-
+    Type: String
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  InboundFromBastionHostSecurityGroupParameter:
+    Description: Inbound from Bastion Host Security Group Id
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Main Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Prerequisite Resources Stack Prefix
+    Type: String
+  Route53HostedZoneNameParameter:
+    Description: Route53 Hosted Zone Name the Record Set will be Created in
+    Type: String
 Resources:
-
   AuthorPublishDispatcherInstance:
-    Type: AWS::EC2::Instance
     Properties:
       BlockDeviceMappings:
       - DeviceName:
@@ -95,7 +74,8 @@ Resources:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       IamInstanceProfile:
-        Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
+        Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
       ImageId:
         Ref: AuthorPublishDispatcherImageParameter
       InstanceType:
@@ -107,10 +87,12 @@ Resources:
           Ref: AssociatePublicIpAddressParameter
         DeviceIndex: '0'
         GroupSet:
-          - Ref: InboundFromBastionHostSecurityGroupParameter
-          - Fn::ImportValue: !Sub ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+        - Ref: InboundFromBastionHostSecurityGroupParameter
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
         SubnetId:
-          Fn::ImportValue: !Sub ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
+          Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
       Tags:
       - Key: StackPrefix
         Value:
@@ -127,16 +109,18 @@ Resources:
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
             \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-publish-dispatcher\
             \ ${AemAwsStackProvisionerVersionParameter}\n"
-
+    Type: AWS::EC2::Instance
   AuthorPublishDispatcherRoute53RecordSet:
-    Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneName:
         Ref: Route53HostedZoneNameParameter
       Name:
         Fn::Sub: ${AuthorPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
       ResourceRecords:
-      - Fn::GetAtt: [AuthorPublishDispatcherInstance, PrivateIp]
+      - Fn::GetAtt:
+        - AuthorPublishDispatcherInstance
+        - PrivateIp
       TTL:
         Ref: DNSRecordSetTTL
       Type: A
+    Type: AWS::Route53::RecordSet
