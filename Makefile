@@ -37,6 +37,12 @@ config:
 # Shared stacks
 ########################################
 
+create-vpc:
+	./scripts/create-stack.sh network/vpc "$(config_path)" "$(stack_prefix)"
+
+delete-vpc:
+	./scripts/delete-stack.sh network/vpc "$(config_path)" "$(stack_prefix)"
+	
 create-network:
 	./scripts/create-stack.sh network/network "$(config_path)" "$(stack_prefix)"
 
@@ -48,12 +54,6 @@ create-network-exports:
 
 delete-network-exports:
 	./scripts/delete-stack.sh network/network-exports "$(config_path)" "$(stack_prefix)"
-
-create-vpc:
-	./scripts/create-stack.sh network/vpc "$(config_path)" "$(stack_prefix)"
-
-delete-vpc:
-	./scripts/delete-stack.sh network/vpc "$(config_path)" "$(stack_prefix)"
 
 create-nat-gateway:
 	./scripts/create-stack.sh network/nat-gateway "$(config_path)" "$(stack_prefix)"
