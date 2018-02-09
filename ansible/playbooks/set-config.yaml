@@ -1,0 +1,17 @@
+---
+- name: Set configuration tasks
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Add custom AWS tags to CloudFormation template files
+      cf_tags:
+        template_dir: "{{ item }}"
+        global_tags: "{{ aws['tags'] }}"
+      items:
+        - ../../cloudformation/apps/aem/consolidated/
+        - ../../cloudformation/apps/aem/full-set/
+        - ../../cloudformation/apps/aem-stack-manager/
+        - ../../cloudformation/apps/
+        - ../../cloudformation/network/

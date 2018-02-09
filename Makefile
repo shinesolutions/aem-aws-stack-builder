@@ -30,6 +30,9 @@ validate:
 		aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 
+config:
+	scripts/set-config.sh "${config_path}"
+
 ########################################
 # Shared stacks
 ########################################

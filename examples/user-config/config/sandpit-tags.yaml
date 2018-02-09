@@ -1,0 +1,8 @@
+aws:
+  tags:
+    - Key: Project
+      Value: Open Source AEM Platform
+    - Key: Owner
+      Value: Shine Solutions AEM Team
+    - Key: Cost Centre
+      Value: 12345
