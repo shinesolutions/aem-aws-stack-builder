@@ -5,6 +5,13 @@
   connection: local
 
   tasks:
+    - name: Create stage directory
+      file:
+        path: ../../../../stage/
+        state: directory
+      tags:
+      - create
+
     - name: Check AEM Stack Manager artifact existence
       stat:
         path: ../../../../stage/aem-stack-manager-cloud.zip
