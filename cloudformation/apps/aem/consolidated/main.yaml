@@ -1,8 +1,20 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UseAuthorDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UseAuthorDataVolSnapshotParameter
+    - true
+  UsePublishDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UsePublishDataVolSnapshotParameter
+    - true
 Description: Create AEM Consolidated Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
+    Type: String
+  AuthorDataVolSnapshotParameter:
+    Description: The Author Data Volume Snapshot Id
     Type: String
   AssociatePublicIpAddressParameter:
     Description: Add Public IP Address to instance
@@ -47,8 +59,23 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Prerequisite Resources Stack Prefix
     Type: String
+  PublishDataVolSnapshotParameter:
+    Description: The Publish Data Volume Snapshot Id
+    Type: String
   Route53HostedZoneNameParameter:
     Description: Route53 Hosted Zone Name the Record Set will be Created in
+    Type: String
+  UseAuthorDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Whether to use the Author Snapshot Data Volume.
+    Type: String
+  UsePublishDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Publish Snapshot Data Volume.
     Type: String
 Resources:
   AuthorPublishDispatcherInstance:
@@ -64,12 +91,22 @@ Resources:
       - DeviceName: /dev/sdb
         Ebs:
           DeleteOnTermination: true
+          SnapshotId:
+            Fn::If:
+            - UseAuthorDataVolSnapshotCondition
+            - Ref: AuthorDataVolSnapshotParameter
+            - Ref: AWS::NoValue
           VolumeSize:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
       - DeviceName: /dev/sdc
         Ebs:
           DeleteOnTermination: true
+          SnapshotId:
+            Fn::If:
+            - UsePublishDataVolSnapshotCondition
+            - Ref: PublishDataVolSnapshotParameter
+            - Ref: AWS::NoValue
           VolumeSize:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
