@@ -216,3 +216,51 @@ Resources:
         Value:
           Ref: MainStackPrefixParameter
     Type: AWS::ElasticLoadBalancing::LoadBalancer
+  AuthorDispatcherAtLeastOneUnHealthyAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: At least one Author Dispatcher is Unhealthy
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAtLeastOneUnHealthyAlarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: AuthorDispatcherLoadBalancer
+      EvaluationPeriods: 10
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+    Type: AWS::CloudWatch::Alarm
+  AuthorDispatcherMoreThanOneUnHealthyAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: More than one Author Dispatcher is Unhealthy
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherMoreThanOneUnHealthyAlarm
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: AuthorDispatcherLoadBalancer
+      EvaluationPeriods: 1
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+    Type: AWS::CloudWatch::Alarm
