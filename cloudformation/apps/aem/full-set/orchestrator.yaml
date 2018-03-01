@@ -164,3 +164,27 @@ Resources:
             \ ${DataBucketNameParameter} ${MainStackPrefixParameter} orchestrator\
             \ ${AemAwsStackProvisionerVersionParameter} /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n"
     Type: AWS::AutoScaling::LaunchConfiguration
+  OrchestratorNoInstanceAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: No Orchestrator Instance in Service
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-OrchestratorNoInstanceAlarm
+      ComparisonOperator: LessThanThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value:
+          Ref: OrchestratorAutoScalingGroup
+      EvaluationPeriods: 5
+      MetricName: GroupInServiceInstances
+      Namespace: AWS/AutoScaling
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+    Type: AWS::CloudWatch::Alarm
