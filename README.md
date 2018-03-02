@@ -42,6 +42,7 @@ Usage
 - Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
 - Create [configuration file](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
 - Set up the configuration files by running `make config config_path=<path/to/config/dir>`
+- Download open source library artifacts and upload them to S3 by running `make library config_path=<path/to/config/dir>`
 
 ### Network
 

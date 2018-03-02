@@ -3,7 +3,7 @@ version ?= 2.1.0
 ci: clean deps lint package
 
 clean:
-	rm -rf logs
+	rm -rf logs stage
 	rm -f *.cert *.key
 	rm -f ansible/playbooks/apps/*.retry
 
@@ -30,8 +30,14 @@ validate:
 		aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 
+stage:
+	mkdir -p stage/
+
 config:
 	scripts/set-config.sh "${config_path}"
+
+library: stage
+	scripts/fetch-library.sh "${config_path}"
 
 ########################################
 # Shared stacks
@@ -42,7 +48,7 @@ create-vpc:
 
 delete-vpc:
 	./scripts/delete-stack.sh network/vpc "$(config_path)" "$(stack_prefix)"
-	
+
 create-network:
 	./scripts/create-stack.sh network/network "$(config_path)" "$(stack_prefix)"
 
