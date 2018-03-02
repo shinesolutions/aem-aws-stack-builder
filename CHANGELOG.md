@@ -24,6 +24,7 @@
 * Add aem.version configuration
 * Add CW Alarm to monitor auto scaling messaging queue
 * Add Collectd proxy configuration support
+* Add new command mapping in stack_manager_config.py 
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
