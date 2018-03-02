@@ -161,11 +161,6 @@ create-ssm-documents:
 delete-ssm-documents:
 	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
-# utility targets
-
-library-upload:
-	./scripts/create-stack.sh apps/library-upload "$(config_path)" "$(stack_prefix)"
-
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME=aem-stack-builder
 
