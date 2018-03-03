@@ -7,6 +7,12 @@
   vars:
     artifacts_dir: ../../stage/library-artifacts/
 
+  # Artifact download tasks unfortunately have to use a mix of proper get_url
+  # and wget shell command. This is deliberately done in order to support environments
+  # (a combination of older Ansible 2.x, Python 2.7.x, and OpenSSL 1.0x)
+  # with tlsv1 protocol, which is used by GitHub, hence GitHub downloads use
+  # command instead of get_url.
+
   tasks:
 
     - name: Ensure stage directory exists
@@ -33,9 +39,9 @@
         mode: 0644
       when: library.aem_password_reset_version is defined
 
-    # - name: Download AEM Stack Manager from GitHub
-    #   command: "wget -O {{ artifacts_dir }}//aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip https://github.com/shinesolutions/aem-stack-manager-cloud/releases/download/{{ library.aem_stack_manager_version }}/aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip"
-    #   when: library.aem_stack_manager_version is defined
+    - name: Download AEM Stack Manager from GitHub
+      command: "wget -O {{ artifacts_dir }}//aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip https://github.com/shinesolutions/aem-stack-manager-cloud/releases/download/{{ library.aem_stack_manager_version }}/aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip"
+      when: library.aem_stack_manager_version is defined
 
     - name: Download Oak Run  from Maven Central
       get_url:
