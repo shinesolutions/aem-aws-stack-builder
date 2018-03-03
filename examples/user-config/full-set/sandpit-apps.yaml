@@ -81,7 +81,7 @@ library:
   aem_orchestrator_version: 1.0.1
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
-  aem_stack_manager_version: 2.0.0
+  aem_stack_manager_version: 1.1.0
 
 certificate_manager:
   ssl_certificate_arn: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
