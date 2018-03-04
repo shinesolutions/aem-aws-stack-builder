@@ -12,7 +12,7 @@ proxy:
   protocol:
   host:
   port:
-    
+
 aem:
   # AEM 6.2
   version: '6.2'
@@ -77,7 +77,7 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 2.4.2
+  aem_aws_stack_provisioner_version: 2.4.3
   aem_orchestrator_version: 1.0.1
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
