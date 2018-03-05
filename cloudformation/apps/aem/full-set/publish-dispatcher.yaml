@@ -200,6 +200,54 @@ Resources:
           - Ref: PublishDispatcherASGCPUScalingParameters
       TreatMissingData: breaching
     Type: AWS::CloudWatch::Alarm
+  PublishDispatcherAtLeastOneUnHealthyAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: At least one Publish Dispatcher is Unhealthy
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherAtLeastOneUnHealthyAlarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: PublishDispatcherLoadBalancer
+      EvaluationPeriods: 15
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+    Type: AWS::CloudWatch::Alarm
+  PublishDispatcherMoreThanOneUnHealthyAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: More than one Publish Dispatcher is Unhealthy
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherMoreThanOneUnHealthyAlarm
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: PublishDispatcherLoadBalancer
+      EvaluationPeriods: 1
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+    Type: AWS::CloudWatch::Alarm
   PublishDispatcherLaunchConfiguration:
     Properties:
       AssociatePublicIpAddress: false

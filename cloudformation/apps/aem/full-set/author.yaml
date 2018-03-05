@@ -247,8 +247,7 @@ Resources:
       AlarmActions:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      AlarmDescription: Monitors the sync delay between the Author Standby and the
-        Author Primary
+      AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
       AlarmName:
         Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
@@ -272,7 +271,7 @@ Resources:
       AlarmActions:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      AlarmDescription: Multiple Author Instances have Enterered into Service
+      AlarmDescription: Multiple Author Instances have Entered into Service
       AlarmName:
         Fn::Sub: ${MainStackPrefixParameter}-MultiAuthorInstanceAlarm
       ComparisonOperator: GreaterThanThreshold
@@ -289,4 +288,28 @@ Resources:
       Period: 60
       Statistic: Maximum
       Threshold: 1
+    Type: AWS::CloudWatch::Alarm
+  NoAuthorInstanceAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: No Author Instance in Service
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-NoAuthorInstanceAlarm
+      ComparisonOperator: LessThanOrEqualToThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: AuthorLoadBalancer
+      EvaluationPeriods: 5
+      MetricName: HealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 0
     Type: AWS::CloudWatch::Alarm
