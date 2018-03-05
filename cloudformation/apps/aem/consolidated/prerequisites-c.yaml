@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Overarching CF Template to Create Prerequisites Resources for AEM Consolidated
+  Stacks
+Outputs:
+  InstanceProfilesStackName:
+    Description: Instance Profiles Stack Name
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-InstanceProfilesStackName
+    Value:
+      Ref: InstanceProfilesStack
+  SecurityGroupsStackName:
+    Description: Security Groups Stack Name
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-SecurityGroupsStackName
+    Value:
+      Ref: SecurityGroupsStack
+Parameters:
+  AuthorPublishDispatcherInstanceProfileParameter:
+    Description: The Author Publish Dispatcher Instance Profile
+    Type: String
+  AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
+    Description: AEM Author Publish Dispatcher Security Group Inbound Cidr Ip
+    Type: String
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  SecureShellInboundCidrIpParameter:
+    Description: AEM Stack Secure Shell Inbound Cidr Ip
+    Type: String
+Resources:
+  InstanceProfilesStack:
+    Properties:
+      Parameters:
+        AuthorPublishDispatcherInstanceProfileParameter:
+          Ref: AuthorPublishDispatcherInstanceProfileParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles-exports.yaml
+    Type: AWS::CloudFormation::Stack
+  SecurityGroupsStack:
+    Properties:
+      Parameters:
+        AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter:
+          Ref: AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        SecureShellInboundCidrIpParameter:
+          Ref: SecureShellInboundCidrIpParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
+    Type: AWS::CloudFormation::Stack

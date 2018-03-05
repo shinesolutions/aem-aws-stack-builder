@@ -1,0 +1,143 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UseAuthorDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UseAuthorDataVolSnapshotParameter
+    - true
+  UsePublishDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UsePublishDataVolSnapshotParameter
+    - true
+Description: Create AEM Consolidated Main Resources Stacks
+Parameters:
+  AemAwsStackProvisionerVersionParameter:
+    Description: AEM AWS Stack Provisioner version number
+    Type: String
+  AuthorDataVolSnapshotParameter:
+    Description: The Author Data Volume Snapshot Id
+    Type: String
+  AssociatePublicIpAddressParameter:
+    Description: Add Public IP Address to instance
+    Type: String
+  AuthorPublishDispatcherDNSRecordSetNameParameter:
+    Description: Author Publish Dispatcher DNS Record Set Name
+    Type: String
+  AuthorPublishDispatcherDataVolSizeParameter:
+    Description: Author Publish Dispatcher Instances Data EBS Volume Size
+    Type: Number
+  AuthorPublishDispatcherImageParameter:
+    Description: AMI Id used for the Host
+    Type: AWS::EC2::Image::Id
+  AuthorPublishDispatcherImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the Author Publish Dispatcher Image Id
+    Type: String
+  AuthorPublishDispatcherInstanceTypeParameter:
+    Description: The Author Publish Dispatcher Instance Type
+    Type: String
+  AuthorPublishDispatcherRootVolSizeParameter:
+    Description: Author Publish Dispatcher Instances Root EBS Volume Size
+    Type: Number
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  InboundFromBastionHostSecurityGroupParameter:
+    Description: Inbound from Bastion Host Security Group Id
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Main Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Prerequisite Resources Stack Prefix
+    Type: String
+  PublishDataVolSnapshotParameter:
+    Description: The Publish Data Volume Snapshot Id
+    Type: String
+  UseAuthorDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Whether to use the Author Snapshot Data Volume.
+    Type: String
+  UsePublishDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Publish Snapshot Data Volume.
+    Type: String
+Resources:
+  AuthorPublishDispatcherInstance:
+    Properties:
+      BlockDeviceMappings:
+      - DeviceName:
+          Ref: AuthorPublishDispatcherImageRootDevice
+        Ebs:
+          DeleteOnTermination: true
+          VolumeSize:
+            Ref: AuthorPublishDispatcherRootVolSizeParameter
+          VolumeType: gp2
+      - DeviceName: /dev/sdb
+        Ebs:
+          DeleteOnTermination: true
+          SnapshotId:
+            Fn::If:
+            - UseAuthorDataVolSnapshotCondition
+            - Ref: AuthorDataVolSnapshotParameter
+            - Ref: AWS::NoValue
+          VolumeSize:
+            Ref: AuthorPublishDispatcherDataVolSizeParameter
+          VolumeType: gp2
+      - DeviceName: /dev/sdc
+        Ebs:
+          DeleteOnTermination: true
+          SnapshotId:
+            Fn::If:
+            - UsePublishDataVolSnapshotCondition
+            - Ref: PublishDataVolSnapshotParameter
+            - Ref: AWS::NoValue
+          VolumeSize:
+            Ref: AuthorPublishDispatcherDataVolSizeParameter
+          VolumeType: gp2
+      IamInstanceProfile:
+        Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherInstanceProfile
+      ImageId:
+        Ref: AuthorPublishDispatcherImageParameter
+      InstanceType:
+        Ref: AuthorPublishDispatcherInstanceTypeParameter
+      KeyName:
+        Ref: ComputeKeyPairNameParameter
+      NetworkInterfaces:
+      - AssociatePublicIpAddress:
+          Ref: AssociatePublicIpAddressParameter
+        DeviceIndex: '0'
+        GroupSet:
+        - Ref: InboundFromBastionHostSecurityGroupParameter
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
+        SubnetId:
+          Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
+      Tags:
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+      - Key: Name
+        Value: AuthorPublishDispatcher
+      - Key: Component
+        Value: author-publish-dispatcher
+      UserData:
+        Fn::Base64:
+          Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
+            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
+            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-publish-dispatcher\
+            \ ${AemAwsStackProvisionerVersionParameter}\n"
+    Type: AWS::EC2::Instance

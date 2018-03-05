@@ -34,6 +34,38 @@
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
       tags:
       - create
+      when:
+        permission_type == "b"
+
+    - name: Create AEM Author Publish Dispatcher Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../../../cloudformation/apps/aem/consolidated/main-{{ permission_type }}.yaml"
+        template_parameters:
+          AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
+          AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"
+          AssociatePublicIpAddressParameter: "{{ author_publish_dispatcher.associate_public_ip_address }}"
+          AuthorPublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_publish_dispatcher.record_set_name }}"
+          AuthorPublishDispatcherDataVolSizeParameter: "{{ author_publish_dispatcher.data_vol_size }}"
+          AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
+          AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
+          AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"
+          ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
+          MainStackPrefixParameter: "{{ stack_prefix }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
+          PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
+          PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
+          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot }}"
+          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
+      tags:
+      - create
+      when:
+        permission_type == "c"
 
     - name: Check if a Stack Exists
       command: >

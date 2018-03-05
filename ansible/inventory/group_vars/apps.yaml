@@ -159,6 +159,7 @@ author_dispatcher:
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
+  instance_profile: overwrite-me
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 20
