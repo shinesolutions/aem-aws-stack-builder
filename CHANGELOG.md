@@ -24,7 +24,8 @@
 * Add aem.version configuration
 * Add CW Alarm to monitor auto scaling messaging queue
 * Add Collectd proxy configuration support
-* Add new command mapping in stack_manager_config.py 
+* Add library build target for downloading open source artifacts #101
+* Add new command mapping for AEM Stack Manager
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
