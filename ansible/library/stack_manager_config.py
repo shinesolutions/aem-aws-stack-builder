@@ -9,7 +9,7 @@ Ansible module for creating AEM Stack Manager Lambda configuration file
 requirements:
   - boto3 >= 1.0.0
   - python >= 2.6
-options: 
+options:
     AEM_stack_name:
         description:
           - The name of the AEM Stack
@@ -136,9 +136,9 @@ class config:
                     "ssm-service-role-arn": ssmservicerolearn,\
                     "dynamodb-table": dynamodbtablename\
                     }}
-            
+
         # Create dict for task mapping
-        
+
         messenger_task_mapping = {
             "DeployArtifacts": "deploy-artifacts",
             "ManageService": "manage-service",
@@ -154,16 +154,17 @@ class config:
             "RunAdhocPuppet": "run-adhoc-puppet",
             "LiveSnapshot": "live-snapshot",
             "DisableCrxde": "disable-crxde",
+            "FlushDispatcherCache": "flush-dispatcher-cache",
             }
-        
+
         messenger_config_list = {
                 messenger_task_mapping[output['OutputKey']]: output['OutputValue']
                 for output in stack_outputs
                 }
-    
+
         messenger_dict = dict()
         messenger_dict['document_mapping'] = messenger_config_list
-        
+
         # Create dict for offline snapshot
         offline_snapshot ={
                 "offline_snapshot": {
@@ -234,7 +235,7 @@ def main():
 
     if state == 'present':
         stack_manager_config = config(module)
-        
+
         stack_outputs = stack_manager_config.describe_ssmdocument_stack(cf_connection, stack_name, ssm_stack_name)
 
         stack_manager_config.create(argument_spec, stack_outputs, s3_connection)
@@ -242,5 +243,5 @@ def main():
     elif state == 'absent':
         module.exit_json(changed=changed)
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     main()
