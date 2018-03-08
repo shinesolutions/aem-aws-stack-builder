@@ -12,6 +12,13 @@
       tags:
       - create
 
+    - name: Create Stack Manager Cloud directory
+      file:
+        path: ../../../../stage/aem-stack-manager-cloud
+        state: directory
+      tags:
+      - create
+
     - name: Check AEM Stack Manager artifact existence
       stat:
         path: ../../../../stage/aem-stack-manager-cloud.zip
@@ -32,7 +39,7 @@
     - name: Unpack aem-stack-manager-cloud library to stage directory
       unarchive:
         src: ../../../../stage/aem-stack-manager-cloud.zip
-        dest: ../../../../stage/
+        dest: ../../../../stage/aem-stack-manager-cloud
       tags:
       - create
 
