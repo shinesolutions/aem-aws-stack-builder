@@ -36,9 +36,6 @@ stage:
 config:
 	scripts/set-config.sh "${config_path}"
 
-secgrp:
-	scripts/set-secgrp.sh "${config_path}"
-
 library: stage
 	scripts/fetch-library.sh "${config_path}"
 
