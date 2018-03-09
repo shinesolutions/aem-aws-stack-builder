@@ -7,7 +7,7 @@ jq_filters=.
 # shellcheck disable=SC2086
 pushd "$(dirname ${0})" > /dev/null
 SCRIPTPATH="$(pwd)"
-CFTMPLPATH="$SCRIPTPATH/../cloudformation"
+CFTMPLPATH="$SCRIPTPATH/../cloudformation/apps/aem-stack-manager"
 popd > /dev/null
 
 for cmd in $(python "$SCRIPTPATH"/yaml2json.py "$CFTMPLPATH"/ssm-commands-cloudformation.yaml | jq -r '.Resources | keys | .[]'); do

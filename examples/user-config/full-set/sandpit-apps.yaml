@@ -31,7 +31,7 @@ aem:
       port: 59182
 
 compute:
-  key_pair_name: aem-stack-key-pair
+  key_pair_name: michaelb-sandpit
   inbound_from_bastion_host_security_group: sg-62153b04
 
 security_groups:
@@ -77,11 +77,11 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 2.4.4
+  aem_aws_stack_provisioner_version: 2.4.5
   aem_orchestrator_version: 1.0.1
   aem_password_reset_version: 1.0.1
   oak_run_version: 1.4.15
-  aem_stack_manager_version: 1.2.0
+  aem_stack_manager_version: 1.2.1
 
 certificate_manager:
   ssl_certificate_arn: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
