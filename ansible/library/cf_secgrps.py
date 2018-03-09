@@ -26,8 +26,8 @@ def add_secgrps_to_elb(elb_resource, secgrps, template, debug_output):
         if elb_resource in resource:
             elb_secgrps = template['Resources'][elb_resource]['Properties']['SecurityGroups']
             for secgrp in secgrps:
+                #debug_output.append('Adding: ' + secgrp + ' to ' + elb_resource)
                 elb_secgrps.append(secgrp)
-                debug_output.append('Adding: ' + secgrp + ' to ' + elb_resource)
 
     return template
 
