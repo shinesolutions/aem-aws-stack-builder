@@ -42,6 +42,8 @@ security_groups:
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: overwrite-me
+    extra_groups:
+      - overwrite-me
 
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
@@ -61,6 +63,8 @@ security_groups:
   author_dispatcher_elb:
     tag_name: AEM Author Dispatcher ELB Security Group
     inbound_cidr_ip: overwrite-me
+    extra_groups:
+      - overwrite-me
 
   author_publish_dispatcher:
     tag_name: AEM Author Publish Dispatcher Security Group

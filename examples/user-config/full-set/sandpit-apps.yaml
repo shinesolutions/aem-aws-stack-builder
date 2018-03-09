@@ -44,6 +44,8 @@ security_groups:
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
+    extra_groups:
+      - sg-62153b04
 
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
@@ -63,6 +65,8 @@ security_groups:
   author_dispatcher_elb:
     tag_name: AEM Author Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
+    extra_groups:
+      - sg-62153b04
 
   author_publish_dispatcher:
     inbound_cidr_ip: 10.0.8.128/25
