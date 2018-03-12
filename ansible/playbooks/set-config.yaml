@@ -23,6 +23,7 @@
         secgrps: "{{ security_groups['publish_dispatcher_elb']['extra_groups'] }}"
       items:
         - ../../cloudformation/apps/aem/full-set/
+      when: security_groups['publish_dispatcher_elb']['extra_groups'] is defined
       #register: cf_secgrps_out
 
     #- debug: var=cf_secgrps_out
@@ -34,6 +35,7 @@
         secgrps: "{{ security_groups['author_dispatcher_elb']['extra_groups'] }}"
       items:
         - ../../cloudformation/apps/aem/full-set/
+      when: security_groups['author_dispatcher_elb']['extra_groups'] is defined
      #register: cf_secgrps_out
 
     #- debug: var=cf_secgrps_out
