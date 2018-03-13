@@ -20,14 +20,14 @@ def write_template(file_name, template):
         f.write(text)
 
 
-def add_secgrps_to_elb(elb_resource, secgrps, template, debug_output):
+def add_security_groups_to_elb(elb_resource, security_groups, template, debug_output):
 
     for resource in template['Resources']:
         if elb_resource in resource:
-            elb_secgrps = template['Resources'][elb_resource]['Properties']['SecurityGroups']
-            for secgrp in secgrps:
+            elb_security_groups = template['Resources'][elb_resource]['Properties']['SecurityGroups']
+            for secgrp in security_groups:
                 #debug_output.append('Adding: ' + secgrp + ' to ' + elb_resource)
-                elb_secgrps.append(secgrp)
+                elb_security_groups.append(secgrp)
 
     return template
 
@@ -38,7 +38,7 @@ def main():
       argument_spec = dict(
         template_dir = dict(required=True, type='str'),
         elb_resource = dict(required=True, type='str'),
-        secgrps = dict(required=True, type='list')
+        security_groups = dict(required=True, type='list')
       )
     )
 
@@ -47,13 +47,13 @@ def main():
 
     template_dir = module.params['template_dir']
     elb_resource = module.params['elb_resource']
-    secgrps = module.params['secgrps']
+    security_groups = module.params['security_groups']
 
     template_files = glob.glob(template_dir + "*.yaml")
     for template_file in template_files:
         #debug_output.append('Adding Security Groups to %s' % template_file)
         template = read_template(template_file)
-        template = add_secgrps_to_elb(elb_resource, secgrps, template, debug_output)
+        template = add_security_groups_to_elb(elb_resource, security_groups, template, debug_output)
         write_template(template_file, template)
 
     module.exit_json(changed = True, message = ", ".join(template_files), debug_out=debug_output)
