@@ -27,6 +27,7 @@
 * Add library build target for downloading open source artifacts #101
 * Add new command mapping for AEM Stack Manager
 * Introduce permission types to support various resource restrictions
+* Add Simian Army artifact to library #75
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
