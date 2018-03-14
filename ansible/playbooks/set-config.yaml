@@ -15,3 +15,21 @@
         - ../../cloudformation/apps/aem-stack-manager/
         - ../../cloudformation/apps/
         - ../../cloudformation/network/
+
+    - name: Add custom AWS Security Groups to CloudFormation template files for Publish Dispatcher ELB
+      cf_security_groups:
+        template_dir: "{{ item }}"
+        elb_resource: 'PublishDispatcherLoadBalancer'
+        security_groups: "{{ security_groups['publish_dispatcher_elb']['extra_groups'] }}"
+      items:
+        - ../../cloudformation/apps/aem/full-set/
+      when: security_groups['publish_dispatcher_elb']['extra_groups'] is defined
+
+    - name: Add custom AWS Security Groups to CloudFormation template files for Author Dispatcher ELB
+      cf_security_groups:
+        template_dir: "{{ item }}"
+        elb_resource: 'AuthorDispatcherLoadBalancer'
+        security_groups: "{{ security_groups['author_dispatcher_elb']['extra_groups'] }}"
+      items:
+        - ../../cloudformation/apps/aem/full-set/
+      when: security_groups['author_dispatcher_elb']['extra_groups'] is defined
