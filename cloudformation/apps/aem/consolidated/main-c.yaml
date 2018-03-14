@@ -142,6 +142,6 @@ Resources:
             \ ${AemAwsStackProvisionerVersionParameter}\n"
     Type: AWS::EC2::Instance
 Outputs:
-    AppInstanceIP:
+    AuthorPublishDispatcherInstanceIp:
         Description: Ip Address of the resulting instance.
         Value: !GetAtt AuthorPublishDispatcherInstance.PrivateIp 
