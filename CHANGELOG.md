@@ -28,6 +28,7 @@
 * Add new command mapping for AEM Stack Manager
 * Introduce permission types to support various resource restrictions
 * Add Simian Army artifact to library #75
+* Set Ansible config hash behaviour to merge #108
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
