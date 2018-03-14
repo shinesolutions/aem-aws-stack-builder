@@ -16,20 +16,12 @@
         - ../../cloudformation/apps/
         - ../../cloudformation/network/
 
-    - name: Add custom AWS Security Groups to CloudFormation template files for Publish Dispatcher ELB
+    - name: Add extra AWS Security Groups to CloudFormation template files
       cf_security_groups:
-        template_dir: "{{ item }}"
-        elb_resource: 'PublishDispatcherLoadBalancer'
-        security_groups: "{{ security_groups['publish_dispatcher_elb']['extra_groups'] }}"
+        template_dir: '../../cloudformation/apps/aem/full-set/'
+        elb_resource: "{{ item.resource }}"
+        security_groups: "{{ security_groups[item.property]['extra_groups'] }}"
       items:
-        - ../../cloudformation/apps/aem/full-set/
-      when: security_groups['publish_dispatcher_elb']['extra_groups'] is defined
-
-    - name: Add custom AWS Security Groups to CloudFormation template files for Author Dispatcher ELB
-      cf_security_groups:
-        template_dir: "{{ item }}"
-        elb_resource: 'AuthorDispatcherLoadBalancer'
-        security_groups: "{{ security_groups['author_dispatcher_elb']['extra_groups'] }}"
-      items:
-        - ../../cloudformation/apps/aem/full-set/
-      when: security_groups['author_dispatcher_elb']['extra_groups'] is defined
+        - { resource: 'AuthorDispatcherLoadBalancer', property: 'author_dispatcher_elb' }
+        - { resource: 'PublishDispatcherLoadBalancer', property: 'publish_dispatcher_elb' }
+      when: security_groups[item.property] is defined and security_groups[item.property]['extra_groups'] is defined
