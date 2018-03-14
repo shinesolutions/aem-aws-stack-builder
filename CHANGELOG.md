@@ -29,6 +29,7 @@
 * Introduce permission types to support various resource restrictions
 * Add Simian Army artifact to library #75
 * Set Ansible config hash behaviour to merge #108
+* Add support for adding extra security groups to ELBs #107
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
