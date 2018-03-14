@@ -129,7 +129,7 @@ Resources:
         Value:
           Ref: MainStackPrefixParameter
       - Key: Name
-        Value: AuthorPublishDispatcher
+        Value: AEM Author Publish Dispatcher
       - Key: Component
         Value: author-publish-dispatcher
       UserData:
@@ -144,4 +144,4 @@ Resources:
 Outputs:
     AuthorPublishDispatcherInstanceIp:
         Description: Ip Address of the resulting instance.
-        Value: !GetAtt AuthorPublishDispatcherInstance.PrivateIp 
+        Value: !GetAtt AuthorPublishDispatcherInstance.PrivateIp
