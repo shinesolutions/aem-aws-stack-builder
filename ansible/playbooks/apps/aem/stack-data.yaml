@@ -186,6 +186,15 @@
       tags:
       - create
 
+    - name: Copy Simian Army from library to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/simianarmy-{{ library.simian_army_version }}.war"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/simianarmy-{{ library.simian_army_version }}.war"
+      tags:
+      - create
+
     - name: Check that custom AEM Stack Provisioner exists
       stat:
         path: ../../../../stage/aem-custom-stack-provisioner.tar.gz

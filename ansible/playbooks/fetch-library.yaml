@@ -43,12 +43,19 @@
       command: "wget -O {{ artifacts_dir }}//aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip https://github.com/shinesolutions/aem-stack-manager-cloud/releases/download/{{ library.aem_stack_manager_version }}/aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip"
       when: library.aem_stack_manager_version is defined
 
-    - name: Download Oak Run  from Maven Central
+    - name: Download Oak Run from Maven Central
       get_url:
         url: "http://central.maven.org/maven2/org/apache/jackrabbit/oak-run/{{ library.oak_run_version }}/oak-run-{{ library.oak_run_version }}.jar"
         dest: "{{ artifacts_dir }}"
         mode: 0644
       when: library.oak_run_version is defined
+
+    - name: Download Simian Army from Bintray
+      get_url:
+        url: "https://dl.bintray.com/netflixoss/maven/com/netflix/simianarmy/simianarmy/{{ library.simian_army_version }}/simianarmy-{{ library.simian_army_version }}.war"
+        dest: "{{ artifacts_dir }}"
+        mode: 0644
+      when: library.simian_army_version is defined
 
     - name: Upload fetched artifacts to S3 library bucket
       s3_sync:

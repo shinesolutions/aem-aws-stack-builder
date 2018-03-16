@@ -4,6 +4,7 @@ publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 orchestrator::aem_orchestrator_version: '{{ library.aem_orchestrator_version }}'
+chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 
 common::proxy_enabled: {{ proxy.enabled }}
 common::proxy_protocol: '{{ proxy.protocol }}'
