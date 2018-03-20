@@ -46,7 +46,7 @@
 
     - name: Generate CloudFormation Template for SSM Documents
       shell: >
-          "{{ playbook_dir }}/../../../../stage/aem-stack-manager-cloud/scripts/generate.sh" >  "{{ playbook_dir }}/../../../../stage/ssm_template.json"
+          "{{ playbook_dir }}/../../../../scripts/generate.sh" >  "{{ playbook_dir }}/../../../../stage/ssm_template.json"
       tags:
         - create
 
