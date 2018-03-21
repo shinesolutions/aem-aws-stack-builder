@@ -24,4 +24,4 @@
       items:
         - { resource: 'AuthorDispatcherLoadBalancer', property: 'author_dispatcher_elb' }
         - { resource: 'PublishDispatcherLoadBalancer', property: 'publish_dispatcher_elb' }
-      when: security_groups[item.property] is defined and security_groups[item.property]['extra_groups'] is defined
+      when: security_groups is defined and security_groups[item.property] is defined and security_groups[item.property]['extra_groups'] is defined
