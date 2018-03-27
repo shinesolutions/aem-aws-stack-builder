@@ -1,0 +1,26 @@
+{
+  "author-primary": {
+    "packages": [
+    ]
+  },
+  "author-dispatcher": {
+    "artifacts": [
+      {
+        "name": "aem-author-dispatcher-disable-crxde",
+        "source": "s3://aem-stack-builder/library/aem-author-dispatcher-disable-crxde-1.0.0.zip"
+      }
+    ]
+  },
+  "publish": {
+    "packages": [
+    ]
+  },
+  "publish-dispatcher": {
+    "artifacts": [
+      {
+        "name": "aem-publish-dispatcher-disable-crxde",
+        "source": "s3://aem-stack-builder/library/aem-publish-dispatcher-disable-crxde-1.0.0.zip"
+      }
+    ]
+  }
+}

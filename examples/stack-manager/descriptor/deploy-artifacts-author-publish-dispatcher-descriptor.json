@@ -1,0 +1,31 @@
+{
+  "author-publish-dispatcher": {
+    "packages": [
+      {
+        "source": "s3://aem-stack-builder/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "group": "shinesolutions",
+        "name": "aem-helloworld-content",
+        "version": "0.0.1-SNAPSHOT",
+        "replicate": false,
+        "activate": false,
+        "force": false
+      },
+      {
+        "source": "s3://aem-stack-builder/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "group": "shinesolutions",
+        "name": "aem-helloworld-content",
+        "version": "0.0.1-SNAPSHOT",
+        "replicate": false,
+        "activate": false,
+        "force": false,
+        "aem_id": "publish"
+      }
+    ],
+    "artifacts": [
+      {
+        "name": "aem-helloworld-author-publish-dispatcher",
+        "source": "s3://aem-stack-builder/library/aem-helloworld-publish-dispatcher-0.10.0.zip"
+      }
+    ]
+  }
+}
