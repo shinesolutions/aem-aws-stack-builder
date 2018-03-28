@@ -105,3 +105,10 @@ Ensure [configuration file for AEM Stack Manager]() has been set up.
 Create AEM Stack Manager stacks:
 
     make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
+    
+More
+----
+
+Further information about AEM AWS Stack Builder:
+
+* [Open Source AEM Platform: A Short Intro](https://www.slideshare.net/cliffano/open-source-aem-platform-a-short-intro-89967729)
