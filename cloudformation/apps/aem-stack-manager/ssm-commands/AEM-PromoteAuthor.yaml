@@ -17,6 +17,6 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
-        - /opt/shinesolutions/aem-tools/promote-author-standby-to-primary.sh
+        - /opt/shinesolutions/aws-tools/promote-author-standby-to-primary.sh
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
