@@ -1,7 +1,7 @@
 ---
 schemaVersion: '2.0'
 description: >-
-  Test the AEM stack to see if it is ready to be used.
+  Test the AEM Fullset stack to see if it is ready to be used.
 parameters:
   executionTimeout:
     description: >-
