@@ -17,6 +17,6 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
-        - /opt/shinesolutions/aem-tools/xxxxxxxx.sh
+        - /opt/shinesolutions/aem-tools/test-full-set-ready.sh
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
