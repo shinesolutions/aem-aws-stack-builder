@@ -102,6 +102,12 @@ Parameters:
     Description: >-
       The name of the file containing the FlushDispatcherCache SSM command
 
+  TestReadinessIncludeFile:
+    Type: String
+    Default: AEM-TestReadiness.yaml
+    Description: >-
+      The name of the file containing the TestReadiness SSM command.
+
 Resources:
   DeployArtifact:
     Type: AWS::SSM::Document
@@ -248,6 +254,16 @@ Resources:
           Name: 'AWS::Include'
           Parameters: !Sub '${S3BucketAndPrefix}/${FlushDispatcherCacheIncludeFile}'
 
+  TestReadiness:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${TestReadinessIncludeFile}'
+
 Outputs:
   DeployArtifact:
     Description: Document name for Deploy Artifact
@@ -308,3 +324,7 @@ Outputs:
   FlushDispatcherCache:
     Description: Document name for FlushDispatcherCache
     Value: !Ref FlushDispatcherCache
+
+  TestReadiness:
+    Description: Documention name for Test Readiness
+    Value: !Ref TestReadiness
