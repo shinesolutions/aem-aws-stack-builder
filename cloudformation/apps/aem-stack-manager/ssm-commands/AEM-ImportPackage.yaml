@@ -3,7 +3,7 @@ schemaVersion: '2.0'
 description: >-
   Deploy artifacts to an AEM environment based on a descriptor file.
 parameters:
-  aem_id:
+  aemId:
     description: (Required) AEM ID of the instance to deploy the artifact
     type: String
   sourceStackPrefix:
@@ -36,6 +36,6 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
-        - '/opt/shinesolutions/aem-tools/import-backup.sh {{aem_id}} {{ sourceStackPrefix }} {{ packageGroup }} {{ packageName }} {{ packageDatestamp }}'
+        - '/opt/shinesolutions/aem-tools/import-backup.sh {{aemId}} {{ sourceStackPrefix }} {{ packageGroup }} {{ packageName }} {{ packageDatestamp }}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp

@@ -3,7 +3,7 @@ schemaVersion: '2.0'
 description: >-
   Deploy an artifact to an AEM environment.
 parameters:
-  aem_id:
+  aemId:
     description: (Required) AEM ID of the instance to deploy the artifact
     type: String
   source:
@@ -41,6 +41,6 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
-        - '/opt/shinesolutions/aem-tools/deploy-artifact.sh {{aem_id}} {{source}} {{group}} {{name}} {{version}} {{replicate}} {{activate}} {{force}}'
+        - '/opt/shinesolutions/aem-tools/deploy-artifact.sh {{aemId}} {{source}} {{group}} {{name}} {{version}} {{replicate}} {{activate}} {{force}}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp

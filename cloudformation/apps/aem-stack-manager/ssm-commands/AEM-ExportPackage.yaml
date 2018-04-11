@@ -3,6 +3,9 @@ schemaVersion: '2.0'
 description: >-
   Deploy artifacts to an AEM environment based on a descriptor file.
 parameters:
+  aemId:
+    description: (Required) AEM ID of the instance to deploy the artifact
+    type: String
   packageGroup:
     description: >-
       (Required) The AEM group the package belongs to.
@@ -29,6 +32,6 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
-        - '/opt/shinesolutions/aem-tools/export-backup.sh {{ packageGroup }} {{ packageName }} {{ packageFilter }}'
+        - '/opt/shinesolutions/aem-tools/export-backup.sh {{ aemId }} {{ packageGroup }} {{ packageName }} {{ packageFilter }}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
