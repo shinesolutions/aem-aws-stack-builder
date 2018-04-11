@@ -46,7 +46,7 @@
     - name: Package Lambda functions
       command: >
         zip -j "../../../../stage/{{ item }}.zip" "../../../../stage/aem-stack-manager-cloud/lambda/{{ item }}.py"
-      items:
+      with_items:
         - aem_stack_manager
         - aem_offline_snapshot
         - aem_task_query
@@ -60,7 +60,7 @@
         object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/{{ item }}.zip"
         src: ../../../../stage/{{ item }}.zip
         mode: put
-      items:
+      with_items:
         - aem_stack_manager
         - aem_offline_snapshot
         - aem_task_query
@@ -82,7 +82,7 @@
       file:
         path: ../../../../stage/{{ item }}.zip
         state: absent
-      items:
+      with_items:
         - aem_stack_manager
         - aem_offline_snapshot
         - aem_task_query
