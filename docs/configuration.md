@@ -1,29 +1,18 @@
-## Configuration
+Configuration
+-------------
 
-| Name                                         | Description |
-|----------------------------------------------|-------------|
-| publish_dispatcher.stack_name                | TODO        |
-| publish_dispatcher.instance_profile          | TODO        |
-| publish_dispatcher.instance_type             | TODO        |
-| publish_dispatcher.min_size                  | TODO        |
-| publish_dispatcher.max_size                  | TODO        |
-| publish_dispatcher.load_balancer.tag_name    | TODO        |
-| publish_dispatcher.tag_name                  | TODO        |
-| publish_dispatcher.elb_health_check          | TODO        |
-| publish_dispatcher.route53_record_set_name   | TODO        |
-| chaos_monkey.stack_name                      | TODO        |
-| chaos_monkey.ami_id                          | TODO        |
-| chaos_monkey.instance_profile                | TODO        |
-| chaos_monkey.instance_type                   | TODO        |
-| chaos_monkey.tag_name                        | TODO        |
+The following configurations are available for users to customise the creation process and the resulting machine images.
 
-## Development
+Check out the [example configuration files](https://github.com/shinesolutions/packer-aem/blob/master/examples/user-config/) as reference.
 
-Requirements:
+**Global configuration properties:**
 
-* Install [ShellCheck](https://github.com/koalaman/shellcheck#user-content-installing)
+| Name | Description |
+|------|-------------|
+| todo | TODO |
 
-Check shell scripts, validate CloudFormation templates, check Ansible playbooks syntax:
-```
-make lint
-```
+**AEM configuration properties:**
+
+| Name | Description |
+|------|-------------|
+| aem.enable_reverse_replication | If true, reverse replication from AEM Publish to AEM Author will be enabled |

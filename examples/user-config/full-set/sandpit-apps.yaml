@@ -21,6 +21,7 @@ aem:
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: false
+  enable_reverse_replication: true
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jmxremote:
