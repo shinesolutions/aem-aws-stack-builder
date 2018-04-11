@@ -102,6 +102,18 @@ Parameters:
     Description: >-
       The name of the file containing the FlushDispatcherCache SSM command
 
+  TestReadinessFullsetIncludeFile:
+    Type: String
+    Default: AEM-TestReadinessFullset.yaml
+    Description: >-
+      The name of the file containing the TestReadinessFullset SSM command.
+
+  TestReadinessConsolidatedIncludeFile:
+    Type: String
+    Default: AEM-TestReadinessConsolidated.yaml
+    Description: >-
+      The name of the file containing the TestReadinessConsolidated SSM command.
+
 Resources:
   DeployArtifact:
     Type: AWS::SSM::Document
@@ -248,6 +260,26 @@ Resources:
           Name: 'AWS::Include'
           Parameters: !Sub '${S3BucketAndPrefix}/${FlushDispatcherCacheIncludeFile}'
 
+  TestReadinessFullset:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${TestReadinessFullsetIncludeFile}'
+
+  TestReadinessConsolidated:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefix}/${TestReadinessConsolidatedIncludeFile}'
+
 Outputs:
   DeployArtifact:
     Description: Document name for Deploy Artifact
@@ -308,3 +340,11 @@ Outputs:
   FlushDispatcherCache:
     Description: Document name for FlushDispatcherCache
     Value: !Ref FlushDispatcherCache
+
+  TestReadinessFullset:
+    Description: Documention name for Test Readiness Fullset
+    Value: !Ref TestReadinessFullset
+
+  TestReadinessConsolidated:
+    Description: Documention name for Test Readiness Consolidated
+    Value: !Ref TestReadinessConsolidated
