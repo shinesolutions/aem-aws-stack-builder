@@ -18,6 +18,8 @@ aem:
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: true
+  deployment_check_retries: 60
+  deployment_check_delay_in_seconds: 5
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jmxremote:
