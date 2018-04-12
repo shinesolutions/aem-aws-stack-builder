@@ -155,6 +155,8 @@ class config:
             "LiveSnapshot": "live-snapshot",
             "DisableCrxde": "disable-crxde",
             "FlushDispatcherCache": "flush-dispatcher-cache",
+            "TestReadinessFullset": "test-readiness-full-set",
+            "TestReadinessConsolidated": "test-readiness-consolidated",
             }
 
         messenger_config_list = {
