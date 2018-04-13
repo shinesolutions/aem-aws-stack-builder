@@ -9,6 +9,7 @@ aem:
   enable_default_passwords: false
   enable_deploy_on_init: false
   enable_reverse_replication: true
+  deployment_delay_in_seconds: 10
   deployment_post_install_wait_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
