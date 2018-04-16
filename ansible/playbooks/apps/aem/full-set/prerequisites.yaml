@@ -54,7 +54,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../../cloudformation/apps/aem/full-set/prerequisites-c.yaml"
+        template: "../../../../../cloudformation/apps/aem/full-set/prerequisites-{{ permission_type }}.yaml"
         template_parameters:
           PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ networks_stack_prefix }}"
