@@ -1,0 +1,470 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  CreateChaosMonkeyStackCondition:
+    Fn::Not:
+      - Fn::Equals:
+        - Ref: ChaosMonkeyInstanceTypeParameter
+        - ''
+Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
+Parameters:
+  AemAwsStackProvisionerVersionParameter:
+    Description: AEM AWS Stack Provisioner version number
+    Type: String
+  AuthorDNSRecordSetNameParameter:
+    Description: Author DNS Record Set Name
+    Type: String
+  AuthorDataVolSizeParameter:
+    Description: Author Instances Data EBS Volume Size
+    Type: Number
+  AuthorDataVolSnapshotParameter:
+    Description: The Author Data Volume Snapshot Id
+    Type: String
+  AuthorDispatcherASGAvailabilityZoneListParameter:
+    Description: The Author Dispatcher Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  AuthorDispatcherASGDesiredCapacityParameter:
+    Description: The Author Dispatcher Auto Scaling Group Desired Capacity
+    Type: String
+  AuthorDispatcherASGMaxSizeParameter:
+    Description: The Author Dispatcher Auto Scaling Group Maximum Size
+    Type: String
+  AuthorDispatcherASGMinSizeParameter:
+    Description: The Author Dispatcher Auto Scaling Group Minimum Size
+    Type: String
+  AuthorDispatcherDNSRecordSetNameParameter:
+    Description: AuthorDispatcher DNS Record Set Name
+    Type: String
+  AuthorDispatcherDataVolSizeParameter:
+    Description: Author Dispatcher Instances Data EBS Volume Size
+    Type: Number
+  AuthorDispatcherImageParameter:
+    Description: The Author Dispatcher Image Id
+    Type: AWS::EC2::Image::Id
+  AuthorDispatcherInstanceTypeParameter:
+    Description: The Author Dispatcher Instance Type
+    Type: String
+  AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Author Dispatcher ELB Health Check Target
+    Type: String
+  AuthorDispatcherRootVolSizeParameter:
+    Description: Author Dispatcher Instances Root EBS Volume Size
+    Type: Number
+  AuthorImageParameter:
+    Description: The Author Image Id
+    Type: AWS::EC2::Image::Id
+  AuthorInstanceTypeParameter:
+    Description: The Author Instance Type
+    Type: String
+  AuthorLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Author ELB Health Check Target
+    Type: String
+  AuthorRootVolSizeParameter:
+    Description: Author Instances Root EBS Volume Size
+    Type: Number
+  ChaosMonkeyASGAvailabilityZoneListParameter:
+    Description: The Chaos Monkey Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  ChaosMonkeyImageParameter:
+    Description: The Chaos Monkey Image Id
+    Type: AWS::EC2::Image::Id
+  ChaosMonkeyInstanceTypeParameter:
+    Default: ''
+    Description: The Chaos Monkey Instance Type
+    Type: String
+  ChaosMonkeyRootVolSizeParameter:
+    Description: Chaos Monkey Instances Root EBS Volum Size
+    Type: Number
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  ImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the Image Ids
+    Type: String
+  InboundFromBastionHostSecurityGroupParameter:
+    Description: Inbound Bound from Bastion Host Security Group Id
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  OrchestratorASGAvailabilityZoneListParameter:
+    Description: The Orchestrator Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  OrchestratorDataVolSizeParameter:
+    Description: Orchestrator Instances Data EBS Volume Size
+    Type: Number
+  OrchestratorImageParameter:
+    Description: The Orchestrator Image Id
+    Type: AWS::EC2::Image::Id
+  OrchestratorInstanceTypeParameter:
+    Description: The Orchestrator Instance Type
+    Type: String
+  OrchestratorRootVolSizeParameter:
+    Description: Orchestrator Instances Root EBS Volume Size
+    Type: Number
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  PublishASGAvailabilityZoneListParameter:
+    Description: The Publish Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PublishASGDesiredCapacityParameter:
+    Description: The Publish Auto Scaling Group Desired Capacity
+    Type: String
+  PublishASGMaxSizeParameter:
+    Description: The Publish Auto Scaling Group Maximum Size
+    Type: String
+  PublishASGMinSizeParameter:
+    Description: The Publish Auto Scaling Group Minimum Size
+    Type: String
+  PublishDataVolSizeParameter:
+    Description: The Publish Instances Data EBS Volume Size
+    Type: Number
+  PublishDataVolSnapshotParameter:
+    Description: The Publish Data Volume Snapshot Id
+    Type: String
+  PublishDispatcherASGAvailabilityZoneListParameter:
+    Description: The Publish Dispatcher Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PublishDispatcherASGCPUScalingParameters:
+    Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances
+      are scaled up/down at
+    Type: List<Number>
+  PublishDispatcherASGDesiredCapacityParameter:
+    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
+    Type: String
+  PublishDispatcherASGMaxSizeParameter:
+    Description: The Publish Dispatcher Auto Scaling Group Maximum Size
+    Type: String
+  PublishDispatcherASGMinSizeParameter:
+    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
+    Type: String
+  PublishDispatcherDNSRecordSetNameParameter:
+    Description: PublishDispatcher DNS Record Set Name
+    Type: String
+  PublishDispatcherDataVolSizeParameter:
+    Description: PublishDispatcher Instances Root EBS Volume Size
+    Type: Number
+  PublishDispatcherImageParameter:
+    Description: The Publish Dispatcher Image Id
+    Type: AWS::EC2::Image::Id
+  PublishDispatcherInstanceTypeParameter:
+    Description: The Publish Dispatcher Instance Type
+    Type: String
+  PublishDispatcherLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Publish Dispatcher ELB Health Check Target
+    Type: String
+  PublishDispatcherLoadBalancerSchemeParameter:
+    Description: AEM Publish Dispatcher ELB Scheme
+    Type: String
+  PublishDispatcherRootVolSizeParameter:
+    Description: PublishDispatcher Instances Root EBS Volume Size
+    Type: Number
+  PublishImageParameter:
+    Description: The Publish Image Id
+    Type: AWS::EC2::Image::Id
+  PublishInstanceTypeParameter:
+    Description: The Publish Instance Type
+    Type: String
+  PublishRootVolSizeParameter:
+    Description: Publish Instances Root EBS Volume Size
+    Type: Number
+  Route53HostedZoneNameParameter:
+    Description: Route53 Hosted Zone Name the Record Set will be Created in
+    Type: String
+  UseAuthorDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Author Snapshot Data Volume.
+    Type: String
+  UsePublishDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Publish Snapshot Data Volume.
+    Type: String
+Resources:
+  AuthorDispatcherStack:
+    Properties:
+      Parameters:
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        AuthorDispatcherASGAvailabilityZoneListParameter:
+          Fn::Join:
+            - ','
+            - Ref: AuthorDispatcherASGAvailabilityZoneListParameter
+        AuthorDispatcherASGDesiredCapacityParameter:
+          Ref: AuthorDispatcherASGDesiredCapacityParameter
+        AuthorDispatcherASGMaxSizeParameter:
+          Ref: AuthorDispatcherASGMaxSizeParameter
+        AuthorDispatcherASGMinSizeParameter:
+          Ref: AuthorDispatcherASGMinSizeParameter
+        AuthorDispatcherDataVolSizeParameter:
+          Ref: AuthorDispatcherDataVolSizeParameter
+        AuthorDispatcherImageParameter:
+          Ref: AuthorDispatcherImageParameter
+        AuthorDispatcherImageRootDevice:
+          Ref: ImageRootDevice
+        AuthorDispatcherInstanceTypeParameter:
+          Ref: AuthorDispatcherInstanceTypeParameter
+        AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
+          Ref: AuthorDispatcherLoadBalancerHealthCheckTargetParameter
+        AuthorDispatcherRootVolSizeParameter:
+          Ref: AuthorDispatcherRootVolSizeParameter
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        InboundFromBastionHostSecurityGroupParameter:
+          Ref: InboundFromBastionHostSecurityGroupParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/author-dispatcher.yaml
+    Type: AWS::CloudFormation::Stack
+  AuthorStack:
+    Properties:
+      Parameters:
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        AuthorDataVolSizeParameter:
+          Ref: AuthorDataVolSizeParameter
+        AuthorDataVolSnapshotParameter:
+          Ref: AuthorDataVolSnapshotParameter
+        AuthorImageParameter:
+          Ref: AuthorImageParameter
+        AuthorImageRootDevice:
+          Ref: ImageRootDevice
+        AuthorInstanceTypeParameter:
+          Ref: AuthorInstanceTypeParameter
+        AuthorLoadBalancerHealthCheckTargetParameter:
+          Ref: AuthorLoadBalancerHealthCheckTargetParameter
+        AuthorRootVolSizeParameter:
+          Ref: AuthorRootVolSizeParameter
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        InboundFromBastionHostSecurityGroupParameter:
+          Ref: InboundFromBastionHostSecurityGroupParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        UseAuthorDataVolSnapshotParameter:
+          Ref: UseAuthorDataVolSnapshotParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/author.yaml
+    Type: AWS::CloudFormation::Stack
+  ChaosMonkeyStack:
+    Condition: CreateChaosMonkeyStackCondition
+    DependsOn:
+    - AuthorStack
+    - PublishStack
+    - AuthorDispatcherStack
+    - PublishDispatcherStack
+    - OrchestratorStack
+    Properties:
+      Parameters:
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        ChaosMonkeyASGAvailabilityZoneListParameter:
+          Fn::Join:
+            - ','
+            - Ref: ChaosMonkeyASGAvailabilityZoneListParameter
+        ChaosMonkeyImageParameter:
+          Ref: ChaosMonkeyImageParameter
+        ChaosMonkeyImageRootDevice:
+          Ref: ImageRootDevice
+        ChaosMonkeyInstanceTypeParameter:
+          Ref: ChaosMonkeyInstanceTypeParameter
+        ChaosMonkeyRootVolSizeParameter:
+          Ref: ChaosMonkeyRootVolSizeParameter
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        InboundFromBastionHostSecurityGroupParameter:
+          Ref: InboundFromBastionHostSecurityGroupParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/chaos-monkey.yaml
+    Type: AWS::CloudFormation::Stack
+  DNSRecordStack:
+    DependsOn:
+    - AuthorDispatcherStack
+    - AuthorStack
+    - PublishDispatcherStack
+    Properties:
+      Parameters:
+        AuthorDNSRecordSetNameParameter:
+          Ref: AuthorDNSRecordSetNameParameter
+        AuthorDispatcherDNSRecordSetNameParameter:
+          Ref: AuthorDispatcherDNSRecordSetNameParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        PublishDispatcherDNSRecordSetNameParameter:
+          Ref: PublishDispatcherDNSRecordSetNameParameter
+        Route53HostedZoneNameParameter:
+          Ref: Route53HostedZoneNameParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/dns-records.yaml
+    Type: AWS::CloudFormation::Stack
+  OrchestratorStack:
+    Properties:
+      Parameters:
+        AEMASGEventQueueName:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        AuthorDispatcherStackName:
+          Ref: AuthorDispatcherStack
+        AuthorStackName:
+          Ref: AuthorStack
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        InboundFromBastionHostSecurityGroupParameter:
+          Ref: InboundFromBastionHostSecurityGroupParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        MessagingStackName:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-MessagingStackName
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        OrchestratorASGAvailabilityZoneListParameter:
+          Fn::Join:
+            - ','
+            - Ref: OrchestratorASGAvailabilityZoneListParameter
+        OrchestratorDataVolSizeParameter:
+          Ref: OrchestratorDataVolSizeParameter
+        OrchestratorImageParameter:
+          Ref: OrchestratorImageParameter
+        OrchestratorImageRootDevice:
+          Ref: ImageRootDevice
+        OrchestratorInstanceTypeParameter:
+          Ref: OrchestratorInstanceTypeParameter
+        OrchestratorRootVolSizeParameter:
+          Ref: OrchestratorRootVolSizeParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        PublishDispatcherStackName:
+          Ref: PublishDispatcherStack
+        PublishStackName:
+          Ref: PublishStack
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/orchestrator.yaml
+    Type: AWS::CloudFormation::Stack
+  PublishDispatcherStack:
+    Properties:
+      Parameters:
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        InboundFromBastionHostSecurityGroupParameter:
+          Ref: InboundFromBastionHostSecurityGroupParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        PublishDispatcherASGAvailabilityZoneListParameter:
+          Fn::Join:
+            - ','
+            - Ref: PublishDispatcherASGAvailabilityZoneListParameter
+        PublishDispatcherASGCPUScalingParameters:
+          Fn::Join:
+            - ','
+            - Ref: PublishDispatcherASGCPUScalingParameters
+        PublishDispatcherASGDesiredCapacityParameter:
+          Ref: PublishDispatcherASGDesiredCapacityParameter
+        PublishDispatcherASGMaxSizeParameter:
+          Ref: PublishDispatcherASGMaxSizeParameter
+        PublishDispatcherASGMinSizeParameter:
+          Ref: PublishDispatcherASGMinSizeParameter
+        PublishDispatcherDataVolSizeParameter:
+          Ref: PublishDispatcherDataVolSizeParameter
+        PublishDispatcherImageParameter:
+          Ref: PublishDispatcherImageParameter
+        PublishDispatcherImageRootDevice:
+          Ref: ImageRootDevice
+        PublishDispatcherInstanceTypeParameter:
+          Ref: PublishDispatcherInstanceTypeParameter
+        PublishDispatcherLoadBalancerHealthCheckTargetParameter:
+          Ref: PublishDispatcherLoadBalancerHealthCheckTargetParameter
+        PublishDispatcherLoadBalancerSchemeParameter:
+          Ref: PublishDispatcherLoadBalancerSchemeParameter
+        PublishDispatcherRootVolSizeParameter:
+          Ref: PublishDispatcherRootVolSizeParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish-dispatcher.yaml
+    Type: AWS::CloudFormation::Stack
+  PublishStack:
+    Properties:
+      Parameters:
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        InboundFromBastionHostSecurityGroupParameter:
+          Ref: InboundFromBastionHostSecurityGroupParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        PublishASGAvailabilityZoneListParameter:
+          Fn::Join:
+            - ','
+            - Ref: PublishASGAvailabilityZoneListParameter
+        PublishASGDesiredCapacityParameter:
+          Ref: PublishASGDesiredCapacityParameter
+        PublishASGMaxSizeParameter:
+          Ref: PublishASGMaxSizeParameter
+        PublishASGMinSizeParameter:
+          Ref: PublishASGMinSizeParameter
+        PublishDataVolSizeParameter:
+          Ref: PublishDataVolSizeParameter
+        PublishDataVolSnapshotParameter:
+          Ref: PublishDataVolSnapshotParameter
+        PublishImageParameter:
+          Ref: PublishImageParameter
+        PublishImageRootDevice:
+          Ref: ImageRootDevice
+        PublishInstanceTypeParameter:
+          Ref: PublishInstanceTypeParameter
+        PublishRootVolSizeParameter:
+          Ref: PublishRootVolSizeParameter
+        UsePublishDataVolSnapshotParameter:
+          Ref: UsePublishDataVolSnapshotParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish.yaml
+    Type: AWS::CloudFormation::Stack
