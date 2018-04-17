@@ -252,9 +252,11 @@ Resources:
         Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
-      - Name: PluginInstance
+      - Name: FixedDimension
         Value:
-          Fn::Sub: ${MainStackPrefixParameter}-standby-status
+          Fn::Sub: ${MainStackPrefixParameter}-author-standby
+      - Name: PluginInstance
+        Value: standby-status
       - Name: Host
         Value:
           Ref: AuthorStandbyInstance
