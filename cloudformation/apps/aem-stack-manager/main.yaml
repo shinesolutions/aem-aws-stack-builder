@@ -1,5 +1,27 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Overarching CF Template to Create AEM Stack Manager Resources Stacks
+Outputs:
+  InstanceProfilesStackArn:
+    Description: Instance Profiles Stack ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-InstanceProfilesStackName
+    Value:
+      Ref: InstanceProfilesStack
+  StackManagerStackArn:
+    Description: Stack Manager Stack ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerStackName
+    Value:
+      Ref: StackManagerStack
+  UtilitiesStackArn:
+    Description: Utilities Stack ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-UtilitiesStackName
+    Value:
+      Ref: UtilitiesStack
 Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
