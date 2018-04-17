@@ -1,4 +1,5 @@
 version ?= 2.1.0
+stage_config_path = stage/user-config
 
 ci: clean deps lint package
 
@@ -161,6 +162,34 @@ create-ssm-documents:
 
 delete-ssm-documents:
 	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
+
+# convenient targets for setting up configuration files
+
+define config_examples
+  rm -rf $(stage_config_path)
+	mkdir $(stage_config_path)
+	cp examples/user-config/common/*.yaml $(stage_config_path)
+	cp examples/user-config/ami-ids/$(1)-$(2)-stack-builder-ami-ids.yaml $(stage_config_path)
+	cp examples/user-config/$(3)/*.yaml $(stage_config_path)
+endef
+
+config-examples-aem62-rhel7-full-set: stage
+	$(call config_examples,aem62_sp1_cfp13,rhel7,full-set)
+
+config-examples-aem62-rhel7-consolidated: stage
+	$(call config_examples,aem62_sp1_cfp13,rhel7,consolidated)
+
+config-examples-aem63-rhel7-full-set: stage
+	$(call config_examples,aem63_sp1_cfp2,rhel7,full-set)
+
+config-examples-aem63-rhel7-consolidated: stage
+	$(call config_examples,aem63_sp1_cfp2,rhel7,consolidated)
+
+config-examples-aem64-rhel7-full-set: stage
+	$(call config_examples,aem64,rhel7,full-set)
+
+config-examples-aem64-rhel7-consolidated: stage
+	$(call config_examples,aem64,rhel7,consolidated)
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME=aem-stack-builder
