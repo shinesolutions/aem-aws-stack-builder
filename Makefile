@@ -1,5 +1,4 @@
 version ?= 2.1.0
-stage_config_path = stage/user-config
 
 ci: clean deps lint package
 
@@ -166,11 +165,11 @@ delete-ssm-documents:
 # convenient targets for setting up configuration files
 
 define config_examples
-  rm -rf $(stage_config_path)
-	mkdir $(stage_config_path)
-	cp examples/user-config/common/*.yaml $(stage_config_path)
-	cp examples/user-config/ami-ids/$(1)-$(2)-stack-builder-ami-ids.yaml $(stage_config_path)
-	cp examples/user-config/$(3)/*.yaml $(stage_config_path)
+  rm -rf stage/user-config/$(1)-$(2)-$(3)/
+	mkdir stage/user-config/$(1)-$(2)-$(3)/
+	cp examples/user-config/common/*.yaml stage/user-config/$(1)-$(2)-$(3)/
+	cp examples/user-config/ami-ids/$(1)-$(2)-stack-builder-ami-ids.yaml stage/user-config/$(1)-$(2)-$(3)/
+	cp examples/user-config/$(3)/*.yaml stage/user-config/$(1)-$(2)-$(3)/
 endef
 
 config-examples-aem62-rhel7-full-set: stage
