@@ -45,8 +45,6 @@
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
       tags:
       - create
-      when:
-        permission_type =="b"
 
     - name: Create AEM App Prerequisite Resources Stack
       cloudformation:
