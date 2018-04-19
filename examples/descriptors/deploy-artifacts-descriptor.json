@@ -2,10 +2,10 @@
   "author-primary": {
     "packages": [
       {
-        "source": "s3://aem-stack-builder/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "source": "http://central.maven.org/maven2/com/shinesolutions/aem-helloworld-content/0.0.1/aem-helloworld-content-0.0.1.zip",
         "group": "shinesolutions",
         "name": "aem-helloworld-content",
-        "version": "0.0.1-SNAPSHOT",
+        "version": "0.0.1",
         "replicate": false,
         "activate": false,
         "force": false
@@ -16,17 +16,17 @@
     "artifacts": [
       {
         "name": "aem-helloworld-author-dispatcher",
-        "source": "s3://aem-stack-builder/library/aem-helloworld-author-dispatcher-0.10.0.zip"
+        "source": "https://github.com/shinesolutions/aem-helloworld-author-dispatcher/releases/download/0.10.1/aem-helloworld-author-dispatcher-0.10.1.zip"
       }
     ]
   },
   "publish": {
     "packages": [
       {
-        "source": "s3://aem-stack-builder/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "source": "http://central.maven.org/maven2/com/shinesolutions/aem-helloworld-content/0.0.1/aem-helloworld-content-0.0.1.zip",
         "group": "shinesolutions",
         "name": "aem-helloworld-content",
-        "version": "0.0.1-SNAPSHOT",
+        "version": "0.0.1",
         "replicate": false,
         "activate": false,
         "force": false
@@ -37,7 +37,7 @@
     "artifacts": [
       {
         "name": "aem-helloworld-publish-dispatcher",
-        "source": "s3://aem-stack-builder/library/aem-helloworld-publish-dispatcher-0.10.0.zip"
+        "source": "https://github.com/shinesolutions/aem-helloworld-publish-dispatcher/releases/download/0.10.2/aem-helloworld-publish-dispatcher-0.10.2.zip"
       }
     ]
   }
