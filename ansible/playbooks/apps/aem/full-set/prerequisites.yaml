@@ -44,7 +44,7 @@
           AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
         tags:
-        - create
+          - create
         when:
           permission_type == "b"
 
@@ -77,7 +77,7 @@
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
           PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
         tags:
-        - create
+          - create
         when:
           permission_type == "c"
 
