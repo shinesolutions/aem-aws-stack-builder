@@ -166,7 +166,7 @@ delete-ssm-documents:
 
 define config_examples
   rm -rf stage/user-config/$(1)-$(2)-$(3)/
-	mkdir stage/user-config/$(1)-$(2)-$(3)/
+	mkdir -p stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/common/*.yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/ami-ids/$(1)-$(2)-stack-builder-ami-ids.yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/$(3)/*.yaml stage/user-config/$(1)-$(2)-$(3)/
