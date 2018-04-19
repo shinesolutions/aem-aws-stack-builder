@@ -68,6 +68,14 @@
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
           AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
+          AEMStackManagerSnapshotLambdaServiceRoleArnParameter: "{{ stack_manager.snapshot_lambda_service_role_arn }}"
+          AEMStackManagerSnapshotLambdaServiceRoleNameParameter: "{{ stack_manager.snapshot_lambda_service_role_name }}"
+          AuthorDispatcherInstanceProfileParameter: "{{ author_dispatcher.instance_profile }}"
+          AuthorInstanceProfileParameter: "{{ author.instance_profile }}"
+          ChaosMonkeyInstanceProfileParameter: "{{ chaos_monkey.instance_profile }}"
+          OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
+          PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
+          PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
         tags:
         - create
         when:
