@@ -48,7 +48,7 @@
       when:
         permission_type == "b"
 
-    - name: Create AEM App Prerequisite Resources Stack
+    - name: Create AEM App Prerequisite Resources Stack with Permissions Type C
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ prerequsites.stack.name }}"
         region: "{{ aws.region }}"
