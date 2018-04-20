@@ -28,12 +28,12 @@ aem:
   deployment_check_delay_in_seconds: 5
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
-    jvm_opts: "-nofork"
+    jvm_opts: ""
     jmxremote:
       port: 59183
   author:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
-    jvm_opts: "-nofork"
+    jvm_opts: ""
     jmxremote:
       port: 59182
 
