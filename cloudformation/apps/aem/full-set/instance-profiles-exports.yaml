@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Instance Profiles for AEM Stack
+Outputs:
+  AEMStackManagerSnapshotLambdaServiceRoleArn:
+    Description: The Stack Manager Lambda Service Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
+    Value:
+        Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
+  AEMStackManagerSnapshotLambdaServiceRoleName:
+    Description: AEM StackManager Snapshot Lambda Service Role Name
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName
+    Value:
+      Ref: AEMStackManagerSnapshotLambdaServiceRoleParameter
+  AuthorDispatcherInstanceProfile:
+    Description: The Author Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherInstanceProfile
+    Value:
+      Ref: AuthorDispatcherInstanceProfileParameter
+  AuthorInstanceProfile:
+    Description: The Author Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
+    Value:
+      Ref: AuthorInstanceProfileParameter
+  ChaosMonkeyInstanceProfile:
+    Description: The Chaos Monkey Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
+    Value:
+      Ref: ChaosMonkeyInstanceProfileParameter
+  OrchestratorInstanceProfile:
+    Description: The Orchestrator Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorInstanceProfile
+    Value:
+      Ref: OrchestratorInstanceProfileParameter
+  PublishDispatcherInstanceProfile:
+    Description: The Publish Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
+    Value:
+      Ref: PublishDispatcherInstanceProfileParameter
+  PublishInstanceProfile:
+    Description: The Publish Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishInstanceProfile
+    Value:
+      Ref: PublishInstanceProfileParameter
+Parameters:
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  AEMStackManagerSnapshotLambdaServiceRoleArn:
+    Description: The Stack Manager Lambda Service Role ARN
+    Type: String
+  AEMStackManagerSnapshotLambdaServiceRoleName:
+    Description: AEM StackManager Snapshot Lambda Service Role Name
+    Type: String
+  AuthorDispatcherInstanceProfile:
+    Description: The Author Dispatcher Instance Profile
+    Type: String
+  AuthorInstanceProfile:
+    Description: The Author Instance Profile
+    Type: String
+  ChaosMonkeyInstanceProfile:
+    Description: The Chaos Monkey Instance Profile
+    Type: String
+  OrchestratorInstanceProfile:
+    Description: The Orchestrator Instance Profile
+    Type: String
+  PublishDispatcherInstanceProfile:
+    Description: The Publish Dispatcher Instance Profile
+    Type: String
+  PublishInstanceProfile:
+    Description: The Publish Instance Profile
+    Type: String
+Resources:
+  DummyGroup:
+    Properties:
+      GroupDescription: Dummy security group to allow stack to work.
+      VpcId:
+        Ref: VPCId
+    Type: AWS::EC2::SecurityGroup 
