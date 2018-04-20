@@ -1,4 +1,5 @@
 ### 2.1.0
+* Add java_opts parameter allowing custom java_opts to be specified
 * Add AuthorPublishDispatcher component
 * Add configuration flag for enabling CRXDE #35
 * Add configuration flag for enabling default system users password #36
