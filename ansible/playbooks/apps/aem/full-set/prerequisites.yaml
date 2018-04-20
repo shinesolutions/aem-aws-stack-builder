@@ -13,7 +13,7 @@
         name: "{{ s3.data_bucket_name }}"
         state: present
       tags:
-      - create
+        - create
 
     - name: Upload CloudFormation Templates to S3
       command: >
@@ -43,10 +43,10 @@
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
           AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
-        tags:
-          - create
-        when:
-          permission_type == "b"
+      tags:
+        - create
+      when:
+        permission_type == "b"
 
     - name: Create AEM App Prerequisite Resources Stack with Permissions Type C
       cloudformation:
@@ -76,12 +76,12 @@
           OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
           PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
-        tags:
-          - create
-        when:
-          permission_type == "c"
+      tags:
+        - create
+      when:
+        permission_type == "c"
 
-      
+
     - name: Check if a Stack Exists
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ prerequisites.stack_name }}"

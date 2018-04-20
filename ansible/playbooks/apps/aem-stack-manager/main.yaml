@@ -42,7 +42,7 @@
           OrchestrationSnapshotsPurgeInput: "{{ stack_manager.OrchestrationSnapshotsPurgeInput }}"
       register: main_stack_info
       tags:
-      - create
+        - create
 
     - name: Generate CloudFormation Template for SSM Documents
       shell: >
