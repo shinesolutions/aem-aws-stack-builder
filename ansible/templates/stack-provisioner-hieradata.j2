@@ -3,6 +3,7 @@ author::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+publish_dispatcher::enable_content_healthcheck: {{ aem.enable_content_healthcheck }}
 orchestrator::aem_orchestrator_version: '{{ library.aem_orchestrator_version }}'
 chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 

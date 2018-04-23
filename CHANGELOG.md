@@ -33,6 +33,7 @@
 * Add support for adding extra security groups to ELBs #107
 * Add aem.enable_reverse_replication configuration #117
 * Add AEM package deployment wait and retry configurations #122
+* Add aem.enable_content_healthcheck configuration #116
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
