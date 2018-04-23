@@ -154,6 +154,7 @@ class config:
             "RunAdhocPuppet": "run-adhoc-puppet",
             "LiveSnapshot": "live-snapshot",
             "DisableCrxde": "disable-crxde",
+            "ListPackages": "list-packages",
             "FlushDispatcherCache": "flush-dispatcher-cache",
             "TestReadinessFullset": "test-readiness-full-set",
             "TestReadinessConsolidated": "test-readiness-consolidated",
