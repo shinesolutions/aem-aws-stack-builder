@@ -13,6 +13,7 @@ deps:
 lint:
 	# TODO: re-enable at a later release, post transition to aem-platform-buildenv
 	# shellcheck scripts/*.sh
+	shellcheck test/integration-local/*.sh
 	for playbook in ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
@@ -190,6 +191,9 @@ config-examples-aem64-rhel7-full-set: stage
 
 config-examples-aem64-rhel7-consolidated: stage
 	$(call config_examples,aem64,rhel7,consolidated)
+
+test-integration-local-examples:
+	./test/integration-local/test-examples.sh $(test_id)
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME=aem-stack-builder
