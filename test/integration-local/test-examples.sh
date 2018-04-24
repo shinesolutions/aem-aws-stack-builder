@@ -42,8 +42,10 @@ make test-full-set \
 #   "stack_prefix=${test_id}-stack-manager" \
 #   "target_aem_stack_prefix=${test_id}-consolidated"
 
-# # delete AEM environments
+# delete AEM environments
 cd ../aem-aws-stack-builder
+make config-examples-aem62-rhel7-full-set
 make delete-full-set "stack_prefix=${test_id}-full-set" config_path=stage/user-config/aem62_sp1_cfp13-rhel7-full-set/
+make config-examples-aem62-rhel7-consolidated
 make delete-consolidated "stack_prefix=${test_id}-consolidated" config_path=stage/user-config/aem62_sp1_cfp13-rhel7-consolidated/
 make delete-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=examples/user-config/aem-stack-manager/
