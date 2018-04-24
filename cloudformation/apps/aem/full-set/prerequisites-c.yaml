@@ -97,22 +97,22 @@ Resources:
       Parameters:
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
-            AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
-              Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
-            AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
-              Ref: AEMStackManagerSnapshotLambdaServiceRoleNameParameter
-            AuthorDispatcherInstanceProfileParameter:
-              Ref: AuthorDispatcherInstanceProfileParameter
-            AuthorInstanceProfileParameter:
-              Ref: AuthorInstanceProfileParameter
-            ChaosMonkeyInstanceProfileParameter:
-              Ref: ChaosMonkeyInstanceProfileParameter
-            OrchestratorInstanceProfileParameter:
-              Ref: OrchestratorInstanceProfileParameter
-            PublishDispatcherInstanceProfileParameter:
-              Ref: PublishDispatcherInstanceProfileParameter
-            PublishInstanceProfileParameter:
-              Ref: PublishInstanceProfileParameter
+        AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
+          Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
+        AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
+          Ref: AEMStackManagerSnapshotLambdaServiceRoleNameParameter
+        AuthorDispatcherInstanceProfileParameter:
+          Ref: AuthorDispatcherInstanceProfileParameter
+        AuthorInstanceProfileParameter:
+          Ref: AuthorInstanceProfileParameter
+        ChaosMonkeyInstanceProfileParameter:
+          Ref: ChaosMonkeyInstanceProfileParameter
+        OrchestratorInstanceProfileParameter:
+          Ref: OrchestratorInstanceProfileParameter
+        PublishDispatcherInstanceProfileParameter:
+          Ref: PublishDispatcherInstanceProfileParameter
+        PublishInstanceProfileParameter:
+          Ref: PublishInstanceProfileParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles-exports.yaml
     Type: AWS::CloudFormation::Stack
