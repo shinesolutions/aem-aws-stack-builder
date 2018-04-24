@@ -1,5 +1,5 @@
 
-ansible>=2.2.0.0
+ansible>=2.5.0
 awscli>=1.11.36
 boto>=2.46.1
 boto3>=1.4.3
