@@ -57,7 +57,7 @@
         template: "../../../../../cloudformation/apps/aem/full-set/prerequisites-{{ permission_type }}.yaml"
         template_parameters:
           PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
-          NetworkStackPrefixParameter: "{{ networks_stack_prefix }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
