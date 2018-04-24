@@ -89,7 +89,7 @@ Resources:
   DummyParameter:
     Properties:
       Name:
-        Fn::Sub: ${PrerequisiteStackPrefixParameter}-DummyParameter
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
       Description: Dummy Parameter to allow stack to work.
       Type: String
       Value:
