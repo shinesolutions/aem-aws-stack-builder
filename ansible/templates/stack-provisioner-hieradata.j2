@@ -18,8 +18,7 @@ aem_curator::config_author_primary::enable_default_passwords: {{ aem.enable_defa
 aem_curator::config_author_primary::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
 aem_curator::config_author_primary::jmxremote_port: {{ aem.author.jmxremote.port }}
 aem_curator::config_author_primary::jvm_opts: {{ aem.author.jvm_opts }}
-aem_curator::config_author_primary::jvm_opts: {{ aem.deployment_timeout }}
-aem_curator::config_author_primary::deployment_timeout: {{ aem.deployment_timeout }}
+aem_curator::config_author_primary::timeout: {{ aem.client_timeout }}
 
 aem_curator::config_author_standby::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
 aem_curator::config_author_standby::jmxremote_port: {{ aem.author.jmxremote.port }}
@@ -31,7 +30,7 @@ aem_curator::config_publish::enable_default_passwords: {{ aem.enable_default_pas
 aem_curator::config_publish::jvm_mem_opts: {{ aem.publish.jvm_mem_opts }}
 aem_curator::config_publish::jmxremote_port: {{ aem.publish.jmxremote.port }}
 aem_curator::config_publish::jvm_opts: {{ aem.publish.jvm_opts }}
-aem_curator::config_publish::deployment_timeout: {{ aem.deployment_timeout }}
+aem_curator::config_publish::timeout: {{ aem.client_timeout }}
 
 aem_curator::config_aem_tools::oak_run_version: '{{ library.oak_run_version }}'
 
