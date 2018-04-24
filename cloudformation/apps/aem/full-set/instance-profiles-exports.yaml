@@ -7,14 +7,14 @@ Outputs:
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
     Value:
-        Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
+      Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
   AEMStackManagerSnapshotLambdaServiceRoleName:
     Description: AEM StackManager Snapshot Lambda Service Role Name
     Export:
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName
     Value:
-      Ref: AEMStackManagerSnapshotLambdaServiceRoleParameter
+      Ref: AEMStackManagerSnapshotLambdaServiceRoleNameParameter
   AuthorDispatcherInstanceProfile:
     Description: The Author Dispatcher Instance Profile
     Export:
