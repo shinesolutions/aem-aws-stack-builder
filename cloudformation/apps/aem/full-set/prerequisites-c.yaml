@@ -67,12 +67,52 @@ Parameters:
   SecureShellInboundCidrIpParameter:
     Description: AEM Stack Secure Shell Inbound Cidr Ip
     Type: String
+  AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
+    Description: AEM Stack Manager Lambda Role Arn 
+    Type: String
+  AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
+    Description: AEM Stack Manager Lambda Role Name
+    Type: String
+  AuthorDispatcherInstanceProfileParameter:
+    Description: AEM Author Dispatcher Profile name
+    Type: String
+  AuthorInstanceProfileParameter:
+    Description: AEM Author Profile name
+    Type: String
+  ChaosMonkeyInstanceProfileParameter:
+    Description: AEM Chaos Monkey Profile name
+    Type: String
+  OrchestratorInstanceProfileParameter:
+    Description: AEM Orchestrator Profile name
+    Type: String
+  PublishDispatcherInstanceProfileParameter:
+    Description: AEM Publish Dispatcher Profile name
+    Type: String
+  PublishInstanceProfileParameter:
+    Description: AEM Publish Profile name
+    Type: String
 Resources:
   InstanceProfilesStack:
     Properties:
       Parameters:
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
+            AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
+              Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
+            AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
+              Ref: AEMStackManagerSnapshotLambdaServiceRoleNameParameter
+            AuthorDispatcherInstanceProfileParameter:
+              Ref: AuthorDispatcherInstanceProfileParameter
+            AuthorInstanceProfileParameter:
+              Ref: AuthorInstanceProfileParameter
+            ChaosMonkeyInstanceProfileParameter:
+              Ref: ChaosMonkeyInstanceProfileParameter
+            OrchestratorInstanceProfileParameter:
+              Ref: OrchestratorInstanceProfileParameter
+            PublishDispatcherInstanceProfileParameter:
+              Ref: PublishDispatcherInstanceProfileParameter
+            PublishInstanceProfileParameter:
+              Ref: PublishInstanceProfileParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/instance-profiles-exports.yaml
     Type: AWS::CloudFormation::Stack
