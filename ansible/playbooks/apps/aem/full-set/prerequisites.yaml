@@ -50,7 +50,7 @@
 
     - name: Create AEM App Prerequisite Resources Stack with Permissions Type C
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ prerequsites.stack.name }}"
+        stack_name: "{{ stack_prefix }}-{{ prerequisites.stack.name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
