@@ -149,28 +149,28 @@
       tags:
       - create
 
-    - name: Copy content-health-check-descriptor from source bucket to data bucket
+    - name: Copy content-healthcheck-descriptor from source bucket to data bucket
       s3_copy_object:
         src_bucket: "{{ s3.data_bucket_name }}"
-        src_key: "{{ source_stack_prefix }}/content-health-check-descriptor.json"
+        src_key: "{{ source_stack_prefix }}/content-healthcheck-descriptor.json"
         dest_bucket: "{{ s3.data_bucket_name }}"
-        dest_key: "{{ stack_prefix }}/content-health-check-descriptor.json"
+        dest_key: "{{ stack_prefix }}/content-healthcheck-descriptor.json"
       when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
       tags:
       - create
 
-    - name: Check content-health-check-descriptor existence
+    - name: Check content-healthcheck-descriptor existence
       stat:
-        path: ../../../../stage/content-health-check-descriptor.json
+        path: ../../../../stage/content-healthcheck-descriptor.json
       register: content_health_check_descriptor_stat_result
       tags:
       - create
 
-    - name: Upload content-health-check-descriptor from stage directory to data bucket when supplied
+    - name: Upload content-healthcheck-descriptor from stage directory to data bucket when supplied
       s3:
         bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/content-health-check-descriptor.json"
-        src: ../../../../stage/content-health-check-descriptor.json
+        object: "{{ stack_prefix }}/content-healthcheck-descriptor.json"
+        src: ../../../../stage/content-healthcheck-descriptor.json
         mode: put
       when: content_health_check_descriptor_stat_result.stat.exists == True
       tags:
