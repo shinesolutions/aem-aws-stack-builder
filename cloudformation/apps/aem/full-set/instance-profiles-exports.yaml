@@ -86,9 +86,12 @@ Parameters:
     Description: The Publish Instance Profile
     Type: String
 Resources:
-  DummyGroup:
+  DummyParameter:
     Properties:
-      GroupDescription: Dummy security group to allow stack to work.
-      VpcId:
-        Ref: VPCId
-    Type: AWS::EC2::SecurityGroup 
+      Name:
+        Fn::Sub: ${PrerequisiteStackPrefixParameter}-DummyParameter
+      Description: Dummy Parameter to allow stack to work.
+      Type: String
+      Value:
+        Fn::Sub: ${PrerequisiteStackPrefixParameter}-DummyParameter
+      Type: "AWS::SSM::Parameter"
