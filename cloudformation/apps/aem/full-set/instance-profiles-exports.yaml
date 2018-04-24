@@ -93,5 +93,5 @@ Resources:
       Description: Dummy Parameter to allow stack to work.
       Type: String
       Value:
-        Fn::Sub: ${PrerequisiteStackPrefixParameter}-DummyParameter
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
     Type: "AWS::SSM::Parameter"
