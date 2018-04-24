@@ -94,4 +94,4 @@ Resources:
       Type: String
       Value:
         Fn::Sub: ${PrerequisiteStackPrefixParameter}-DummyParameter
-      Type: "AWS::SSM::Parameter"
+    Type: "AWS::SSM::Parameter"
