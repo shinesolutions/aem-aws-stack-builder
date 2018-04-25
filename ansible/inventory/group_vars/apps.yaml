@@ -134,7 +134,7 @@ publish:
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
-  data_vol_size: 50
+  data_vol_size: 75
   tag_name: AEM Publish
 
 author:
@@ -142,7 +142,7 @@ author:
   instance_profile: overwrite-me
   instance_type: m3.large
   root_vol_size: 20
-  data_vol_size: 50
+  data_vol_size: 75
   load_balancer:
     tag_name: AEM Author Load Balancer
   tag_name: AEM Author
