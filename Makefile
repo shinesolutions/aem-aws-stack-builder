@@ -171,7 +171,7 @@ define config_examples
 	cp examples/user-config/common/*.yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/ami-ids/$(1)-$(2)-stack-builder-ami-ids.yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/$(3)/*.yaml stage/user-config/$(1)-$(2)-$(3)/
-	cp examples/descriptors/*.json stage/
+	cp examples/descriptors/$(3)/*.json stage/
 endef
 
 config-examples-aem62-rhel7-full-set: stage
