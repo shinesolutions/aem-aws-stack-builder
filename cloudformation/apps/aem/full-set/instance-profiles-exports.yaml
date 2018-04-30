@@ -7,14 +7,14 @@ Outputs:
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleArn
     Value:
-        Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
+      Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
   AEMStackManagerSnapshotLambdaServiceRoleName:
     Description: AEM StackManager Snapshot Lambda Service Role Name
     Export:
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-StackManagerSnapshotLambdaServiceRoleName
     Value:
-      Ref: AEMStackManagerSnapshotLambdaServiceRoleParameter
+      Ref: AEMStackManagerSnapshotLambdaServiceRoleNameParameter
   AuthorDispatcherInstanceProfile:
     Description: The Author Dispatcher Instance Profile
     Export:
@@ -61,34 +61,37 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
-  AEMStackManagerSnapshotLambdaServiceRoleArn:
+  AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
     Description: The Stack Manager Lambda Service Role ARN
     Type: String
-  AEMStackManagerSnapshotLambdaServiceRoleName:
+  AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
     Description: AEM StackManager Snapshot Lambda Service Role Name
     Type: String
-  AuthorDispatcherInstanceProfile:
+  AuthorDispatcherInstanceProfileParameter:
     Description: The Author Dispatcher Instance Profile
     Type: String
-  AuthorInstanceProfile:
+  AuthorInstanceProfileParameter:
     Description: The Author Instance Profile
     Type: String
-  ChaosMonkeyInstanceProfile:
+  ChaosMonkeyInstanceProfileParameter:
     Description: The Chaos Monkey Instance Profile
     Type: String
-  OrchestratorInstanceProfile:
+  OrchestratorInstanceProfileParameter:
     Description: The Orchestrator Instance Profile
     Type: String
-  PublishDispatcherInstanceProfile:
+  PublishDispatcherInstanceProfileParameter:
     Description: The Publish Dispatcher Instance Profile
     Type: String
-  PublishInstanceProfile:
+  PublishInstanceProfileParameter:
     Description: The Publish Instance Profile
     Type: String
 Resources:
-  DummyGroup:
+  DummyParameter:
     Properties:
-      GroupDescription: Dummy security group to allow stack to work.
-      VpcId:
-        Ref: VPCId
-    Type: AWS::EC2::SecurityGroup 
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
+      Description: Dummy Parameter to allow stack to work.
+      Type: String
+      Value:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
+    Type: "AWS::SSM::Parameter"

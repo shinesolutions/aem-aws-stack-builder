@@ -308,26 +308,6 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/chaos-monkey.yaml
     Type: AWS::CloudFormation::Stack
-  DNSRecordStack:
-    DependsOn:
-    - AuthorDispatcherStack
-    - AuthorStack
-    - PublishDispatcherStack
-    Properties:
-      Parameters:
-        AuthorDNSRecordSetNameParameter:
-          Ref: AuthorDNSRecordSetNameParameter
-        AuthorDispatcherDNSRecordSetNameParameter:
-          Ref: AuthorDispatcherDNSRecordSetNameParameter
-        MainStackPrefixParameter:
-          Ref: MainStackPrefixParameter
-        PublishDispatcherDNSRecordSetNameParameter:
-          Ref: PublishDispatcherDNSRecordSetNameParameter
-        Route53HostedZoneNameParameter:
-          Ref: Route53HostedZoneNameParameter
-      TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/dns-records.yaml
-    Type: AWS::CloudFormation::Stack
   OrchestratorStack:
     Properties:
       Parameters:
