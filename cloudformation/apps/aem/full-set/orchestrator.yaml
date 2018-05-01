@@ -20,13 +20,13 @@ Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
     Type: String
-  AuthorDispatcherStackName:
+  AuthorDispatcherStackArn:
     Default: ''
-    Description: The name of the author-dispatcher stack.
+    Description: The ARN of the author-dispatcher stack.
     Type: String
-  AuthorStackName:
+  AuthorStackArn:
     Default: ''
-    Description: The name of the author stack.
+    Description: The ARN of the author stack.
     Type: String
   ComputeKeyPairNameParameter:
     Description: The Compute Resources Key Pair Name
@@ -40,9 +40,9 @@ Parameters:
   MainStackPrefixParameter:
     Description: The AEM Stack Compute Resources Stack Prefix
     Type: String
-  MessagingStackName:
+  MessagingStackArn:
     Default: ''
-    Description: The name of the messaging stack.
+    Description: The ARN of the messaging stack.
     Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
@@ -69,13 +69,17 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
+  PublishDispatcherStackArn:
+    Default: ''
+    Description: The ARN of the publish-dispatcher stack.
+    Type: String
   PublishDispatcherStackName:
     Default: ''
     Description: The name of the publish-dispatcher stack.
     Type: String
-  PublishStackName:
+  PublishStackArn:
     Default: ''
-    Description: The name of the author stack.
+    Description: The ARN of the author stack.
     Type: String
 Resources:
   OrchestratorAutoScalingGroup:
@@ -152,11 +156,11 @@ Resources:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ # Configure other stack names in Orchestrator's stack provisioner's\
             \ local.yaml\n echo '\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_author:\
-            \ \"${AuthorStackName}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher:\
-            \ \"${AuthorDispatcherStackName}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish:\
-            \ \"${PublishStackName}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher:\
+            \ \"${AuthorStackArn}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher:\
+            \ \"${AuthorDispatcherStackArn}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish:\
+            \ \"${PublishStackArn}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher:\
             \ \"${PublishDispatcherStackName}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging:\
-            \ \"${MessagingStackName}\"\n aem_orchestrator::application_properties::aws_sqs_queue_name:\
+            \ \"${MessagingStackArn}\"\n aem_orchestrator::application_properties::aws_sqs_queue_name:\
             \ \"${AEMASGEventQueueName}\"\n ' > /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
