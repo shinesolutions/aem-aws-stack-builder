@@ -34,6 +34,7 @@
 * Add aem.enable_reverse_replication configuration #117
 * Add AEM package deployment wait and retry configurations #122
 * Add aem.enable_content_healthcheck configuration #116
+* Add ec2 delete volume permission to Publish role
 
 ### 2.0.0
 * Add Stack Provisioner custom hiera configuration support
