@@ -372,6 +372,10 @@ Resources:
         PublishDispatcherStackArn:
           Ref: PublishDispatcherStack
         PublishDispatcherStackName:
+          # As of May '18, CloudFormation doesn't provide a way to retrieve the Stack Name with Fn::GetAtt or Ref functions
+          # Resorting to parsing the ARN to obtain it
+          # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html
+          #      https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html
           !Select [ 1, !Split [ "/", !Ref PublishDispatcherStack ] ]
         PublishStackArn:
           Ref: PublishStack
