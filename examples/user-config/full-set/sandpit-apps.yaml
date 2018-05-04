@@ -209,3 +209,57 @@ stack_manager:
   LiveSnapshotsPurgeInput:  '"SnapshotType": "live", "Age": "1d"'
   OfflineSnapshotsPurgeInput:  '"SnapshotType": "offline", "Age": "1w"'
   OrchestrationSnapshotsPurgeInput: '"SnapshotType": "orchestration", "Age": "4h"'
+
+scheduled_jobs:
+  author_primary:
+    offline_compaction:
+      enable: true
+      weekday: 2
+      hour: 3
+      minute: 0
+    export:
+      enable: true
+      weekday: 0-7
+      hour: 2
+      minute: 0
+    live_snapshot:
+      enable: true
+      weekday: 0-7
+      hour: '*'
+      minute: 0
+
+  author_standby:
+    live_snapshot:
+      enable: true
+      weekday: 0-7
+      hour: '*'
+      minute: 0
+
+  publish:
+    offline_compaction:
+      enable: true
+      weekday: 2
+      hour: 3
+      minute: 0
+    export:
+      enable: true
+      weekday: 0-7
+      hour: 2
+      minute: 0
+    live_snapshot:
+      enable: true
+      weekday: 0-7
+      hour: '*'
+      minute: 0
+
+  aem_orchestrator:
+    offline_compaction_snapshot:
+      enable: true
+      weekday: 1
+      hour: 1
+      minute: 15
+    offline_snapshot:
+      enable: true
+      weekday: 2-7
+      hour: 1
+      minute: 15

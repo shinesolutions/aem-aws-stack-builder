@@ -110,13 +110,13 @@ export FACTER_stack_prefix="${stack_prefix}"
 
 set +o errexit
 
-echo "Applying common Puppet manifest for all components..."
+echo "Applying pre-common Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
-  manifests/common.pp
+  manifests/pre-common.pp
 
 translate_puppet_exit_code "$?"
 
@@ -137,6 +137,16 @@ puppet apply \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   "manifests/${component}.pp"
+
+translate_puppet_exit_code "$?"
+
+echo "Applying scheduled-job Puppet manifest for all components..."
+puppet apply \
+  --detailed-exitcodes \
+  --logdest /var/log/puppet-stack-init.log \
+  --modulepath modules \
+  --hiera_config conf/hiera.yaml \
+  manifests/scheduled-job.pp
 
 translate_puppet_exit_code "$?"
 

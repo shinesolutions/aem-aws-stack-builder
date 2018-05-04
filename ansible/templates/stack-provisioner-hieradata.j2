@@ -1,10 +1,56 @@
 author_publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+
 author::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+
+author_primary::scheduled_jobs::aem::enable::offline_compaction: {{ scheduled_jobs.author_primary.offline_compaction.enable }}
+author_primary::scheduled_jobs::aem::weekday::offline_compaction: "{{ scheduled_jobs.author_primary.offline_compaction.weekday }}"
+author_primary::scheduled_jobs::aem::hour::offline_compaction: "{{ scheduled_jobs.author_primary.offline_compaction.hour }}"
+author_primary::scheduled_jobs::aem::minute::offline_compaction: "{{ scheduled_jobs.author_primary.offline_compaction.minute }}"
+author_primary::scheduled_jobs::enable::export: {{ scheduled_jobs.author_primary.export.enable }}
+author_primary::scheduled_jobs::weekday::export: "{{ scheduled_jobs.author_primary.export.weekday }}"
+author_primary::scheduled_jobs::hour::export: "{{ scheduled_jobs.author_primary.export.hour }}"
+author_primary::scheduled_jobs::minute::export: "{{ scheduled_jobs.author_primary.export.minute }}"
+author_primary::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.author_primary.live_snapshot.enable }}
+author_primary::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.author_primary.live_snapshot.weekday }}"
+author_primary::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.author_primary.live_snapshot.hour }}"
+author_primary::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.author_primary.live_snapshot.minute }}"
+
+publish::scheduled_jobs::aem::enable::offline_compaction: {{ scheduled_jobs.publish.offline_compaction.enable }}
+publish::scheduled_jobs::aem::weekday::offline_compaction: "{{ scheduled_jobs.publish.offline_compaction.weekday }}"
+publish::scheduled_jobs::aem::hour::offline_compaction: "{{ scheduled_jobs.publish.offline_compaction.hour }}"
+publish::scheduled_jobs::aem::minute::offline_compaction: "{{ scheduled_jobs.publish.offline_compaction.minute }}"
+publish::scheduled_jobs::enable::export: {{ scheduled_jobs.publish.export.enable }}
+publish::scheduled_jobs::weekday::export: "{{ scheduled_jobs.publish.export.weekday }}"
+publish::scheduled_jobs::hour::export: "{{ scheduled_jobs.publish.export.hour }}"
+publish::scheduled_jobs::minute::export: "{{ scheduled_jobs.publish.export.minute }}"
+publish::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.publish.live_snapshot.enable }}
+publish::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.weekday }}"
+publish::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.hour }}"
+publish::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.minute }}"
+
+author_standby::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.author_standby.live_snapshot.enable }}
+author_standby::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.weekday }}"
+author_standby::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.hour }}"
+author_standby::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.minute }}"
+
+aem_orchestrator::scheduled_jobs::enable::offline_compaction_snapshot: {{ scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.enable }}
+aem_orchestrator::scheduled_jobs::weekday::offline_compaction_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.weekday }}"
+aem_orchestrator::scheduled_jobs::hour::offline_compaction_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.hour }}"
+aem_orchestrator::scheduled_jobs::minute::offline_compaction_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.minute }}"
+aem_orchestrator::scheduled_jobs::enable::offline_snapshot: {{ scheduled_jobs.aem_orchestrator.offline_snapshot.enable }}
+aem_orchestrator::scheduled_jobs::weekday::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.weekday }}"
+aem_orchestrator::scheduled_jobs::hour::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.hour }}"
+aem_orchestrator::scheduled_jobs::minute::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.minute }}"
+
 publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+
 author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+
 publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish_dispatcher::enable_content_healthcheck: {{ aem.enable_content_healthcheck }}
+
 orchestrator::aem_orchestrator_version: '{{ library.aem_orchestrator_version }}'
+
 chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 
 common::proxy_enabled: {{ proxy.enabled }}

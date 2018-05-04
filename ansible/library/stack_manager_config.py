@@ -158,6 +158,7 @@ class config:
             "FlushDispatcherCache": "flush-dispatcher-cache",
             "TestReadinessFullset": "test-readiness-full-set",
             "TestReadinessConsolidated": "test-readiness-consolidated",
+            "ScheduleOfflineSnapshot": "schedule-offline-snapshot"
             }
 
         messenger_config_list = {
