@@ -24,6 +24,7 @@ aem:
   enable_deploy_on_init: false
   enable_reverse_replication: true
   enable_content_healthcheck: true
+  enable_content_healthcheck_terminate_instance: false
   deployment_delay_in_seconds: 10
   deployment_post_install_wait_in_seconds: 10
   deployment_check_retries: 60

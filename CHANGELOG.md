@@ -1,4 +1,5 @@
 ### 2.1.0
+* Add aem.enable_content_healthcheck_terminate_instance switch for instance termination for content healthcheck alarms
 * Add java_opts parameter allowing custom java_opts to be specified
 * Add AuthorPublishDispatcher component
 * Add configuration flag for enabling CRXDE #35
