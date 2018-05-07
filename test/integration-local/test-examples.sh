@@ -6,6 +6,7 @@ test_id=$1
 # download dependencies and run lint checks
 cd ../puppet-aem-resources && make clean deps lint
 cd ../puppet-aem-curator && make clean deps lint
+cd ../puppet-aem-orchestrator && make clean deps lint
 cd ../aem-aws-stack-provisioner && make clean deps lint
 cd ../aem-aws-stack-builder && make clean deps lint
 cd ../aem-stack-manager-messenger && make clean deps lint
@@ -16,6 +17,7 @@ rm -rf modules/aem_resources/*
 rm -rf modules/aem_curator/*
 cp -R ../puppet-aem-resources/* modules/aem_resources/
 cp -R ../puppet-aem-curator/* modules/aem_curator/
+cp -R ../puppet-aem-orchestrator/* modules/aem_orchestrator/
 make package "version=${test_id}"
 aws s3 cp "stage/aem-aws-stack-provisioner-${test_id}.tar.gz" s3://aem-stack-builder/library/
 
