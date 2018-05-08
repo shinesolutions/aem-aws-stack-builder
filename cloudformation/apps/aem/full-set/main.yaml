@@ -376,7 +376,11 @@ Resources:
           # Resorting to parsing the ARN to obtain it
           # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html
           #      https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html
-          !Select [ 1, !Split [ "/", !Ref PublishDispatcherStack ] ]
+          Fn::Select:
+            - 1
+            - Fn::Split:
+              - /
+              - Ref: PublishDispatcherStack
         PublishStackArn:
           Ref: PublishStack
       TemplateURL:
