@@ -18,12 +18,12 @@ aem:
   client_timeout: 1200
   publish:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
-    jvm_opts: "-nofork"
+    jvm_opts: ""
     jmxremote:
       port: 59183
   author:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
-    jvm_opts: "-nofork"
+    jvm_opts: ""
     jmxremote:
       port: 59182
 
