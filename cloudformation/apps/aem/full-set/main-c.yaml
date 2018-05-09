@@ -316,9 +316,9 @@ Resources:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName
         AemAwsStackProvisionerVersionParameter:
           Ref: AemAwsStackProvisionerVersionParameter
-        AuthorDispatcherStackName:
+        AuthorDispatcherStackArn:
           Ref: AuthorDispatcherStack
-        AuthorStackName:
+        AuthorStackArn:
           Ref: AuthorStack
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
@@ -328,7 +328,7 @@ Resources:
           Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
-        MessagingStackName:
+        MessagingStackArn:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-MessagingStackName
         NetworkStackPrefixParameter:
@@ -349,9 +349,19 @@ Resources:
           Ref: OrchestratorRootVolSizeParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
-        PublishDispatcherStackName:
+        PublishDispatcherStackArn:
           Ref: PublishDispatcherStack
-        PublishStackName:
+        PublishDispatcherStackName:
+          # As of May '18, CloudFormation doesn't provide a way to retrieve the Stack Name with Fn::GetAtt or Ref functions
+          # Resorting to parsing the ARN to obtain it
+          # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html
+          #      https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html
+          Fn::Select:
+            - 1
+            - Fn::Split:
+              - /
+              - Ref: PublishDispatcherStack
+        PublishStackArn:
           Ref: PublishStack
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/orchestrator.yaml
