@@ -221,9 +221,9 @@ snapshots_purge:
   LiveSnapshotsPurgeSchedule: 'cron(10 20 1/3 * ? *)'
   OfflineSnapshotsPurgeSchedule: 'cron(15 19 ? * SUN *)'
   OrchestrationSnapshotsPurgeSchedule: 'cron(5 0/4 * * ? *)'
-  LiveSnapshotsPurgeInput:  '"SnapshotType": "live", "Age": "1d"'
-  OfflineSnapshotsPurgeInput:  '"SnapshotType": "offline", "Age": "1w"'
-  OrchestrationSnapshotsPurgeInput: '"SnapshotType": "orchestration", "Age": "4h"'
+  LiveSnapshotsPurgeInput:  1d
+  OfflineSnapshotsPurgeInput:  364w
+  OrchestrationSnapshotsPurgeInput: 4h
 
 scheduled_jobs:
   author_primary:

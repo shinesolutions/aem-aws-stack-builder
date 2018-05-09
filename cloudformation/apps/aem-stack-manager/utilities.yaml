@@ -19,7 +19,7 @@ Parameters:
     Description: Bucket Name that Stores Files Used by the Function
     Type: String
   LiveSnapshotsPurgeInput:
-    Default: '"SnapshotType": "live", "Age": "1d"'
+    Default: 1d
     Description: Parameters for Purging Live Snapshot in JSON Formatted String
     Type: String
   LiveSnapshotsPurgeSchedule:
@@ -30,7 +30,7 @@ Parameters:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String
   OfflineSnapshotsPurgeInput:
-    Default: '"SnapshotType": "offline", "Age": "1w"'
+    Default: 1w
     Description: Parameters for Purging Offline Snapshot in JSON Formatted String
     Type: String
   OfflineSnapshotsPurgeSchedule:
@@ -38,7 +38,7 @@ Parameters:
     Description: CloudWatch Event Rule Schedule to Purge Old Offline Snapshots
     Type: String
   OrchestrationSnapshotsPurgeInput:
-    Default: '"SnapshotType": "orchestration", "Age": "4h"'
+    Default: 4h
     Description: Parameters for Purging Orchestration Snapshot in JSON Formatted String
     Type: String
   OrchestrationSnapshotsPurgeSchedule:
@@ -94,7 +94,7 @@ Resources:
           Ref: LambdaProdAlias
         Id: LiveSnapshotsPurgeRule
         Input:
-          Fn::Sub: '{${LiveSnapshotsPurgeInput}}'
+          Fn::Sub: '{"SnapshotType": "live", "Age": "${LiveSnapshotsPurgeInput}"}'
     Type: AWS::Events::Rule
   OfflineSnapshotLambdaPermission:
     Properties:
@@ -118,7 +118,7 @@ Resources:
           Ref: LambdaProdAlias
         Id: OfflineSnapshotsPurgeRule
         Input:
-          Fn::Sub: '{${OfflineSnapshotsPurgeInput}}'
+          Fn::Sub: '{"SnapshotType": "offline", "Age": "${OfflineSnapshotsPurgeInput}"}'
     Type: AWS::Events::Rule
   OrchestrationSnapshotLambdaPermission:
     Properties:
@@ -142,7 +142,7 @@ Resources:
           Ref: LambdaProdAlias
         Id: OrchestrationSnapshotsPurgeRule
         Input:
-          Fn::Sub: '{${OrchestrationSnapshotsPurgeInput}}'
+          Fn::Sub: '{"SnapshotType": "orchestration", "Age": "${OrchestrationSnapshotsPurgeInput}"}'
     Type: AWS::Events::Rule
   SnapshotsPurgeLambdaFunction:
     Properties:
