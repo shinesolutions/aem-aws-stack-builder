@@ -262,7 +262,7 @@ Resources:
         Fn::GetAtt: QueryInitialVersion.Version
       Name: prod
     Type: AWS::Lambda::Alias
-  SatusTopicPermission:
+  StatusTopicPermission:
     DependsOn:
     - LambdaProdAlias
     - TaskStatusTopic
