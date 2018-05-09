@@ -144,13 +144,13 @@ set -o errexit
 
 set +o errexit
 
-echo "Applying post-common Puppet manifest for all components..."
+echo "Applying action_scheduled_jobs Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
-  manifests/post-common.pp
+  manifests/action-scheduled-jobs.pp
 
 translate_puppet_exit_code "$?"
 

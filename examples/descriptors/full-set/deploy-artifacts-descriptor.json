@@ -29,7 +29,8 @@
         "version": "0.0.1",
         "replicate": false,
         "activate": false,
-        "force": false
+        "force": false,
+        "aem_id": "publish"
       }
     ]
   },
