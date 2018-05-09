@@ -12,6 +12,8 @@ stack_prefix=$2
 component=$3
 aem_aws_stack_provisioner_version=$4
 
+label=[aem-aws-stack-builder]
+
 aws_provisioner_dir=/opt/shinesolutions/aem-aws-stack-provisioner
 custom_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
 tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
@@ -62,7 +64,7 @@ translate_puppet_exit_code() {
   return "$exit_code"
 }
 
-echo "Initialising AEM Stack Builder provisioning..."
+echo "${label} Initialising AEM Stack Builder provisioning..."
 
 # List down version numbers of utility tools
 echo "AWS CLI version: $(aws --version)"
@@ -73,13 +75,13 @@ echo "Python version: $(python --version)"
 echo "Ruby version: $(ruby --version)"
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
-  echo "Downloading Custom Stack Provisioner..."
+  echo "${label} Downloading Custom Stack Provisioner..."
   download_provisioner "${custom_provisioner_dir}" aem-custom-stack-provisioner.tar.gz
 else
-  echo "No Custom Stack Provisioner provided..."
+  echo "${label} No Custom Stack Provisioner provided..."
 fi
 
-echo "Downloading AEM Stack Provisioner..."
+echo "${label} Downloading AEM Stack Provisioner..."
 download_provisioner "${aws_provisioner_dir}" "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 
 run_custom_stage pre-common
@@ -87,7 +89,7 @@ run_custom_stage pre-common
 cd "${aws_provisioner_dir}"
 
 if [[ -d data ]]; then
-  echo "Downloading custom configuration..."
+  echo "${label} Downloading custom configuration..."
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/data/" data/
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/conf/" conf/
 fi
@@ -101,7 +103,7 @@ if [ "$#" -eq 5 ]; then
   sed -e 's/^[[:space:]]*//' < "${extra_local_yaml_path}" >> "${local_yaml_path}"
 fi
 
-echo "Downloading custom Facter facts..."
+echo "${label} Downloading custom Facter facts..."
 mkdir -p /opt/puppetlabs/facts/facts.d
 aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
 
@@ -110,7 +112,7 @@ export FACTER_stack_prefix="${stack_prefix}"
 
 set +o errexit
 
-echo "Applying pre-common Puppet manifest for all components..."
+echo "${label} Applying pre-common Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
@@ -122,15 +124,15 @@ translate_puppet_exit_code "$?"
 
 set -o errexit
 
-echo "Checking orchestration tags for ${component} component..."
+echo "${label} Checking orchestration tags for ${component} component..."
 /opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
 
-echo "Setting AWS resources as Facter facts..."
+echo "${label} Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
 
 set +o errexit
 
-echo "Applying Puppet manifest for ${component} component..."
+echo "${label} Applying Puppet manifest for ${component} component..."
 puppet apply \
   --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
@@ -144,7 +146,7 @@ set -o errexit
 
 set +o errexit
 
-echo "Applying action_scheduled_jobs Puppet manifest for all components..."
+echo "${label} Applying post-common scheduled jobs action Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
   --logdest /var/log/puppet-stack-init.log \
@@ -158,9 +160,9 @@ set -o errexit
 
 run_custom_stage post-common
 
-echo "Testing ${component} component using InSpec..."
+echo "${label} Testing ${component} component using InSpec..."
 cd "${aws_provisioner_dir}/test/inspec"
 HOME=/root inspec exec "${component}_spec.rb"
 
-echo "Cleaning up provisioner temp directory..."
+echo "${label} Cleaning up provisioner temp directory..."
 rm -rf "${tmp_dir:?}/*"
