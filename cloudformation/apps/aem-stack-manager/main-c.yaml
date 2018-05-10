@@ -82,13 +82,13 @@ Resources:
         S3DataStackManagerPrefix:
           Ref: S3DataStackManagerPrefix
         AEMStackManagerLambdaServiceRoleNameParameter:
-          Ref: AEMStackManagerLambdaServicrRoleNameParameter
+          Ref: AEMStackManagerLambdaServiceRoleNameParameter
         AEMStackManagerLambdaServiceRoleArnParameter:
           Ref: AEMStackManagerLambdaServiceRoleArnParameter
         AEMStackManagerSSMServiceRoleNameParameter:
           Ref: AEMStackManagerSSMServiceRoleNameParameter
-        AEMStackManagerSSMServicrRoleArnParameter:
-          Ref: AEMStackManagerSSMServicrRoleArnParameter
+        AEMStackManagerSSMServiceRoleArnParameter:
+          Ref: AEMStackManagerSSMServiceRoleArnParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles-exports.yaml
     Type: AWS::CloudFormation::Stack
