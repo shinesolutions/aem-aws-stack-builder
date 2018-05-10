@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Instance Profiles for AEM Stack Manager
+Outputs:
+  AEMStackManagerLambdaServiceRoleArn:
+    Description: The Stack Manager Lambda Service Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerLambdaServiceRoleArnParameter
+    Value:
+      Ref: AEMStackManagerLambdaServiceRoleArnParameter
+  AEMStackManagerLambdaServiceRoleName:
+    Description: The Stack Manager Lambda Service Role Name
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerLambdaServiceRoleNameParameter
+    Value:
+      Ref: AEMStackManagerLambdaServiceRoleNameParameter
+  AEMStackManagerSSMServiceRoleArn:
+    Description: The Stack Manager SSM Service Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerSSMServiceRoleArnParameter
+    Value:
+      Ref: AEMStackManagerSSMServiceRoleArnParameter
+  AEMStackManagerSSMServiceRoleName:
+    Description: The Stack Manager Lambda Service Role Name
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerSSMServiceRoleNameParameter
+    Value:
+      Ref: AEMStackManagerSSMServiceRoleNameParameter
+Parameters:
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data file
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Main Resources Stack Prefix
+    Type: String
+  S3DataStackManagerPrefix:
+    Description: Prefix within the Bucket to Locate Files
+    Type: String
+  AEMStackManagerSSMServiceRoleNameParameter:
+    Description: Stack Manager SSM Service Role Name
+    Type: String
+  AEMStackManagerSSMServiceRoleArnParameter:
+    Description: Stack Manager SSM Service Role Arn 
+    Type: String
+  AEMStackManagerLambdaServiceRoleNameParameter:
+    Description: Stack Manager Lambda Service Role Name 
+    Type: String
+  AEMStackManagerLambdaServiceRoleArnParameter:
+    Description: Stack Manager Lambda Service Role Arn 
+    Type: String
+Resources:
+  DummyParameter:
+    Properties:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-DummyParameter
+      Description: Dummy Parameter to allow this stack to build.
+      Type: String
+      Value:
+        Fn::Sub: ${MainStackPrefixParameter}-DummyParameter
+      Type: "AWS::SSM::Parameter"
