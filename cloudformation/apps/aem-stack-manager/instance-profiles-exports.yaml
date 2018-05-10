@@ -5,28 +5,28 @@ Outputs:
     Description: The Stack Manager Lambda Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerLambdaServiceRoleArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
     Value:
       Ref: AEMStackManagerLambdaServiceRoleArnParameter
   AEMStackManagerLambdaServiceRoleName:
     Description: The Stack Manager Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerLambdaServiceRoleName
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
     Value:
       Ref: AEMStackManagerLambdaServiceRoleNameParameter
   AEMStackManagerSSMServiceRoleArn:
     Description: The Stack Manager SSM Service Role ARN
     Export:
       Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerSSMServiceRoleArn
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn
     Value:
       Ref: AEMStackManagerSSMServiceRoleArnParameter
   AEMStackManagerSSMServiceRoleName:
     Description: The Stack Manager Lambda Service Role Name
     Export:
       Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerSSMServiceRoleName
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleName
     Value:
       Ref: AEMStackManagerSSMServiceRoleNameParameter
 Parameters:
