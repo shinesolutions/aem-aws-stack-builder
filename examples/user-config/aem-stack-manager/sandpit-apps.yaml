@@ -8,7 +8,7 @@ stack_manager:
   OfflineSnapshotsPurgeSchedule: 'cron(15 19 ? * SUN *)'
   OrchestrationSnapshotsPurgeSchedule: 'cron(5 0/4 * * ? *)'
   LiveSnapshotsPurgeInput:  '"SnapshotType": "live", "Age": "1d"'
-  OfflineSnapshotsPurgeInput:  '"SnapshotType": "offline", "Age": "1w"'
+  OfflineSnapshotsPurgeInput:  '"SnapshotType": "offline", "Age": "364w"'
   OrchestrationSnapshotsPurgeInput: '"SnapshotType": "orchestration", "Age": "4h"'
 
 s3:
