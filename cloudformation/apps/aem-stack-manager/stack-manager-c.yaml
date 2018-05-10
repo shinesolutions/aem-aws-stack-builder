@@ -1,0 +1,336 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create AWS Lambda Implementation of AEM Stack Mananger Resources
+Outputs:
+  AemStackManagerTableName:
+    Description: DynamoDB table name for AEM stack manager
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerTableName
+    Value:
+      Ref: StackManagerTable
+  BackupTopicArn:
+    Description: SNS topic Arn used to orchestrate offline backup
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-BackupTopicArn
+    Value:
+      Ref: OfflineBackupTopic
+  SSMServiceRoleArn:
+    Description: Value is needed by Ansible
+    Value:
+      Fn::ImportValue:
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn
+  StackManagerTopicArn:
+    Description: AEM stack manager SNS topic Arn
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerTopicArn
+    Value:
+      Ref: StackManagerTopic
+  TaskStatusQueryLambda:
+    Description: Task status query lambda function name
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-TaskStatusQueryLambda
+    Value:
+      Ref: QueryLambdaFunction
+  TaskStatusTopicArn:
+    Description: SNS topic Arn to notifiy status of stack manager functions
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-TaskStatusTopicArn
+    Value:
+      Ref: TaskStatusTopic
+Parameters:
+  DataBucketNameParameter:
+    Description: Bucket Name that Stores Files Used by the Function
+    Type: String
+  DynamoDBTTLAttribute:
+    Default: ttl
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Main Resources Stack Prefix
+    Type: String
+  S3DataStackManagerPrefix:
+    Description: Prefix within the Bucket to Locate Files
+    Type: String
+Resources:
+  BackupInitialVersion:
+    DependsOn: OfflineBackupLambda
+    Properties:
+      Description: Initial Version to Start With
+      FunctionName:
+        Ref: OfflineBackupLambda
+    Type: AWS::Lambda::Version
+  BackupLambdaDevAlias:
+    DependsOn: OfflineBackupLambda
+    Properties:
+      Description: Lambda Alias for Development Use
+      FunctionName:
+        Ref: OfflineBackupLambda
+      FunctionVersion: $LATEST
+      Name: dev
+    Type: AWS::Lambda::Alias
+  BackupLambdaPermission:
+    DependsOn:
+    - BackupLambdaProdAlias
+    - OfflineBackupTopic
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: BackupLambdaProdAlias
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: OfflineBackupTopic
+    Type: AWS::Lambda::Permission
+  BackupLambdaProdAlias:
+    DependsOn:
+    - OfflineBackupLambda
+    - BackupInitialVersion
+    Properties:
+      Description: Lambda Alias for Production Use
+      FunctionName:
+        Ref: OfflineBackupLambda
+      FunctionVersion:
+        Fn::GetAtt: BackupInitialVersion.Version
+      Name: prod
+    Type: AWS::Lambda::Alias
+  BackupSNSSubscription:
+    DependsOn:
+    - BackupLambdaProdAlias
+    - OfflineBackupTopic
+    Properties:
+      Endpoint:
+        Ref: BackupLambdaProdAlias
+      Protocol: lambda
+      TopicArn:
+        Ref: OfflineBackupTopic
+    Type: AWS::SNS::Subscription
+  InitialVersion:
+    DependsOn: ManagerLambdaFunction
+    Properties:
+      Description: Initial Version to Start With
+      FunctionName:
+        Ref: ManagerLambdaFunction
+    Type: AWS::Lambda::Version
+  LambdaDevAlias:
+    DependsOn: ManagerLambdaFunction
+    Properties:
+      Description: Lambda Alias for Development Use
+      FunctionName:
+        Ref: ManagerLambdaFunction
+      FunctionVersion: $LATEST
+      Name: dev
+    Type: AWS::Lambda::Alias
+  LambdaProdAlias:
+    DependsOn: InitialVersion
+    Properties:
+      Description: Lambda Alias for Production Use
+      FunctionName:
+        Ref: ManagerLambdaFunction
+      FunctionVersion:
+        Fn::GetAtt: InitialVersion.Version
+      Name: prod
+    Type: AWS::Lambda::Alias
+  ManagerLambdaFunction:
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DataBucketNameParameter
+        S3Key:
+          Fn::Sub: ${S3DataStackManagerPrefix}/aem_stack_manager.zip
+      Description: AEM Stack Manager Function
+      Environment:
+        Variables:
+          LOG_LEVEL: '20'
+          S3_BUCKET:
+            Ref: DataBucketNameParameter
+          S3_PREFIX:
+            Ref: S3DataStackManagerPrefix
+      FunctionName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemStackManager
+      Handler: aem_stack_manager.sns_message_processor
+      MemorySize: 128
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+      Runtime: python2.7
+      Timeout: 15
+    Type: AWS::Lambda::Function
+  ManagerTopicPermission:
+    DependsOn:
+    - StackManagerTopic
+    - LambdaProdAlias
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: LambdaProdAlias
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: StackManagerTopic
+    Type: AWS::Lambda::Permission
+  ManagerTopicSubscription:
+    DependsOn:
+    - StackManagerTopic
+    - LambdaProdAlias
+    Properties:
+      Endpoint:
+        Ref: LambdaProdAlias
+      Protocol: lambda
+      TopicArn:
+        Ref: StackManagerTopic
+    Type: AWS::SNS::Subscription
+  OfflineBackupLambda:
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DataBucketNameParameter
+        S3Key:
+          Fn::Sub: ${S3DataStackManagerPrefix}/aem_offline_snapshot.zip
+      Description: AEM Offline Backup Function
+      Environment:
+        Variables:
+          LOG_LEVEL: '20'
+          S3_BUCKET:
+            Ref: DataBucketNameParameter
+          S3_PREFIX:
+            Ref: S3DataStackManagerPrefix
+      FunctionName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemOfflineBackup
+      Handler: aem_offline_snapshot.sns_message_processor
+      MemorySize: 128
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+      Runtime: python2.7
+      Timeout: 15
+    Type: AWS::Lambda::Function
+  OfflineBackupTopic:
+    Properties:
+      DisplayName: AEM Backup
+      TopicName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemOfflineBackup
+    Type: AWS::SNS::Topic
+  QueryInitialVersion:
+    DependsOn: QueryLambdaFunction
+    Properties:
+      Description: Initial Version to Start With
+      FunctionName:
+        Ref: QueryLambdaFunction
+    Type: AWS::Lambda::Version
+  QueryLambdaDevAlias:
+    DependsOn: QueryLambdaFunction
+    Properties:
+      Description: Lambda Alias for Development Use
+      FunctionName:
+        Ref: QueryLambdaFunction
+      FunctionVersion: $LATEST
+      Name: dev
+    Type: AWS::Lambda::Alias
+  QueryLambdaFunction:
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DataBucketNameParameter
+        S3Key:
+          Fn::Sub: ${S3DataStackManagerPrefix}/aem_task_query.zip
+      Description: AEM Task Status Query
+      Environment:
+        Variables:
+          LOG_LEVEL: '20'
+          S3_BUCKET:
+            Ref: DataBucketNameParameter
+          S3_PREFIX:
+            Ref: S3DataStackManagerPrefix
+      FunctionName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemTaskQuery
+      Handler: aem_task_query.handler
+      MemorySize: 128
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+      Runtime: python2.7
+      Timeout: 15
+    Type: AWS::Lambda::Function
+  QueryLambdaProdAlias:
+    DependsOn: QueryInitialVersion
+    Properties:
+      Description: Lambda Alias for Production Use
+      FunctionName:
+        Ref: QueryLambdaFunction
+      FunctionVersion:
+        Fn::GetAtt: QueryInitialVersion.Version
+      Name: prod
+    Type: AWS::Lambda::Alias
+  StatusTopicPermission:
+    DependsOn:
+    - LambdaProdAlias
+    - TaskStatusTopic
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: LambdaProdAlias
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: TaskStatusTopic
+    Type: AWS::Lambda::Permission
+  StackManagerTable:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: command_id
+        AttributeType: S
+      - AttributeName: externalId
+        AttributeType: S
+      - AttributeName: timestamp
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: ExternalQuery
+        KeySchema:
+        - AttributeName: externalId
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+        Projection:
+          NonKeyAttributes:
+          - state
+          ProjectionType: INCLUDE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      KeySchema:
+      - AttributeName: command_id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerTable
+      TimeToLiveSpecification:
+        AttributeName:
+          Ref: DynamoDBTTLAttribute
+        Enabled: true
+    Type: AWS::DynamoDB::Table
+  StackManagerTopic:
+    Properties:
+      DisplayName: AEM Stack Manager Topic
+      TopicName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemStackManager
+    Type: AWS::SNS::Topic
+  StatusTopicSubscription:
+    DependsOn:
+    - LambdaProdAlias
+    - TaskStatusTopic
+    Properties:
+      Endpoint:
+        Ref: LambdaProdAlias
+      Protocol: lambda
+      TopicArn:
+        Ref: TaskStatusTopic
+    Type: AWS::SNS::Subscription
+  TaskStatusTopic:
+    Properties:
+      DisplayName:
+        Fn::Sub: AEM Stack Manager Topic
+      TopicName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerStatus
+    Type: AWS::SNS::Topic
