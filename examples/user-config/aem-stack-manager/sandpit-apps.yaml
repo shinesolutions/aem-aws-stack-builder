@@ -7,9 +7,9 @@ stack_manager:
   LiveSnapshotsPurgeSchedule: 'cron(10 20 1/3 * ? *)'
   OfflineSnapshotsPurgeSchedule: 'cron(15 19 ? * SUN *)'
   OrchestrationSnapshotsPurgeSchedule: 'cron(5 0/4 * * ? *)'
-  LiveSnapshotsPurgeInput:  '"SnapshotType": "live", "Age": "1d"'
-  OfflineSnapshotsPurgeInput:  '"SnapshotType": "offline", "Age": "364w"'
-  OrchestrationSnapshotsPurgeInput: '"SnapshotType": "orchestration", "Age": "4h"'
+  LiveSnapshotsPurgeInput:  1d
+  OfflineSnapshotsPurgeInput:  364w
+  OrchestrationSnapshotsPurgeInput: 4h
 
 s3:
   data_bucket_name: aem-stack-builder
