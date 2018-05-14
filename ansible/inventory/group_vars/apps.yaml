@@ -219,13 +219,13 @@ stack_manager:
   purge:
     live_snapshots:
       schedule: '10 20 1/3 * ? *'
-      max_age: 24
+      max_age_in_hours: 24
     offline_snapshots:
       schedule: '15 19 ? * SUN *'
-      max_age: 61320
+      max_age_in_hours: 61320
     orchestration_snapshots:
       schedule: '5 0/4 * * ? *'
-      max_age: 4
+      max_age_in_hours: 4
 
 scheduled_jobs:
   author_primary:

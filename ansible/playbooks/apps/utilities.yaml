@@ -19,11 +19,11 @@
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
           LiveSnapshotsPurgeSchedule: "{{ stack_manager.purge.live_snapshots.schedule }}"
-          LiveSnapshotsPurgeMaxAge: "{{ stack_manager.purge.live_snapshots.max_age }}"
+          LiveSnapshotsPurgeMaxAge: "{{ stack_manager.purge.live_snapshots.max_age_in_hours }}"
           OfflineSnapshotsPurgeSchedule: "{{ stack_manager.purge.offline_snapshots.schedule }}"
-          OfflineSnapshotsPurgeMaxAge: "{{ stack_manager.purge.offline_snapshots.max_age }}"
+          OfflineSnapshotsPurgeMaxAge: "{{ stack_manager.purge.offline_snapshots.max_age_in_hours }}"
           OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.purge.orchestration_snapshots.schedule }}"
-          OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age }}"
+          OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age_in_hours }}"
       register: stack_info
       tags:
         - create

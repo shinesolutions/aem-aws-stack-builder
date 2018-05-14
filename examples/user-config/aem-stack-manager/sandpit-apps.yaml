@@ -7,13 +7,13 @@ stack_manager:
   purge:
     live_snapshots:
       schedule: '10 20 1/3 * ? *'
-      max_age: 24
+      max_age_in_hours: 24
     offline_snapshots:
       schedule: '15 19 ? * SUN *'
-      max_age: 168
+      max_age_in_hours: 168
     orchestration_snapshots:
       schedule: '5 0/4 * * ? *'
-      max_age: 4
+      max_age_in_hours: 4
 s3:
   data_bucket_name: aem-stack-builder
 
