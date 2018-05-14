@@ -34,12 +34,12 @@
           MainStackPrefixParameter: "{{ stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-          LiveSnapshotsPurgeSchedule: "{{ stack_manager.LiveSnapshotsPurgeSchedule}}"
-          OfflineSnapshotsPurgeSchedule: "{{ stack_manager.OfflineSnapshotsPurgeSchedule }}"
-          OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.OrchestrationSnapshotsPurgeSchedule }}"
-          LiveSnapshotsPurgeInput: "{{ stack_manager.LiveSnapshotsPurgeInput }}"
-          OfflineSnapshotsPurgeInput: " {{ stack_manager.OfflineSnapshotsPurgeInput }}"
-          OrchestrationSnapshotsPurgeInput: "{{ stack_manager.OrchestrationSnapshotsPurgeInput }}"
+          LiveSnapshotsPurgeSchedule: "{{ stack_manager.purge.live_snapshots.schedule }}"
+          LiveSnapshotsPurgeMaxAge: "{{ stack_manager.purge.live_snapshots.max_age }}"
+          OfflineSnapshotsPurgeSchedule: "{{ stack_manager.purge.offline_snapshots.schedule }}"
+          OfflineSnapshotsPurgeMaxAge: " {{ stack_manager.purge.offline_snapshots.max_age }}"
+          OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.purge.orchestration_snapshots.schedule }}"
+          OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age }}"
       register: main_stack_info
       tags:
         - create

@@ -9,7 +9,7 @@
     - name: >
         Create Snapshots Purge Cloud Native Solution Related Resources Using CloudFormation
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ snapshots_purge.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{ stack_manager.utilities_stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: false
@@ -18,19 +18,19 @@
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
-          LiveSnapshotsPurgeSchedule: "{{ snapshots_purge.LiveSnapshotsPurgeSchedule}}"
-          OfflineSnapshotsPurgeSchedule: "{{ snapshots_purge.OfflineSnapshotsPurgeSchedule }}"
-          OrchestrationSnapshotsPurgeSchedule: "{{ snapshots_purge.OrchestrationSnapshotsPurgeSchedule }}"
-          LiveSnapshotsPurgeInput: "{{ snapshots_purge.LiveSnapshotsPurgeInput }}"
-          OfflineSnapshotsPurgeInput: " {{ snapshots_purge.OfflineSnapshotsPurgeInput }}"
-          OrchestrationSnapshotsPurgeInput: "{{ snapshots_purge.OrchestrationSnapshotsPurgeInput }}"
+          LiveSnapshotsPurgeSchedule: "{{ stack_manager.purge.live_snapshots.schedule }}"
+          LiveSnapshotsPurgeMaxAge: "{{ stack_manager.purge.live_snapshots.max_age }}"
+          OfflineSnapshotsPurgeSchedule: "{{ stack_manager.purge.offline_snapshots.schedule }}"
+          OfflineSnapshotsPurgeMaxAge: "{{ stack_manager.purge.offline_snapshots.max_age }}"
+          OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.purge.orchestration_snapshots.schedule }}"
+          OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age }}"
       register: stack_info
       tags:
         - create
 
     - name: Check if Snapshots Purge Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ snapshots_purge.stack_name }}"
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ stack_manager.utilities_stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -39,7 +39,7 @@
 
     - name: Report Snapshots Purge Stack Problem if Any
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ snapshots_purge.stack_name }}" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ stack_manager.utilities_stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -47,7 +47,7 @@
 
     - name: Delete AEM Snapshots Purge Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{  snapshots_purge.stack_name }}"
+        stack_name: "{{ stack_prefix }}-{{  stack_manager.utilities_stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:

@@ -212,18 +212,20 @@ dns_records:
     ttl: 300
 
 stack_manager:
-  ssm_stack_name: aem-stack-manager-ssm
+  ssm_stack_name: ssm
   stack_name: aem-stack-manager
   s3_prefix: stack-manager
-
-snapshots_purge:
-  stack_name: aem-snapshots-purge
-  LiveSnapshotsPurgeSchedule: 'cron(10 20 1/3 * ? *)'
-  OfflineSnapshotsPurgeSchedule: 'cron(15 19 ? * SUN *)'
-  OrchestrationSnapshotsPurgeSchedule: 'cron(5 0/4 * * ? *)'
-  LiveSnapshotsPurgeInput:  1d
-  OfflineSnapshotsPurgeInput:  364w
-  OrchestrationSnapshotsPurgeInput: 4h
+  utilities_stack_name: utilities
+  purge:
+    live_snapshots:
+      schedule: '10 20 1/3 * ? *'
+      max_age: 24
+    offline_snapshots:
+      schedule: '15 19 ? * SUN *'
+      max_age: 61320
+    orchestration_snapshots:
+      schedule: '5 0/4 * * ? *'
+      max_age: 4
 
 scheduled_jobs:
   author_primary:

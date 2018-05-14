@@ -29,7 +29,7 @@ Parameters:
   DynamoDBTTLAttribute:
     Default: ttl
     Type: String
-  LiveSnapshotsPurgeInput:
+  LiveSnapshotsPurgeMaxAge:
     Default: '"SnapshotType": "live", "Age": "1d"'
     Description: Parameters for Purging Live Snapshot in JSON Formatted String
     Type: String
@@ -40,7 +40,7 @@ Parameters:
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String
-  OfflineSnapshotsPurgeInput:
+  OfflineSnapshotsPurgeMaxAge:
     Default: '"SnapshotType": "offline", "Age": "1w"'
     Description: Parameters for Purging Offline Snapshot in JSON Formatted String
     Type: String
@@ -48,7 +48,7 @@ Parameters:
     Default: cron(15 19 ? * SUN *)
     Description: CloudWatch Event Rule Schedule to Purge Old Offline Snapshots
     Type: String
-  OrchestrationSnapshotsPurgeInput:
+  OrchestrationSnapshotsPurgeMaxAge:
     Default: '"SnapshotType": "orchestration", "Age": "4h"'
     Description: Parameters for Purging Orchestration Snapshot in JSON Formatted String
     Type: String
@@ -95,18 +95,18 @@ Resources:
       Parameters:
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
-        LiveSnapshotsPurgeInput:
-          Ref: LiveSnapshotsPurgeInput
+        LiveSnapshotsPurgeMaxAge:
+          Ref: LiveSnapshotsPurgeMaxAge
         LiveSnapshotsPurgeSchedule:
           Ref: LiveSnapshotsPurgeSchedule
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
-        OfflineSnapshotsPurgeInput:
-          Ref: OfflineSnapshotsPurgeInput
+        OfflineSnapshotsPurgeMaxAge:
+          Ref: OfflineSnapshotsPurgeMaxAge
         OfflineSnapshotsPurgeSchedule:
           Ref: OfflineSnapshotsPurgeSchedule
-        OrchestrationSnapshotsPurgeInput:
-          Ref: OrchestrationSnapshotsPurgeInput
+        OrchestrationSnapshotsPurgeMaxAge:
+          Ref: OrchestrationSnapshotsPurgeMaxAge
         OrchestrationSnapshotsPurgeSchedule:
           Ref: OrchestrationSnapshotsPurgeSchedule
         S3DataStackManagerPrefix:

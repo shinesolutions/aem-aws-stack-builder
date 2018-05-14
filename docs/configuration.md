@@ -30,9 +30,9 @@ Check out the [example configuration files](https://github.com/shinesolutions/pa
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
-| stack_manager.snapshots_purge.live_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | `10 20 1/3 * ? *` |
-| stack_manager.snapshots_purge.live_snapshots.expiry | The number of hours to keep a live snapshot before it expires and will be removed | Optional | `24` |
-| stack_manager.snapshots_purge.offline_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | `15 19 ? * SUN *` |
-| stack_manager.snapshots_purge.offline_snapshots.expiry | The number of hours to keep an offline snapshot before it expires and will be removed  | Optional | `61320` |
-| stack_manager.snapshots_purge.orchestration_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | `5 0/4 * * ? *` |
-| stack_manager.snapshots_purge.orchestration_snapshots | The number of hours to keep an orchestration snapshot before it expires and will be removed  | Optional | `4` |
+| stack_manager.purge.live_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | `10 20 1/3 * ? *` |
+| stack_manager.purge.live_snapshots.max_age | The number of hours to keep a live snapshot before it expires and will be removed | Optional | `24` |
+| stack_manager.purge.offline_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | `15 19 ? * SUN *` |
+| stack_manager.purge.offline_snapshots.max_age | The number of hours to keep an offline snapshot before it expires and will be removed  | Optional | `61320` |
+| stack_manager.purge.orchestration_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | `5 0/4 * * ? *` |
+| stack_manager.purge.orchestration_snapshots.max_age | The number of hours to keep an orchestration snapshot before it expires and will be removed  | Optional | `4` |
