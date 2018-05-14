@@ -49,7 +49,9 @@
         dest_file: "{{ playbook_dir }}/../../../../stage/ssm_template.json"
         ssm_command_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands-cloudformation.yaml"
         ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands/"
-
+      tags:
+        - create
+        
     - name: Create SSM Document Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ main.ssm_stack_name }}"
