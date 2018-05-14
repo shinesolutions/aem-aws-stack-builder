@@ -86,9 +86,9 @@ class CreateSSMCFTemplate:
             del cf_template['Resources'][ssm_command]['Properties']['Content']['Fn::Transform']
             cf_template['Resources'][ssm_command]['Properties']['Content'].update(cf_template_content)
 
-            result = yaml.safe_dump(cf_template, default_flow_style=False)
+        result = yaml.safe_dump(cf_template, default_flow_style=False)
 
-            return result
+        return result
 
     def _read_ssm_cf_template(self):
         cf_template_file = self.module.params.get("ssm_command_cf_template")
