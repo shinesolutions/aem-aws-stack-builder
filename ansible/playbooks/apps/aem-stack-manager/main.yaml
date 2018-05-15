@@ -1,5 +1,4 @@
 ---
-
 - name: AEM Stack Managers Main Resources Creation and Deletion Tasks
   hosts: all
   gather_facts: no
@@ -45,8 +44,10 @@
         - create
 
     - name: Generate CloudFormation Template for SSM Documents
-      shell: >
-          "{{ playbook_dir }}/../../../../scripts/generate.sh" >  "{{ playbook_dir }}/../../../../stage/ssm_template.json"
+      ssm_template:
+        dest_file: "{{ playbook_dir }}/../../../../stage/ssm_template.json"
+        ssm_command_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands-cloudformation.yaml"
+        ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands/"
       tags:
         - create
 
