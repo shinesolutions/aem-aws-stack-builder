@@ -25,6 +25,7 @@ Check out the [example configuration files](https://github.com/shinesolutions/pa
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | aem.enable_content_healthcheck | If true, content health check will be performed from each AEM Publish-Dispatcher instance, checking the content on its AEM Publish instance pair | Optional | true |
+| scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_prefix | The stack prefix of the Stack Manager pair which will be used by the AEM environment to execute offline snapshot and offline compaction snapshot events | Mandatory | |
 
 ### AEM Stack Manager configuration properties:
 

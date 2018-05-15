@@ -50,6 +50,7 @@ publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish_dispatcher::enable_content_healthcheck: {{ aem.enable_content_healthcheck }}
 
 orchestrator::aem_orchestrator_version: '{{ library.aem_orchestrator_version }}'
+orchestrator::stack_manager_stack_name: '{{ scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_prefix }}-{{ stack_manager.stack_name }}-main-stack-manager'
 
 chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 
