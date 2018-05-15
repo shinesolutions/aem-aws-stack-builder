@@ -29,6 +29,7 @@ aem:
   deployment_post_install_wait_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
+  revert_snapshot_type: offline
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jvm_opts: "-Dkey=value"

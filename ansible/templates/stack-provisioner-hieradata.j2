@@ -43,6 +43,7 @@ aem_orchestrator::scheduled_jobs::hour::offline_snapshot: "{{ scheduled_jobs.aem
 aem_orchestrator::scheduled_jobs::minute::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.minute }}"
 
 publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
 
 author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 
