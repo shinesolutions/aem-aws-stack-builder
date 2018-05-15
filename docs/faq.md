@@ -6,3 +6,16 @@ Frequently Asked Questions
 
 * __Q:__ How to solve timeout error when deploying a large AEM package?<br/>
   __A:__ You need to increase the value of `aem.deployment_post_install_wait_in_seconds`, `aem.deployment_check_retries`, and `aem.deployment_check_delay_in_seconds` [configuration properties](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md).
+
+* __Q:__ How to set up custom AWS tags?<br/>
+  __A:__ This can be [configured](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md#aws-configuration-properties) in `aws.tags` property. For example:
+  ```
+  aws:
+    tags:
+    - Key: Project
+      Value: Open Source AEM Platform
+    - Key: Owner
+      Value: Shine Solutions AEM Team
+    - Key: Cost Centre
+      Value: 12345
+  ```
