@@ -3,6 +3,7 @@
 * Set snapshots purge max age unit to hour, set schedule to cron expression without function syntax
 * Simplify offline snapshot events Stack Manager pairing to use stack prefix instead of SNS topic ARN
 * Remove global fact stack_manager_sns_topic_arn
+* Add revert_snapshot_type parameter to allow default launch configuration to set snapshots to offline or live types
 
 ### 2.1.0
 * Add aem.enable_content_healthcheck_terminate_instance switch for instance termination for content healthcheck alarms
