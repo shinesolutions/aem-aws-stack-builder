@@ -269,6 +269,8 @@ scheduled_jobs:
       minute: 0
 
   aem_orchestrator:
+    stack_manager_pair:
+      stack_prefix:
     offline_compaction_snapshot:
       enable: true
       weekday: 1

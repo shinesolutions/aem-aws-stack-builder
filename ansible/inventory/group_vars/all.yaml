@@ -13,5 +13,3 @@ proxy:
 cron:
   env_path: /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin
   https_proxy:
-
-stack_manager_sns_topic_arn:
