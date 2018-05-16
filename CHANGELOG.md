@@ -3,6 +3,7 @@
 * Set snapshots purge max age unit to hour, set schedule to cron expression without function syntax
 * Simplify offline snapshot events Stack Manager pairing to use stack prefix instead of SNS topic ARN
 * Remove global fact stack_manager_sns_topic_arn
+* Replace SSM template generation shell script with ssm_template Ansible module
 
 ### 2.1.0
 * Add aem.enable_content_healthcheck_terminate_instance switch for instance termination for content healthcheck alarms
