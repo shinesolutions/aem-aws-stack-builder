@@ -5,6 +5,7 @@
 * Remove global fact stack_manager_sns_topic_arn
 * Replace SSM template generation shell script with ssm_template Ansible module
 * Add revert_snapshot_type parameter to allow default launch configuration to set snapshots to offline or live types
+* Add /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed as an indicator that userdata has been completed successfully
 
 ### 2.1.0
 * Add aem.enable_content_healthcheck_terminate_instance switch for instance termination for content healthcheck alarms

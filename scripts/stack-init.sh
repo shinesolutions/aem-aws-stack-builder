@@ -14,6 +14,7 @@ aem_aws_stack_provisioner_version=$4
 
 label=[aem-aws-stack-builder]
 
+aws_builder_dir=/opt/shinesolutions/aem-aws-stack-builder
 aws_provisioner_dir=/opt/shinesolutions/aem-aws-stack-provisioner
 custom_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
 tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
@@ -166,3 +167,11 @@ HOME=/root inspec exec "${component}_spec.rb"
 
 echo "${label} Cleaning up provisioner temp directory..."
 rm -rf "${tmp_dir:?}/*"
+
+echo "${label} Completed ${component} component initialisation"
+
+# Due to the lack of AWS built-in mechanism to identify the completion of userdata / cloud-init,
+# we have to rely on the existence of the file below to indicate that it has been completed.
+# In the event of any error, this script would've exited before creating the file.
+# The existence of this file is used as a pre-condition before executing Stack Manager events.
+touch "${aws_builder_dir}/stack-init-completed"
