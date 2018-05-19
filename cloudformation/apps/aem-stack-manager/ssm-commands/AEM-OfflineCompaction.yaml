@@ -29,6 +29,7 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
+        - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
         - '/opt/shinesolutions/aem-tools/offline-compaction.sh'
         - '/opt/shinesolutions/aem-tools/oak-run-process-quited.sh {{repeats}} {{interval}}'
       timeoutSeconds: '{{ executionTimeout }}'

@@ -46,6 +46,7 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
+        - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
         - '/sbin/service aem-{{ aemid }} {{ action }}'
         - '[ {{action}} = "start" ] || /opt/shinesolutions/aem-tools/crx-process-quited.sh {{repeats}}  {{interval}}'
       timeoutSeconds: '{{ executionTimeout }}'

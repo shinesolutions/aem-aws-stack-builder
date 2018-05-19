@@ -7,6 +7,7 @@
 * Add revert_snapshot_type parameter to allow default launch configuration to set snapshots to offline or live types
 * Add /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed as an indicator that userdata has been completed successfully
 * Fix delay and retries configuration for single artifact deployment
+* Add stack-init completion check to all Stack Manager SSM commands
 
 ### 2.1.0
 * Add aem.enable_content_healthcheck_terminate_instance switch for instance termination for content healthcheck alarms

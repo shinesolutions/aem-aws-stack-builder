@@ -36,6 +36,7 @@ mainSteps:
     inputs:
       runCommand:
         - '. /etc/profile'
+        - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
         - '/opt/shinesolutions/aem-tools/import-backup.sh {{aemId}} {{ sourceStackPrefix }} {{ packageGroup }} {{ packageName }} {{ packageDatestamp }}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
