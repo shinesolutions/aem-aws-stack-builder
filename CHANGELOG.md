@@ -1,3 +1,6 @@
+### 2.2.0
+*
+
 ### 2.1.1
 * Restructure configuration for Stack Manager snapshots purge schedule and max age
 * Set snapshots purge max age unit to hour, set schedule to cron expression without function syntax
