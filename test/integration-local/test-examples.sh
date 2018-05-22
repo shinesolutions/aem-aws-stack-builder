@@ -23,6 +23,7 @@ aws s3 cp "stage/aem-aws-stack-provisioner-${test_id}.tar.gz" s3://aem-stack-bui
 
 # create AEM environments
 cd ../aem-aws-stack-builder
+rm -f examples/user-config/common/zzz-test-integration-local.yaml
 echo -e "library:\n  aem_aws_stack_provisioner_version: ${test_id}" > examples/user-config/common/zzz-test-integration-local.yaml
 echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix: ${test_id}-stack-manager" >> examples/user-config/common/zzz-test-integration-local.yaml
 make create-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=examples/user-config/aem-stack-manager/
