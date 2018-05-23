@@ -41,10 +41,10 @@ run_custom_stage() {
   stage=${1}
   script=${custom_provisioner_dir}/${stage}.sh
   if [ -x "${script}" ]; then
-    echo "Executing the ${stage} script of Custom Stack Provisioner..."
+    echo "${label} Executing the ${stage} script of Custom Stack Provisioner..."
     cd ${custom_provisioner_dir} && ${script} "${stack_prefix}" "${component}"
   else
-    echo "${stage} script of Custom Stack Provisioner is either not provided or not executable..."
+    echo "${label} ${stage} script of Custom Stack Provisioner is either not provided or not executable"
   fi
 }
 
@@ -68,12 +68,12 @@ translate_puppet_exit_code() {
 echo "${label} Initialising AEM Stack Builder provisioning..."
 
 # List down version numbers of utility tools
-echo "AWS CLI version: $(aws --version)"
-echo "Facter version: $(facter --version)"
-echo "Hiera version: $(hiera --version)"
-echo "Puppet version: $(puppet --version)"
-echo "Python version: $(python --version)"
-echo "Ruby version: $(ruby --version)"
+echo "${label} AWS CLI version: $(aws --version)"
+echo "${label} Facter version: $(facter --version)"
+echo "${label} Hiera version: $(hiera --version)"
+echo "${label} Puppet version: $(puppet --version)"
+echo "${label} Python version: $(python --version)"
+echo "${label} Ruby version: $(ruby --version)"
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
   echo "${label} Downloading Custom Stack Provisioner..."
@@ -100,7 +100,7 @@ fi
 if [ "$#" -eq 5 ]; then
   extra_local_yaml_path=$5
   local_yaml_path="${PWD}/data/local.yaml"
-  echo "Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
+  echo "${label} Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
   sed -e 's/^[[:space:]]*//' < "${extra_local_yaml_path}" >> "${local_yaml_path}"
 fi
 
