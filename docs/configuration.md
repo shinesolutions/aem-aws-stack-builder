@@ -7,14 +7,15 @@ Check out the [example configuration files](https://github.com/shinesolutions/ae
 
 ### Global configuration properties:
 
-| Name | Description |
-|------|-------------|
-| todo | TODO |
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| main.stack_name | The stack name (to be appended to stack prefix) of the main parent stack of the corresponding architecture | Mandatory | |
+| prerequisites.stack_name | The stack name (to be appended to stack prefix) of the prerequisites parent stack of the corresponding architecture | Mandatory for AEM Consolidated and AEM Full-Set architectures, not needed for AEM Stack Manager | |
 
 ### AEM configuration properties:
 
 | Name | Description | Required? | Default |
-|------|-------------|-----------|---------|
+|------|-------------| -----------|---------|
 | aem.enable_reverse_replication | If true, reverse replication from AEM Publish to AEM Author will be enabled (Full-Set only) | Optional | true |
 | aem.deployment_post_install_wait_in_seconds | The number of seconds after AEM package installation, before resuming to perform health checks | Optional | 10 |
 | aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | 60 |
