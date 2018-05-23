@@ -4,6 +4,11 @@ network_stack_prefix: overwrite-me
 instance_profile_stack_prefix: overwrite-me
 security_groups_stack_prefix: overwrite-me
 
+main:
+  stack_name: overwrite-me
+prerequisites:
+  stack_name: overwrite-me
+  
 aem:
   enable_crxde: false
   enable_default_passwords: false
