@@ -3,7 +3,6 @@ network_stack_prefix: sandpit-2
 
 main:
   stack_name: aem-full-set-main-stack
-  ssm_stack_name: aem-stack-manager-ssm
 
 prerequisites:
   stack_name: aem-prerequisites-stack
