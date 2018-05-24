@@ -1,5 +1,5 @@
 ### 2.2.0
-*
+* Move Stack Manager SSM stack to become a nested/child stack of Stack Manager main stack #149
 
 ### 2.1.1
 * Restructure configuration for Stack Manager snapshots purge schedule and max age

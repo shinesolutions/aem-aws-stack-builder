@@ -10,10 +10,6 @@ requirements:
   - boto3 >= 1.0.0
   - python >= 2.6
 options:
-    AEM_stack_name:
-        description:
-          - The name of the AEM Stack
-        required: true
     SSM_stack_name:
         description:
           - The Stack name of the SSM Document Stack
@@ -108,9 +104,9 @@ class config:
         except Exception as e:
             self.module.fail_json(msg="Error: Can't upload configuration file - " + str(e), exception=traceback.format_exc(e))
 
-    def describe_ssmdocument_stack(self, cf_connection, stack_name, ssm_stack_name):
+    def describe_ssmdocument_stack(self, cf_connection, ssm_stack_name):
         try:
-            stack_outputs = cf_connection.Stack(stack_name + '-' + ssm_stack_name).outputs
+            stack_outputs = cf_connection.Stack(ssm_stack_name).outputs
             if stack_outputs:
                 return stack_outputs
             self.module.fail_json(msg="Error: Can not getting stack output")
@@ -118,7 +114,6 @@ class config:
             self.module.fail_json(msg="Error: Can not establish connection - " + str(e), exception=traceback.format_exc(e))
 
     def create(self, argument_spec, stack_outputs, s3_connection):
-        stack_name = self.module.params.get("AEM_stack_name")
         taskstatustopicarn = self.module.params.get("TaskStatusTopicArn")
         ssmservicerolearn = self.module.params.get("SSMServiceRoleArn")
         s3bucketssmoutput = self.module.params.get("S3BucketSSMOutput")
@@ -197,7 +192,6 @@ class config:
 def main():
     argument_spec = ec2_argument_spec()
     argument_spec.update(dict(
-            AEM_stack_name=dict(required=True, type='str' ),
             SSM_stack_name=dict(required=True, type='str'),
             S3Bucket=dict(required=True, type='str'),
             S3Folder=dict(required=True, type='str'),
@@ -234,13 +228,12 @@ def main():
 
     #tmp_file = '../../stage/templist.json'
     state = module.params.get("state")
-    stack_name = module.params.get("AEM_stack_name")
     ssm_stack_name = module.params.get("SSM_stack_name")
 
     if state == 'present':
         stack_manager_config = config(module)
 
-        stack_outputs = stack_manager_config.describe_ssmdocument_stack(cf_connection, stack_name, ssm_stack_name)
+        stack_outputs = stack_manager_config.describe_ssmdocument_stack(cf_connection, ssm_stack_name)
 
         stack_manager_config.create(argument_spec, stack_outputs, s3_connection)
 

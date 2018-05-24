@@ -2,125 +2,119 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Description: >-
-  Create the SSM Documents needed to orchestrate AEM in an AWS encivironment.
+  Create the SSM Documents needed to orchestrate AEM in an AWS environment.
 
 Parameters:
-  S3BucketAndPrefix:
-    Type: String
-    Default: ''
-    Description: >-
-      The S3 URL (s3://<bucket>/<key_prefix>) for the location of the SSM
-      documents. This should not include a trailing slash.
 
-  DeployArtifactIncludeFile:
+  DeployArtifactIncludeFileParameter:
     Type: String
     Default: AEM-DeployArtifact.yaml
     Description: >-
       The name of the file containing the DeployArtifact SSM command.
 
-  DeployArtifactsIncludeFile:
+  DeployArtifactsIncludeFileParameter:
     Type: String
     Default: AEM-DeployArtifacts.yaml
     Description: >-
       The name of the file containing the DeployArtifacts SSM command.
 
-  ExportPackageIncludeFile:
+  ExportPackageIncludeFileParameter:
     Type: String
     Default: AEM-ExportPackage.yaml
     Description: >-
       The name of the file containing the ExportPackage SSM command.
 
-  ExportPackagesIncludeFile:
+  ExportPackagesIncludeFileParameter:
     Type: String
     Default: AEM-ExportPackages.yaml
     Description: >-
       The name of the file containing the ExportPackages SSM command.
 
-  ImportPackageIncludeFile:
+  ImportPackageIncludeFileParameter:
     Type: String
     Default: AEM-ImportPackage.yaml
     Description: >-
       The name of the file containing the ImportPackage SSM command.
 
-  PromoteAuthorIncludeFile:
+  PromoteAuthorIncludeFileParameter:
     Type: String
     Default: AEM-PromoteAuthor.yaml
     Description: >-
       The name of the file containing the PromoteAuthor SSM command.
 
-  ManageServiceIncludeFile:
+  ManageServiceIncludeFileParameter:
     Type: String
     Default: AEM-ManageService.yaml
     Description: >-
       The name of the file containing the ManageService SSM command.
 
-  OfflineCompactionIncludeFile:
+  OfflineCompactionIncludeFileParameter:
     Type: String
     Default: AEM-OfflineCompaction.yaml
     Description: >-
       The name of the file containing the OfflineCompaction SSM command.
 
-  OfflineSnapshotIncludeFile:
+  OfflineSnapshotIncludeFileParameter:
     Type: String
     Default: AEM-OfflineSnapshot.yaml
     Description: >-
       The name of the file containing the OfflineSnapshot SSM command.
 
-  WaitUntilReadyIncludeFile:
+  WaitUntilReadyIncludeFileParameter:
     Type: String
     Default: AEM-WaitUntilReady.yaml
     Description: >-
       The name of the file containing the WaitUntilReady SSM command.
 
-  EnableCrxdeIncludeFile:
+  EnableCrxdeIncludeFileParameter:
     Type: String
     Default: AEM-EnableCrxde.yaml
     Description: >-
       The name of the file containing the EnableCrxde SSM command.
 
-  DisableCrxdeIncludeFile:
+  DisableCrxdeIncludeFileParameter:
     Type: String
     Default: AEM-DisableCrxde.yaml
     Description: >-
       The name of the file containing the DisableCrxde SSM command.
 
-  ListPackagesIncludeFile:
+  ListPackagesIncludeFileParameter:
     Type: String
     Default: AEM-ListPackages.yaml
     Description: >-
       The name of the file containing the ListPackages SSM command.
 
-  RunAdhocPuppetIncludeFile:
+  RunAdhocPuppetIncludeFileParameter:
     Type: String
     Default: AEM-RunAdhocPuppet.yaml
     Description: >-
       The name of the file containing the RunAdhocPuppet SSM command.
 
-  LiveSnapshotIncludeFile:
+  LiveSnapshotIncludeFileParameter:
     Type: String
     Default: AEM-LiveSnapshot.yaml
     Description: >-
       The name of the file containing the LiveSnapshot SSM command
 
-  FlushDispatcherCacheIncludeFile:
+  FlushDispatcherCacheIncludeFileParameter:
     Type: String
     Default: AEM-FlushDispatcherCache.yaml
     Description: >-
       The name of the file containing the FlushDispatcherCache SSM command
 
-  ScheduleOfflineSnapshotIncludeFile:
+  ScheduleOfflineSnapshotIncludeFileParameter:
     Type: String
     Default: AEM-ScheduleOfflineSnapshot.yaml
     Description: >-
       The name of the file containing the ScheduleOfflineSnapshot SSM command.
 
-  TestReadinessFullsetIncludeFile:
+  TestReadinessFullsetIncludeFileParameter:
     Type: String
     Default: AEM-TestReadinessFullset.yaml
     Description: >-
       The name of the file containing the TestReadinessFullset SSM command.
 
-  TestReadinessConsolidatedIncludeFile:
+  TestReadinessConsolidatedIncludeFileParameter:
     Type: String
     Default: AEM-TestReadinessConsolidated.yaml
     Description: >-
@@ -135,7 +129,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${DeployArtifactIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${DeployArtifactIncludeFileParameter}'
 
   DeployArtifacts:
     Type: AWS::SSM::Document
@@ -145,7 +139,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${DeployArtifactsIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${DeployArtifactsIncludeFileParameter}'
 
   ExportPackage:
     Type: AWS::SSM::Document
@@ -155,7 +149,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${ExportPackageIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${ExportPackageIncludeFileParameter}'
 
   ExportPackages:
     Type: AWS::SSM::Document
@@ -165,7 +159,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${ExportPackagesIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${ExportPackagesIncludeFileParameter}'
 
   ImportPackage:
     Type: AWS::SSM::Document
@@ -175,7 +169,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${ImportPackageIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${ImportPackageIncludeFileParameter}'
 
   PromoteAuthor:
     Type: AWS::SSM::Document
@@ -185,7 +179,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${PromoteAuthorIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${PromoteAuthorIncludeFileParameter}'
 
   ManageService:
     Type: AWS::SSM::Document
@@ -195,7 +189,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${ManageServiceIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${ManageServiceIncludeFileParameter}'
 
   OfflineCompaction:
     Type: AWS::SSM::Document
@@ -205,7 +199,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${OfflineCompactionIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionIncludeFileParameter}'
 
   OfflineSnapshot:
     Type: AWS::SSM::Document
@@ -215,7 +209,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${OfflineSnapshotIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotIncludeFileParameter}'
 
   WaitUntilReady:
     Type: AWS::SSM::Document
@@ -224,7 +218,7 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefix}/${WaitUntilReadyIncludeFile}'
+          Parameters: !Sub '${S3BucketAndPrefixParameter}/${WaitUntilReadyIncludeFileParameter}'
 
   EnableCrxde:
     Type: AWS::SSM::Document
@@ -233,7 +227,7 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefix}/${EnableCrxdeIncludeFile}'
+          Parameters: !Sub '${S3BucketAndPrefixParameter}/${EnableCrxdeIncludeFileParameter}'
 
   DisableCrxde:
     Type: AWS::SSM::Document
@@ -242,7 +236,7 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefix}/${DisableCrxdeIncludeFile}'
+          Parameters: !Sub '${S3BucketAndPrefixParameter}/${DisableCrxdeIncludeFileParameter}'
 
   ListPackages:
     Type: AWS::SSM::Document
@@ -251,7 +245,7 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefix}/${ListPackagesIncludeFile}'
+          Parameters: !Sub '${S3BucketAndPrefixParameter}/${ListPackagesIncludeFileParameter}'
 
   RunAdhocPuppet:
     Type: AWS::SSM::Document
@@ -260,7 +254,7 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefix}/${RunAdhocPuppetIncludeFile}'
+          Parameters: !Sub '${S3BucketAndPrefixParameter}/${RunAdhocPuppetIncludeFileParameter}'
 
   LiveSnapshot:
     Type: AWS::SSM::Document
@@ -269,7 +263,7 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefix}/${LiveSnapshotIncludeFile}'
+          Parameters: !Sub '${S3BucketAndPrefixParameter}/${LiveSnapshotIncludeFileParameter}'
 
   FlushDispatcherCache:
     Type: AWS::SSM::Document
@@ -278,7 +272,7 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefix}/${FlushDispatcherCacheIncludeFile}'
+          Parameters: !Sub '${S3BucketAndPrefixParameter}/${FlushDispatcherCacheIncludeFileParameter}'
 
   ScheduleOfflineSnapshot:
     Type: AWS::SSM::Document
@@ -288,7 +282,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${ScheduleOfflineSnapshotIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${ScheduleOfflineSnapshotIncludeFileParameter}'
 
   TestReadinessFullset:
     Type: AWS::SSM::Document
@@ -298,7 +292,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${TestReadinessFullsetIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${TestReadinessFullsetIncludeFileParameter}'
 
   TestReadinessConsolidated:
     Type: AWS::SSM::Document
@@ -308,7 +302,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefix}/${TestReadinessConsolidatedIncludeFile}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${TestReadinessConsolidatedIncludeFileParameter}'
 
 Outputs:
   DeployArtifact:

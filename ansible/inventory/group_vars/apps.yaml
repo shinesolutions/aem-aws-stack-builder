@@ -8,7 +8,7 @@ main:
   stack_name: overwrite-me
 prerequisites:
   stack_name: overwrite-me
-  
+
 aem:
   enable_crxde: false
   enable_default_passwords: false
@@ -221,7 +221,6 @@ dns_records:
     ttl: 300
 
 stack_manager:
-  ssm_stack_name: ssm
   stack_name: aem-stack-manager
   s3_prefix: stack-manager
   utilities_stack_name: utilities

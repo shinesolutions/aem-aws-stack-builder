@@ -82,7 +82,7 @@ class CreateSSMCFTemplate:
 
         for ssm_command in cf_template['Resources']:
             cf_template_content = self._read_ssm_command_cf_template(ssm_command)
-            del cf_template['Parameters'][ssm_command + "IncludeFile"]
+            del cf_template['Parameters'][ssm_command + "IncludeFileParameter"]
             del cf_template['Resources'][ssm_command]['Properties']['Content']['Fn::Transform']
             cf_template['Resources'][ssm_command]['Properties']['Content'].update(cf_template_content)
 
