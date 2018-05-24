@@ -280,7 +280,7 @@ scheduled_jobs:
   aem_orchestrator:
     stack_manager_pair:
       stack_prefix:
-      stack_name: aem-stack-manager-main-stack
+      stack_name: aem-stack-manager-main-stack-manager
     offline_compaction_snapshot:
       enable: true
       weekday: 1
