@@ -17,7 +17,6 @@ aem:
   enable_content_healthcheck: true
   enable_content_healthcheck_terminate_instance: false
   deployment_delay_in_seconds: 60
-  deployment_post_install_wait_in_seconds: 120
   deployment_check_retries: 120
   deployment_check_delay_in_seconds: 15
   revert_snapshot_type: offline

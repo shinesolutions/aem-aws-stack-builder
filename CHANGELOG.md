@@ -3,6 +3,7 @@
 * Stack Manager main stack name is now configurable via scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name config
 * Fix content health check termination behaviour via AEM Orchestrator 1.0.3 upgrade
 * Increase default deployment delay to 60, check retries to 120, and check delay to 15
+* Remove unused aem.deployment_post_install_wait_in_seconds configuration property
 
 ### 2.1.1
 * Restructure configuration for Stack Manager snapshots purge schedule and max age
