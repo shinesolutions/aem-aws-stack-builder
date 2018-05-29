@@ -1,7 +1,8 @@
 ### 2.2.0
 * Move Stack Manager SSM stack to become a nested/child stack of Stack Manager main stack #149
-* Stack Manager main stack name is now configurable via scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name config 
+* Stack Manager main stack name is now configurable via scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name config
 * Fix content health check termination behaviour via AEM Orchestrator 1.0.3 upgrade
+* Increase default deployment delay to 60, check retries to 120, and check delay to 15
 
 ### 2.1.1
 * Restructure configuration for Stack Manager snapshots purge schedule and max age
