@@ -76,3 +76,19 @@ nat_gateway:
 
 endpoints:
   s3: aem-stack-builder
+
+network_exports:
+  stack_name: aem-network-exports-stack
+  VPCId: vpc-12345678
+  AuthorPublishDispatcherSubnet: subnet-12345678
+  PublishDispatcherELBSubnetList: subnet-12345678,subnet-87654321
+  PublishDispatcherSubnetList: subnet-12345678,subnet-87654321
+  PublishSubnetList: subnet-12345678,subnet-87654321
+  AuthorPrimarySubnet: subnet-12345678
+  AuthorStandbySubnet: subnet-87654321
+  AuthorELBSubnetList: subnet-12345678,subnet-87654321
+  AuthorDispatcherELBSubnetList: subnet-12345678,subnet-87654321
+  AuthorDispatcherSubnetList: subnet-12345678,subnet-87654321
+  ToolSubnetList: subnet-12345678,subnet-87654321
+  PublicRouteTable: rtb-77cd4413
+  PrivateRouteTable: rtb-75cd4411

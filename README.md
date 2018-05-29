@@ -105,7 +105,7 @@ Ensure [configuration file for AEM Stack Manager]() has been set up.
 Create AEM Stack Manager stacks:
 
     make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
-    
+
 More
 ----
 

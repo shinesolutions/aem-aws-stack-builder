@@ -1,5 +1,5 @@
 permission_type: b
-network_stack_prefix: sandpit-2
+network_stack_prefix: aemopencloud
 
 main:
   stack_name: aem-consolidated-main-stack
