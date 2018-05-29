@@ -235,6 +235,85 @@ stack_manager:
       schedule: '5 0/4 * * ? *'
       max_age_in_hours: 4
 
+logrotation:
+  config:
+    /etc/logrotate.conf:
+      rotate: 4
+  default_config:
+      rotate: 4
+      rotate_every: week
+      compress: true
+      create: true
+      dateext: true
+      ifempty: false
+      mail: false
+      olddir: false
+      size: 10M
+  rules:
+    amazon_ssm:
+      path: /var/log/amazon/ssm/*.log
+      olddir: /var/log/amazon/ssm/
+      postrotate: '/bin/systemctl restart amazon-ssm-agent > /dev/null 2>/dev/null||true'
+    scheduled_jobs:
+      path: "%{hiera('common::log_dir')}/cron*.log"
+      olddir: "%{hiera('common::log_dir')}"
+  author_primary:
+    config:
+    rules:
+  author_standby:
+    config:
+    rules:
+  publish:
+    config:
+    rules:
+  author_dispatcher:
+    config:
+    rules:
+      httpd:
+        path: /var/log/httpd/*.log
+        rotate: 5
+        size: 200M
+        dateext: true
+        rotate_every: day
+        sharedscripts: true
+        delaycompress: true
+        missingok: true
+        ifempty: false
+        olddir: /var/log/httpd
+        postrotate: /bin/systemctl reload httpd.service > /dev/null 2>/dev/null||true
+  publish_dispatcher:
+    config:
+    rules:
+      httpd:
+        path: /var/log/httpd/*.log
+        rotate: 5
+        size: 200M
+        dateext: true
+        rotate_every: day
+        sharedscripts: true
+        delaycompress: true
+        missingok: true
+        ifempty: false
+        olddir: /var/log/httpd
+        postrotate: /bin/systemctl reload httpd.service > /dev/null 2>/dev/null||true
+  orchestrator:
+    config:
+    rules:
+  simianarmy:
+    config:
+    rules:
+      simianarmy:
+        path: "/var/log/tomcat/*.log"
+        rotate: 5
+        size: 200M
+        dateext: true
+        rotate_every: day
+        sharedscripts: true
+        delaycompress: true
+        missingok: true
+        ifempty: false
+        olddir: "/var/log/tomcat"
+
 scheduled_jobs:
   author_primary:
     offline_compaction:
