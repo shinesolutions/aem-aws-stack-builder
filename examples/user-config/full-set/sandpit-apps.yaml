@@ -247,7 +247,7 @@ scheduled_jobs:
 
   aem_orchestrator:
     stack_manager_pair:
-      stack_prefix: bloch1
+      stack_prefix:
     offline_compaction_snapshot:
       enable: true
       weekday: 1
