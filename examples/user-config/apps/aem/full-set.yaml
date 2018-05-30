@@ -7,17 +7,7 @@ main:
 prerequisites:
   stack_name: aem-prerequisites-stack
 
-proxy:
-  enabled: false
-  protocol:
-  host:
-  port:
-
 aem:
-  # AEM 6.2
-  version: '6.2'
-  # AEM 6.3
-  # version: '6.3'
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: false
@@ -93,10 +83,6 @@ library:
   aem_aws_stack_provisioner_version: 2.4.18
   aem_orchestrator_version: 1.0.3
   aem_password_reset_version: 1.0.1
-  # AEM 6.2
-  oak_run_version: 1.4.15
-  # AEM 6.3
-  # oak_run_version: 1.6.6
   simian_army_version: 2.5.3
 
 certificate_manager:

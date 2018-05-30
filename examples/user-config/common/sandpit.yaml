@@ -6,3 +6,9 @@ aws:
       Value: Shine Solutions AEM Team
     - Key: Cost Centre
       Value: 12345
+
+proxy:
+  enabled: false
+  protocol:
+  host:
+  port:

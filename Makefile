@@ -169,22 +169,23 @@ define config_examples
   rm -rf stage/user-config/$(1)-$(2)-$(3)/
 	mkdir -p stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/common/*.yaml stage/user-config/$(1)-$(2)-$(3)/
-	cp examples/user-config/ami-ids/$(1)-$(2)-stack-builder-ami-ids.yaml stage/user-config/$(1)-$(2)-$(3)/
+	cp examples/user-config/apps/aem/$(1)-$(2).yaml stage/user-config/$(1)-$(2)-$(3)/
+	cp examples/user-config/apps/aem/$(3).yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/$(3)/*.yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/descriptors/$(3)/*.json stage/
 endef
 
 config-examples-aem62-rhel7-full-set: stage
-	$(call config_examples,aem62_sp1_cfp13,rhel7,full-set)
+	$(call config_examples,aem62,rhel7,full-set)
 
 config-examples-aem62-rhel7-consolidated: stage
-	$(call config_examples,aem62_sp1_cfp13,rhel7,consolidated)
+	$(call config_examples,aem62,rhel7,consolidated)
 
 config-examples-aem63-rhel7-full-set: stage
-	$(call config_examples,aem63_sp1_cfp2,rhel7,full-set)
+	$(call config_examples,aem63,rhel7,full-set)
 
 config-examples-aem63-rhel7-consolidated: stage
-	$(call config_examples,aem63_sp1_cfp2,rhel7,consolidated)
+	$(call config_examples,aem63,rhel7,consolidated)
 
 config-examples-aem64-rhel7-full-set: stage
 	$(call config_examples,aem64,rhel7,full-set)
