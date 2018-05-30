@@ -301,17 +301,6 @@ logrotation:
   simianarmy:
     config:
     rules:
-      simianarmy:
-        path: "/var/log/tomcat/*.log"
-        rotate: 5
-        size: 200M
-        dateext: true
-        rotate_every: day
-        sharedscripts: true
-        delaycompress: true
-        missingok: true
-        ifempty: false
-        olddir: "/var/log/tomcat"
 
 scheduled_jobs:
   author_primary:
