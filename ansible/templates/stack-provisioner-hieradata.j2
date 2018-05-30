@@ -98,6 +98,28 @@ aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_
 aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 
+# Logrotation configuration. For configuration parameters see https://github.com/voxpupuli/puppet-logrotate
+common::logrotation::config:
+{{ logrotation.config | to_nice_yaml | indent(width=2, first=True) }}
+common::logrotation::config_default:
+{{ logrotation.default_config | to_nice_yaml | indent(width=2, first=True) }}
+common::logrotation::rules:
+{{ logrotation.rules | to_nice_yaml | indent(width=2, first=True) }}
+author_primary::logrotation:
+{{ logrotation.author_primary | to_nice_yaml | indent(width=2, first=True) }}
+author_standby::logrotation:
+{{ logrotation.author_standby | to_nice_yaml | indent(width=2, first=True) }}
+publish::logrotation:
+{{ logrotation.publish | to_nice_yaml | indent(width=2, first=True) }}
+author_dispatcher::logrotation:
+{{ logrotation.author_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
+publish_dispatcher::logrotation:
+{{ logrotation.publish_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
+aem_orchestrator::logrotation:
+{{ logrotation.orchestrator | to_nice_yaml | indent(width=2, first=True) }}
+simianarmy::logrotation:
+{{ logrotation.simianarmy | to_nice_yaml | indent(width=2, first=True) }}
+
 aem_resources::deploy_packages::sleep_seconds: '{{ aem.deployment_delay_in_seconds }}'
 
 aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'

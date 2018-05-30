@@ -18,6 +18,8 @@ aws_builder_dir=/opt/shinesolutions/aem-aws-stack-builder
 aws_provisioner_dir=/opt/shinesolutions/aem-aws-stack-provisioner
 custom_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
 tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
+log_dir=/var/log/shinesolutions
+log_file=puppet-stack-init.log
 
 PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH
 
@@ -116,7 +118,7 @@ set +o errexit
 echo "${label} Applying pre-common Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
-  --logdest /var/log/puppet-stack-init.log \
+  --logdest "${log_dir}/${log_file}" \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   manifests/pre-common.pp
@@ -136,7 +138,7 @@ set +o errexit
 echo "${label} Applying Puppet manifest for ${component} component..."
 puppet apply \
   --detailed-exitcodes \
-  --logdest /var/log/puppet-stack-init.log \
+  --logdest "${log_dir}/${log_file}" \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   "manifests/${component}.pp"
@@ -150,7 +152,7 @@ set +o errexit
 echo "${label} Applying post-common scheduled jobs action Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
-  --logdest /var/log/puppet-stack-init.log \
+  --logdest "${log_dir}/${log_file}" \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   manifests/action-scheduled-jobs.pp
