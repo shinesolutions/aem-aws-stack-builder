@@ -6,6 +6,7 @@
 * Remove unused aem.deployment_post_install_wait_in_seconds configuration property
 * Add feature to configure Logrotation per component or/and per stack
 * Improve network-exports to support subnets list instead of predefined subnet A and subnet B #79
+* Offline compaction scheduled job on Author Primary and Publish is disabled by default
 
 ### 2.1.1
 * Restructure configuration for Stack Manager snapshots purge schedule and max age

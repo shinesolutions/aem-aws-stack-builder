@@ -305,7 +305,7 @@ logrotation:
 scheduled_jobs:
   author_primary:
     offline_compaction:
-      enable: true
+      enable: false
       weekday: 2
       hour: 3
       minute: 0
@@ -329,7 +329,7 @@ scheduled_jobs:
 
   publish:
     offline_compaction:
-      enable: true
+      enable: false
       weekday: 2
       hour: 3
       minute: 0
