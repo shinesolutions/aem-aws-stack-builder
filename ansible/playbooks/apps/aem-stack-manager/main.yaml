@@ -110,34 +110,6 @@
       tags:
       - delete
 
-
-    - name: Check if Stack Manager SSM Stack Exists
-      command: >
-        aws cloudformation describe-stacks --stack-name "{{stack_prefix }}-{{ main.ssm_stack_name }}"
-             --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
-      register: stack_query_ssm
-      tags:
-        - delete
-
-    - name: Report Stack Manager SSM Stack Problem if Any
-      debug:
-        msg: Stack "{{stack_prefix }}-{{ main.ssm_stack_name }}" does not exist or some other errors occured
-      when:
-        "stack_query_ssm.rc != 0"
-      tags:
-        - delete
-
-    - name: Delete AEM Stack Manager SSM Stack
-      cloudformation:
-        stack_name: "{{stack_prefix }}-{{ main.ssm_stack_name }}"
-        region: "{{ aws.region }}"
-        state: absent
-      when:
-        "stack_query_ssm.rc == 0"
-      tags:
-        - delete
-
     - name: Delete All Stack Data
       command: >
               aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"/"{{ stack_manager.s3_prefix }}"
