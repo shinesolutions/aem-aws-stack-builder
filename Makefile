@@ -171,7 +171,6 @@ define config_examples
 	cp examples/user-config/common/*.yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/apps/aem/$(1)-$(2).yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/user-config/apps/aem/$(3).yaml stage/user-config/$(1)-$(2)-$(3)/
-	cp examples/user-config/$(3)/*.yaml stage/user-config/$(1)-$(2)-$(3)/
 	cp examples/descriptors/$(3)/*.json stage/
 endef
 
@@ -192,6 +191,10 @@ config-examples-aem64-rhel7-full-set: stage
 
 config-examples-aem64-rhel7-consolidated: stage
 	$(call config_examples,aem64,rhel7,consolidated)
+
+config-examples-aem-stack-manager:
+	mkdir -p stage/user-config/aem-stack-manager/
+	cp examples/user-config/apps/aem-stack-manager.yaml stage/user-config/aem-stack-manager/
 
 test-integration-local-examples:
 	./test/integration-local/test-examples.sh $(test_id)
