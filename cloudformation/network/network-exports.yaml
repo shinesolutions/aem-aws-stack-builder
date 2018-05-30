@@ -1,104 +1,62 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Export Network Resources to Make It Available for Other Stacks
 Outputs:
-  AuthorDispatcherELBSubnetA:
-    Description: The Author Dispatcher ELB Subnet in Availability Zone A
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetA
-    Value:
-      Ref: AuthorDispatcherELBSubnetA
-  AuthorDispatcherELBSubnetB:
-    Description: The Author Dispatcher ELB Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetB
-    Value:
-      Ref: AuthorDispatcherELBSubnetB
   AuthorDispatcherELBSubnetList:
-    Description: The Author Dispatcher ELB Subnet List
+    Description: Comma-separated Author Dispatcher ELB Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetList
     Value:
-      Fn::Sub: ${AuthorDispatcherELBSubnetA},${AuthorDispatcherELBSubnetB}
-  AuthorDispatcherSubnetA:
-    Description: The Author Dispatcher Subnet in Availability Zone A
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetA
-    Value:
-      Ref: AuthorDispatcherSubnetA
-  AuthorDispatcherSubnetB:
-    Description: The Author Dispatcher Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetB
-    Value:
-      Ref: AuthorDispatcherSubnetB
+      Ref: AuthorDispatcherELBSubnetList
   AuthorDispatcherSubnetList:
-    Description: The Author Dispatcher Subnet List
+    Description: Comma-separated Author Dispatcher Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetList
     Value:
-      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
-  AuthorPublishDispatcherSubnetA:
-    Description: The Author Publish Dispatcher Subnet in Availability Zone A
+      Ref: AuthorDispatcherSubnetList
+  AuthorPublishDispatcherSubnet:
+    Description: The Author Publish Dispatcher Subnet
     Export:
       Name:
-        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnetA
+        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnet
     Value:
-      Ref: AuthorPublishDispatcherSubnetA
-  AuthorPublishDispatcherSubnetB:
-    Description: The Author Publish Dispatcher Subnet in Availability Zone B
+      Ref: AuthorPublishDispatcherSubnet
+  AuthorPrimarySubnet:
+    Description: The Author Primary Subnet
     Export:
       Name:
-        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnetB
+        Fn::Sub: ${StackPrefix}-AuthorPrimarySubnet
     Value:
-      Ref: AuthorPublishDispatcherSubnetB
-  AuthorPublishDispatcherSubnetList:
-    Description: The Author Publish Dispatcher Subnet List
+      Ref: AuthorPrimarySubnet
+  AuthorStandbySubnet:
+    Description: The Author Standby Subnet
     Export:
       Name:
-        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnetList
+        Fn::Sub: ${StackPrefix}-AuthorStandbySubnet
     Value:
-      Fn::Sub: ${AuthorPublishDispatcherSubnetA},${AuthorPublishDispatcherSubnetB}
-  AuthorSubnetA:
-    Description: The Author Subnet in Availability Zone A
+      Ref: AuthorStandbySubnet
+  AuthorELBSubnetList:
+    Description: Comma-separated Author ELB Subnet List
     Export:
       Name:
-        Fn::Sub: ${StackPrefix}-AuthorSubnetA
+        Fn::Sub: ${StackPrefix}-AuthorELBSubnetList
     Value:
-      Ref: AuthorSubnetA
-  AuthorSubnetB:
-    Description: The Author Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorSubnetB
-    Value:
-      Ref: AuthorSubnetB
-  AuthorSubnetList:
-    Description: The Author Subnet List
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorSubnetList
-    Value:
-      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB}
+      Ref: AuthorELBSubnetList
   ChaosMonkeySubnetList:
-    Description: The ChaosMonkey Subnet List
+    Description: Comma-separated ChaosMonkey Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-ChaosMonkeySubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
+      Ref: ToolSubnetList
   OrchestratorSubnetList:
-    Description: The Orchestrator Subnet List
+    Description: Comma-separated Orchestrator Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-OrchestratorSubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
+      Ref: ToolSubnetList
   PrivateRouteTable:
     Description: The Private Route Table for AEM Stack VPC
     Export:
@@ -113,90 +71,34 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublicRouteTable
     Value:
       Ref: PublicRouteTable
-  PublishDispatcherELBSubnetA:
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetA
-    Value:
-      Ref: PublishDispatcherELBSubnetA
-  PublishDispatcherELBSubnetB:
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetB
-    Value:
-      Ref: PublishDispatcherELBSubnetB
   PublishDispatcherELBSubnetList:
-    Description: The Publish Dispatcher ELB Subnet List
+    Description: Comma-separated Publish Dispatcher ELB Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetList
     Value:
-      Fn::Sub: ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
-  PublishDispatcherSubnetA:
-    Description: The Publish Dispatcher Subnet in Availability Zone A
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetA
-    Value:
-      Ref: PublishDispatcherSubnetA
-  PublishDispatcherSubnetB:
-    Description: The Publish Dispatcher Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetB
-    Value:
-      Ref: PublishDispatcherSubnetB
+      Ref: PublishDispatcherELBSubnetList
   PublishDispatcherSubnetList:
-    Description: The Publish Dispatcher Subnet List
+    Description: Comma-separated Publish Dispatcher Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetList
     Value:
-      Fn::Sub: ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
-  PublishSubnetA:
-    Description: The Publish Subnet in Availability Zone A
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-PublishSubnetA
-    Value:
-      Ref: PublishSubnetA
-  PublishSubnetB:
-    Description: The Publish Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-PublishSubnetB
-    Value:
-      Ref: PublishSubnetB
+      Ref: PublishDispatcherSubnetList
   PublishSubnetList:
-    Description: The Publish Subnet List
+    Description: Comma-separated Publish Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PublishSubnetList
     Value:
-      Fn::Sub: ${PublishSubnetA},${PublishSubnetB}
-  ToolSubnetA:
-    Description: The Tool Subnet in Availability Zone A
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-ToolSubnetA
-    Value:
-      Ref: ToolSubnetA
-  ToolSubnetB:
-    Description: The Tool Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-ToolSubnetB
-    Value:
-      Ref: ToolSubnetB
+      Ref: PublishSubnetList
   ToolSubnetList:
-    Description: The Tool Subnet List
+    Description: Comma-separated Tool Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-ToolSubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
+      Ref: ToolSubnetList
   VPCId:
     Description: AEM VPC Id
     Export:
@@ -205,30 +107,24 @@ Outputs:
     Value:
       Ref: VPCId
 Parameters:
-  AuthorDispatcherELBSubnetA:
-    Description: The Author Dispatcher ELB Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  AuthorDispatcherELBSubnetB:
-    Description: The Author Dispatcher ELB Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
-  AuthorDispatcherSubnetA:
-    Description: The Author Dispatcher Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  AuthorDispatcherSubnetB:
-    Description: The Author Dispatcher Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
-  AuthorPublishDispatcherSubnetA:
-    Description: The Author Publish Dispatcher Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  AuthorPublishDispatcherSubnetB:
-    Description: The Author Publish Dispatcher Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
-  AuthorSubnetA:
-    Description: The Author Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  AuthorSubnetB:
-    Description: The Author Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
+  AuthorDispatcherELBSubnetList:
+    Description: Comma-separated Author Dispatcher ELB Subnet List
+    Type: String
+  AuthorDispatcherSubnetList:
+    Description: Comma-separated Author Dispatcher Subnet List
+    Type: String
+  AuthorPublishDispatcherSubnet:
+    Description: The Author Publish Dispatcher Subnet
+    Type: String
+  AuthorPrimarySubnet:
+    Description: The Author Primary Subnet
+    Type: String
+  AuthorStandbySubnet:
+    Description: The Author Standby Subnet
+    Type: String
+  AuthorELBSubnetList:
+    Description: Comma-separated Author ELB Subnet List
+    Type: String
   PrivateRouteTable:
     Default: ''
     Description: The Private Route Table for AEM Stack VPC
@@ -237,36 +133,23 @@ Parameters:
     Default: ''
     Description: The Public Route Table for AEM Stack VPC
     Type: String
-  PublishDispatcherELBSubnetA:
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  PublishDispatcherELBSubnetB:
-    Description: The Publish Dispatcher ELB Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
-  PublishDispatcherSubnetA:
-    Description: The Publish Dispatcher Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  PublishDispatcherSubnetB:
-    Description: The Publish Dispatcher Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
-  PublishSubnetA:
-    Description: The Publish Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  PublishSubnetB:
-    Description: The Publish Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
+  PublishDispatcherELBSubnetList:
+    Description: Comma-separated Publish Dispatcher ELB Subnet List
+    Type: String
+  PublishDispatcherSubnetList:
+    Description: Comma-separated Publish Dispatcher Subnet List
+    Type: String
+  PublishSubnetList:
+    Description: Comma-separated Publish Subnet List
+    Type: String
   StackPrefix:
     Default: ''
     Description: Used to Namespace the Exported Resources
     Type: String
-  ToolSubnetA:
+  ToolSubnetList:
     Default: ''
-    Description: The Tool Subnet in Availability Zone A
-    Type: AWS::EC2::Subnet::Id
-  ToolSubnetB:
-    Default: ''
-    Description: The Tool Subnet in Availability Zone B
-    Type: AWS::EC2::Subnet::Id
+    Description: Comma-separated Tool Subnet List
+    Type: String
   VPCId:
     Description: AEM VPC Id
     Type: AWS::EC2::VPC::Id

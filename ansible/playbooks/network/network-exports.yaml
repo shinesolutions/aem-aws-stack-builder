@@ -16,27 +16,20 @@
         template_parameters:
           StackPrefix: "{{ stack_prefix }}"
           VPCId: "{{ network_exports.VPCId }}"
-          AuthorPublishDispatcherSubnetA: "{{ network_exports.AuthorPublishDispatcherSubnetA }}"
-          AuthorPublishDispatcherSubnetB: "{{ network_exports.AuthorPublishDispatcherSubnetB }}"
-          PublishDispatcherELBSubnetA: "{{ network_exports.PublishDispatcherELBSubnetA }}"
-          PublishDispatcherELBSubnetB: "{{ network_exports.PublishDispatcherELBSubnetB }}"
-          PublishDispatcherSubnetA: "{{ network_exports.PublishDispatcherSubnetA }}"
-          PublishDispatcherSubnetB: "{{ network_exports.PublishDispatcherSubnetB }}"
-          PublishSubnetA: "{{ network_exports.PublishSubnetA }}"
-          PublishSubnetB: "{{ network_exports.PublishSubnetB }}"
-          AuthorSubnetA: "{{ network_exports.AuthorSubnetA }}"
-          AuthorSubnetB: "{{ network_exports.AuthorSubnetB }}"
-          AuthorDispatcherELBSubnetA: "{{ network_exports.AuthorDispatcherELBSubnetA }}"
-          AuthorDispatcherELBSubnetB: "{{ network_exports.AuthorDispatcherELBSubnetB }}"
-          AuthorDispatcherSubnetA: "{{ network_exports.AuthorDispatcherSubnetA }}"
-          AuthorDispatcherSubnetB: "{{ network_exports.AuthorDispatcherSubnetB }}"
-          ToolSubnetA: "{{ network_exports.ToolSubnetA }}"
-          ToolSubnetB: "{{ network_exports.ToolSubnetB }}"
+          AuthorPublishDispatcherSubnet: "{{ network_exports.AuthorPublishDispatcherSubnet }}"
+          PublishDispatcherELBSubnetList: "{{ network_exports.PublishDispatcherELBSubnetList }}"
+          PublishDispatcherSubnetList: "{{ network_exports.PublishDispatcherSubnetList }}"
+          PublishSubnetList: "{{ network_exports.PublishSubnetList }}"
+          AuthorPrimarySubnet: "{{ network_exports.AuthorPrimarySubnet }}"
+          AuthorStandbySubnet: "{{ network_exports.AuthorStandbySubnet }}"
+          AuthorELBSubnetList: "{{ network_exports.AuthorELBSubnetList }}"
+          AuthorDispatcherELBSubnetList: "{{ network_exports.AuthorDispatcherELBSubnetList }}"
+          AuthorDispatcherSubnetList: "{{ network_exports.AuthorDispatcherSubnetList }}"
+          ToolSubnetList: "{{ network_exports.ToolSubnetList }}"
           PublicRouteTable: "{{ network_exports.PublicRouteTable }}"
           PrivateRouteTable: "{{ network_exports.PrivateRouteTable }}"
       tags:
         - create
-
 
     - name: Check if a Stack Exists
       command: >

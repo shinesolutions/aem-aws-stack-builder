@@ -129,7 +129,7 @@ Resources:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
         SubnetId:
           Fn::ImportValue:
-            Fn::Sub: ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnetA
+            Fn::Sub: ${NetworkStackPrefixParameter}-AuthorPublishDispatcherSubnet
       Tags:
       - Key: StackPrefix
         Value:
