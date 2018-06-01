@@ -18,8 +18,8 @@ cd "${workspace_dir}/puppet-aem-resources" && make clean deps lint
 cd "${workspace_dir}/puppet-aem-curator" && make clean deps lint
 cd "${workspace_dir}/puppet-aem-orchestrator" && make clean deps lint
 cd "${workspace_dir}/aem-aws-stack-provisioner" && make clean deps lint
-cd "${workspace_dir}/aem-aws-stack-builder" && make clean deps lint
 cd "${workspace_dir}/aem-stack-manager-messenger" && make clean deps lint
+cd "${workspace_dir}/aem-aws-stack-builder" && make clean deps lint
 
 # Build AEM AWS Stack Provisioner and upload it to S3
 cd "${workspace_dir}/aem-aws-stack-provisioner"
