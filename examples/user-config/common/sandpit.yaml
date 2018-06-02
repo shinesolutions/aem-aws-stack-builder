@@ -12,3 +12,9 @@ proxy:
   protocol:
   host:
   port:
+
+cron:
+  env_path: /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin
+  http_proxy:
+  https_proxy:
+  no_proxy:
