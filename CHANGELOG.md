@@ -8,6 +8,7 @@
 * Improve network-exports to support subnets list instead of predefined subnet A and subnet B #79
 * Offline compaction scheduled job on Author Primary and Publish is disabled by default
 * Add cron.no_proxy configuration support
+* Revert snapshot is disabled by default
 
 ### 2.1.1
 * Restructure configuration for Stack Manager snapshots purge schedule and max age
