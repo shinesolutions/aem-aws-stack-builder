@@ -422,6 +422,15 @@ Resources:
             Effect: Allow
             Resource: '*'
           - Action:
+            - autoscaling:CreateLaunchConfiguration
+            - autoscaling:DeleteLaunchConfiguration
+            - autoscaling:DescribeAutoScalingGroups
+            - autoscaling:DescribeLaunchConfigurations
+            - autoscaling:UpdateAutoScalingGroup
+            - iam:PassRole
+            Effect: Allow
+            Resource: '*'
+          - Action:
             - logs:*
             Effect: Allow
             Resource:

@@ -1,24 +1,13 @@
 permission_type: b
-network_stack_prefix: sandpit-2
+network_stack_prefix: aemopencloud
 
 main:
   stack_name: aem-full-set-main-stack
-  ssm_stack_name: aem-stack-manager-ssm
 
 prerequisites:
   stack_name: aem-prerequisites-stack
 
-proxy:
-  enabled: false
-  protocol:
-  host:
-  port:
-
 aem:
-  # AEM 6.2
-  version: '6.2'
-  # AEM 6.3
-  # version: '6.3'
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: false
@@ -26,9 +15,9 @@ aem:
   enable_content_healthcheck: true
   enable_content_healthcheck_terminate_instance: false
   deployment_delay_in_seconds: 10
-  deployment_post_install_wait_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
+  revert_snapshot_type: offline
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jvm_opts: "-Dkey=value"
@@ -91,10 +80,9 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 2.4.16
-  aem_orchestrator_version: 1.0.2
+  aem_aws_stack_provisioner_version: 2.5.1
+  aem_orchestrator_version: 1.0.3
   aem_password_reset_version: 1.0.1
-  oak_run_version: 1.4.15
   simian_army_version: 2.5.3
 
 certificate_manager:
@@ -201,16 +189,6 @@ messaging:
   alarm_notification:
     contact_email: user@example.com
 
-stack_manager:
-  stack_name: aem-stack-manager
-  s3_prefix: stack-manager
-  LiveSnapshotsPurgeSchedule: 'cron(10 20 1/3 * ? *)'
-  OfflineSnapshotsPurgeSchedule: 'cron(15 19 ? * SUN *)'
-  OrchestrationSnapshotsPurgeSchedule: 'cron(5 0/4 * * ? *)'
-  LiveSnapshotsPurgeInput:  '"SnapshotType": "live", "Age": "1d"'
-  OfflineSnapshotsPurgeInput:  '"SnapshotType": "offline", "Age": "1w"'
-  OrchestrationSnapshotsPurgeInput: '"SnapshotType": "orchestration", "Age": "4h"'
-
 scheduled_jobs:
   author_primary:
     offline_compaction:
@@ -254,6 +232,8 @@ scheduled_jobs:
       minute: 0
 
   aem_orchestrator:
+    stack_manager_pair:
+      stack_prefix:
     offline_compaction_snapshot:
       enable: true
       weekday: 1

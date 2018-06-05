@@ -1,5 +1,5 @@
 permission_type: b
-network_stack_prefix: sandpit-2
+network_stack_prefix: aemopencloud
 
 main:
   stack_name: aem-consolidated-main-stack
@@ -7,14 +7,7 @@ main:
 prerequisites:
   stack_name: aem-consolidated-prerequisites-stack
 
-proxy:
-  enabled: false
-  protocol:
-  host:
-  port:
-
 aem:
-  version: '6.2'
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: true
@@ -47,10 +40,9 @@ s3:
   data_bucket_name: aem-stack-builder
 
 library:
-  aem_aws_stack_provisioner_version: 2.4.16
+  aem_aws_stack_provisioner_version: 2.5.1
   aem_orchestrator_version:
   aem_password_reset_version: 1.0.1
-  oak_run_version: 1.4.15
 
 snapshots:
   author:

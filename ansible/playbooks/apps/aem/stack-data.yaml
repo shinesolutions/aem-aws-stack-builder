@@ -62,8 +62,9 @@
       stack_facter_facts:
         stack_prefix: "{{ stack_prefix }}"
         cron_env_path: "{{ cron.env_path }}"
+        cron_http_proxy: "{{ cron.http_proxy }}"
         cron_https_proxy: "{{ cron.https_proxy }}"
-        stack_manager_sns_topic_arn: "{{ stack_manager_sns_topic_arn }}"
+        cron_no_proxy: "{{ cron.no_proxy }}"
         publish_dispatcher_allowed_client: "{{ publish_dispatcher.allowed_client }}"
       register: stack_facter_facts
       tags:

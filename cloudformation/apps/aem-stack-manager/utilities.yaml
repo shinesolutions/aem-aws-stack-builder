@@ -18,31 +18,25 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket Name that Stores Files Used by the Function
     Type: String
-  LiveSnapshotsPurgeInput:
-    Default: '"SnapshotType": "live", "Age": "1d"'
+  LiveSnapshotsPurgeMaxAge:
     Description: Parameters for Purging Live Snapshot in JSON Formatted String
     Type: String
   LiveSnapshotsPurgeSchedule:
-    Default: cron(10 20 1/3 * ? *)
     Description: CloudWatch Event Rule Schedule to Purge Old Live Snapshots
     Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String
-  OfflineSnapshotsPurgeInput:
-    Default: '"SnapshotType": "offline", "Age": "1w"'
+  OfflineSnapshotsPurgeMaxAge:
     Description: Parameters for Purging Offline Snapshot in JSON Formatted String
     Type: String
   OfflineSnapshotsPurgeSchedule:
-    Default: cron(15 19 ? * SUN *)
     Description: CloudWatch Event Rule Schedule to Purge Old Offline Snapshots
     Type: String
-  OrchestrationSnapshotsPurgeInput:
-    Default: '"SnapshotType": "orchestration", "Age": "4h"'
+  OrchestrationSnapshotsPurgeMaxAge:
     Description: Parameters for Purging Orchestration Snapshot in JSON Formatted String
     Type: String
   OrchestrationSnapshotsPurgeSchedule:
-    Default: cron(5 0/4 * * ? *)
     Description: CloudWatch Event Rule Schedule to Purge Old Orchestration Snapshots
     Type: String
   S3DataStackManagerPrefix:
@@ -87,14 +81,14 @@ Resources:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-LiveSnapshotsPurge
       ScheduleExpression:
-        Ref: LiveSnapshotsPurgeSchedule
+        Fn::Sub: 'cron(${LiveSnapshotsPurgeSchedule})'
       State: ENABLED
       Targets:
       - Arn:
           Ref: LambdaProdAlias
         Id: LiveSnapshotsPurgeRule
         Input:
-          Fn::Sub: '{${LiveSnapshotsPurgeInput}}'
+          Fn::Sub: '{"SnapshotType": "live", "Age": "${LiveSnapshotsPurgeMaxAge}h"}'
     Type: AWS::Events::Rule
   OfflineSnapshotLambdaPermission:
     Properties:
@@ -111,14 +105,14 @@ Resources:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-OfflineSnapshotsPurge
       ScheduleExpression:
-        Ref: OfflineSnapshotsPurgeSchedule
+        Fn::Sub: 'cron(${OfflineSnapshotsPurgeSchedule})'
       State: ENABLED
       Targets:
       - Arn:
           Ref: LambdaProdAlias
         Id: OfflineSnapshotsPurgeRule
         Input:
-          Fn::Sub: '{${OfflineSnapshotsPurgeInput}}'
+          Fn::Sub: '{"SnapshotType": "offline", "Age": "${OfflineSnapshotsPurgeMaxAge}h"}'
     Type: AWS::Events::Rule
   OrchestrationSnapshotLambdaPermission:
     Properties:
@@ -135,14 +129,14 @@ Resources:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-OrchestrationSnapshotsPurge
       ScheduleExpression:
-        Ref: OrchestrationSnapshotsPurgeSchedule
+        Fn::Sub: 'cron(${OrchestrationSnapshotsPurgeSchedule})'
       State: ENABLED
       Targets:
       - Arn:
           Ref: LambdaProdAlias
         Id: OrchestrationSnapshotsPurgeRule
         Input:
-          Fn::Sub: '{${OrchestrationSnapshotsPurgeInput}}'
+          Fn::Sub: '{"SnapshotType": "orchestration", "Age": "${OrchestrationSnapshotsPurgeMaxAge}h"}'
     Type: AWS::Events::Rule
   SnapshotsPurgeLambdaFunction:
     Properties:

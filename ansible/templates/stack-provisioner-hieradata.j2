@@ -43,6 +43,7 @@ aem_orchestrator::scheduled_jobs::hour::offline_snapshot: "{{ scheduled_jobs.aem
 aem_orchestrator::scheduled_jobs::minute::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.minute }}"
 
 publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
 
 author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 
@@ -50,6 +51,7 @@ publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish_dispatcher::enable_content_healthcheck: {{ aem.enable_content_healthcheck }}
 
 orchestrator::aem_orchestrator_version: '{{ library.aem_orchestrator_version }}'
+orchestrator::stack_manager_stack_name: '{{ scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_prefix }}-{{ scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name }}'
 
 chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 
@@ -91,6 +93,32 @@ aem_curator::config_collectd::proxy_port: '{{ proxy.port }}'
 aem_curator::action_deploy_artifacts::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifacts::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifacts::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
+
+aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_retries }}
+aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
+aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
+
+# Logrotation configuration. For configuration parameters see https://github.com/voxpupuli/puppet-logrotate
+common::logrotation::config:
+{{ logrotation.config | to_nice_yaml | indent(width=2, first=True) }}
+common::logrotation::config_default:
+{{ logrotation.default_config | to_nice_yaml | indent(width=2, first=True) }}
+common::logrotation::rules:
+{{ logrotation.rules | to_nice_yaml | indent(width=2, first=True) }}
+author_primary::logrotation:
+{{ logrotation.author_primary | to_nice_yaml | indent(width=2, first=True) }}
+author_standby::logrotation:
+{{ logrotation.author_standby | to_nice_yaml | indent(width=2, first=True) }}
+publish::logrotation:
+{{ logrotation.publish | to_nice_yaml | indent(width=2, first=True) }}
+author_dispatcher::logrotation:
+{{ logrotation.author_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
+publish_dispatcher::logrotation:
+{{ logrotation.publish_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
+aem_orchestrator::logrotation:
+{{ logrotation.orchestrator | to_nice_yaml | indent(width=2, first=True) }}
+simianarmy::logrotation:
+{{ logrotation.simianarmy | to_nice_yaml | indent(width=2, first=True) }}
 
 aem_resources::deploy_packages::sleep_seconds: '{{ aem.deployment_delay_in_seconds }}'
 

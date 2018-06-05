@@ -14,9 +14,12 @@ aem_aws_stack_provisioner_version=$4
 
 label=[aem-aws-stack-builder]
 
+aws_builder_dir=/opt/shinesolutions/aem-aws-stack-builder
 aws_provisioner_dir=/opt/shinesolutions/aem-aws-stack-provisioner
 custom_provisioner_dir=/opt/shinesolutions/aem-custom-stack-provisioner
 tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
+log_dir=/var/log/shinesolutions
+log_file=puppet-stack-init.log
 
 PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH
 
@@ -40,10 +43,10 @@ run_custom_stage() {
   stage=${1}
   script=${custom_provisioner_dir}/${stage}.sh
   if [ -x "${script}" ]; then
-    echo "Executing the ${stage} script of Custom Stack Provisioner..."
+    echo "${label} Executing the ${stage} script of Custom Stack Provisioner..."
     cd ${custom_provisioner_dir} && ${script} "${stack_prefix}" "${component}"
   else
-    echo "${stage} script of Custom Stack Provisioner is either not provided or not executable..."
+    echo "${label} ${stage} script of Custom Stack Provisioner is either not provided or not executable"
   fi
 }
 
@@ -67,12 +70,12 @@ translate_puppet_exit_code() {
 echo "${label} Initialising AEM Stack Builder provisioning..."
 
 # List down version numbers of utility tools
-echo "AWS CLI version: $(aws --version)"
-echo "Facter version: $(facter --version)"
-echo "Hiera version: $(hiera --version)"
-echo "Puppet version: $(puppet --version)"
-echo "Python version: $(python --version)"
-echo "Ruby version: $(ruby --version)"
+echo "${label} AWS CLI version: $(aws --version)"
+echo "${label} Facter version: $(facter --version)"
+echo "${label} Hiera version: $(hiera --version)"
+echo "${label} Puppet version: $(puppet --version)"
+echo "${label} Python version: $(python --version)"
+echo "${label} Ruby version: $(ruby --version)"
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
   echo "${label} Downloading Custom Stack Provisioner..."
@@ -99,7 +102,7 @@ fi
 if [ "$#" -eq 5 ]; then
   extra_local_yaml_path=$5
   local_yaml_path="${PWD}/data/local.yaml"
-  echo "Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
+  echo "${label} Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
   sed -e 's/^[[:space:]]*//' < "${extra_local_yaml_path}" >> "${local_yaml_path}"
 fi
 
@@ -115,7 +118,7 @@ set +o errexit
 echo "${label} Applying pre-common Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
-  --logdest /var/log/puppet-stack-init.log \
+  --logdest "${log_dir}/${log_file}" \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   manifests/pre-common.pp
@@ -135,7 +138,7 @@ set +o errexit
 echo "${label} Applying Puppet manifest for ${component} component..."
 puppet apply \
   --detailed-exitcodes \
-  --logdest /var/log/puppet-stack-init.log \
+  --logdest "${log_dir}/${log_file}" \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   "manifests/${component}.pp"
@@ -149,7 +152,7 @@ set +o errexit
 echo "${label} Applying post-common scheduled jobs action Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
-  --logdest /var/log/puppet-stack-init.log \
+  --logdest "${log_dir}/${log_file}" \
   --modulepath modules \
   --hiera_config conf/hiera.yaml \
   manifests/action-scheduled-jobs.pp
@@ -166,3 +169,11 @@ HOME=/root inspec exec "${component}_spec.rb"
 
 echo "${label} Cleaning up provisioner temp directory..."
 rm -rf "${tmp_dir:?}/*"
+
+echo "${label} Completed ${component} component initialisation"
+
+# Due to the lack of AWS built-in mechanism to identify the completion of userdata / cloud-init,
+# we have to rely on the existence of the file below to indicate that it has been completed.
+# In the event of any error, this script would've exited before creating the file.
+# The existence of this file is used as a pre-condition before executing Stack Manager events.
+touch "${aws_builder_dir}/stack-init-completed"

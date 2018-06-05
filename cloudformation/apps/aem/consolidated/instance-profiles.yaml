@@ -45,9 +45,12 @@ Resources:
             - ec2:CreateSnapshot
             - ec2:ModifyInstanceAttribute
             - autoscaling:CreateLaunchConfiguration
+            - autoscaling:DeleteLaunchConfiguration
             - autoscaling:DescribeLaunchConfigurations
+            - autoscaling:DescribeAutoScalingGroups
             - autoscaling:UpdateAutoScalingGroup
             - autoscaling:CreateOrUpdateTags
+            - iam:PassRole
             - cloudwatch:PutMetricData
             Effect: Allow
             Resource: '*'

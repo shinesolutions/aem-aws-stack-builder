@@ -1,3 +1,29 @@
+### 2.2.1
+*
+
+### 2.2.0
+* Move Stack Manager SSM stack to become a nested/child stack of Stack Manager main stack #149
+* Stack Manager main stack name is now configurable via scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name config
+* Fix content health check termination behaviour via AEM Orchestrator 1.0.3 upgrade
+* Increase default deployment delay to 60, check retries to 120, and check delay to 15
+* Remove unused aem.deployment_post_install_wait_in_seconds configuration property
+* Add feature to configure Logrotation per component or/and per stack
+* Improve network-exports to support subnets list instead of predefined subnet A and subnet B #79
+* Offline compaction scheduled job on Author Primary and Publish is disabled by default
+* Add cron.no_proxy configuration support
+* Revert snapshot is disabled by default
+
+### 2.1.1
+* Restructure configuration for Stack Manager snapshots purge schedule and max age
+* Set snapshots purge max age unit to hour, set schedule to cron expression without function syntax
+* Simplify offline snapshot events Stack Manager pairing to use stack prefix instead of SNS topic ARN
+* Remove global fact stack_manager_sns_topic_arn
+* Replace SSM template generation shell script with ssm_template Ansible module
+* Add revert_snapshot_type parameter to allow default launch configuration to set snapshots to offline or live types
+* Add /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed as an indicator that userdata has been completed successfully
+* Fix delay and retries configuration for single artifact deployment
+* Add stack-init completion check to all Stack Manager SSM commands
+
 ### 2.1.0
 * Add aem.enable_content_healthcheck_terminate_instance switch for instance termination for content healthcheck alarms
 * Add java_opts parameter allowing custom java_opts to be specified

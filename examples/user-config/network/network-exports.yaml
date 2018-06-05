@@ -1,0 +1,15 @@
+network_exports:
+  stack_name: aem-network-exports-stack
+  VPCId: vpc-2fc3014b
+  AuthorPublishDispatcherSubnet: subnet-8162f4e5
+  PublishDispatcherELBSubnetList: subnet-8162f4e5,subnet-002f9176
+  PublishDispatcherSubnetList: subnet-8762f4e3,subnet-012f9177
+  PublishSubnetList: subnet-8062f4e4,subnet-032f9175
+  AuthorPrimarySubnet: subnet-b451bad3
+  AuthorStandbySubnet: subnet-022f9174
+  AuthorELBSubnetList: subnet-b451bad3,subnet-022f9174
+  AuthorDispatcherELBSubnetList: subnet-8162f4e5,subnet-002f9176
+  AuthorDispatcherSubnetList: subnet-8562f4e1,subnet-0e2f9178
+  ToolSubnetList: subnet-8662f4e2,subnet-052f9173
+  PublicRouteTable: rtb-77cd4413
+  PrivateRouteTable: rtb-75cd4411

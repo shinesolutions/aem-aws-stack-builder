@@ -1,5 +1,4 @@
 ---
-
 - name: AEM Stack Managers Main Resources Creation and Deletion Tasks
   hosts: all
   gather_facts: no
@@ -23,9 +22,25 @@
       tags:
         - create
 
+    - name: Generate CloudFormation Template for SSM Documents
+      ssm_template:
+        dest_file: "{{ playbook_dir }}/../../../../stage/ssm-commands.yaml"
+        ssm_command_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands-template.yaml"
+        ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands/"
+      tags:
+        - create
+
+    - name: Upload SSM Documents CloudFormation Template to S3
+      command: >
+              aws s3 sync ../../../../stage/
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "ssm-commands.yaml" --acl public-read
+      tags:
+        - create
+
     - name: Create AEM Stack Manager Main Resources Stack
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}-manager"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -34,12 +49,12 @@
           MainStackPrefixParameter: "{{ stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-          LiveSnapshotsPurgeSchedule: "{{ stack_manager.LiveSnapshotsPurgeSchedule}}"
-          OfflineSnapshotsPurgeSchedule: "{{ stack_manager.OfflineSnapshotsPurgeSchedule }}"
-          OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.OrchestrationSnapshotsPurgeSchedule }}"
-          LiveSnapshotsPurgeInput: "{{ stack_manager.LiveSnapshotsPurgeInput }}"
-          OfflineSnapshotsPurgeInput: " {{ stack_manager.OfflineSnapshotsPurgeInput }}"
-          OrchestrationSnapshotsPurgeInput: "{{ stack_manager.OrchestrationSnapshotsPurgeInput }}"
+          LiveSnapshotsPurgeSchedule: "{{ stack_manager.purge.live_snapshots.schedule }}"
+          LiveSnapshotsPurgeMaxAge: "{{ stack_manager.purge.live_snapshots.max_age_in_hours }}"
+          OfflineSnapshotsPurgeSchedule: "{{ stack_manager.purge.offline_snapshots.schedule }}"
+          OfflineSnapshotsPurgeMaxAge: " {{ stack_manager.purge.offline_snapshots.max_age_in_hours }}"
+          OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.purge.orchestration_snapshots.schedule }}"
+          OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age_in_hours }}"
       register: main_stack_info
       tags:
         - create
@@ -73,51 +88,33 @@
       when: 
         permission_type == "c"
 
-    - name: Generate CloudFormation Template for SSM Documents
-      shell: >
-          "{{ playbook_dir }}/../../../../scripts/generate.sh" >  "{{ playbook_dir }}/../../../../stage/ssm_template.json"
-      tags:
-        - create
-
-    - name: Create SSM Document Stack
-      cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.ssm_stack_name }}"
-        region: "{{ aws.region }}"
-        state: present
-        disable_rollback: false
-        template: "{{ playbook_dir }}/../../../../stage/ssm_template.json"
-      tags:
-        - create
-
     - cloudformation_facts:
-        stack_name: "{{ main_stack_info.stack_resources[1].physical_resource_id.split('/')[1] }}"
+        stack_name: "{{ main_stack_info.stack_resources[2].physical_resource_id.split('/')[1] }}"
         region: "{{ aws.region }}"
         all_facts: true
       register: stack_manager_stack_info
       tags:
         - create
 
-
     - name: Create Stack Manager configuration
       stack_manager_config:
         region: "{{ aws.region }}"
-        AEM_stack_name: "{{ stack_prefix }}"
-        SSM_stack_name: "{{ main.ssm_stack_name }}"
+        SSM_stack_name: "{{ main_stack_info.stack_resources[1].physical_resource_id.split('/')[1] }}"
         S3Bucket: "{{ s3.data_bucket_name }}"
         S3Folder: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-        TaskStatusTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
-        SSMServiceRoleArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.SSMServiceRoleArn }}"
+        TaskStatusTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[2].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
+        SSMServiceRoleArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[2].physical_resource_id.split('/')[1]].stack_outputs.SSMServiceRoleArn }}"
         S3BucketSSMOutput: "{{ s3.data_bucket_name }}"
         S3PrefixSSMOutput: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/SSMOutput"
-        BackupTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
-        DynamoDBTableName: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[1].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
+        BackupTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[2].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
+        DynamoDBTableName: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[2].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
         state: present
       tags:
         - create
 
     - name: Check if a Stack Exists
       command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}-manager"
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
       ignore_errors: True
       register: stack_query
@@ -126,7 +123,7 @@
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}-manager" does not exist or some other errors occured
+        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
       when:
         "stack_query.rc != 0"
       tags:
@@ -134,41 +131,13 @@
 
     - name: Delete AEM Stack Manager Main Resources Stacks
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}-manager"
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
       when:
         "stack_query.rc == 0"
       tags:
       - delete
-
-
-    - name: Check if Stack Manager SSM Stack Exists
-      command: >
-        aws cloudformation describe-stacks --stack-name "{{stack_prefix }}-{{ main.ssm_stack_name }}"
-             --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
-      register: stack_query_ssm
-      tags:
-        - delete
-
-    - name: Report Stack Manager SSM Stack Problem if Any
-      debug:
-        msg: Stack "{{stack_prefix }}-{{ main.ssm_stack_name }}" does not exist or some other errors occured
-      when:
-        "stack_query_ssm.rc != 0"
-      tags:
-        - delete
-
-    - name: Delete AEM Stack Manager SSM Stack
-      cloudformation:
-        stack_name: "{{stack_prefix }}-{{ main.ssm_stack_name }}"
-        region: "{{ aws.region }}"
-        state: absent
-      when:
-        "stack_query_ssm.rc == 0"
-      tags:
-        - delete
 
     - name: Delete All Stack Data
       command: >
