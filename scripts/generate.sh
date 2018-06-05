@@ -5,9 +5,8 @@ jq_filters=.
 
 # make sure the script works no matter where it is being invoked
 # shellcheck disable=SC2086
-#pushd "$(dirname ${0})" > /dev/null
-#echo $PWD
-SCRIPTPATH="$WORKSPACE/aem-aws-stack-builder/scripts"
+pushd "$(dirname ${0})" > /dev/null
+SCRIPTPATH="$(pwd)"
 CFTMPLPATH="$SCRIPTPATH/../cloudformation/apps/aem-stack-manager"
 popd > /dev/null
 
