@@ -274,6 +274,72 @@ Resources:
       SourceArn:
         Ref: TaskStatusTopic
     Type: AWS::Lambda::Permission
+  StackManagerLambdaPolicy:
+    DependsOn: StackManagerTable
+    Properties:
+      Description: Lambda Policy for StackManagerLambdaServiceRole
+      ManagedPolicyName:
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaPolicy
+      Path: /
+      PolicyDocument:
+        Statement:
+        - Action:
+          - dynamodb:PutItem
+          - dynamodb:DeleteItem
+          - dynamodb:GetItem
+          - dynamodb:UpdateItem
+          - dynamodb:UpdateTimeToLive
+          Effect: Allow
+          Resource:
+            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}
+        - Action:
+          - dynamodb:Query
+          Effect: Allow
+          Resource:
+          - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}/index/
+        Version: 2012-10-17
+      Roles:
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
+    Type: AWS::IAM::ManagedPolicy
+  StackManagerLambdaSSMPolicy:
+    DependsOn: TaskStatusTopic
+    Properties:
+      Description: Lambda SSM policy for StackManagerLambdaServiceRole
+      ManagedPolicyName:
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaSSMPolicy
+      Path: /
+      PolicyDocument:
+        Statement:
+        - Action:
+          - sns:Publish
+          Effect: Allow
+          Resource:
+            Ref: TaskStatusTopic
+        Version: 2012-10-17
+      Roles:
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
+    Type: AWS::IAM::ManagedPolicy
+  StackManagerSSMPolicy:
+    Properties:
+      Description: Policy for StackManagerSSMRole
+      ManagedPolicyName:
+        Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerSSMPolicy
+      Path: /
+      PolicyDocument:
+        Statement:
+        - Action:
+          - sns:Publish
+          Effect: Allow
+          Resource:
+          - Ref: OfflineBackupTopic
+          - Ref: TaskStatusTopic
+        Version: 2012-10-17
+      Roles:
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerSSMServiceRoleName
+    Type: AWS::IAM::ManagedPolicy
   StackManagerTable:
     Properties:
       AttributeDefinitions:
