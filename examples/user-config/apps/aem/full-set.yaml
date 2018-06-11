@@ -170,7 +170,7 @@ chaos_monkey:
   instance_type: t2.micro
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
-  include_stack: 'true'
+  include_stack: true
 
 dns_records:
   stack_name: aem-dns-records
