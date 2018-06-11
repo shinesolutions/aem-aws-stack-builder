@@ -105,7 +105,7 @@ Resources:
         S3DataStackManagerPrefix:
           Ref: S3DataStackManagerPrefix
       TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-manager.yaml
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-manager-c.yaml
     Type: AWS::CloudFormation::Stack
   UtilitiesStack:
     DependsOn:
