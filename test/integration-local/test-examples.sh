@@ -6,9 +6,14 @@ set -o errexit
 # branch that's being worked on for each of the repos.
 # The AEM environments are created using examples user configurations.
 
+if [[ "$#" -lt 1 ]] || [[ "$#" -gt 3 ]]; then
+  echo "Usage: ${0} <test_id> [aem_version] [os_type]"
+  exit 1
+fi
+
 test_id=$1
-aem_version=aem63
-os_type=rhel7
+aem_version=${2:=aem63}
+os_type=${3:=rhel7}
 s3_bucket=aem-stack-builder
 integration_config_file=examples/user-config/common/zzz-test-integration-local.yaml
 workspace_dir=..
