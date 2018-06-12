@@ -30,8 +30,8 @@
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
           Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
-          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot }}"
-          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
+          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot | lower }}"
+          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot | lower }}"
       tags:
       - create
       when:
@@ -60,8 +60,8 @@
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
-          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot }}"
-          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot }}"
+          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot | lower }}"
+          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot | lower }}"
       tags:
       - create
       when:

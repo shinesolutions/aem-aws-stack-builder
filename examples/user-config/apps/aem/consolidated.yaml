@@ -46,11 +46,11 @@ library:
 
 snapshots:
   author:
-    use_data_vol_snapshot: 'false'
-    data_vol_snapshot_id: TODO
+    use_data_vol_snapshot: false
+    data_vol_snapshot_id:
   publish:
-    use_data_vol_snapshot: 'false'
-    data_vol_snapshot_id: TODO
+    use_data_vol_snapshot: false
+    data_vol_snapshot_id:
 
 author_publish_dispatcher:
   instance_profile: cliffs0-aem-consolidated-prerequisites-stack-InstanceProfilesStack-1IMSEFFH-AuthorPublishDispatcherInstanceProfile-DRJP0OXRCRU2
