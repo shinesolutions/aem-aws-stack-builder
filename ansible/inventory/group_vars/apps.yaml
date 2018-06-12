@@ -19,7 +19,7 @@ aem:
   deployment_delay_in_seconds: 60
   deployment_check_retries: 120
   deployment_check_delay_in_seconds: 15
-  revert_snapshot_type: 
+  revert_snapshot_type:
   client_timeout: 1200
   publish:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
@@ -205,7 +205,7 @@ chaos_monkey:
   instance_type: t2.micro
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
-  include_stack: 'true'
+  include_stack: true
   termination_settings:
     calendar_open_hour: '9'
     calendar_close_hour: '15'
