@@ -1,5 +1,6 @@
 ### 2.2.1
-* Add configuration chaos_monkey.include_stack to include/exclude Chaos Monkey nested stackp
+* Add configuration chaos_monkey.include_stack to include/exclude Chaos Monkey nested stack
+* Add AEM version and OS type support to local integration testing
 
 ### 2.2.0
 * Move Stack Manager SSM stack to become a nested/child stack of Stack Manager main stack #149

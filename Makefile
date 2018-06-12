@@ -196,8 +196,14 @@ config-examples-aem-stack-manager:
 	mkdir -p stage/user-config/aem-stack-manager/
 	cp examples/user-config/apps/aem-stack-manager.yaml stage/user-config/aem-stack-manager/
 
-test-integration-local-examples:
-	./test/integration-local/test-examples.sh $(test_id)
+test-integration-local-aem62-rhel7:
+	./test/integration-local/test-examples.sh $(test_id) aem62 rhel7
+
+test-integration-local-aem63-rhel7:
+	./test/integration-local/test-examples.sh $(test_id) aem63 rhel7
+
+test-integration-local-aem64-rhel7:
+	./test/integration-local/test-examples.sh $(test_id) aem64 rhel7
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME=aem-stack-builder
