@@ -1,0 +1,135 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Overarching CF Template to Create AEM Stack Manager Resources Stacks
+Outputs:
+  InstanceProfilesStackArn:
+    Description: Instance Profiles Stack ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-InstanceProfilesStackName
+    Value:
+      Ref: InstanceProfilesStack
+  StackManagerStackArn:
+    Description: Stack Manager Stack ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerStackName
+    Value:
+      Ref: StackManagerStack
+  UtilitiesStackArn:
+    Description: Utilities Stack ARN
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-UtilitiesStackName
+    Value:
+      Ref: UtilitiesStack
+Parameters:
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data file
+    Type: String
+  DynamoDBTTLAttribute:
+    Default: ttl
+    Type: String
+  LiveSnapshotsPurgeMaxAge:
+    Description: Parameters for Purging Live Snapshot in JSON Formatted String
+    Type: String
+  LiveSnapshotsPurgeSchedule:
+    Description: CloudWatch Event Rule Schedule to Purge Old Live Snapshots
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Main Resources Stack Prefix
+    Type: String
+  OfflineSnapshotsPurgeMaxAge:
+    Description: Parameters for Purging Offline Snapshot in JSON Formatted String
+    Type: String
+  OfflineSnapshotsPurgeSchedule:
+    Description: CloudWatch Event Rule Schedule to Purge Old Offline Snapshots
+    Type: String
+  OrchestrationSnapshotsPurgeMaxAge:
+    Description: Parameters for Purging Orchestration Snapshot in JSON Formatted String
+    Type: String
+  OrchestrationSnapshotsPurgeSchedule:
+    Description: CloudWatch Event Rule Schedule to Purge Old Orchestration Snapshots
+    Type: String
+  S3DataStackManagerPrefix:
+    Description: Prefix within the Bucket to Locate Files
+    Type: String
+  AEMStackManagerSSMServiceRoleNameParameter:
+    Description: Stack Manager SSM Service Role Name
+    Type: String
+  AEMStackManagerSSMServiceRoleArnParameter:
+    Description: Stack Manager SSM Service Role Arn 
+    Type: String
+  AEMStackManagerLambdaServiceRoleNameParameter:
+    Description: Stack Manager Lambda Service Role Name 
+    Type: String
+  AEMStackManagerLambdaServiceRoleArnParameter:
+    Description: Stack Manager Lambda Service Role Arn 
+    Type: String
+Resources:
+  SSMCommandsStack:
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/ssm-commands.yaml
+    Type: AWS::CloudFormation::Stack
+  InstanceProfilesStack:
+    Properties:
+      Parameters:
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        S3DataStackManagerPrefix:
+          Ref: S3DataStackManagerPrefix
+        AEMStackManagerLambdaServiceRoleNameParameter:
+          Ref: AEMStackManagerLambdaServiceRoleNameParameter
+        AEMStackManagerLambdaServiceRoleArnParameter:
+          Ref: AEMStackManagerLambdaServiceRoleArnParameter
+        AEMStackManagerSSMServiceRoleNameParameter:
+          Ref: AEMStackManagerSSMServiceRoleNameParameter
+        AEMStackManagerSSMServiceRoleArnParameter:
+          Ref: AEMStackManagerSSMServiceRoleArnParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles-exports.yaml
+    Type: AWS::CloudFormation::Stack
+  StackManagerStack:
+    DependsOn:
+    - InstanceProfilesStack
+    Properties:
+      Parameters:
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        DynamoDBTTLAttribute:
+          Ref: DynamoDBTTLAttribute
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        S3DataStackManagerPrefix:
+          Ref: S3DataStackManagerPrefix
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-manager-c.yaml
+    Type: AWS::CloudFormation::Stack
+  UtilitiesStack:
+    DependsOn:
+    - InstanceProfilesStack
+    Properties:
+      Parameters:
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        LiveSnapshotsPurgeMaxAge:
+          Ref: LiveSnapshotsPurgeMaxAge
+        LiveSnapshotsPurgeSchedule:
+          Ref: LiveSnapshotsPurgeSchedule
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        OfflineSnapshotsPurgeMaxAge:
+          Ref: OfflineSnapshotsPurgeMaxAge
+        OfflineSnapshotsPurgeSchedule:
+          Ref: OfflineSnapshotsPurgeSchedule
+        OrchestrationSnapshotsPurgeMaxAge:
+          Ref: OrchestrationSnapshotsPurgeMaxAge
+        OrchestrationSnapshotsPurgeSchedule:
+          Ref: OrchestrationSnapshotsPurgeSchedule
+        S3DataStackManagerPrefix:
+          Ref: S3DataStackManagerPrefix
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/utilities.yaml
+    Type: AWS::CloudFormation::Stack
