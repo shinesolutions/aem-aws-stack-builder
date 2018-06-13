@@ -160,10 +160,10 @@ author:
 
 snapshots:
   author:
-    use_data_vol_snapshot: 'false'
+    use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
   publish:
-    use_data_vol_snapshot: 'false'
+    use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
 
 author_dispatcher:

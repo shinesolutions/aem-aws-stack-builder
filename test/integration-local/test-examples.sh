@@ -12,8 +12,8 @@ if [[ "$#" -lt 1 ]] || [[ "$#" -gt 3 ]]; then
 fi
 
 test_id=$1
-aem_version=${2:=aem63}
-os_type=${3:=rhel7}
+aem_version=${2:-aem63}
+os_type=${3:-rhel7}
 s3_bucket=aem-stack-builder
 integration_config_file=examples/user-config/common/zzz-test-integration-local.yaml
 workspace_dir=..
