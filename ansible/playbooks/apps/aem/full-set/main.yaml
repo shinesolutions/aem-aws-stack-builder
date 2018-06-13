@@ -13,7 +13,7 @@
       tags:
         - create
 
-    - name: Create AEM App Main Resources Stack
+    - name: Create AEM App Main Resources Stack with permission type b
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
@@ -85,7 +85,7 @@
       when:
         permission_type == "b"
 
-    - name: Create AEM App Main Resources Stack with Permissions Type C
+    - name: Create AEM App Main Resources Stack with permission type c
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
