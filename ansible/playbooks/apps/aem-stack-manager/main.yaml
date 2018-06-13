@@ -58,6 +58,35 @@
       register: main_stack_info
       tags:
         - create
+      when:
+        permission_type == "b"
+
+    - name: Create AEM Stack Manager Main Resources Stack with permissions type c
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}-manager"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../../cloudformation/apps/aem-stack-manager/main-c.yaml"
+        template_parameters:
+          MainStackPrefixParameter: "{{ stack_prefix }}"
+          DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
+          LiveSnapshotsPurgeSchedule: "{{ stack_manager.purge.live_snapshots.schedule }}"
+          LiveSnapshotsPurgeMaxAge: "{{ stack_manager.purge.live_snapshots.max_age_in_hours }}"
+          OfflineSnapshotsPurgeSchedule: "{{ stack_manager.purge.offline_snapshots.schedule }}"
+          OfflineSnapshotsPurgeMaxAge: " {{ stack_manager.purge.offline_snapshots.max_age_in_hours }}"
+          OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.purge.orchestration_snapshots.schedule }}"
+          OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age_in_hours }}"
+          AEMStackManagerLambdaServiceRoleNameParameter: "{{ stack_manager.lambda_service_role_name }}"         
+          AEMStackManagerLambdaServiceRoleArnParameter: "{{ stack_manager.lambda_service_role_arn }}"
+          AEMStackManagerSSMServiceRoleNameParameter: "{{ stack_manager.ssm_service_role_name }}"
+          AEMStackManagerSSMServiceRoleArnParameter: "{{ stack_manager.ssm_service_role_arn }}"
+      register: main_stack_info
+      tags:
+        - create
+      when: 
+        permission_type == "c"
 
     - cloudformation_facts:
         stack_name: "{{ main_stack_info.stack_resources[2].physical_resource_id.split('/')[1] }}"
