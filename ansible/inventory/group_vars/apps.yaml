@@ -210,8 +210,7 @@ chaos_monkey:
     calendar_open_hour: '9'
     calendar_close_hour: '15'
     calendar_timezone: 'Australia/Sydney'
-    scheduler_frequency: '5'
-    scheduler_frequency_unit: 'MINUTES'
+    scheduler_frequency_in_minutes: '5'
     asg_probability: '1.0'
     asg_max_terminations_per_day: '1.0'
 
