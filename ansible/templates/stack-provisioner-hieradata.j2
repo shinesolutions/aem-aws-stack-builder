@@ -55,6 +55,16 @@ orchestrator::stack_manager_stack_name: '{{ scheduled_jobs.aem_orchestrator.stac
 
 chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 
+chaos_monkey::asg_probability: '{{ chaos_monkey.termination_settings.asg_probability }}'
+chaos_monkey::asg_max_terminations_per_day: '{{ chaos_monkey.termination_settings.asg_max_terminations_per_day }}'
+
+simianarmy::simianarmy_properties::simianarmy_calendar_open_hour: '{{ chaos_monkey.termination_settings.calendar_open_hour }}'
+simianarmy::simianarmy_properties::simianarmy_calendar_close_hour: '{{ chaos_monkey.termination_settings.calendar_close_hour }}'
+simianarmy::simianarmy_properties::simianarmy_calendar_timezone: '{{ chaos_monkey.termination_settings.calendar_timezone }}'
+simianarmy::simianarmy_properties::simianarmy_scheduler_frequency_in_minutes: '{{ chaos_monkey.termination_settings.scheduler_frequency_in_minutes }}'
+simianarmy::chaos_properties::simianarmy_chaos_asg_probability: '{{ chaos_monkey.termination_settings.asg_probability }}'
+simianarmy::chaos_properties::simianarmy_chaos_asg_max_terminations_per_day: '{{ chaos_monkey.termination_settings.asg_max_terminations_per_day }}'
+
 common::proxy_enabled: {{ proxy.enabled }}
 common::proxy_protocol: '{{ proxy.protocol }}'
 common::proxy_host: '{{ proxy.host }}'

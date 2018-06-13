@@ -171,6 +171,13 @@ chaos_monkey:
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
   include_stack: true
+  termination_settings:
+    calendar_open_hour: '9'
+    calendar_close_hour: '15'
+    calendar_timezone: 'Australia/Sydney'
+    scheduler_frequency_in_minutes: '5'
+    asg_probability: '1.0'
+    asg_max_terminations_per_day: '1.0'
 
 dns_records:
   stack_name: aem-dns-records

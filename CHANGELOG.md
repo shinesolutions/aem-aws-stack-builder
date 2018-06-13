@@ -2,6 +2,7 @@
 * Add configuration chaos_monkey.include_stack to include/exclude Chaos Monkey nested stack
 * Add AEM version and OS type support to local integration testing
 * Change snapshots.author.use_data_vol_snapshot and snapshots.publish.use_data_vol_snapshot configuration properties to accept boolean
+* Add configurable chaos monkey settings
 
 ### 2.2.0
 * Move Stack Manager SSM stack to become a nested/child stack of Stack Manager main stack #149
