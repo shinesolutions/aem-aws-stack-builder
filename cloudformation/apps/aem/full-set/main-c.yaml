@@ -1,10 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   CreateChaosMonkeyStackCondition:
-    Fn::Not:
-      - Fn::Equals:
-        - Ref: ChaosMonkeyInstanceTypeParameter
-        - ''
+    Fn::Equals:
+      - Ref: ChaosMonkeyIncludeStack
+      - 'true'
 Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -61,6 +60,10 @@ Parameters:
   AuthorRootVolSizeParameter:
     Description: Author Instances Root EBS Volume Size
     Type: Number
+  ChaosMonkeyIncludeStack:
+    Default: 'true'
+    Description: Creates the ChaosMonkey stack or not
+    Type: String
   ChaosMonkeyASGAvailabilityZoneListParameter:
     Description: The Chaos Monkey Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
