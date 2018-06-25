@@ -137,46 +137,37 @@ Outputs:
     Value:
       Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
 Parameters:
-  AuthorDispatcherSubnetACidrBlockParameter:
-    Default: 10.0.14.0/25
-    Description: AEM Author Dispatcher Subnet A Cidr Block
+{% if (availability_zone_list | length) == 3 %}
+  {% set slash=26, subnets=[0,64,128] %}
+{% else if (availability_zone_list | length) == 2 %}
+  {% set slash=25, subnets=[0,128] %}
+{% endif %}
+{% for az in availability_zone_list %}
+  AuthorDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter:
+    Default: 10.0.14."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
+    Description: AEM Author Dispatcher Subnet {{ az[:-1] | upper }} Cidr Block
     Type: String
-  AuthorDispatcherSubnetATagNameParameter:
-    Default: AEM Author Dispatcher Subnet A
-    Description: AEM Author Dispatcher Subnet A Name
+  AuthorDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter:
+    Default: AEM Author Dispatcher Subnet {{ az[:-1] | upper }}
+    Description: AEM Author Dispatcher Subnet {{ az[:-1] | upper }} Name
     Type: String
-  AuthorDispatcherSubnetBCidrBlockParameter:
-    Default: 10.0.14.128/25
-    Description: AEM Author Dispatcher Subnet B Cidr Block
+{% endfor %}
+{% for az in availability_zone_list %}
+  AuthorSubnet{{ az[:-1] | upper }}CidrBlockParameter:
+    Default: 10.0.13."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
+    Description: AEM Author Subnet {{ az[:-1] | upper }} Cidr Block
     Type: String
-  AuthorDispatcherSubnetBTagNameParameter:
-    Default: AEM Author Dispatcher Subnet B
-    Description: AEM Author Dispatcher Subnet B Name
+  AuthorSubnet{{ az[:-1] | upper }}TagNameParameter:
+    Default: AEM Author Subnet {{ az[:-1] | upper }}
+    Description: AEM Author Subnet {{ az[:-1] | upper }} Name
     Type: String
-  AuthorSubnetACidrBlockParameter:
-    Default: 10.0.13.0/25
-    Description: AEM Author Subnet A Cidr Block
-    Type: String
-  AuthorSubnetATagNameParameter:
-    Default: AEM Author Subnet A
-    Description: AEM Author Subnet A Name
-    Type: String
-  AuthorSubnetBCidrBlockParameter:
-    Default: 10.0.13.128/25
-    Description: AEM Author Subnet B Cidr Block
-    Type: String
-  AuthorSubnetBTagNameParameter:
-    Default: AEM Auhtor Subnet B
-    Description: AEM Author Subnet B Name
-    Type: String
-  AvailabilityZoneAParameter:
-    Default: ap-southeast-2a
-    Description: Availability Zone A
+{% endfor %}
+{% for az in availability_zone_list %}
+  AvailabilityZone{{ az[:-1] | upper }}Parameter:
+    Default: {{ az }}
+    Description: Availability Zone {{ az[:-1] | upper }}
     Type: AWS::EC2::AvailabilityZone::Name
-  AvailabilityZoneBParameter:
-    Default: ap-southeast-2b
-    Description: Availability Zone B
-    Type: AWS::EC2::AvailabilityZone::Name
+{% endfor %}
   Ec2InternetGatewayTagNameParameter:
     Default: AEM VPC Internet Gateway
     Description: AEM VPC Internet Gateway Name
@@ -189,54 +180,36 @@ Parameters:
     Default: AEM VPC Public Route Table
     Description: AEM VPC Public Route Table Name
     Type: String
-  PublishDispatcherELBSubnetACidrBlockParameter:
-    Default: 10.0.10.0/25
-    Description: AEM Publish Dispatcher ELB Subnet A Cidr Block
+{% for az in availability_zone_list %}
+  PublishDispatcherELBSubnet{{ az[:-1] | upper }}CidrBlockParameter:
+    Default: 10.0.10."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
+    Description: AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }} Cidr Block
     Type: String
-  PublishDispatcherELBSubnetATagNameParameter:
-    Default: AEM Publish Dispatcher ELB Subnet A
-    Description: AEM Publish Dispatcher ELB Subnet A Name
+  PublishDispatcherELBSubnet{{ az[:-1] | upper }}TagNameParameter:
+    Default: AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }}
+    Description: AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }} Name
     Type: String
-  PublishDispatcherELBSubnetBCidrBlockParameter:
-    Default: 10.0.10.128/25
-    Description: AEM Publish Dispatcher ELB Subnet B Cidr Block
+{% endfor %}
+{% for az in availability_zone_list %}
+  PublishDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter:
+    Default: 10.0.11."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
+    Description: AEM Publish Dispatcher Subnet {{ az[:-1] | upper }} Cidr Block
     Type: String
-  PublishDispatcherELBSubnetBTagNameParameter:
-    Default: AEM Publish Dispatcher ELB Subnet B
-    Description: AEM Publish Dispatcher ELB Subnet B Name
+  PublishDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter:
+    Default: AEM Publish Dispatcher Subnet {{ az[:-1] | upper }}
+    Description: AEM Publish Dispatcher Subnet {{ az[:-1] | upper }} Name
     Type: String
-  PublishDispatcherSubnetACidrBlockParameter:
-    Default: 10.0.11.0/25
-    Description: AEM Publish Dispatcher Subnet A Cidr Block
+{% endfor %}
+{% for az in availability_zone_list %}
+  PublishSubnet{{ az[:-1] | upper }}CidrBlockParameter:
+    Default: 10.0.12."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
+    Description: AEM Publish Subnet {{ az[:-1] | upper }} Cidr Block
     Type: String
-  PublishDispatcherSubnetATagNameParameter:
-    Default: AEM Publish Dispatcher Subnet A
-    Description: AEM Publish Dispatcher Subnet A Name
+  PublishSubnet{{ az[:-1] | upper }}TagNameParameter:
+    Default: AEM Publish Subnet {{ az[:-1] | upper }}
+    Description: AEM Publish Subnet {{ az[:-1] | upper }} Name
     Type: String
-  PublishDispatcherSubnetBCidrBlockParameter:
-    Default: 10.0.11.128/25
-    Description: AEM Publish Dispatcher Subnet B Cidr Block
-    Type: String
-  PublishDispatcherSubnetBTagNameParameter:
-    Default: AEM Publish Dispatcher Subnet B
-    Description: AEM Publish Dispatcher Subnet B Name
-    Type: String
-  PublishSubnetACidrBlockParameter:
-    Default: 10.0.12.0/25
-    Description: AEM Publish Subnet A Cidr Block
-    Type: String
-  PublishSubnetATagNameParameter:
-    Default: AEM Publish Subnet A
-    Description: AEM Publish Subnet A Name
-    Type: String
-  PublishSubnetBCidrBlockParameter:
-    Default: 10.0.12.128/25
-    Description: AEM Publish Subnet B Cidr Block
-    Type: String
-  PublishSubnetBTagNameParameter:
-    Default: AEM Publish Subnet B
-    Description: AEM Publish Subnet B Name
-    Type: String
+{% endfor %}
   S3BucketParameter:
     Default: ''
     Description: S3 Bucket Allowed to Access Via S3 Endpoint in the VPC
@@ -245,22 +218,16 @@ Parameters:
     Default: ''
     Description: Used to Namespace the Exported Resources
     Type: String
-  ToolSubnetACidrBlockParameter:
-    Default: 10.0.15.0/25
-    Description: Tool Subnet A Cidr Block
+{% for az in availability_zone_list %}
+  ToolSubnet{{ az[:-1] | upper }}CidrBlockParameter:
+    Default: 10.0.15."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
+    Description: Tool Subnet {{ az[:-1] | upper }} Cidr Block
     Type: String
-  ToolSubnetATagNameParameter:
-    Default: AEM Tool Subnet A
-    Description: AEM Tool Subnet A Name
+  ToolSubnet{{ az[:-1] | upper }}TagNameParameter:
+    Default: AEM Tool Subnet {{ az[:-1] | upper }}
+    Description: AEM Tool Subnet {{ az[:-1] | upper }} Name
     Type: String
-  ToolSubnetBCidrBlockParameter:
-    Default: 10.0.15.128/25
-    Description: Tool Subnet B Cidr Block
-    Type: String
-  ToolSubnetBTagNameParameter:
-    Default: AEM Tool Subnet B
-    Description: AEM Tool Subnet B Name
-    Type: String
+{% endfor %}
 Resources:
   AuthorDispatcherSubnetA:
     Properties:
