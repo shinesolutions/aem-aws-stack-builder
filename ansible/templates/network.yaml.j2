@@ -229,94 +229,54 @@ Parameters:
     Type: String
 {% endfor %}
 Resources:
-  AuthorDispatcherSubnetA:
+{% for az in availability_zone_list %}
+  AuthorDispatcherSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZoneAParameter
+        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
       CidrBlock:
-        Ref: AuthorDispatcherSubnetACidrBlockParameter
+        Ref: AuthorDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: AuthorDispatcherSubnetATagNameParameter
+          Ref: AuthorDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  AuthorDispatcherSubnetAPrivatecRouteTableAssociation:
+  AuthorDispatcherSubnet{{ az[:-1] | upper }}PrivatecRouteTableAssociation:
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: AuthorDispatcherSubnetA
+        Ref: AuthorDispatcherSubnet{{ az[:-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
-  AuthorDispatcherSubnetB:
+{% endfor %}
+{% for az in availability_zone_list %}
+  AuthorSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZoneBParameter
+        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
       CidrBlock:
-        Ref: AuthorDispatcherSubnetBCidrBlockParameter
+        Ref: AuthorSubnet{{ az[:-1] | upper }}CidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: AuthorDispatcherSubnetBTagNameParameter
+          Ref: AuthorSubnet{{ az[:-1] | upper }}TagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  AuthorDispatcherSubnetBPrivateRouteTableAssociation:
+  AuthorSubnet{{ az[:-1] | upper }}PrivatecRouteTableAssociation:
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: AuthorDispatcherSubnetB
+        Ref: AuthorSubnet{{ az[:-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
-  AuthorSubnetA:
-    Properties:
-      AvailabilityZone:
-        Ref: AvailabilityZoneAParameter
-      CidrBlock:
-        Ref: AuthorSubnetACidrBlockParameter
-      MapPublicIpOnLaunch: false
-      Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorSubnetATagNameParameter
-      VpcId:
-        Fn::ImportValue:
-          Fn::Sub: ${StackPrefix}-VPCId
-    Type: AWS::EC2::Subnet
-  AuthorSubnetAPrivatecRouteTableAssociation:
-    Properties:
-      RouteTableId:
-        Ref: PrivateRouteTable
-      SubnetId:
-        Ref: AuthorSubnetA
-    Type: AWS::EC2::SubnetRouteTableAssociation
-  AuthorSubnetB:
-    Properties:
-      AvailabilityZone:
-        Ref: AvailabilityZoneBParameter
-      CidrBlock:
-        Ref: AuthorSubnetBCidrBlockParameter
-      MapPublicIpOnLaunch: false
-      Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorSubnetBTagNameParameter
-      VpcId:
-        Fn::ImportValue:
-          Fn::Sub: ${StackPrefix}-VPCId
-    Type: AWS::EC2::Subnet
-  AuthorSubnetBPrivateRouteTableAssociation:
-    Properties:
-      RouteTableId:
-        Ref: PrivateRouteTable
-      SubnetId:
-        Ref: AuthorSubnetB
-    Type: AWS::EC2::SubnetRouteTableAssociation
+{% endfor %}
   Ec2InternetGateway:
     Properties:
       Tags:
@@ -361,138 +321,78 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::RouteTable
-  PublishDispatcherELBSubnetA:
+{% for az in availability_zone_list %}
+  PublishDispatcherELBSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZoneAParameter
+        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
       CidrBlock:
-        Ref: PublishDispatcherELBSubnetACidrBlockParameter
+        Ref: PublishDispatcherELBSubnet{{ az[:-1] | upper }}CidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: PublishDispatcherELBSubnetATagNameParameter
+          Ref: PublishDispatcherELBSubnet{{ az[:-1] | upper }}TagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  PublishDispatcherELBSubnetAPublicRouteTableAssociation:
+  PublishDispatcherELBSubnet{{ az[:-1] | upper }}PublicRouteTableAssociation:
     Properties:
       RouteTableId:
         Ref: PublicRouteTable
       SubnetId:
-        Ref: PublishDispatcherELBSubnetA
+        Ref: PublishDispatcherELBSubnet{{ az[:-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
-  PublishDispatcherELBSubnetB:
+{% endfor %}
+{% for az in availability_zone_list %}
+  PublishDispatcherSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZoneBParameter
+        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
       CidrBlock:
-        Ref: PublishDispatcherELBSubnetBCidrBlockParameter
+        Ref: PublishDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: PublishDispatcherELBSubnetBTagNameParameter
+          Ref: PublishDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  PublishDispatcherELBSubnetBPublicRouteTableAssociation:
-    Properties:
-      RouteTableId:
-        Ref: PublicRouteTable
-      SubnetId:
-        Ref: PublishDispatcherELBSubnetB
-    Type: AWS::EC2::SubnetRouteTableAssociation
-  PublishDispatcherSubnetA:
-    Properties:
-      AvailabilityZone:
-        Ref: AvailabilityZoneAParameter
-      CidrBlock:
-        Ref: PublishDispatcherSubnetACidrBlockParameter
-      MapPublicIpOnLaunch: false
-      Tags:
-      - Key: Name
-        Value:
-          Ref: PublishDispatcherSubnetATagNameParameter
-      VpcId:
-        Fn::ImportValue:
-          Fn::Sub: ${StackPrefix}-VPCId
-    Type: AWS::EC2::Subnet
-  PublishDispatcherSubnetAPrivateRouteTableAssociation:
+  PublishDispatcherSubnet{{ az[:-1] | upper }}PrivateRouteTableAssociation:
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: PublishDispatcherSubnetA
+        Ref: PublishDispatcherSubnet{{ az[:-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
-  PublishDispatcherSubnetB:
+{% endfor %}
+{% for az in availability_zone_list %}
+  PublishSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZoneBParameter
+        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
       CidrBlock:
-        Ref: PublishDispatcherSubnetBCidrBlockParameter
+        Ref: PublishSubnet{{ az[:-1] | upper }}CidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: PublishDispatcherSubnetBTagNameParameter
+          Ref: PublishSubnet{{ az[:-1] | upper }}TagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  PublishDispatcherSubnetBPrivateRouteTableAssociation:
+  PublishSubnet{{ az[:-1] | upper }}PrivatecRouteTableAssociation:
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: PublishDispatcherSubnetB
+        Ref: PublishSubnet{{ az[:-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
-  PublishSubnetA:
-    Properties:
-      AvailabilityZone:
-        Ref: AvailabilityZoneAParameter
-      CidrBlock:
-        Ref: PublishSubnetACidrBlockParameter
-      MapPublicIpOnLaunch: false
-      Tags:
-      - Key: Name
-        Value:
-          Ref: PublishSubnetATagNameParameter
-      VpcId:
-        Fn::ImportValue:
-          Fn::Sub: ${StackPrefix}-VPCId
-    Type: AWS::EC2::Subnet
-  PublishSubnetAPrivatecRouteTableAssociation:
-    Properties:
-      RouteTableId:
-        Ref: PrivateRouteTable
-      SubnetId:
-        Ref: PublishSubnetA
-    Type: AWS::EC2::SubnetRouteTableAssociation
-  PublishSubnetB:
-    Properties:
-      AvailabilityZone:
-        Ref: AvailabilityZoneBParameter
-      CidrBlock:
-        Ref: PublishSubnetBCidrBlockParameter
-      MapPublicIpOnLaunch: false
-      Tags:
-      - Key: Name
-        Value:
-          Ref: PublishSubnetBTagNameParameter
-      VpcId:
-        Fn::ImportValue:
-          Fn::Sub: ${StackPrefix}-VPCId
-    Type: AWS::EC2::Subnet
-  PublishSubnetBPrivateRouteTableAssociation:
-    Properties:
-      RouteTableId:
-        Ref: PrivateRouteTable
-      SubnetId:
-        Ref: PublishSubnetB
-    Type: AWS::EC2::SubnetRouteTableAssociation
+{% endfor %}
   S3Endpoint:
     Condition: UseS3EndPoint
     Properties:
@@ -514,47 +414,27 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::VPCEndpoint
-  ToolSubnetA:
+{% for az in availability_zone_list %}
+  ToolSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZoneAParameter
+        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
       CidrBlock:
-        Ref: ToolSubnetACidrBlockParameter
+        Ref: ToolSubnet{{ az[:-1] | upper }}CidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: ToolSubnetATagNameParameter
+          Ref: ToolSubnet{{ az[:-1] | upper }}TagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  ToolSubnetAPrivatecRouteTableAssociation:
+  ToolSubnet{{ az[:-1] | upper }}PrivatecRouteTableAssociation:
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: ToolSubnetA
+        Ref: ToolSubnet{{ az[:-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
-  ToolSubnetB:
-    Properties:
-      AvailabilityZone:
-        Ref: AvailabilityZoneBParameter
-      CidrBlock:
-        Ref: ToolSubnetBCidrBlockParameter
-      MapPublicIpOnLaunch: false
-      Tags:
-      - Key: Name
-        Value:
-          Ref: ToolSubnetBTagNameParameter
-      VpcId:
-        Fn::ImportValue:
-          Fn::Sub: ${StackPrefix}-VPCId
-    Type: AWS::EC2::Subnet
-  ToolSubnetBPrivateRouteTableAssociation:
-    Properties:
-      RouteTableId:
-        Ref: PrivateRouteTable
-      SubnetId:
-        Ref: ToolSubnetB
-    Type: AWS::EC2::SubnetRouteTableAssociation
+{% endfor %}
