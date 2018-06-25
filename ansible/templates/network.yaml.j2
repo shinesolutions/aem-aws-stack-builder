@@ -115,20 +115,15 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublishSubnetList
     Value:
       Fn::Sub: ${PublishSubnetA},${PublishSubnetB}
-  ToolSubnetA:
-    Description: The Tool Subnet in Availability Zone A
+{% for az in availability_zone_list %}
+  ToolSubnet{{ az[:-1] | upper }}:
+    Description: The Tool Subnet in Availability Zone {{ az[:-1] | upper }}
     Export:
       Name:
-        Fn::Sub: ${StackPrefix}-ToolSubnetA
+        Fn::Sub: ${StackPrefix}-ToolSubnet{{ az[:-1] | upper }}
     Value:
-      Ref: ToolSubnetA
-  ToolSubnetB:
-    Description: The Tool Subnet in Availability Zone B
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-ToolSubnetB
-    Value:
-      Ref: ToolSubnetB
+      Ref: ToolSubnet{{ az[:-1] | upper }}
+{% endfor %}
   ToolSubnetList:
     Description: The Tool Subnet List
     Export:
