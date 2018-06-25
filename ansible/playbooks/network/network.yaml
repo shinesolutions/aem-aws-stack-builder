@@ -6,6 +6,11 @@
 
   tasks:
 
+    - name: Create cloudformation/network/network.yaml from jinja2 template
+      template:
+        src: "../../templates/network.yaml.j2"
+        dest: "../../../cloudformation/network/network.yaml"
+
     - name: Create AEM Network Stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ network.stack_name }}"
