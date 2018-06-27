@@ -1,0 +1,31 @@
+---
+- name: Create AEM Network Stack
+  cloudformation:
+    stack_name: "{{ stack_prefix }}-{{ network.stack_name }}"
+    state: present
+    region: "{{ aws.region }}"
+    disable_rollback: true
+    template: "../../../cloudformation/network/network.yaml"
+    template_parameters:
+      StackPrefix: "{{ stack_prefix}}"
+      Ec2InternetGatewayTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
+      {% for az in availability_zone_list %}
+      AvailabilityZone{{ az[:-1] | upper }}Parameter: "{{ az }}"
+      PublishDispatcherELBSubnet{{ az[:-1] | upper }}CidrBlockParameter: "{{ network.publish_dispatcher_elb.subnet_{{ az[:-1] }}.cidr_block }}"
+      PublishDispatcherELBSubnet{{ az[:-1] | upper }}TagNameParameter: "{{ stack_prefix }}-{{ network.publish_dispatcher_elb.subnet_{{ az[:-1] }}.tag_name }}"
+      PublishDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter: "{{ network.publish_dispatcher.subnet_{{ az[:-1] }}.cidr_block }}"
+      PublishDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter: "{{ stack_prefix }}-{{ network.publish_dispatcher.subnet_{{ az[:-1] }}.tag_name }}"
+      PublishSubnet{{ az[:-1] | upper }}CidrBlockParameter: "{{ network.publish.subnet_{{ az[:-1] }}.cidr_block }}"
+      PublishSubnet{{ az[:-1] | upper }}TagNameParameter: "{{ stack_prefix }}-{{ network.publish.subnet_{{ az[:-1] }}.tag_name }}"
+      AuthorSubnet{{ az[:-1] | upper }}CidrBlockParameter: "{{ network.author.subnet_{{ az[:-1] }}.cidr_block }}"
+      AuthorSubnet{{ az[:-1] | upper }}TagNameParameter: "{{ stack_prefix }}-{{ network.author.subnet_{{ az[:-1] }}.tag_name }}"
+      AuthorDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter: "{{ network.author_dispatcher.subnet_{{ az[:-1] }}.cidr_block }}"
+      AuthorDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter: "{{ stack_prefix }}-{{ network.author_dispatcher.subnet_{{ az[:-1] }}.tag_name }}"
+      ToolSubnet{{ az[:-1] | upper }}CidrBlockParameter: "{{ network.tool.subnet_{{ az[:-1] }}.cidr_block }}"
+      ToolSubnet{{ az[:-1] | upper }}TagNameParameter: "{{ stack_prefix }}-{{ network.tool.subnet_{{ az[:-1] }}.tag_name }}"
+      {% endfor %}
+      PublicRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.public_route_table.tag_name }}"
+      PrivateRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.private_route_table.tag_name }}"
+      S3BucketParameter: "{{ endpoints.s3 | default('') }}"
+  tags:
+  - create
