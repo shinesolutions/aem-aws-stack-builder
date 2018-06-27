@@ -42,6 +42,11 @@ aem_orchestrator::scheduled_jobs::weekday::offline_snapshot: "{{ scheduled_jobs.
 aem_orchestrator::scheduled_jobs::hour::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.hour }}"
 aem_orchestrator::scheduled_jobs::minute::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.minute }}"
 
+publish_dispatcher::scheduled_jobs::enable::content_health_check: {{ scheduled_jobs.publish_dispatcher.content_health_check.enable }}
+publish_dispatcher::scheduled_jobs::weekday::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.weekday }}"
+publish_dispatcher::scheduled_jobs::hour::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.hour }}"
+publish_dispatcher::scheduled_jobs::minute::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.minute }}"
+
 publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
 
