@@ -1,3 +1,6 @@
+### 2.3.0
+* Upgrade AEM AWS Stack Provisioner to 2.6.0
+
 ### 2.2.1
 * Add configuration chaos_monkey.include_stack to include/exclude Chaos Monkey nested stack
 * Add AEM version and OS type support to local integration testing
