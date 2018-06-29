@@ -15,43 +15,43 @@ network:
   publish_dispatcher_elb:
   {% for az in availability_zone_list %}
     subnet_{{ az[:-1] }}:
-      cidr_block: 10.0.10."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-      tag_name: AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }}
+      cidr_block: "10.0.10.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+      tag_name: "AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }}"
   {% endfor %}
 
   publish_dispatcher:
   {% for az in availability_zone_list %}
     subnet_{{ az[:-1] }}:
-      cidr_block: 10.0.11."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-      tag_name: AEM Publish Dispatcher Subnet {{ az[:-1] | upper }}
+      cidr_block: "10.0.11.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+      tag_name: "AEM Publish Dispatcher Subnet {{ az[:-1] | upper }}"
   {% endfor %}
 
   publish:
   {% for az in availability_zone_list %}
     subnet_{{ az[:-1] }}:
-      cidr_block: 10.0.12."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-      tag_name: AEM Publish Subnet {{ az[:-1] | upper }}
+      cidr_block: "10.0.12.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+      tag_name: "AEM Publish Subnet {{ az[:-1] | upper }}"
   {% endfor %}
 
   author:
   {% for az in availability_zone_list %}
     subnet_{{ az[:-1] }}:
-      cidr_block: 10.0.13."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-      tag_name: AEM Author Subnet {{ az[:-1] | upper }}
+      cidr_block: "10.0.13.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+      tag_name: "AEM Author Subnet {{ az[:-1] | upper }}"
   {% endfor %}
 
   author_dispatcher:
   {% for az in availability_zone_list %}
     subnet_{{ az[:-1] }}:
-      cidr_block: 10.0.14."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-      tag_name: AEM Author Dispatcher Subnet {{ az[:-1] | upper }}
+      cidr_block: "10.0.14.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+      tag_name: "AEM Author Dispatcher Subnet {{ az[:-1] | upper }}"
   {% endfor %}
 
   tool:
   {% for az in availability_zone_list %}
     subnet_{{ az[:-1] }}:
-      cidr_block: 10.0.15."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-      tag_name: AEM Tool Subnet {{ az[:-1] | upper }}
+      cidr_block: "10.0.15.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+      tag_name: "AEM Tool Subnet {{ az[:-1] | upper }}"
   {% endfor %}
 
   public_route_table:

@@ -139,28 +139,28 @@ Parameters:
 {% endif %}
 {% for az in availability_zone_list %}
   AuthorDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter:
-    Default: 10.0.14."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-    Description: AEM Author Dispatcher Subnet {{ az[:-1] | upper }} Cidr Block
+    Default: "10.0.14.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+    Description: "AEM Author Dispatcher Subnet {{ az[:-1] | upper }} Cidr Block"
     Type: String
   AuthorDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter:
-    Default: AEM Author Dispatcher Subnet {{ az[:-1] | upper }}
-    Description: AEM Author Dispatcher Subnet {{ az[:-1] | upper }} Name
+    Default: "AEM Author Dispatcher Subnet {{ az[:-1] | upper }}"
+    Description: "AEM Author Dispatcher Subnet {{ az[:-1] | upper }} Name"
     Type: String
 {% endfor %}
 {% for az in availability_zone_list %}
   AuthorSubnet{{ az[:-1] | upper }}CidrBlockParameter:
-    Default: 10.0.13."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-    Description: AEM Author Subnet {{ az[:-1] | upper }} Cidr Block
+    Default: "10.0.13.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+    Description: "AEM Author Subnet {{ az[:-1] | upper }} Cidr Block"
     Type: String
   AuthorSubnet{{ az[:-1] | upper }}TagNameParameter:
-    Default: AEM Author Subnet {{ az[:-1] | upper }}
-    Description: AEM Author Subnet {{ az[:-1] | upper }} Name
+    Default: "AEM Author Subnet {{ az[:-1] | upper }}"
+    Description: "AEM Author Subnet {{ az[:-1] | upper }} Name"
     Type: String
 {% endfor %}
 {% for az in availability_zone_list %}
   AvailabilityZone{{ az[:-1] | upper }}Parameter:
-    Default: {{ az }}
-    Description: Availability Zone {{ az[:-1] | upper }}
+    Default: "{{ az }}"
+    Description: "Availability Zone {{ az[:-1] | upper }}"
     Type: AWS::EC2::AvailabilityZone::Name
 {% endfor %}
   Ec2InternetGatewayTagNameParameter:
@@ -177,32 +177,32 @@ Parameters:
     Type: String
 {% for az in availability_zone_list %}
   PublishDispatcherELBSubnet{{ az[:-1] | upper }}CidrBlockParameter:
-    Default: 10.0.10."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-    Description: AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }} Cidr Block
+    Default: "10.0.10.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+    Description: "AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }} Cidr Block"
     Type: String
   PublishDispatcherELBSubnet{{ az[:-1] | upper }}TagNameParameter:
-    Default: AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }}
-    Description: AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }} Name
+    Default: "AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }}"
+    Description: "AEM Publish Dispatcher ELB Subnet {{ az[:-1] | upper }} Name"
     Type: String
 {% endfor %}
 {% for az in availability_zone_list %}
   PublishDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter:
-    Default: 10.0.11."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-    Description: AEM Publish Dispatcher Subnet {{ az[:-1] | upper }} Cidr Block
+    Default: "10.0.11."{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+    Description: "AEM Publish Dispatcher Subnet {{ az[:-1] | upper }} Cidr Block"
     Type: String
   PublishDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter:
-    Default: AEM Publish Dispatcher Subnet {{ az[:-1] | upper }}
-    Description: AEM Publish Dispatcher Subnet {{ az[:-1] | upper }} Name
+    Default: "AEM Publish Dispatcher Subnet {{ az[:-1] | upper }}"
+    Description: "AEM Publish Dispatcher Subnet {{ az[:-1] | upper }} Name"
     Type: String
 {% endfor %}
 {% for az in availability_zone_list %}
   PublishSubnet{{ az[:-1] | upper }}CidrBlockParameter:
-    Default: 10.0.12."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-    Description: AEM Publish Subnet {{ az[:-1] | upper }} Cidr Block
+    Default: "10.0.12.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+    Description: "AEM Publish Subnet {{ az[:-1] | upper }} Cidr Block"
     Type: String
   PublishSubnet{{ az[:-1] | upper }}TagNameParameter:
-    Default: AEM Publish Subnet {{ az[:-1] | upper }}
-    Description: AEM Publish Subnet {{ az[:-1] | upper }} Name
+    Default: "AEM Publish Subnet {{ az[:-1] | upper }}"
+    Description: "AEM Publish Subnet {{ az[:-1] | upper }} Name"
     Type: String
 {% endfor %}
   S3BucketParameter:
@@ -215,12 +215,12 @@ Parameters:
     Type: String
 {% for az in availability_zone_list %}
   ToolSubnet{{ az[:-1] | upper }}CidrBlockParameter:
-    Default: 10.0.15."{{ subnets[availability_zone_list.index0] }}"/"{{ slash }}"
-    Description: Tool Subnet {{ az[:-1] | upper }} Cidr Block
+    Default: "10.0.15.{{ subnets[availability_zone_list.index0] }}/{{ slash }}"
+    Description: "Tool Subnet {{ az[:-1] | upper }} Cidr Block"
     Type: String
   ToolSubnet{{ az[:-1] | upper }}TagNameParameter:
-    Default: AEM Tool Subnet {{ az[:-1] | upper }}
-    Description: AEM Tool Subnet {{ az[:-1] | upper }} Name
+    Default: "AEM Tool Subnet {{ az[:-1] | upper }}"
+    Description: "AEM Tool Subnet {{ az[:-1] | upper }} Name"
     Type: String
 {% endfor %}
 Resources:
@@ -228,14 +228,14 @@ Resources:
   AuthorDispatcherSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
+        Ref: "AvailabilityZone{{ az[:-1] | upper }}Parameter"
       CidrBlock:
-        Ref: AuthorDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter
+        Ref: "AuthorDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter"
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: AuthorDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter
+          Ref: "AuthorDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter"
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -245,21 +245,21 @@ Resources:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: AuthorDispatcherSubnet{{ az[:-1] | upper }}
+        Ref: "AuthorDispatcherSubnet{{ az[:-1] | upper }}"
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
 {% for az in availability_zone_list %}
   AuthorSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
+        Ref: "AvailabilityZone{{ az[:-1] | upper }}Parameter"
       CidrBlock:
-        Ref: AuthorSubnet{{ az[:-1] | upper }}CidrBlockParameter
+        Ref: "AuthorSubnet{{ az[:-1] | upper }}CidrBlockParameter"
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: AuthorSubnet{{ az[:-1] | upper }}TagNameParameter
+          Ref: "AuthorSubnet{{ az[:-1] | upper }}TagNameParameter"
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -269,7 +269,7 @@ Resources:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: AuthorSubnet{{ az[:-1] | upper }}
+        Ref: "AuthorSubnet{{ az[:-1] | upper }}"
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
   Ec2InternetGateway:
@@ -320,14 +320,14 @@ Resources:
   PublishDispatcherELBSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
+        Ref: "AvailabilityZone{{ az[:-1] | upper }}Parameter"
       CidrBlock:
-        Ref: PublishDispatcherELBSubnet{{ az[:-1] | upper }}CidrBlockParameter
+        Ref: "PublishDispatcherELBSubnet{{ az[:-1] | upper }}CidrBlockParameter"
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: PublishDispatcherELBSubnet{{ az[:-1] | upper }}TagNameParameter
+          Ref: "PublishDispatcherELBSubnet{{ az[:-1] | upper }}TagNameParameter"
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -337,21 +337,21 @@ Resources:
       RouteTableId:
         Ref: PublicRouteTable
       SubnetId:
-        Ref: PublishDispatcherELBSubnet{{ az[:-1] | upper }}
+        Ref: "PublishDispatcherELBSubnet{{ az[:-1] | upper }}"
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
 {% for az in availability_zone_list %}
   PublishDispatcherSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
+        Ref: "AvailabilityZone{{ az[:-1] | upper }}Parameter"
       CidrBlock:
-        Ref: PublishDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter
+        Ref: "PublishDispatcherSubnet{{ az[:-1] | upper }}CidrBlockParameter"
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: PublishDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter
+          Ref: "PublishDispatcherSubnet{{ az[:-1] | upper }}TagNameParameter"
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -361,21 +361,21 @@ Resources:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: PublishDispatcherSubnet{{ az[:-1] | upper }}
+        Ref: "PublishDispatcherSubnet{{ az[:-1] | upper }}"
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
 {% for az in availability_zone_list %}
   PublishSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
+        Ref: "AvailabilityZone{{ az[:-1] | upper }}Parameter"
       CidrBlock:
-        Ref: PublishSubnet{{ az[:-1] | upper }}CidrBlockParameter
+        Ref: "PublishSubnet{{ az[:-1] | upper }}CidrBlockParameter"
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: PublishSubnet{{ az[:-1] | upper }}TagNameParameter
+          Ref: "PublishSubnet{{ az[:-1] | upper }}TagNameParameter"
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -385,7 +385,7 @@ Resources:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: PublishSubnet{{ az[:-1] | upper }}
+        Ref: "PublishSubnet{{ az[:-1] | upper }}"
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
   S3Endpoint:
@@ -413,14 +413,14 @@ Resources:
   ToolSubnet{{ az[:-1] | upper }}:
     Properties:
       AvailabilityZone:
-        Ref: AvailabilityZone{{ az[:-1] | upper }}Parameter
+        Ref: "AvailabilityZone{{ az[:-1] | upper }}Parameter"
       CidrBlock:
-        Ref: ToolSubnet{{ az[:-1] | upper }}CidrBlockParameter
+        Ref: "ToolSubnet{{ az[:-1] | upper }}CidrBlockParameter"
       MapPublicIpOnLaunch: false
       Tags:
       - Key: Name
         Value:
-          Ref: ToolSubnet{{ az[:-1] | upper }}TagNameParameter
+          Ref: "ToolSubnet{{ az[:-1] | upper }}TagNameParameter"
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -430,6 +430,6 @@ Resources:
       RouteTableId:
         Ref: PrivateRouteTable
       SubnetId:
-        Ref: ToolSubnet{{ az[:-1] | upper }}
+        Ref: "ToolSubnet{{ az[:-1] | upper }}"
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
