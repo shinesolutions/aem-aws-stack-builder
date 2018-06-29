@@ -352,6 +352,13 @@ scheduled_jobs:
       hour: '*'
       minute: 0
 
+  publish_dispatcher:
+    content_health_check:
+      enable: true
+      weekday: '*'
+      hour: '*'
+      minute: '*'
+
   aem_orchestrator:
     stack_manager_pair:
       stack_prefix:
