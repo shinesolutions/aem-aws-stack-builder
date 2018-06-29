@@ -6,4 +6,4 @@ phases:
       - make deps
   build:
     commands:
-      - make test-integration-$OS_TYPE-$AEM_VERSION
+      - make test-integration-$OS_TYPE-$AEM_VERSION test_id=$BUILD_ID
