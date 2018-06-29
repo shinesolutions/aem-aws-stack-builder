@@ -1,0 +1,9 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - make deps
+  build:
+    commands:
+      - make test-integration-$OS_TYPE-$AEM_VERSION
