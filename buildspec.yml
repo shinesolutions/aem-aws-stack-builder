@@ -6,7 +6,7 @@ phases:
       - make deps
   pre_build:
     commands:
-      - chmod +x test/integration/test-examples.sh
+      - chmod +x scripts/*.sh test/*/*.sh
   build:
     commands:
       - make test-integration-$AEM_VERSION-$OS_TYPE test_id=$BUILD_ID
