@@ -6,11 +6,11 @@
 
   tasks:
 
-    - name: Ensure data bucket exists
-      s3_bucket:
+    - name: Inspect content of data bucket
+      aws_s3:
+        bucket: "{{ s3.data_bucket_name }}"
         region: "{{ aws.region }}"
-        name: "{{ s3.data_bucket_name }}"
-        state: present
+        mode: list
       tags:
       - create
 
@@ -143,7 +143,7 @@
         - create
       when:
         permission_type == "c"
-        
+
     - name: Check if a Stack Exists
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
