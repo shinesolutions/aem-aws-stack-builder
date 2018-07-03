@@ -22,11 +22,11 @@
       tags:
       - create
 
-    - name: Ensure data bucket exists
-      s3_bucket:
-        name: "{{ s3.data_bucket_name }}"
+    - name: Inspect content of data bucket
+      aws_s3:
+        bucket: "{{ s3.data_bucket_name }}"
         region: "{{ aws.region }}"
-        state: present
+        mode: list
       tags:
         - create
 
