@@ -1,3 +1,6 @@
+### 2.3.1
+*
+
 ### 2.3.0
 * Upgrade AEM AWS Stack Provisioner to 2.6.0
 * Add integration testing support using configured libraries
