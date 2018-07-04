@@ -6,20 +6,15 @@
 
   tasks:
 
-    - name: Create cloudformation/network/network.yaml from jinja2 template
-      template:
-        src: "../../templates/network.yaml.j2"
-        dest: "../../../cloudformation/network/network.yaml"
-
-    - name: Create group_vars/network.yaml from jinja2 template
-      template:
-        src: "../../templates/network-groupvars.yaml.j2"
-        dest: "../../group_vars/network.yaml"
-
     - name: Create playbooks/network/create-network-stack.yaml from jinja2 template
       template:
         src: "../../templates/create-network-stack.yaml.j2"
         dest: "./create-network-stack.yaml"
+
+    - name: Create cloudformation/network/network.yaml from jinja2 template
+      template:
+        src: "../../templates/network.yaml.j2"
+        dest: "../../../cloudformation/network/network.yaml"
 
     - name: Include create-network-stack.yaml
       include: create-network-stack.yaml
