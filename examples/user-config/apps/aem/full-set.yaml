@@ -86,7 +86,7 @@ library:
   simian_army_version: 2.5.3
 
 certificate_manager:
-  ssl_certificate_arn: 'arn:aws:acm:ap-southeast-2:918473058104:certificate/3bf6d041-025c-4b7f-a30c-c519ee63c7e0'
+  ssl_certificate_arn: 'arn:aws:iam::918473058104:server-certificate/aem-opencloud'
 
 snapshots:
   author:

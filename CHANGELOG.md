@@ -1,6 +1,11 @@
 ### 3.0.0
 * Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support
 
+### 2.3.0
+* Upgrade AEM AWS Stack Provisioner to 2.6.0
+* Add integration testing support using configured libraries
+* Change s3 bucket presence check to inspect the content of the bucket
+
 ### 2.2.1
 * Add configuration chaos_monkey.include_stack to include/exclude Chaos Monkey nested stack
 * Add AEM version and OS type support to local integration testing

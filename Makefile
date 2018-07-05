@@ -196,6 +196,15 @@ config-examples-aem-stack-manager:
 	mkdir -p stage/user-config/aem-stack-manager/
 	cp examples/user-config/apps/aem-stack-manager.yaml stage/user-config/aem-stack-manager/
 
+test-integration-aem62-rhel7:
+	./test/integration/test-examples.sh $(test_id) aem62 rhel7
+
+test-integration-aem63-rhel7:
+	./test/integration/test-examples.sh $(test_id) aem63 rhel7
+
+test-integration-aem64-rhel7:
+	./test/integration/test-examples.sh $(test_id) aem64 rhel7
+
 test-integration-local-aem62-rhel7:
 	./test/integration-local/test-examples.sh $(test_id) aem62 rhel7
 
