@@ -10,14 +10,20 @@
       template:
         src: "../../templates/create-network-stack.yaml.j2"
         dest: "./create-network-stack.yaml"
+      tags:
+        - create
 
     - name: Create cloudformation/network/network.yaml from jinja2 template
       template:
         src: "../../templates/network.yaml.j2"
         dest: "../../../cloudformation/network/network.yaml"
+      tags:
+        - create
 
-    - name: Include create-network-stack.yaml
-      include: create-network-stack.yaml
+    - name: Include create-network-stack.yaml tasks
+      include_tasks: create-network-stack.yaml
+      tags:
+        - create
 
     - name: Check if a Stack Exists
       command: >
