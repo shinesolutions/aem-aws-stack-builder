@@ -1,5 +1,6 @@
 ### 3.0.0
 * Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support
+* Upgrade AEM Password Reset to 1.1.0 for AEM 6.4 support
 
 ### 2.3.0
 * Upgrade AEM AWS Stack Provisioner to 2.6.0

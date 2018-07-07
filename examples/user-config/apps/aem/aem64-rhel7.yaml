@@ -2,6 +2,7 @@ aem:
   version: '6.4'
 
 library:
+  aem_password_reset_version: 1.1.0
   # TODO: which Oak version is compatible with AEM 6.4
   oak_run_version: 1.8.3
 
