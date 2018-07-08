@@ -13,7 +13,7 @@ if [[ "$#" -lt 1 ]] || [[ "$#" -gt 3 ]]; then
 fi
 
 test_id=$1
-aem_version=${2:-aem63}
+aem_version=${2:-aem64}
 os_type=${3:-rhel7}
 s3_bucket=aem-opencloud
 integration_config_file=examples/user-config/common/zzz-test.yaml

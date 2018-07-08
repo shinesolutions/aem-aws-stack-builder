@@ -11,7 +11,7 @@ if [[ "$#" -lt 1 ]] || [[ "$#" -gt 3 ]]; then
 fi
 
 test_id=$1
-aem_version=${2:-aem63}
+aem_version=${2:-aem64}
 os_type=${3:-rhel7}
 integration_config_file=examples/user-config/common/zzz-test.yaml
 aem_stack_manager_messenger_version=1.4.0
