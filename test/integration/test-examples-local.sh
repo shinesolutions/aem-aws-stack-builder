@@ -31,6 +31,7 @@ cd "${workspace_dir}/aem-aws-stack-builder" && make clean deps lint
 cd "${workspace_dir}/aem-aws-stack-provisioner"
 rm -rf modules/aem_resources/*
 rm -rf modules/aem_curator/*
+rm -rf modules/aem_orchestrator/*
 cp -R ${workspace_dir}/puppet-aem-resources/* modules/aem_resources/
 cp -R ${workspace_dir}/puppet-aem-curator/* modules/aem_curator/
 cp -R ${workspace_dir}/puppet-aem-orchestrator/* modules/aem_orchestrator/
