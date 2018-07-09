@@ -7,7 +7,7 @@
     "artifacts": [
       {
         "name": "aem-author-dispatcher-enable-crxde",
-        "source": "s3://aem-stack-builder/library/aem-author-dispatcher-enable-crxde-1.0.0.zip"
+        "source": "s3://aem-opencloud/library/aem-helloworld-author-dispatcher-enable-crxde-1.0.0.zip"
       }
     ]
   },
@@ -19,7 +19,7 @@
     "artifacts": [
       {
         "name": "aem-publish-dispatcher-enable-crxde",
-        "source": "s3://aem-stack-builder/library/aem-publish-dispatcher-enable-crxde-1.0.0.zip"
+        "source": "s3://aem-opencloud/library/aem-helloworld-publish-dispatcher-enable-crxde-1.0.0.zip"
       }
     ]
   }
