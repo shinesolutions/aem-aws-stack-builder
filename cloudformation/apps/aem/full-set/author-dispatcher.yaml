@@ -203,7 +203,6 @@ Resources:
       SecurityGroups:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
       Subnets:
         Fn::Split:
         - ','
