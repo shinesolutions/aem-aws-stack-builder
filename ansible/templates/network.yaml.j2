@@ -9,7 +9,7 @@ Conditions:
         - ''
 Description: Create Subnets, Internet Gateway, and Route Tables for AEM Stack
 Outputs:
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   {# Here we are grabbing the last char of the region name, and using it in our template.
      The last char is listed as the identifier, so we are assuming it is unique to the region.
      You can view the AWS documentaion here:
@@ -29,7 +29,7 @@ Outputs:
         Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetList
     Value:
       Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   AuthorSubnet{{ az[-1] | upper }}:
     Description: The Author Subnet in Availability Zone {{ az[-1] | upper }}
     Export:
@@ -73,7 +73,7 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublicRouteTable
     Value:
       Ref: PublicRouteTable
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   PublishDispatcherELBSubnet{{ az[-1] | upper }}:
     Description: The Publish Dispatcher ELB Subnet in Availability Zone {{ az[-1] | upper }}
     Export:
@@ -89,7 +89,7 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetList
     Value:
       Fn::Sub: ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   PublishDispatcherSubnet{{ az[-1] | upper }}:
     Description: The Publish Dispatcher Subnet in Availability Zone {{ az[-1] | upper }}
     Export:
@@ -105,7 +105,7 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetList
     Value:
       Fn::Sub: ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   PublishSubnet{{ az[-1] | upper }}:
     Description: The Publish Subnet in Availability Zone {{ az[-1] | upper }}
     Export:
@@ -121,7 +121,7 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublishSubnetList
     Value:
       Fn::Sub: ${PublishSubnetA},${PublishSubnetB}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   ToolSubnet{{ az[-1] | upper }}:
     Description: The Tool Subnet in Availability Zone {{ az[-1] | upper }}
     Export:
@@ -138,7 +138,7 @@ Outputs:
     Value:
       Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
 Parameters:
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
 {% set subname = 'subnet_' + az[-1] %}
   AuthorDispatcherSubnet{{ az[-1] | upper }}CidrBlockParameter:
     Default: {{ network.author_dispatcher[subname].cidr_block }}
@@ -149,7 +149,7 @@ Parameters:
     Description: AEM Author Dispatcher Subnet {{ az[-1] | upper }} Name
     Type: String
 {% endfor %}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
 {% set subname = 'subnet_' + az[-1] %}
   AuthorSubnet{{ az[-1] | upper }}CidrBlockParameter:
     Default: {{ network.author[subname].cidr_block }}
@@ -160,7 +160,7 @@ Parameters:
     Description: AEM Author Subnet {{ az[-1] | upper }} Name
     Type: String
 {% endfor %}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   AvailabilityZone{{ az[-1] | upper }}Parameter:
     Default: {{ az }}
     Description: Availability Zone {{ az[-1] | upper }}
@@ -178,7 +178,7 @@ Parameters:
     Default: AEM VPC Public Route Table
     Description: AEM VPC Public Route Table Name
     Type: String
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
 {% set subname = 'subnet_' + az[-1] %}
   PublishDispatcherELBSubnet{{ az[-1] | upper }}CidrBlockParameter:
     Default: {{ network.publish_dispatcher_elb[subname].cidr_block }}
@@ -189,7 +189,7 @@ Parameters:
     Description: AEM Publish Dispatcher ELB Subnet {{ az[-1] | upper }} Name
     Type: String
 {% endfor %}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
 {% set subname = 'subnet_' + az[-1] %}
   PublishDispatcherSubnet{{ az[-1] | upper }}CidrBlockParameter:
     Default: {{ network.publish_dispatcher[subname].cidr_block }}
@@ -200,7 +200,7 @@ Parameters:
     Description: AEM Publish Dispatcher Subnet {{ az[-1] | upper }} Name
     Type: String
 {% endfor %}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
 {% set subname = 'subnet_' + az[-1] %}
   PublishSubnet{{ az[-1] | upper }}CidrBlockParameter:
     Default: {{ network.publish[subname].cidr_block }}
@@ -219,7 +219,7 @@ Parameters:
     Default: ''
     Description: Used to Namespace the Exported Resources
     Type: String
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
 {% set subname = 'subnet_' + az[-1] %}
   ToolSubnet{{ az[-1] | upper }}CidrBlockParameter:
     Default: {{ network.tool[subname].cidr_block }}
@@ -231,7 +231,7 @@ Parameters:
     Type: String
 {% endfor %}
 Resources:
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   AuthorDispatcherSubnet{{ az[-1] | upper }}:
     Properties:
       AvailabilityZone:
@@ -255,7 +255,7 @@ Resources:
         Ref: AuthorDispatcherSubnet{{ az[-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   AuthorSubnet{{ az[-1] | upper }}:
     Properties:
       AvailabilityZone:
@@ -323,7 +323,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::RouteTable
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   PublishDispatcherELBSubnet{{ az[-1] | upper }}:
     Properties:
       AvailabilityZone:
@@ -347,7 +347,7 @@ Resources:
         Ref: PublishDispatcherELBSubnet{{ az[-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   PublishDispatcherSubnet{{ az[-1] | upper }}:
     Properties:
       AvailabilityZone:
@@ -371,7 +371,7 @@ Resources:
         Ref: PublishDispatcherSubnet{{ az[-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation
 {% endfor %}
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   PublishSubnet{{ az[-1] | upper }}:
     Properties:
       AvailabilityZone:
@@ -416,7 +416,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::VPCEndpoint
-{% for az in aws.availability_zone_list %}
+{% for az in az_array %}
   ToolSubnet{{ az[-1] | upper }}:
     Properties:
       AvailabilityZone:

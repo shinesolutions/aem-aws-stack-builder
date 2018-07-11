@@ -4,6 +4,9 @@
   gather_facts: no
   connection: local
 
+  vars:
+    az_array: "{{ aws.availability_zone_list.split(', ') }}"
+
   tasks:
 
     - name: Create playbooks/network/create-network-stack.yaml from jinja2 template
