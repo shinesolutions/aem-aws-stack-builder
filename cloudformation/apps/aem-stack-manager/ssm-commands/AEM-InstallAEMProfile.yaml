@@ -46,6 +46,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/install-aem-profile.sh {{aemID}} {{aemProfile}} {{aemArtifactsBase}} {{aemHealthcheckVersion}} {{aemPort}} {{aemSslPort}}'
+        - '/opt/shinesolutions/aem-tools/install-aem-profile.sh {{aemID}} {{aemProfile}} {{aemArtifactsBase}} {{aemBase}} {{aemHealthcheckVersion}} {{aemPort}} {{aemSslPort}}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
