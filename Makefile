@@ -13,7 +13,7 @@ deps:
 lint:
 	# TODO: re-enable at a later release, post transition to aem-platform-buildenv
 	# shellcheck scripts/*.sh
-	shellcheck test/integration-local/*.sh
+	shellcheck test/integration/*.sh
 	for playbook in ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
