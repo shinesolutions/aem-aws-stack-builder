@@ -25,6 +25,7 @@
     - name: Inspect content of data bucket
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
+        prefix: "{{ stack_prefix }}"
         region: "{{ aws.region }}"
         mode: list
       tags:
