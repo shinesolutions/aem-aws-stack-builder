@@ -13,7 +13,6 @@ fi
 test_id=$1
 aem_version=${2:-aem63}
 os_type=${3:-rhel7}
-s3_bucket=aem-stack-builder
 integration_config_file=examples/user-config/common/zzz-test.yaml
 aem_stack_manager_messenger_version=1.4.1
 

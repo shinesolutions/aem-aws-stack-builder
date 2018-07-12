@@ -105,7 +105,7 @@ compute:
   inbound_from_bastion_host_security_group: overwrite-me
 
 s3:
-  data_bucket_name: aem-stack-builder
+  data_bucket_name: aem-opencloud
 
 library:
   aem_aws_stack_provisioner_version: 2.6.0

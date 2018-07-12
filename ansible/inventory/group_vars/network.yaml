@@ -75,7 +75,7 @@ nat_gateway:
   elastic_ip_allocation_id: eipalloc-32711957
 
 endpoints:
-  s3: aem-stack-builder
+  s3: aem-opencloud
 
 network_exports:
   stack_name: aem-network-exports-stack

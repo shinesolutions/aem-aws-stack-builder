@@ -2,7 +2,7 @@
   "author-publish-dispatcher": {
     "packages": [
       {
-        "source": "s3://aem-stack-builder/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "source": "s3://aem-opencloud/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
         "group": "shinesolutions",
         "name": "aem-helloworld-content",
         "version": "0.0.1-SNAPSHOT",
@@ -11,7 +11,7 @@
         "force": false
       },
       {
-        "source": "s3://aem-stack-builder/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "source": "s3://aem-opencloud/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
         "group": "shinesolutions",
         "name": "aem-helloworld-content",
         "version": "0.0.1-SNAPSHOT",
@@ -24,7 +24,7 @@
     "artifacts": [
       {
         "name": "aem-helloworld-author-publish-dispatcher",
-        "source": "s3://aem-stack-builder/library/aem-helloworld-publish-dispatcher-0.10.0.zip"
+        "source": "s3://aem-opencloud/library/aem-helloworld-publish-dispatcher-0.10.0.zip"
       }
     ]
   }
