@@ -15,7 +15,7 @@ aem_version=${2:-aem63}
 os_type=${3:-rhel7}
 s3_bucket=aem-stack-builder
 integration_config_file=examples/user-config/common/zzz-test.yaml
-aem_stack_manager_messenger_version=1.4.0
+aem_stack_manager_messenger_version=1.4.1
 
 # Download Stack Manager Messenger
 wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
