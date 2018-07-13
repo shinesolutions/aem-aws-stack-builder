@@ -90,10 +90,10 @@ certificate_manager:
 snapshots:
   author:
     use_data_vol_snapshot: false
-    data_vol_snapshot_id: snap-06eea7764113b8844
+    data_vol_snapshot_id:
   publish:
     use_data_vol_snapshot: false
-    data_vol_snapshot_id: snap-06eea7764113b8844
+    data_vol_snapshot_id:
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
