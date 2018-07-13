@@ -2,6 +2,7 @@
 set -o errexit
 set -o nounset
 
+# Full path required here
 if [ "$#" -ne 1 ]; then
   echo 'Usage: ./generate-network-vars.sh <config_path>'
   exit 1
@@ -27,4 +28,4 @@ ANSIBLE_CONFIG=ansible/ansible.cfg \
   ansible-playbook ansible/playbooks/generate-network-vars.yaml \
   -i "localhost," \
   --module-path ansible/library/ \
-  "${extra_vars[@]}" -vvvv
+  "${extra_vars[@]}"
