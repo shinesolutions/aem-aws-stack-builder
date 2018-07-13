@@ -1,0 +1,28 @@
+---
+- name: Playbook to generate network variable template file
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  tasks:
+    - name: Check if network.yaml file already exists
+      stat:
+        path: "{{ config_path }}/network.yaml"
+      register: st
+
+    - name: Create a backup dir in config_path if network.yaml file already exists
+      file:
+        path: "{{ config_path }}/backup"
+        state: directory
+      when: st.stat.exists == True
+
+    - name: Take backup of network.yaml file so we can roll back if need be
+      copy:
+        src: "{{ config_path }}/network.yaml"
+        dest: "{{ config_path }}/backup/network-{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}.yaml"
+      when: st.stat.exists == True
+
+    - name: Create network.yaml file from template
+      template:
+        src: "../templates/group-vars-network.yaml.j2"
+        dest: "{{ config_path }}/network.yaml"

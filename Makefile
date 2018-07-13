@@ -41,6 +41,9 @@ config:
 library: stage
 	scripts/fetch-library.sh "${config_path}"
 
+generate-network-vars:
+	scripts/generate-network-vars.sh "${config_path}"
+
 ########################################
 # Shared stacks
 ########################################
@@ -251,4 +254,4 @@ git-archive:
 	mkdir -p stage
 	git archive --format=tar.gz --prefix=aaem-aws-stack-builder-$(version)/ HEAD -o stage/aem-aws-stack-builder-$(version).tar.gz
 
-.PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert package git-archive
+.PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert package git-archive generate-network-vars
