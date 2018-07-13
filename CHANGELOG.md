@@ -1,3 +1,6 @@
+### 2.3.2
+*
+
 ### 2.3.1
 * Upgrade AEM AWS Stack Provisioner to 2.6.1
 * Remove attachment of Bastion Host security group from all ELBs
