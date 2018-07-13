@@ -139,9 +139,8 @@ Outputs:
       Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
 Parameters:
 {% for az in az_array %}
-{% set subname = 'subnet_' + az[-1] %}
   AuthorDispatcherSubnet{{ az[-1] | upper }}CidrBlockParameter:
-    Default: {{ network.author_dispatcher[subname].cidr_block }}
+    Default: {{ network.author_dispatcher[az].cidr_block }}
     Description: AEM Author Dispatcher Subnet {{ az[-1] | upper }} Cidr Block
     Type: String
   AuthorDispatcherSubnet{{ az[-1] | upper }}TagNameParameter:
@@ -150,9 +149,8 @@ Parameters:
     Type: String
 {% endfor %}
 {% for az in az_array %}
-{% set subname = 'subnet_' + az[-1] %}
   AuthorSubnet{{ az[-1] | upper }}CidrBlockParameter:
-    Default: {{ network.author[subname].cidr_block }}
+    Default: {{ network.author[az].cidr_block }}
     Description: AEM Author Subnet {{ az[-1] | upper }} Cidr Block
     Type: String
   AuthorSubnet{{ az[-1] | upper }}TagNameParameter:
@@ -179,9 +177,8 @@ Parameters:
     Description: AEM VPC Public Route Table Name
     Type: String
 {% for az in az_array %}
-{% set subname = 'subnet_' + az[-1] %}
   PublishDispatcherELBSubnet{{ az[-1] | upper }}CidrBlockParameter:
-    Default: {{ network.publish_dispatcher_elb[subname].cidr_block }}
+    Default: {{ network.publish_dispatcher_elb[az].cidr_block }}
     Description: AEM Publish Dispatcher ELB Subnet {{ az[-1] | upper }} Cidr Block
     Type: String
   PublishDispatcherELBSubnet{{ az[-1] | upper }}TagNameParameter:
@@ -190,9 +187,8 @@ Parameters:
     Type: String
 {% endfor %}
 {% for az in az_array %}
-{% set subname = 'subnet_' + az[-1] %}
   PublishDispatcherSubnet{{ az[-1] | upper }}CidrBlockParameter:
-    Default: {{ network.publish_dispatcher[subname].cidr_block }}
+    Default: {{ network.publish_dispatcher[az].cidr_block }}
     Description: AEM Publish Dispatcher Subnet {{ az[-1] | upper }} Cidr Block
     Type: String
   PublishDispatcherSubnet{{ az[-1] | upper }}TagNameParameter:
@@ -201,9 +197,8 @@ Parameters:
     Type: String
 {% endfor %}
 {% for az in az_array %}
-{% set subname = 'subnet_' + az[-1] %}
   PublishSubnet{{ az[-1] | upper }}CidrBlockParameter:
-    Default: {{ network.publish[subname].cidr_block }}
+    Default: {{ network.publish[az].cidr_block }}
     Description: AEM Publish Subnet {{ az[-1] | upper }} Cidr Block
     Type: String
   PublishSubnet{{ az[-1] | upper }}TagNameParameter:
@@ -220,9 +215,8 @@ Parameters:
     Description: Used to Namespace the Exported Resources
     Type: String
 {% for az in az_array %}
-{% set subname = 'subnet_' + az[-1] %}
   ToolSubnet{{ az[-1] | upper }}CidrBlockParameter:
-    Default: {{ network.tool[subname].cidr_block }}
+    Default: {{ network.tool[az].cidr_block }}
     Description: Tool Subnet {{ az[-1] | upper }} Cidr Block
     Type: String
   ToolSubnet{{ az[-1] | upper }}TagNameParameter:
