@@ -30,7 +30,7 @@ parameters:
   aemSslPort:
     description: >-
       (Required) AEM HTTPS listening port.
-    type: Integer
+    type: String
   executionTimeout:
     description: >-
       (Optional) The time in seconds for a command to be completed before it is
