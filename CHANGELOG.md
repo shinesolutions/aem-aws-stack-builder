@@ -1,5 +1,5 @@
 ### 3.1.0
-*
+* Move Custom Stack Provisioner pre step to be after facts provisioning
 
 ### 3.0.0
 * Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support
