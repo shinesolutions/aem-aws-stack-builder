@@ -1,0 +1,64 @@
+#jinja2:lstrip_blocks:True,trim_blocks:True
+#stack_prefix: default
+
+ec2_vpc:
+  stack_name:
+  tag_name: AEM Stack VPC
+  cidr_block:
+  dhcp_option: dopt-75958817
+
+network:
+  stack_name: aem-network-stack
+
+  internet_gateway:
+    tag_name: AEM VPC Internet Gateway
+
+  publish_dispatcher_elb:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Publish Dispatcher ELB Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  publish_dispatcher:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Publish Dispatcher Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  publish:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Publish Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  author:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Author Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  author_dispatcher:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Author Dispatcher Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  tool:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Tool Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  public_route_table:
+    tag_name: AEM VPC Public Route Table
+
+  private_route_table:
+    tag_name: AEM VPC Private Route Table
+
+  hosted_zone: aem.
