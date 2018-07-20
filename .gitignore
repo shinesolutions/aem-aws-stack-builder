@@ -10,3 +10,5 @@ stage
 backup/
 output/
 examples/user-config/*/zzz-*.yaml
+ansible/playbooks/network/create-network-stack.yaml
+testconfig/*
