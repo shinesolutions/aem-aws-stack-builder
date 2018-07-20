@@ -4,7 +4,7 @@ set -o nounset
 
 # Full path required here
 if [ "$#" -ne 1 ]; then
-  echo 'Usage: ./generate-network-vars.sh <config_path>'
+  echo 'Usage: ./generate-network-config.sh <config_path>'
   exit 1
 fi
 
@@ -25,7 +25,7 @@ echo "  ${extra_vars[*]}"
 
 PYTHONPATH=../python-modules \
 ANSIBLE_CONFIG=ansible/ansible.cfg \
-  ansible-playbook ansible/playbooks/generate-network-vars.yaml \
+  ansible-playbook ansible/playbooks/generate-network-config.yaml \
   -i "localhost," \
   --module-path ansible/library/ \
   "${extra_vars[@]}"

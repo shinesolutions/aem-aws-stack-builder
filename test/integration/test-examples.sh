@@ -47,16 +47,16 @@ tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_versi
 
 # Run integration tests via Stack Manager Messenger
 cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
-make test-consolidated \
-  "stack_prefix=${test_id}-stack-manager" \
-  "target_aem_stack_prefix=${test_id}-consolidated"
+# make test-consolidated \
+#   "stack_prefix=${test_id}-stack-manager" \
+#   "target_aem_stack_prefix=${test_id}-consolidated"
 make test-full-set \
   "stack_prefix=${test_id}-stack-manager" \
   "target_aem_stack_prefix=${test_id}-full-set"
-
-# Delete all created AEM environments
-cd "${workspace_dir}"
-(make "config-examples-${aem_version}-${os_type}-full-set" && make delete-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/") &
-(make "config-examples-${aem_version}-${os_type}-consolidated" && make delete-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/") &
-(make config-examples-aem-stack-manager && make delete-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/) &
-wait
+#
+# # Delete all created AEM environments
+# cd "${workspace_dir}"
+# (make "config-examples-${aem_version}-${os_type}-full-set" && make delete-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/") &
+# (make "config-examples-${aem_version}-${os_type}-consolidated" && make delete-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/") &
+# (make config-examples-aem-stack-manager && make delete-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/) &
+# wait
