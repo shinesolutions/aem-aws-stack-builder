@@ -38,7 +38,7 @@
     "artifacts": [
       {
         "name": "aem-helloworld-publish-dispatcher",
-        "source": "https://github.com/shinesolutions/aem-helloworld-publish-dispatcher/releases/download/0.10.2/aem-helloworld-publish-dispatcher-0.10.2.zip"
+        "source": "https://github.com/shinesolutions/aem-helloworld-publish-dispatcher/releases/download/0.10.2/aem-helloworld-publish-dispatcher-0.11.0.zip"
       }
     ]
   }

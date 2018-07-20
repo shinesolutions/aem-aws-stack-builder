@@ -24,7 +24,7 @@
     "artifacts": [
       {
         "name": "aem-helloworld-author-publish-dispatcher",
-        "source": "s3://aem-opencloud/library/aem-helloworld-publish-dispatcher-0.10.0.zip"
+        "source": "s3://aem-opencloud/library/aem-helloworld-publish-dispatcher-0.11.0.zip"
       }
     ]
   }
