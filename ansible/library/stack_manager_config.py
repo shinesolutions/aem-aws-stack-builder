@@ -147,7 +147,9 @@ class config:
             "LiveSnapshot": "live-snapshot",
             "ManageService": "manage-service",
             "OfflineCompaction": "offline-compaction",
+            "OfflineCompactionConsolidated": "offline-compaction",
             "OfflineSnapshot": "offline-snapshot",
+            "OfflineSnapshotConsolidated": "offline-snapshot",
             "PromoteAuthor": "promote-author",
             "RunAdhocPuppet": "run-adhoc-puppet",
             "ScheduleOfflineSnapshot": "schedule-offline-snapshot"
