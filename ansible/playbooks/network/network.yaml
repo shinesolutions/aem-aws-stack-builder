@@ -9,22 +9,22 @@
 
   tasks:
 
-    - name: Create playbooks/network/create-network-stack.yaml from jinja2 template
+    - name: Generate network resources playbook from jinja2 template
       template:
-        src: "../../templates/create-network-stack.yaml.j2"
-        dest: "./create-network-stack.yaml"
+        src: "../../templates/network-playbook.yaml.j2"
+        dest: "./network-resources-generated.yaml"
       tags:
         - create
 
-    - name: Create cloudformation/network/network.yaml from jinja2 template
+    - name: Create network CloudFormation template from jinja2 template
       template:
-        src: "../../templates/network.yaml.j2"
+        src: "../../templates/network-cf.yaml.j2"
         dest: "../../../cloudformation/network/network.yaml"
       tags:
         - create
 
-    - name: Include create-network-stack.yaml tasks
-      include_tasks: create-network-stack.yaml
+    - name: Include generated network resources playbook tasks
+      include_tasks: network-resources-generated.yaml
       tags:
         - create
 
@@ -53,4 +53,4 @@
       when:
         "stack_query.rc == 0"
       tags:
-      - delete
+        - delete

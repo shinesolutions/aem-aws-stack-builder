@@ -58,14 +58,14 @@ Outputs:
     Value:
       Ref: ToolSubnetList
   PrivateRouteTable:
-    Description: The Private Route Table for AEM Stack VPC
+    Description: The Private Route Table for AEM OpenCloud VPC
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PrivateRouteTable
     Value:
       Ref: PrivateRouteTable
   PublicRouteTable:
-    Description: The Public Route Table for AEM Stack VPC
+    Description: The Public Route Table for AEM OpenCloud VPC
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PublicRouteTable
@@ -127,11 +127,11 @@ Parameters:
     Type: String
   PrivateRouteTable:
     Default: ''
-    Description: The Private Route Table for AEM Stack VPC
+    Description: The Private Route Table for AEM OpenCloud VPC
     Type: String
   PublicRouteTable:
     Default: ''
-    Description: The Public Route Table for AEM Stack VPC
+    Description: The Public Route Table for AEM OpenCloud VPC
     Type: String
   PublishDispatcherELBSubnetList:
     Description: Comma-separated Publish Dispatcher ELB Subnet List

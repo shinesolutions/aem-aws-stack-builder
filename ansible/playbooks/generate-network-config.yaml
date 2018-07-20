@@ -1,0 +1,15 @@
+---
+- name: Playbook to generate network config file
+  hosts: localhost
+  gather_facts: no
+  connection: local
+
+  vars:
+    az_array: "{{ aws.availability_zone_list.split(', ') }}"
+
+  tasks:
+
+    - name: Create network config file from template
+      template:
+        src: "../templates/network-config.yaml.j2"
+        dest: "../../{{ config_path }}/network.yaml"

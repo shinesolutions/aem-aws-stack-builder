@@ -41,12 +41,12 @@ config:
 library: stage
 	scripts/fetch-library.sh "${config_path}"
 
-generate-network-vars:
-	scripts/generate-network-vars.sh "${config_path}"
+########################################
+# Network stacks
+########################################
 
-########################################
-# Shared stacks
-########################################
+generate-network-config:
+	./scripts/generate-network-config.sh "$(config_path)"
 
 create-vpc:
 	./scripts/create-stack.sh network/vpc "$(config_path)" "$(stack_prefix)"
@@ -79,7 +79,7 @@ delete-bastion:
 	./scripts/delete-stack.sh network/bastion "$(config_path)" "$(stack_prefix)"
 
 ########################################
-# AEM
+# AEM Stack Data
 ########################################
 
 create-aem-stack-data:
@@ -263,4 +263,4 @@ git-archive:
 	mkdir -p stage
 	git archive --format=tar.gz --prefix=aaem-aws-stack-builder-$(version)/ HEAD -o stage/aem-aws-stack-builder-$(version).tar.gz
 
-.PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert package git-archive generate-network-vars
+.PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert package git-archive generate-network-config
