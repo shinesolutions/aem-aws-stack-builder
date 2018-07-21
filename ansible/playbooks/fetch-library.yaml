@@ -21,10 +21,21 @@
         state: directory
         mode: 0755
 
+    # AEM AWS Stack Provisioner Tasks
     - name: Download AEM AWS Stack Provisioner from GitHub
       command: "wget -O {{ artifacts_dir }}/aem-aws-stack-provisioner-{{ library.aem_aws_stack_provisioner_version }}.tar.gz https://github.com/shinesolutions/aem-aws-stack-provisioner/releases/download/{{ library.aem_aws_stack_provisioner_version }}/aem-aws-stack-provisioner-{{ library.aem_aws_stack_provisioner_version }}.tar.gz"
       when: library.aem_aws_stack_provisioner_version is defined
 
+    - name: Generate checksum file for AEM AWS Stack Provisioner tar.gz
+      generate_checksum_file:
+        src: "{{ artifacts_dir }}/aem-aws-stack-provisioner-{{ library.aem_aws_stack_provisioner_version }}.tar.gz"
+        dest_path: "{{ artifacts_dir }}"
+        dest_file: "aem-aws-stack-provisioner-{{ library.aem_aws_stack_provisioner_version }}.tar.gz.metadata.json"
+        outfile_type: json
+        checksum_type: all
+      when: library.aem_aws_stack_provisioner_version is defined
+
+    # AEM Orchestrator Tasks
     - name: Download AEM Orchestrator from Maven Central
       get_url:
         url: "http://central.maven.org/maven2/com/shinesolutions/aem-orchestrator/{{ library.aem_orchestrator_version }}/aem-orchestrator-{{ library.aem_orchestrator_version }}.jar"
@@ -32,6 +43,16 @@
         mode: 0644
       when: library.aem_orchestrator_version is defined
 
+    - name: Generate checksum file for AEM Orchestrator file
+      generate_checksum_file:
+        src: "{{ artifacts_dir }}/aem-orchestrator-{{ library.aem_orchestrator_version }}.jar"
+        dest_path: "{{ artifacts_dir }}"
+        dest_file: "aem-orchestrator-{{ library.aem_orchestrator_version }}.jar.metadata.json"
+        outfile_type: json
+        checksum_type: all
+      when: library.aem_orchestrator_version is defined
+
+    # AEM Password Reset Tasks
     - name: Download AEM Password Reset from Maven Central
       get_url:
         url: "http://central.maven.org/maven2/com/shinesolutions/aem-password-reset-content/{{ library.aem_password_reset_version }}/aem-password-reset-content-{{ library.aem_password_reset_version }}.zip"
@@ -39,10 +60,30 @@
         mode: 0644
       when: library.aem_password_reset_version is defined
 
+    - name: Generate checksum file for AEM Password Reset file
+      generate_checksum_file:
+        src: "{{ artifacts_dir }}/aem-password-reset-content-{{ library.aem_password_reset_version }}.zip"
+        dest_path: "{{ artifacts_dir }}"
+        dest_file: "aem-password-reset-content-{{ library.aem_password_reset_version }}.zip.metadata.json"
+        outfile_type: json
+        checksum_type: all
+      when: library.aem_password_reset_version is defined
+
+    # AEM Stack Manager Tasks
     - name: Download AEM Stack Manager from GitHub
       command: "wget -O {{ artifacts_dir }}//aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip https://github.com/shinesolutions/aem-stack-manager-cloud/releases/download/{{ library.aem_stack_manager_version }}/aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip"
       when: library.aem_stack_manager_version is defined
 
+    - name: Generate checksum file for AEM Stack Manager file
+      generate_checksum_file:
+        src: "{{ artifacts_dir }}/aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip"
+        dest_path: "{{ artifacts_dir }}"
+        dest_file: "aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip.metadata.json"
+        outfile_type: json
+        checksum_type: all
+      when: library.aem_stack_manager_version is defined
+
+    # Oak Run Tasks
     - name: Download Oak Run from Maven Central
       get_url:
         url: "http://central.maven.org/maven2/org/apache/jackrabbit/oak-run/{{ library.oak_run_version }}/oak-run-{{ library.oak_run_version }}.jar"
@@ -50,11 +91,30 @@
         mode: 0644
       when: library.oak_run_version is defined
 
+    - name: Generate checksum file for Oak Run file
+      generate_checksum_file:
+        src: "{{ artifacts_dir }}/oak-run-{{ library.oak_run_version }}.jar"
+        dest_path: "{{ artifacts_dir }}"
+        dest_file: "oak-run-{{ library.oak_run_version }}.jar.metadata.json"
+        outfile_type: json
+        checksum_type: all
+      when: library.oak_run_version is defined
+
+    # Simian Army Tasks
     - name: Download Simian Army from Bintray
       get_url:
         url: "https://dl.bintray.com/netflixoss/maven/com/netflix/simianarmy/simianarmy/{{ library.simian_army_version }}/simianarmy-{{ library.simian_army_version }}.war"
         dest: "{{ artifacts_dir }}"
         mode: 0644
+      when: library.simian_army_version is defined
+
+    - name: Generate checksum file for Simian Army file
+      generate_checksum_file:
+        src: "{{ artifacts_dir }}/simianarmy-{{ library.simian_army_version }}.war"
+        dest_path: "{{ artifacts_dir }}"
+        dest_file: "simianarmy-{{ library.simian_army_version }}.war.metadata.json"
+        outfile_type: json
+        checksum_type: all
       when: library.simian_army_version is defined
 
     - name: Upload fetched artifacts to S3 library bucket
