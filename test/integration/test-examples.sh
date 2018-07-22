@@ -25,6 +25,27 @@ make config-examples-aem-stack-manager && make create-stack-manager "stack_prefi
 make "config-examples-${aem_version}-${os_type}-full-set" && make create-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
 make "config-examples-${aem_version}-${os_type}-consolidated" && make create-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
 
+# Download Stack Manager Messenger
+cd "${workspace_dir}"
+wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
+mkdir -p "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+
+# Run Stack Manager Messenger integration tests
+cd "${workspace_dir}"
+wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
+mkdir -p "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+
+# Run integration tests via Stack Manager Messenger
+cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+make test-consolidated \
+  "stack_prefix=${test_id}-stack-manager" \
+  "target_aem_stack_prefix=${test_id}-consolidated"
+make test-full-set \
+  "stack_prefix=${test_id}-stack-manager" \
+  "target_aem_stack_prefix=${test_id}-full-set"
+
 # Download AEM Test Suite
 cd "${workspace_dir}"
 wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
@@ -39,24 +60,9 @@ make test-recovery-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
 # placeholder security test for now, TODO: retrieve author, publish, and publish_dispatcher hosts
 # make test-security config_path=conf/
 
-# Run Stack Manager Messenger integration tests
+# Delete all created AEM environments
 cd "${workspace_dir}"
-wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
-mkdir -p "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
-tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
-
-# Run integration tests via Stack Manager Messenger
-cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
-# make test-consolidated \
-#   "stack_prefix=${test_id}-stack-manager" \
-#   "target_aem_stack_prefix=${test_id}-consolidated"
-make test-full-set \
-  "stack_prefix=${test_id}-stack-manager" \
-  "target_aem_stack_prefix=${test_id}-full-set"
-#
-# # Delete all created AEM environments
-# cd "${workspace_dir}"
-# (make "config-examples-${aem_version}-${os_type}-full-set" && make delete-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/") &
-# (make "config-examples-${aem_version}-${os_type}-consolidated" && make delete-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/") &
-# (make config-examples-aem-stack-manager && make delete-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/) &
-# wait
+(make "config-examples-${aem_version}-${os_type}-full-set" && make delete-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/") &
+(make "config-examples-${aem_version}-${os_type}-consolidated" && make delete-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/") &
+(make config-examples-aem-stack-manager && make delete-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/) &
+wait
