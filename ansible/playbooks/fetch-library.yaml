@@ -117,6 +117,23 @@
         checksum_type: all
       when: library.simian_army_version is defined
 
+    # AEM Health Check tasks
+    - name: Download AEM Health Check from Maven Central
+      get_url:
+        url: "http://central.maven.org/maven2/com/shinesolutions/aem-healthcheck-content/{{ library.aem_healthcheck_version }}/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
+        dest: "{{ artifacts_dir }}"
+        mode: 0644
+      when: library.aem_healthcheck_version is defined
+
+    - name: Generate checksum file for AEM Health Check file
+      generate_checksum_file:
+        src: "{{ artifacts_dir }}/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
+        dest_path: "{{ artifacts_dir }}"
+        dest_file: "aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip.metadata.json"
+        outfile_type: json
+        checksum_type: all
+      when: library.aem_healthcheck_version is defined
+
     - name: Upload fetched artifacts to S3 library bucket
       s3_sync:
         region: "{{ aws.region }}"
