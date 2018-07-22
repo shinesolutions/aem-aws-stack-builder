@@ -3,6 +3,7 @@
 * Add support for any number of availability zones during VPC and network provisioning #159
 * Add metadata file creation for each artifact uploaded using Makefile library target #114
 * Add library.aem_healthcheck_version configuration property
+* Add new SSM Document install-aem-profile
 
 ### 3.0.0
 * Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support

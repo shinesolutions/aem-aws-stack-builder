@@ -153,7 +153,8 @@ class config:
             "FlushDispatcherCache": "flush-dispatcher-cache",
             "TestReadinessFullset": "test-readiness-full-set",
             "TestReadinessConsolidated": "test-readiness-consolidated",
-            "ScheduleOfflineSnapshot": "schedule-offline-snapshot"
+            "ScheduleOfflineSnapshot": "schedule-offline-snapshot",
+            "InstallAEMProfile": "install-aem-profile"
             }
 
         messenger_config_list = {
