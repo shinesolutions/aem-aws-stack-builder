@@ -22,6 +22,7 @@ Check out the [example configuration files](https://github.com/shinesolutions/ae
 | aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | 120 |
 | aem.deployment_check_delay_in_seconds | The number of seconds delay before retrying the deployment status check | Optional | 15 |
 | library.oak_run_version | The version number of [Oak Run](https://github.com/apache/jackrabbit-oak/blob/trunk/oak-run/README.md) library. This version number must be compatible with the AEM version that you're using. Oak Run version numbers are available from [Maven repository](https://mvnrepository.com/artifact/org.apache.jackrabbit/oak-run) | Mandatory | |
+| library.aem_healthcheck_version | The version number of [AEM Health Check](https://github.com/shinesolutions/aem-healthcheck) library. This version number will be used during Stack Manager event for reconfiguring AEM, which will provision AEM Health Check. | Optional | |
 
 ### AEM Full-Set specific configuration properties:
 
