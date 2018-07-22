@@ -4,50 +4,29 @@
   gather_facts: no
   connection: local
 
+  vars:
+    az_array: "{{ aws.availability_zone_list.split(', ') }}"
+
   tasks:
 
-    - name: Create AEM Network Stack
-      cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ network.stack_name }}"
-        state: present
-        region: "{{ aws.region }}"
-        disable_rollback: true
-        template: "../../../cloudformation/network/network.yaml"
-        template_parameters:
-          StackPrefix: "{{ stack_prefix}}"
-          AvailabilityZoneAParameter: "{{ aws.availability_zone_a }}"
-          AvailabilityZoneBParameter: "{{ aws.availability_zone_b }}"
-          Ec2InternetGatewayTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"
-          PublishDispatcherELBSubnetACidrBlockParameter: "{{ network.publish_dispatcher_elb.subnet_a.cidr_block }}"
-          PublishDispatcherELBSubnetATagNameParameter: "{{ stack_prefix }}-{{ network.publish_dispatcher_elb.subnet_a.tag_name }}"
-          PublishDispatcherELBSubnetBCidrBlockParameter: "{{ network.publish_dispatcher_elb.subnet_b.cidr_block }}"
-          PublishDispatcherELBSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.publish_dispatcher_elb.subnet_b.tag_name }}"
-          PublishDispatcherSubnetACidrBlockParameter: "{{ network.publish_dispatcher.subnet_a.cidr_block }}"
-          PublishDispatcherSubnetATagNameParameter: "{{ stack_prefix }}-{{ network.publish_dispatcher.subnet_a.tag_name }}"
-          PublishDispatcherSubnetBCidrBlockParameter: "{{ network.publish_dispatcher.subnet_b.cidr_block }}"
-          PublishDispatcherSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.publish_dispatcher.subnet_b.tag_name }}"
-          PublishSubnetACidrBlockParameter: "{{ network.publish.subnet_a.cidr_block }}"
-          PublishSubnetATagNameParameter: "{{ stack_prefix }}-{{ network.publish.subnet_a.tag_name }}"
-          PublishSubnetBCidrBlockParameter: "{{ network.publish.subnet_b.cidr_block }}"
-          PublishSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.publish.subnet_b.tag_name }}"
-          AuthorSubnetACidrBlockParameter: "{{ network.author.subnet_a.cidr_block }}"
-          AuthorSubnetATagNameParameter: "{{ stack_prefix }}-{{ network.author.subnet_a.tag_name }}"
-          AuthorSubnetBCidrBlockParameter: "{{ network.author.subnet_b.cidr_block }}"
-          AuthorSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.author.subnet_b.tag_name }}"
-          AuthorDispatcherSubnetACidrBlockParameter: "{{ network.author_dispatcher.subnet_a.cidr_block }}"
-          AuthorDispatcherSubnetATagNameParameter: "{{ stack_prefix }}-{{ network.author_dispatcher.subnet_a.tag_name }}"
-          AuthorDispatcherSubnetBCidrBlockParameter: "{{ network.author_dispatcher.subnet_b.cidr_block }}"
-          AuthorDispatcherSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.author_dispatcher.subnet_b.tag_name }}"
-          ToolSubnetACidrBlockParameter: "{{ network.tool.subnet_a.cidr_block }}"
-          ToolSubnetATagNameParameter: "{{ stack_prefix }}-{{ network.tool.subnet_a.tag_name }}"
-          ToolSubnetBCidrBlockParameter: "{{ network.tool.subnet_b.cidr_block }}"
-          ToolSubnetBTagNameParameter: "{{ stack_prefix }}-{{ network.tool.subnet_b.tag_name }}"
-          PublicRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.public_route_table.tag_name }}"
-          PrivateRouteTableTagNameParameter: "{{ stack_prefix }}-{{ network.private_route_table.tag_name }}"
-          S3BucketParameter: "{{ endpoints.s3 | default('') }}"
+    - name: Generate network resources playbook from jinja2 template
+      template:
+        src: "../../templates/network-playbook.yaml.j2"
+        dest: "./network-resources-generated.yaml"
       tags:
-      - create
+        - create
 
+    - name: Create network CloudFormation template from jinja2 template
+      template:
+        src: "../../templates/network-cf.yaml.j2"
+        dest: "../../../cloudformation/network/network.yaml"
+      tags:
+        - create
+
+    - name: Include generated network resources playbook tasks
+      include_tasks: network-resources-generated.yaml
+      tags:
+        - create
 
     - name: Check if a Stack Exists
       command: >
@@ -74,4 +53,4 @@
       when:
         "stack_query.rc == 0"
       tags:
-      - delete
+        - delete

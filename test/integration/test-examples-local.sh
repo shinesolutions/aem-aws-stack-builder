@@ -47,7 +47,7 @@ make config-examples-aem-stack-manager && make create-stack-manager "stack_prefi
 make "config-examples-${aem_version}-${os_type}-full-set" && make create-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
 make "config-examples-${aem_version}-${os_type}-consolidated" && make create-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
 
-# Run integration tests via Stack Manager Messenger
+# Run Stack Manager Messenger integration tests
 cd "${workspace_dir}/aem-stack-manager-messenger"
 make test-consolidated \
   "stack_prefix=${test_id}-stack-manager" \
@@ -55,6 +55,14 @@ make test-consolidated \
 make test-full-set \
   "stack_prefix=${test_id}-stack-manager" \
   "target_aem_stack_prefix=${test_id}-full-set"
+
+# Run AEM Test Suite integration tests
+cd "${workspace_dir}/aem-test-suite"
+make test-readiness-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
+make test-acceptance-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
+make test-recovery-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
+# placeholder security test for now, TODO: retrieve author, publish, and publish_dispatcher hosts
+# make test-security config_path=conf/
 
 # Delete all created AEM environments
 cd "${workspace_dir}/aem-aws-stack-builder"

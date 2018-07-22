@@ -48,11 +48,21 @@ Usage
 
 Ensure [configuration file for network]() has been set up.
 
-Create VPC, subnets, along with other network resources:
+From the above base configuration, generate template network configuration file:
+
+    make generate-network-config stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
+
+The above is a once off action which will create a bootstrap network configuration file at `<path/to/config/dir>/network.yaml`, this will save you the trouble of manually creating a long configuration file. Alternatively, you can create the network configuration file manually.
+
+Create VPC stack:
+
+    make create-vpc stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
+
+Create network resources stack:
 
     make create-network stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
 
-Alternatively, if you don't have the permission to create network resources, you can create a network-exports stack that contains the details of your subnets.
+Alternatively, if you don't have the permission to create VPC and/or network resources, you can create a network-exports stack that contains the details of your subnets:
 
     make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
 

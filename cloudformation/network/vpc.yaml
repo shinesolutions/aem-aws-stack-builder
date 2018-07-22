@@ -24,7 +24,7 @@ Parameters:
     Description: Optional DHCP Option Set to Associated with the New VPC
     Type: String
   Ec2VpcTagNameParameter:
-    Default: AEM Stack VPC
+    Default: AEM OpenCloud VPC
     Description: The name of the VPC for the AEM Stack
     Type: String
   StackPrefix:
