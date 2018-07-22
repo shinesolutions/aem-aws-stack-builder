@@ -25,11 +25,13 @@ make config-examples-aem-stack-manager && make create-stack-manager "stack_prefi
 make "config-examples-${aem_version}-${os_type}-full-set" && make create-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
 make "config-examples-${aem_version}-${os_type}-consolidated" && make create-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
 
-# Download Stack Manager Messenger
+# Download Stack Manager Messenger and resolve dependencies
 cd "${workspace_dir}"
 wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
 mkdir -p "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
 tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+make deps
 
 # Run Stack Manager Messenger integration tests
 cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
@@ -40,11 +42,13 @@ make test-full-set \
   "stack_prefix=${test_id}-stack-manager" \
   "target_aem_stack_prefix=${test_id}-full-set"
 
-# Download AEM Test Suite
+# Download AEM Test Suite and resolve dependencies
 cd "${workspace_dir}"
 wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
 mkdir -p "stage/aem-test-suite-${aem_test_suite_version}"
 tar -xvzf "stage/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory "stage/aem-test-suite-${aem_test_suite_version}"
+cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
+make ci
 
 # Run AEM Test Suite integration tests
 cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
