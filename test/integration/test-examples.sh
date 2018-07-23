@@ -54,7 +54,7 @@ wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_t
 mkdir -p "stage/aem-test-suite-${aem_test_suite_version}"
 tar -xvzf "stage/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory "stage/aem-test-suite-${aem_test_suite_version}"
 cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
-make ci
+make deps
 
 # Run AEM Test Suite integration tests
 cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
