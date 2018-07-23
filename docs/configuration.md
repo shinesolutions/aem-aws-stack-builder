@@ -11,6 +11,10 @@ Check out the [example configuration files](https://github.com/shinesolutions/ae
 |------|-------------|-----------|---------|
 | main.stack_name | The stack name (to be appended to stack prefix) of the main parent stack of the corresponding architecture | Mandatory | |
 | prerequisites.stack_name | The stack name (to be appended to stack prefix) of the prerequisites parent stack of the corresponding architecture | Mandatory for AEM Consolidated and AEM Full-Set architectures, not needed for AEM Stack Manager | |
+| proxy.enabled | If true, then web proxy will be used during provisioning steps. Note: this web proxy setting is not used for cron jobs | Optional | `false` |
+| proxy.protocol | Web proxy server protocol used during provisioning steps | Optional | None |
+| proxy.host | Web proxy server host used during provisioning steps | Optional | None |
+| proxy.port | Web proxy server port number used during provisioning steps | Optional | None |
 | cron.env_path | Executable path used when running cron jobs. | Optional | `/sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin` |
 | cron.http_proxy | Web proxy server for http URLs, e.g. `http://someproxy:3128`, leave empty if the cron job needs to directly connect to the Internet. | Optional | None |
 | cron.https_proxy | Web proxy server for https URLs, e.g. `http://someproxy:3128`, leave empty if the cron job needs to directly connect to the Internet. | Optional | None |
