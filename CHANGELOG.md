@@ -1,5 +1,5 @@
 ### 2.3.2
-*
+* Add support for using snapshots containing repository with non AEM OpenCloud ownership
 
 ### 2.3.1
 * Upgrade AEM AWS Stack Provisioner to 2.6.1
