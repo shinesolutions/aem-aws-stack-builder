@@ -152,7 +152,7 @@ class config:
             "OfflineSnapshotFullset": "offline-snapshot-full-set",
             "PromoteAuthor": "promote-author",
             "RunAdhocPuppet": "run-adhoc-puppet",
-            "ScheduleOfflineSnapshot": "schedule-offline-snapshot"
+            "ScheduleOfflineSnapshot": "schedule-offline-snapshot",
             "TestReadinessConsolidated": "test-readiness-consolidated",
             "TestReadinessFullset": "test-readiness-full-set",
             "WaitUntilReady": "wait-until-ready"
