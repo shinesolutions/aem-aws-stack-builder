@@ -109,7 +109,7 @@ s3:
   data_bucket_name: overwrite-me
 
 library:
-  aem_aws_stack_provisioner_version: 3.0.1
+  aem_aws_stack_provisioner_version: 3.0.2
   aem_orchestrator_version: 2.0.0
   aem_password_reset_version: 1.1.0
   oak_run_version: 1.8.3
