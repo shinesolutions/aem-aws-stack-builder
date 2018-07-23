@@ -143,6 +143,7 @@ class config:
             "ExportPackages": "export-packages",
             "FlushDispatcherCache": "flush-dispatcher-cache",
             "ImportPackage": "import-package",
+            "InstallAEMProfile": "install-aem-profile",
             "ListPackages": "list-packages",
             "LiveSnapshot": "live-snapshot",
             "ManageService": "manage-service",

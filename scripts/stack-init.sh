@@ -87,8 +87,6 @@ fi
 echo "${label} Downloading AEM Stack Provisioner..."
 download_provisioner "${aws_provisioner_dir}" "aem-aws-stack-provisioner-${aem_aws_stack_provisioner_version}.tar.gz"
 
-run_custom_stage pre-common
-
 cd "${aws_provisioner_dir}"
 
 if [[ -d data ]]; then
@@ -132,6 +130,8 @@ echo "${label} Checking orchestration tags for ${component} component..."
 
 echo "${label} Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
+
+run_custom_stage pre-common
 
 set +o errexit
 

@@ -60,14 +60,14 @@ Outputs:
     Value:
       Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
   PrivateRouteTable:
-    Description: The Private Route Table for AEM Stack VPC
+    Description: The Private Route Table for AEM OpenCloud VPC
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PrivateRouteTable
     Value:
       Ref: PrivateRouteTable
   PublicRouteTable:
-    Description: The Public Route Table for AEM Stack VPC
+    Description: The Public Route Table for AEM OpenCloud VPC
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PublicRouteTable

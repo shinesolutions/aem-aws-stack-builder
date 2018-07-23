@@ -36,6 +36,12 @@ Parameters:
     Description: >-
       The name of the file containing the ImportPackage SSM command.
 
+  InstallAEMProfileIncludeFileParameter:
+    Type: String
+    Default: AEM-InstallAEMProfile.yaml
+    Description: >-
+      The name of the file containing the InstallAEMProfile SSM command.
+
   PromoteAuthorIncludeFileParameter:
     Type: String
     Default: AEM-PromoteAuthor.yaml
@@ -170,6 +176,16 @@ Resources:
           Name: 'AWS::Include'
           Parameters:
             Location: !Sub '${S3BucketAndPrefixParameter}/${ImportPackageIncludeFileParameter}'
+
+  InstallAEMProfile:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${InstallAEMProfileIncludeFileParameter}'
 
   PromoteAuthor:
     Type: AWS::SSM::Document
@@ -324,6 +340,10 @@ Outputs:
   ImportPackage:
     Description: Document name for Import Package
     Value: !Ref ImportPackage
+
+  InstallAEMProfile:
+    Description: Document name for Install AEM Profile
+    Value: !Ref InstallAEMProfile
 
   PromoteAuthor:
     Description: Documention name for Promote Author
