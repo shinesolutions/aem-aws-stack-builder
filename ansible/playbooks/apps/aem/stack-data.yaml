@@ -241,6 +241,16 @@
       tags:
       - create
 
+    - name: Copy AEM Healthcheck Content from library to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
+      when: snapshots.enable_reconfiguration == True
+      tags:
+      - create
+
     - name: Check that custom AEM Stack Provisioner exists
       stat:
         path: ../../../../stage/aem-custom-stack-provisioner.tar.gz

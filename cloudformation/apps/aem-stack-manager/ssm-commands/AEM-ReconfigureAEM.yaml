@@ -42,7 +42,7 @@ parameters:
       (Optional) Force reconfiguration. If this option is set to true it will delete
       any existing configuration. The default value is "true".
     type: String
-    default: true
+    default: 'true'
   executionTimeout:
     description: >-
       (Optional) The time in seconds for a command to be completed before it is
