@@ -113,6 +113,13 @@ aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_
 aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 
+
+# AEM Reconfiguration Parameters
+common::aem_healthcheck_version: {{ library.aem_healthcheck_version }}
+common::aem_reconfiguration: {{ snapshots.enable_reconfiguration }}
+common::cert_base_url: {{ aem.certs_base }}
+common::aem_keystore_password: {{ aem.keystore_password }}
+
 # Logrotation configuration. For configuration parameters see https://github.com/voxpupuli/puppet-logrotate
 common::logrotation::config:
 {{ logrotation.config | to_nice_yaml | indent(width=2, first=True) }}

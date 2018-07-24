@@ -1,16 +1,17 @@
 ---
 schemaVersion: '2.0'
 description: >-
-  Install AEM Profile manifests
+  Reconfigure an existing AEM installation.
 parameters:
-  aemArtifactsBase:
-    description: >-
-      (Required) The AWS S3 Path to the AEM Artifacts.
-    type: String
   aemBase:
     description: >-
       (Required) AEM installation base path.
     type: String
+  aemHealthcheckSource:
+    description: >-
+      (Optional) AEM Healthcheck source path.
+    type: String
+    default: ''
   aemHealthcheckVersion:
     description: >-
       (Required) AEM Healthcheck version.
@@ -19,18 +20,29 @@ parameters:
     description: >-
       (Required) AEM ID.
     type: String
-  aemPort:
+  aemKeystorePassword:
     description: >-
-      (Required) AEM HTTP listening port.
+      (Required) AEM Keystore Password.
     type: String
-  aemProfile:
+  aemKeystorePath:
     description: >-
-      (Required) AEM Profile to install.
+      (Optional) Filesystem path to the AEM Keystore.
     type: String
+    default: ''
   aemSslPort:
     description: >-
       (Required) AEM HTTPS listening port.
     type: String
+  certBaseUrl:
+    description: >-
+      (Required) Filesystem / S3 Path or URL to aem.cert & aem.key.
+    type: String
+  force:
+    description: >-
+      (Optional) Force reconfiguration. If this option is set to true it will delete
+      any existing configuration. The default value is "true".
+    type: String
+    default: true
   executionTimeout:
     description: >-
       (Optional) The time in seconds for a command to be completed before it is
@@ -46,6 +58,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/install-aem-profile.sh {{aemID}} {{aemProfile}} {{aemArtifactsBase}} {{aemBase}} {{aemHealthcheckVersion}} {{aemPort}} {{aemSslPort}}'
+        - '/opt/shinesolutions/aem-tools/reconfigure-aem.sh {{aemID}} {{aemBase}} {{aemHealthcheckSource}} {{aemHealthcheckVersion}} {{aemKeystorePassword}} {{aemKeystorePath}} {{certBaseUrl}} {{aemSslPort}} {{force}}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp

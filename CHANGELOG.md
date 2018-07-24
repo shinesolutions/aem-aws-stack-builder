@@ -1,3 +1,8 @@
+### 2.3.3
+* Add new configuration parameters to enabling support for reconfigure existing AEM installation
+* Add new SSM Document aem-reconfiguration
+* Update description for SSM Document install-aem-profile
+
 ### 2.3.2
 * Add support for using snapshots containing repository with non AEM OpenCloud ownership
 * Move Custom Stack Provisioner pre step to be after facts provisioning

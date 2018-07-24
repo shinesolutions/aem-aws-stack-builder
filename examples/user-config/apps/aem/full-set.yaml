@@ -1,3 +1,4 @@
+---
 permission_type: b
 network_stack_prefix: aemopencloud
 
@@ -18,6 +19,10 @@ aem:
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
   revert_snapshot_type: offline
+  # BEGINN Parameters needed if AEM reconfiguration is enabled
+  certs_base: s3://aem-opencloud/certs
+  keystore_password: aem-opencloud
+  # END
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jvm_opts: "-Dkey=value"
@@ -84,11 +89,14 @@ library:
   aem_orchestrator_version: 1.0.3
   aem_password_reset_version: 1.0.1
   simian_army_version: 2.5.3
+  # AEM Reconfiguration
+  aem_healthcheck_version: 1.3.3
 
 certificate_manager:
   ssl_certificate_arn: 'arn:aws:iam::918473058104:server-certificate/aem-opencloud'
 
 snapshots:
+  enable_reconfiguration: false
   author:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: snap-06eea7764113b8844

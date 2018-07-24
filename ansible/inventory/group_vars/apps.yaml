@@ -21,6 +21,10 @@ aem:
   deployment_check_delay_in_seconds: 15
   revert_snapshot_type:
   client_timeout: 1200
+  # BEGINN Parameters needed if AEM reconfiguration is enabled
+  certs_base: s3://overwrite/me
+  keystore_password: changeit
+  # END
   publish:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
     jvm_opts: ""
@@ -117,6 +121,7 @@ library:
   # oak_run_version: 1.6.6
   aem_stack_manager_version: 1.2.3
   simian_army_version: 2.5.3
+  # AEM Reconfiguration
   aem_healthcheck_version: 1.3.3
 
 publish_dispatcher:
@@ -160,6 +165,7 @@ author:
   certificate_name: overwrite-me
 
 snapshots:
+  enable_reconfiguration: false
   author:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
