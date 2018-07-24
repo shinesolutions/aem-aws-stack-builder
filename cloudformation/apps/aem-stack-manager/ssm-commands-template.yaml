@@ -54,17 +54,17 @@ Parameters:
     Description: >-
       The name of the file containing the ManageService SSM command.
 
-  OfflineCompactionIncludeFileParameter:
+  OfflineCompactionSnapshotFullsetIncludeFileParameter:
     Type: String
-    Default: AEM-OfflineCompaction.yaml
+    Default: AEM-OfflineCompactionSnapshotFullset.yaml
     Description: >-
-      The name of the file containing the OfflineCompaction SSM command.
+      The name of the file containing the OfflineCompactionSnapshotFullset SSM command.
 
-  OfflineSnapshotIncludeFileParameter:
+  OfflineSnapshotFullsetIncludeFileParameter:
     Type: String
-    Default: AEM-OfflineSnapshot.yaml
+    Default: AEM-OfflineSnapshotFullset.yaml
     Description: >-
-      The name of the file containing the OfflineSnapshot SSM command.
+      The name of the file containing the OfflineSnapshotFullset SSM command.
 
   WaitUntilReadyIncludeFileParameter:
     Type: String
@@ -207,7 +207,7 @@ Resources:
           Parameters:
             Location: !Sub '${S3BucketAndPrefixParameter}/${ManageServiceIncludeFileParameter}'
 
-  OfflineCompaction:
+  OfflineCompactionSnapshotFullset:
     Type: AWS::SSM::Document
     Properties:
       DocumentType: Command
@@ -215,9 +215,9 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionIncludeFileParameter}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotFullsetIncludeFileParameter}'
 
-  OfflineSnapshot:
+  OfflineSnapshotFullset:
     Type: AWS::SSM::Document
     Properties:
       DocumentType: Command
@@ -225,7 +225,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotIncludeFileParameter}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotFullsetIncludeFileParameter}'
 
   WaitUntilReady:
     Type: AWS::SSM::Document
@@ -353,13 +353,13 @@ Outputs:
     Description: Document name for Manage Service
     Value: !Ref ManageService
 
-  OfflineCompaction:
-    Description: Document name for Offline Compaction
-    Value: !Ref OfflineCompaction
+  OfflineCompactionSnapshotFullset:
+    Description: Document name for Offline Compaction Snapshot Fullset
+    Value: !Ref OfflineCompactionSnapshotFullset
 
-  OfflineSnapshot:
-    Description: Document name for Offline Snapshot
-    Value: !Ref OfflineSnapshot
+  OfflineSnapshotFullset:
+    Description: Document name for Offline Snapshot Fullset
+    Value: !Ref OfflineSnapshotFullset
 
   WaitUntilReady:
     Description: Document name for Wait Until Ready
