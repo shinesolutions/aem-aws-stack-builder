@@ -25,6 +25,7 @@ cd "${workspace_dir}/puppet-aem-curator" && make clean deps lint
 cd "${workspace_dir}/puppet-aem-orchestrator" && make clean deps lint
 cd "${workspace_dir}/aem-aws-stack-provisioner" && make clean deps lint
 cd "${workspace_dir}/aem-aws-stack-builder" && make clean deps lint
+cd "${workspace_dir}/aem-stack-manager-cloud" && make clean deps lint
 cd "${workspace_dir}/aem-stack-manager-messenger" && make clean deps lint
 cd "${workspace_dir}/aem-test-suite" && make clean deps lint
 
@@ -39,10 +40,15 @@ cp -R ${workspace_dir}/puppet-aem-orchestrator/* modules/aem_orchestrator/
 make package "version=${test_id}"
 aws s3 cp "stage/aem-aws-stack-provisioner-${test_id}.tar.gz" "s3://${s3_bucket}/library/"
 
+# Build AEM Stack Manager Cloud and upload it to S3
+cd "${workspace_dir}/aem-stack-manager-cloud"
+make package "version=${test_id}"
+aws s3 cp "stage/aem-stack-manager-cloud-${test_id}.zip" "s3://${s3_bucket}/library/"
+
 # Create AEM environments: a Stack Manager, an AEM Consolidated, and an AEM Full-Set
 cd "${workspace_dir}/aem-aws-stack-builder"
 rm -f "${integration_config_file}"
-echo -e "library:\n  aem_aws_stack_provisioner_version: ${test_id}" > "${integration_config_file}"
+echo -e "library:\n  aem_aws_stack_provisioner_version: ${test_id}\n  aem_stack_manager_version: ${test_id}" > "${integration_config_file}"
 echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix: ${test_id}-stack-manager" >> "${integration_config_file}"
 make config-examples-aem-stack-manager && make create-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/
 make "config-examples-${aem_version}-${os_type}-full-set" && make create-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
