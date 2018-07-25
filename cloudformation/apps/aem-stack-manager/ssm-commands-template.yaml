@@ -54,6 +54,18 @@ Parameters:
     Description: >-
       The name of the file containing the ManageService SSM command.
 
+  OfflineCompactionSnapshotConsolidatedIncludeFileParameter:
+    Type: String
+    Default: AEM-OfflineCompactionSnapshotConsolidated.yaml
+    Description: >-
+      The name of the file containing the OfflineCompactionSnapshotConsolidated SSM command.
+
+  OfflineSnapshotConsolidatedIncludeFileParameter:
+    Type: String
+    Default: AEM-OfflineSnapshotConsolidated.yaml
+    Description: >-
+      The name of the file containing the OfflineSnapshotConsolidated SSM command.
+
   OfflineCompactionSnapshotFullsetIncludeFileParameter:
     Type: String
     Default: AEM-OfflineCompactionSnapshotFullset.yaml
@@ -207,6 +219,26 @@ Resources:
           Parameters:
             Location: !Sub '${S3BucketAndPrefixParameter}/${ManageServiceIncludeFileParameter}'
 
+  OfflineCompactionSnapshotConsolidated:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotConsolidatedIncludeFileParameter}'
+
+  OfflineSnapshotConsolidated:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotConsolidatedIncludeFileParameter}'
+
   OfflineCompactionSnapshotFullset:
     Type: AWS::SSM::Document
     Properties:
@@ -352,6 +384,14 @@ Outputs:
   ManageService:
     Description: Document name for Manage Service
     Value: !Ref ManageService
+
+  OfflineCompactionSnapshotConsolidated:
+    Description: Document name for Offline Compaction Snapshot Consolidated
+    Value: !Ref OfflineCompactionSnapshotConsolidated
+
+  OfflineSnapshotConsolidated:
+    Description: Document name for Offline Snapshot Consolidated
+    Value: !Ref OfflineSnapshotConsolidated
 
   OfflineCompactionSnapshotFullset:
     Description: Document name for Offline Compaction Snapshot Fullset
