@@ -1,20 +1,8 @@
 ---
 schemaVersion: '2.0'
 description: >-
-  Taking offline compaction for author instances
+  Taking offline compaction snapshot of author and publisher instances
 parameters:
-  repeats:
-    description: >-
-      (Optional) How many times this command to retry
-    type: String
-    default: '360'
-
-  interval:
-    description: >-
-      (Optional) The interal between each subsucessive retry
-    type: String
-    default: '10'
-
   executionTimeout:
     description: >-
       (Optional) The time in seconds for a command to be completed before it is
@@ -30,7 +18,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/offline-compaction.sh'
-        - '/opt/shinesolutions/aem-tools/oak-run-process-quited.sh {{repeats}} {{interval}}'
+        - '/opt/shinesolutions/aem-tools/offline-compaction-snapshot-backup.sh'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
