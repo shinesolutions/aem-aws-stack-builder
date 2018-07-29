@@ -1,3 +1,9 @@
+### 3.1.1
+* Add new configuration parameters to enabling support for reconfigure existing AEM installation
+* Add new SSM Document aem-reconfiguration
+* Update description for SSM Document install-aem-profile
+* Add System Users parameters in configuration
+
 ### 3.1.0
 * Move Custom Stack Provisioner pre step to be after facts provisioning
 * Add support for any number of availability zones during VPC and network provisioning #159

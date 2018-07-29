@@ -154,7 +154,8 @@ class config:
             "TestReadinessFullset": "test-readiness-full-set",
             "TestReadinessConsolidated": "test-readiness-consolidated",
             "ScheduleOfflineSnapshot": "schedule-offline-snapshot",
-            "InstallAEMProfile": "install-aem-profile"
+            "InstallAEMProfile": "install-aem-profile",
+            "ReconfigureAEM": "reconfigure-aem"
             }
 
         messenger_config_list = {

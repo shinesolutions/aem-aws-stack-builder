@@ -108,6 +108,12 @@ Parameters:
     Description: >-
       The name of the file containing the FlushDispatcherCache SSM command
 
+  ReconfigureAEMIncludeFileParameter:
+    Type: String
+    Default: AEM-ReconfigureAEM.yaml
+    Description: >-
+      The name of the file containing the ReconfigureAEM SSM command.
+
   ScheduleOfflineSnapshotIncludeFileParameter:
     Type: String
     Default: AEM-ScheduleOfflineSnapshot.yaml
@@ -186,6 +192,16 @@ Resources:
           Name: 'AWS::Include'
           Parameters:
             Location: !Sub '${S3BucketAndPrefixParameter}/${InstallAEMProfileIncludeFileParameter}'
+
+  ReconfigureAEM:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${ReconfigureAEMIncludeFileParameter}'
 
   PromoteAuthor:
     Type: AWS::SSM::Document
@@ -344,6 +360,10 @@ Outputs:
   InstallAEMProfile:
     Description: Document name for Install AEM Profile
     Value: !Ref InstallAEMProfile
+
+  ReconfigureAEM:
+    Description: Document name for Reconfigure AEM
+    Value: !Ref ReconfigureAEM
 
   PromoteAuthor:
     Description: Documention name for Promote Author
