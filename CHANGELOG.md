@@ -1,3 +1,6 @@
+### 2.3.3
+* Extend integration test to include Stacks with enabled reconfiguration with system users creations or system users password change
+
 ### 2.3.2
 * Add support for using snapshots containing repository with non AEM OpenCloud ownership
 * Move Custom Stack Provisioner pre step to be after facts provisioning
