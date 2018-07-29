@@ -14,10 +14,6 @@ aem:
   deployment_delay_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
-  # BEGINN Parameters needed if AEM reconfiguration is enabled
-  certs_base: s3://aem-opencloud/certs
-  keystore_password: changeit
-  # END
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jvm_opts: "-Dkey=value"
@@ -51,13 +47,39 @@ library:
   aem_healthcheck_version: 1.3.3
 
 snapshots:
-  enable_reconfiguration: false
   author:
     use_data_vol_snapshot: false
     data_vol_snapshot_id:
   publish:
     use_data_vol_snapshot: false
     data_vol_snapshot_id:
+
+# Parameters needed for AEM reconfiguration
+reconfiguration:
+  enable_reconfiguration: false
+  enable_create_system_users: false
+  certs_base: s3://aem-opencloud/certs
+  keystore_password: changeit
+
+system_users:
+  admin:
+    name: admin
+    path: /home/users/d
+  deployer:
+    name: deployer
+    path: /home/users/q
+  exporter:
+    name: exporter
+    path:  /home/users/e
+  importer:
+    name: importer
+    path:  /home/users/i
+  orchestrator:
+    name: orchestrator
+    path:  /home/users/o
+  replicator:
+    name: replicator
+    path:  /home/users/r
 
 author_publish_dispatcher:
   instance_profile: cliffs0-aem-consolidated-prerequisites-stack-InstanceProfilesStack-1IMSEFFH-AuthorPublishDispatcherInstanceProfile-DRJP0OXRCRU2

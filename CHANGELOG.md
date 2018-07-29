@@ -2,6 +2,7 @@
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
 * Add new SSM Document aem-reconfiguration
 * Update description for SSM Document install-aem-profile
+* Add System Users parameters in configuration
 
 ### 2.3.2
 * Add support for using snapshots containing repository with non AEM OpenCloud ownership

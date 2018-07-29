@@ -21,10 +21,6 @@ aem:
   deployment_check_delay_in_seconds: 15
   revert_snapshot_type:
   client_timeout: 1200
-  # BEGINN Parameters needed if AEM reconfiguration is enabled
-  certs_base: s3://overwrite/me
-  keystore_password: changeit
-  # END
   publish:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
     jvm_opts: ""
@@ -165,13 +161,39 @@ author:
   certificate_name: overwrite-me
 
 snapshots:
-  enable_reconfiguration: false
   author:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
   publish:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
+
+# Parameters needed for AEM reconfiguration
+reconfiguration:
+  enable_reconfiguration: false
+  enable_create_system_users: false
+  certs_base: s3://overwrite/me
+  keystore_password: changeit
+
+system_users:
+  admin:
+    name: admin
+    path: /home/users/d
+  deployer:
+    name: deployer
+    path: /home/users/q
+  exporter:
+    name: exporter
+    path:  /home/users/e
+  importer:
+    name: importer
+    path:  /home/users/i
+  orchestrator:
+    name: orchestrator
+    path:  /home/users/o
+  replicator:
+    name: replicator
+    path:  /home/users/r
 
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack

@@ -19,10 +19,6 @@ aem:
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
   revert_snapshot_type: offline
-  # BEGINN Parameters needed if AEM reconfiguration is enabled
-  certs_base: s3://aem-opencloud/certs
-  keystore_password: changeit
-  # END
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jvm_opts: "-Dkey=value"
@@ -96,13 +92,36 @@ certificate_manager:
   ssl_certificate_arn: 'arn:aws:iam::918473058104:server-certificate/aem-opencloud'
 
 snapshots:
-  enable_reconfiguration: false
   author:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: snap-06eea7764113b8844
   publish:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: snap-06eea7764113b8844
+
+# Parameters needed for AEM reconfiguration
+reconfiguration:
+  enable_reconfiguration: false
+  enable_create_system_users: false
+  certs_base: s3://aem-opencloud/certs
+  keystore_password: changeit
+
+system_users:
+  deployer:
+    name: deployer
+    path: /home/users/q
+  exporter:
+    name: exporter
+    path:  /home/users/e
+  importer:
+    name: importer
+    path:  /home/users/i
+  orchestrator:
+    name: orchestrator
+    path:  /home/users/o
+  replicator:
+    name: replicator
+    path:  /home/users/r
 
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack

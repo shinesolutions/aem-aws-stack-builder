@@ -116,9 +116,12 @@ aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deploymen
 
 # AEM Reconfiguration Parameters
 common::aem_healthcheck_version: {{ library.aem_healthcheck_version }}
-common::aem_reconfiguration: {{ snapshots.enable_reconfiguration }}
-common::cert_base_url: {{ aem.certs_base }}
-common::aem_keystore_password: {{ aem.keystore_password }}
+common::aem_reconfiguration: {{ reconfiguration.enable_reconfiguration }}
+common::cert_base_url: {{ reconfiguration.certs_base }}
+common::aem_keystore_password: {{ reconfiguration.keystore_password }}
+common::enable_create_system_users: {{ reconfiguration.enable_create_system_users }}
+common::aem_system_users:
+{{ system_users | to_nice_yaml | indent(width=2, first=True) }}
 
 # Logrotation configuration. For configuration parameters see https://github.com/voxpupuli/puppet-logrotate
 common::logrotation::config:

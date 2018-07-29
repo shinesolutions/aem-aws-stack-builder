@@ -247,7 +247,7 @@
         src_key: "library/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
-      when: snapshots.enable_reconfiguration == True
+      when: reconfiguration.enable_reconfiguration == True
       tags:
       - create
 
