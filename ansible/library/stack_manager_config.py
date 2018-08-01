@@ -152,7 +152,7 @@ class config:
             "OfflineSnapshotConsolidated": "offline-snapshot-consolidated",
             "OfflineSnapshotFullset": "offline-snapshot-full-set",
             "PromoteAuthor": "promote-author",
-            "ReconfigureAEM": "reconfigure-aem"
+            "ReconfigureAEM": "reconfigure-aem",
             "RunAdhocPuppet": "run-adhoc-puppet",
             "ScheduleOfflineSnapshot": "schedule-offline-snapshot",
             "TestReadinessConsolidated": "test-readiness-consolidated",
