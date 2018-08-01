@@ -16,6 +16,7 @@ aem:
   enable_reverse_replication: true
   enable_content_healthcheck: true
   enable_content_healthcheck_terminate_instance: false
+  enable_reconfiguration: false
   deployment_delay_in_seconds: 60
   deployment_check_retries: 120
   deployment_check_delay_in_seconds: 15
@@ -170,7 +171,6 @@ snapshots:
 
 # Parameters needed for AEM reconfiguration
 reconfiguration:
-  enable_reconfiguration: false
   enable_create_system_users: false
   certs_base: s3://overwrite/me
   keystore_password: changeit
@@ -276,15 +276,15 @@ logrotation:
     /etc/logrotate.conf:
       rotate: 4
   default_config:
-      rotate: 4
-      rotate_every: week
-      compress: true
-      create: true
-      dateext: true
-      ifempty: false
-      mail: false
-      olddir: false
-      size: 10M
+    rotate: 4
+    rotate_every: week
+    compress: true
+    create: true
+    dateext: true
+    ifempty: false
+    mail: false
+    olddir: false
+    size: 10M
   rules:
     amazon_ssm:
       path: /var/log/amazon/ssm/*.log

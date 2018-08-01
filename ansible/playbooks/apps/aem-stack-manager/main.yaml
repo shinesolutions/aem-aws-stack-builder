@@ -13,7 +13,7 @@
         region: "{{ aws.region }}"
         mode: list
       tags:
-      - create
+        - create
 
     - name: Upload CloudFormation Templates to S3
       command: >
@@ -170,11 +170,11 @@
       when:
         "stack_query.rc == 0"
       tags:
-      - delete
+        - delete
 
     - name: Delete All Stack Data
       command: >
               aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"/"{{ stack_manager.s3_prefix }}"
                --recursive --region "{{ aws.region }}"
       tags:
-      - delete
+        - delete
