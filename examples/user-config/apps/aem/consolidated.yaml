@@ -8,7 +8,6 @@ prerequisites:
   stack_name: aem-consolidated-prerequisites-stack
 
 aem:
-  version: 'x.y'
   enable_crxde: true
   enable_default_passwords: true
   enable_deploy_on_init: true
