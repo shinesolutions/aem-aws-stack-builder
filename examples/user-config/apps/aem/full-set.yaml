@@ -15,6 +15,7 @@ aem:
   enable_reverse_replication: true
   enable_content_healthcheck: true
   enable_content_healthcheck_terminate_instance: false
+  enable_reconfiguration: false
   deployment_delay_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
@@ -100,7 +101,6 @@ snapshots:
 
 # Parameters needed for AEM reconfiguration
 reconfiguration:
-  enable_reconfiguration: false
   enable_create_system_users: false
   certs_base: s3://aem-opencloud/certs
   keystore_password: changeit
