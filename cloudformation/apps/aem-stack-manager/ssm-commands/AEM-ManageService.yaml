@@ -23,7 +23,7 @@ parameters:
     description: >-
       (Optional) How many times this command to retry
     type: String
-    default: '24'
+    default: '120'
 
   interval:
     description: >-
