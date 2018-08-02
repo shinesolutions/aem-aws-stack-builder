@@ -3,6 +3,7 @@
 * Add new SSM Document aem-reconfiguration
 * Update description for SSM Document install-aem-profile
 * Add System Users parameters in configuration
+* Fix uploading staged library artifacts during Stack Manager creation
 
 ### 3.1.0
 * Move Custom Stack Provisioner pre step to be after facts provisioning
