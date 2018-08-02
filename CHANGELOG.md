@@ -4,6 +4,7 @@
 * Update description for SSM Document install-aem-profile
 * Add System Users parameters in configuration
 * Fix uploading staged library artifacts during Stack Manager creation
+* Change package installation and compaction related timeouts to 2 hours, service status check to 10 minutes
 
 ### 2.3.2
 * Add support for using snapshots containing repository with non AEM OpenCloud ownership
