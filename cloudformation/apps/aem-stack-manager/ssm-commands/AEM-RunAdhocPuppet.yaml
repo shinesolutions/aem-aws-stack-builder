@@ -16,7 +16,7 @@ parameters:
       hours).
     type: String
     allowedPattern: ([1-9][0-9]{0,3})|(1[0-9]{1,4})|(2[0-7][0-9]{1,3})|(28[0-7][0-9]{1,2})|(28800)
-    default: '3600'
+    default: '7200'
 mainSteps:
   - action: aws:runShellScript
     name: runShellScript

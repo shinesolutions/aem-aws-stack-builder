@@ -4,6 +4,7 @@
 * Update description for SSM Document install-aem-profile
 * Add System Users parameters in configuration
 * Fix uploading staged library artifacts during Stack Manager creation
+* Change package installation and compaction related timeouts to 2 hours, service status check to 10 minutes
 
 ### 3.1.0
 * Move Custom Stack Provisioner pre step to be after facts provisioning
