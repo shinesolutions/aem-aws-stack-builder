@@ -5,6 +5,9 @@
 * Add System Users parameters in configuration
 * Fix uploading staged library artifacts during Stack Manager creation
 * Change package installation and compaction related timeouts to 2 hours, service status check to 10 minutes
+
+### 2.3.2
+* Add support for using snapshots containing repository with non AEM OpenCloud ownership
 * Move Custom Stack Provisioner pre step to be after facts provisioning
 * Add support for any number of availability zones during VPC and network provisioning #159
 * Add metadata file creation for each artifact uploaded using Makefile library target #114
