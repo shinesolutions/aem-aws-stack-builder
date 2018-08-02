@@ -33,9 +33,8 @@
 
     - name: Upload SSM Documents CloudFormation Template to S3
       command: >
-              aws s3 sync ../../../../stage/
-                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
-                  --include "ssm-commands.yaml" --acl public-read
+              aws s3 cp ../../../../stage/ssm-commands.yaml
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}/ssm-commands.yaml
       tags:
         - create
 
