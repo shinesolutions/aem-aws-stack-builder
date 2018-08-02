@@ -1,4 +1,4 @@
-### 2.3.3
+### 2.4.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
 * Add new SSM Document aem-reconfiguration
 * Update description for SSM Document install-aem-profile
