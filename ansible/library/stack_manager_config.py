@@ -135,27 +135,30 @@ class config:
         # Create dict for task mapping
 
         messenger_task_mapping = {
+            "DeployArtifact": "deploy-artifact",
             "DeployArtifacts": "deploy-artifacts",
-            "ManageService": "manage-service",
-            "OfflineSnapshot": "offline-snapshot",
+            "DisableCrxde": "disable-crxde",
+            "EnableCrxde": "enable-crxde",
             "ExportPackage": "export-package",
             "ExportPackages": "export-packages",
-            "DeployArtifact": "deploy-artifact",
-            "OfflineCompaction": "offline-compaction",
-            "PromoteAuthor": "promote-author",
-            "ImportPackage": "import-package",
-            'WaitUntilReady': "wait-until-ready",
-            "EnableCrxde": "enable-crxde",
-            "RunAdhocPuppet": "run-adhoc-puppet",
-            "LiveSnapshot": "live-snapshot",
-            "DisableCrxde": "disable-crxde",
-            "ListPackages": "list-packages",
             "FlushDispatcherCache": "flush-dispatcher-cache",
-            "TestReadinessFullset": "test-readiness-full-set",
-            "TestReadinessConsolidated": "test-readiness-consolidated",
+            "ImportPackage": "import-package",
+            "InstallAEMProfile": "install-aem-profile",
+            "ListPackages": "list-packages",
+            "LiveSnapshot": "live-snapshot",
+            "ManageService": "manage-service",
+            "OfflineCompactionSnapshotConsolidated": "offline-compaction-snapshot-consolidated",
+            "OfflineCompactionSnapshotFullset": "offline-compaction-snapshot-full-set",
+            "OfflineSnapshotConsolidated": "offline-snapshot-consolidated",
+            "OfflineSnapshotFullset": "offline-snapshot-full-set",
+            "PromoteAuthor": "promote-author",
+            "RunAdhocPuppet": "run-adhoc-puppet",
             "ScheduleOfflineSnapshot": "schedule-offline-snapshot",
             "InstallAEMProfile": "install-aem-profile",
-            "ReconfigureAEM": "reconfigure-aem"
+            "ReconfigureAEM": "reconfigure-aem",
+            "TestReadinessConsolidated": "test-readiness-consolidated",
+            "TestReadinessFullset": "test-readiness-full-set",
+            "WaitUntilReady": "wait-until-ready"
             }
 
         messenger_config_list = {
