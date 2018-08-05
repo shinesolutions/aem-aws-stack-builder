@@ -2,19 +2,19 @@
   "author-publish-dispatcher": {
     "packages": [
       {
-        "source": "s3://aem-opencloud/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "source": "s3://aem-opencloud/library/aem-helloworld-content-0.0.1.zip",
         "group": "shinesolutions",
         "name": "aem-helloworld-content",
-        "version": "0.0.1-SNAPSHOT",
+        "version": "0.0.1",
         "replicate": false,
         "activate": false,
         "force": false
       },
       {
-        "source": "s3://aem-opencloud/library/aem-helloworld-content-0.0.1-SNAPSHOT.zip",
+        "source": "s3://aem-opencloud/library/aem-helloworld-content-0.0.1.zip",
         "group": "shinesolutions",
         "name": "aem-helloworld-content",
-        "version": "0.0.1-SNAPSHOT",
+        "version": "0.0.1",
         "replicate": false,
         "activate": false,
         "force": false,
