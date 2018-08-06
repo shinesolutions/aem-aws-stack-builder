@@ -48,6 +48,8 @@ Run `grep "has failure" /var/log/shinesolutions/puppet-stack-init.log` command a
 
 Open up `/var/log/shinesolutions/puppet-stack-init.log`, find the first occurrence of `has failure`, the lines above it are likely to be the cause of the error.
 
-### Check AEM process
-
 ### Check AEM startup error
+
+When provisioning fails due to an AEM error, you need to check AEM log by running `grep -i error /opt/aem/<author|publish>/crx-quickstart/logs/error.log` command and you'll find the error messages.
+
+Please note that there could be errors that are not unrelated to the provisioning steps.
