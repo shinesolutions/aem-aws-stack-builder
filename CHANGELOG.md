@@ -11,7 +11,7 @@
 * Add library.aem_healthcheck_version configuration property
 * Add new SSM Document install-aem-profile
 * Add AEM Stack Manager Cloud to local integration test
-* Upgrade AEM AWS Stack Provisioner to 3.1.0
+* Upgrade AEM AWS Stack Provisioner to 3.1.1
 
 ### 3.0.0
 * Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support
