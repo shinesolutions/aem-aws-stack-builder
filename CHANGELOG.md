@@ -1,3 +1,6 @@
+### 2.4.1
+*
+
 ### 2.4.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
 * Add new SSM Document aem-reconfiguration
