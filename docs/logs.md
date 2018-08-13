@@ -1,6 +1,8 @@
 Logs
 ----
 
+Even though most of these logs are available as [CloudWatch Log Streams](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Working-with-log-groups-and-streams.html), these tables are still handy when you need to troubleshoot directly on the server, or when you have to stream the logs to another system such as [Splunk](http://docs.splunk.com/Documentation/Forwarder/7.1.2/Forwarder/Abouttheuniversalforwarder).
+
 ### Provisioning logs
 
 | Log Path | Description | Components |
