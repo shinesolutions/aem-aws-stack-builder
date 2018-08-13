@@ -17,14 +17,16 @@ Logs
 | `/opt/aem/author/crx-quickstart/logs/error.log` | AEM Author application log file. | author-primary, author-standby, author-publish-dispatcher |
 | `/opt/aem/author/crx-quickstart/logs/access.log` | AEM Author access log file. | author-primary, author-standby, author-publish-dispatcher |
 | `/opt/aem/author/crx-quickstart/logs/request.log` | AEM Author request log file. | author-primary, author-standby, author-publish-dispatcher |
+| `/opt/aem/author/crx-quickstart/logs/audit.log` | AEM Author audit log file. | author-primary, author-standby, author-publish-dispatcher |
 
 #### AEM Publish
 
 | Log Path | Description | Components |
 |----------|-------------|------------|
-| `/opt/aem/publish/crx-quickstart/logs/error.log` | AEM Publish application log file. | publish, author-standby, author-publish-dispatcher |
+| `/opt/aem/publish/crx-quickstart/logs/error.log` | AEM Publish application log file. | publish, author-publish-dispatcher |
 | `/opt/aem/publish/crx-quickstart/logs/access.log` | AEM Publish access log file. | publish, author-publish-dispatcher |
 | `/opt/aem/publish/crx-quickstart/logs/request.log` | AEM Publish request log file. | publish, author-publish-dispatcher |
+| `/opt/aem/publish/crx-quickstart/logs/audit.log` | AEM Publish audit log file. | publish, author-publish-dispatcher |
 
 #### AEM Author-Dispatcher/Publish-Dispatcher (Apache httpd)
 
