@@ -82,7 +82,7 @@ s3:
   data_bucket_name: aem-opencloud
 
 library:
-  aem_aws_stack_provisioner_version: 3.1.1
+  aem_aws_stack_provisioner_version: 3.1.2
   aem_orchestrator_version: 2.0.0
   simian_army_version: 2.5.3
   # AEM Reconfiguration

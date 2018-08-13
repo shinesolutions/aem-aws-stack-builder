@@ -5,6 +5,13 @@
 * Add System Users parameters in configuration
 * Fix uploading staged library artifacts during Stack Manager creation
 * Change package installation and compaction related timeouts to 2 hours, service status check to 10 minutes
+* Upgrade AEM AWS Stack Provisioner to 3.1.2
+
+### 3.0.0
+* Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support
+* Upgrade AEM Password Reset to 1.1.0 for AEM 6.4 support
+* Remove attachment of Bastion Host security group from all ELBs
+* Add support for using snapshots containing repository with non AEM OpenCloud ownership
 
 ### 2.3.2
 * Add support for using snapshots containing repository with non AEM OpenCloud ownership
@@ -15,12 +22,6 @@
 * Add new SSM Document install-aem-profile
 * Add AEM Stack Manager Cloud to local integration test
 * Upgrade AEM AWS Stack Provisioner to 3.1.1
-
-### 3.0.0
-* Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support
-* Upgrade AEM Password Reset to 1.1.0 for AEM 6.4 support
-* Remove attachment of Bastion Host security group from all ELBs
-* Add support for using snapshots containing repository with non AEM OpenCloud ownership
 
 ### 2.3.0
 * Upgrade AEM AWS Stack Provisioner to 2.6.0

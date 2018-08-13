@@ -41,7 +41,7 @@ s3:
   data_bucket_name: aem-opencloud
 
 library:
-  aem_aws_stack_provisioner_version: 3.1.1
+  aem_aws_stack_provisioner_version: 3.1.2
   aem_orchestrator_version:
 
 snapshots:
