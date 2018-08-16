@@ -38,7 +38,7 @@ The tables below are handy when you need to troubleshoot directly on the EC2 ins
 |----------|-------------|------------|
 | /var/log/httpd/access_log | Apache httpd access log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
 | /var/log/httpd/error_log | Apache httpd error log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
-| /var/log/httpd/dispatcher_log | AEM Dispatcher log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
+| /var/log/httpd/dispatcher.log | AEM Dispatcher log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
 
 #### AEM Orchestrator
 
