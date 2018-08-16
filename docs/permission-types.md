@@ -1,6 +1,6 @@
 ## Permission Types
 
-In order to support multiple resource restrictions across the various types of users/organisations, AEM AWS Stack Builder provides the followig permission types:
+In order to support multiple resource restrictions across the various types of users/organisations, AEM AWS Stack Builder provides the following permission types:
 
 | Permission Type | Restrictions |
 |-----------------|--------------|
