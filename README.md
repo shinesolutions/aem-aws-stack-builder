@@ -24,7 +24,7 @@ Other than the above AEM architectures, Stack Builder also provides the followin
 * Stack Manager([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-stack-manager.png)) - includes [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud), set of AWS Lambda functions that will execute AEM functionalities via an SSM agent
 * Network - includes CloudFormation templates for creating VPC, subnets, and some sample NAT Gateway and Bastion set up
 
-Please note that even though AEM AWS Stack Builder is specific for AWS, we would like to support other cloud provider(s) as well and contributions are welcome. If you have a need to run AEM on other technology stacks, please start a discussion by creating a GitHub issue or email us at [opensource@shinesolutions.com](mailto://opensource@shinesolutions.com).
+AEM AWS Stack Builder is part of [AEM OpenCloud](https://shinesolutions.github.io/aem-opencloud/) platform.
 
 Installation
 ------------
