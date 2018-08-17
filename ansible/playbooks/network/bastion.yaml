@@ -17,6 +17,8 @@
           BastionKeyPairName: "{{ bastion.key_pair_name }}"
           BastionSubnet: "{{ bastion.subnet_id }}"
           BastionSecurityGroups: "{{ bastion.security_groups }}"
+          NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
+          PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
       tags:
       - create
 
