@@ -1,3 +1,6 @@
+### 3.1.1
+* Update publish dispatcher log rotation to rotate every hour
+
 ### 3.1.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
 * Add new SSM Document aem-reconfiguration
