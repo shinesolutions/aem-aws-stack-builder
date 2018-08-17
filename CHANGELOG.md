@@ -1,5 +1,5 @@
 ### 3.1.1
-* Update publish dispatcher log rotation to rotate every hour
+* Update default publish dispatcher log rotation config to rotate every hour
 
 ### 3.1.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
