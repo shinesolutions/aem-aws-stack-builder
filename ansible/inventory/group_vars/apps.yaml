@@ -321,8 +321,8 @@ logrotation:
         path: /var/log/httpd/*.log
         rotate: 5
         size: 200M
-        dateext: true
-        rotate_every: day
+        dateext: false
+        rotate_every: hour
         sharedscripts: true
         delaycompress: true
         missingok: true
