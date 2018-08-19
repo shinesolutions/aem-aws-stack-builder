@@ -1,6 +1,3 @@
-### 3.1.1
-* Update default publish dispatcher log rotation config to rotate every hour
-
 ### 3.1.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
 * Add new SSM Document aem-reconfiguration
@@ -9,6 +6,8 @@
 * Fix uploading staged library artifacts during Stack Manager creation
 * Change package installation and compaction related timeouts to 2 hours, service status check to 10 minutes
 * Upgrade AEM AWS Stack Provisioner to 3.1.2
+* Update default publish dispatcher log rotation config to rotate every hour
+* Add export import package to integration test
 
 ### 3.0.0
 * Upgrade AEM AWS Stack Provisioner to 3.x and AEM Orchestrator to 2.x for AEM 6.4 support
