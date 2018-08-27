@@ -55,15 +55,6 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
-  BastionHostSecurityGroupIngress0:
-    Properties:
-      CidrIp: '210.10.209.150/32'
-      FromPort: '22'
-      GroupId:
-        Ref: BastionHostSecurityGroup
-      IpProtocol: tcp
-      ToPort: '22'
-    Type: AWS::EC2::SecurityGroupIngress
   BastionHostSecurityGroupEgress0:
     Properties:
       CidrIp:  '0.0.0.0/0'
