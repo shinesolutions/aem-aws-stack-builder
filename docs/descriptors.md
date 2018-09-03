@@ -7,6 +7,10 @@ A production release might involve someone deploying a multiple AEM packages one
 
 In order to solve the above problem, AEM AWS Stack Builder supports descriptor-based AEM activities. For example, instead of deploying AEM packages one by one, those packages can be listed in a descriptor file, and the descriptor-based deployment process will upload and install those packages in sequence, and it will also perform a number of status checks for each package.
 
+These descriptors will then be stored in S3 data bucket under the /\<stack_prefix> path. For example, if the stack prefix is called `some-stack` and the S3 data bucket is called `some-bucket`, then the descriptor files will be stored at `s3://some-bucket/some-stack/*.json` . The S3 data bucket name can be [configured](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) with `s3.data_bucket_name` configuration property, while the stack prefix will be supplied as a Make argument during AEM environment creation time.
+
+During blue-green deployment, the descriptors on the blue environment are treated as a state and will be copied over to the green environment. If the creation of the green environment doesn't include any new descriptors, then all descriptors from the blue environment will be used AS-IS. However, if there are new descriptors for the green environment, then these descriptors from green environment will overwrite the ones from the blue environment.
+
 AEM AWS Stack Builder currently supports three types of descriptor:
 
 * [Deployment Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md#deployment-descriptor)
