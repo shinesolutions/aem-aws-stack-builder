@@ -7,11 +7,11 @@ A production release might involve someone deploying a multiple AEM packages one
 
 In order to solve the above problem, AEM AWS Stack Builder supports descriptor-based AEM activities. For example, instead of deploying AEM packages one by one, those packages can be listed in a descriptor file, and the descriptor-based deployment process will upload and install those packages in sequence, and it will also perform a number of status checks for each package.
 
-There are three types of descriptors:
+AEM AWS Stack Builder currently supports three types of descriptor:
 
-* Deployment Descriptor
-* Package Backup Descriptor
-* Content Health Check Descriptor
+* [Deployment Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md#deployment-descriptor)
+* [Package Backup Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md#package-backup-descriptor)
+* [Content Health Check Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md#content-health-check-descriptor)
 
 ### Deployment Descriptor
 
