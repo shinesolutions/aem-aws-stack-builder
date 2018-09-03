@@ -24,12 +24,12 @@ Also check out the following examples:
 * [Deployment descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/consolidated/deploy-artifacts-descriptor.json)
 * [Deployment descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/full-set/deploy-artifacts-descriptor.json)
 
-Usage:
+#### Usage:
 
-# Create the Deployment Descriptor following the above guide and examples
-# Place the descriptor at `stage/deploy-artifacts-descriptor.json`
-# Use [Stack Manager Messenger](https://github.com/shinesolutions/aem-stack-manager-messenger) with `deploy-artifacts-full-set` or `deploy-artifacts-full-set` target in order to trigger the deployment on demand
-# Alternatively, you can set configuration property `aem.enable_deploy_on_init` to `true` and the AEM packages and Dispatcher artifacts will be deployed during AEM environment creation. Note that this feature is currently only available for AEM Consolidated architecture.
+1. Create the Deployment Descriptor following the above guide and examples
+2. Place the descriptor at `stage/deploy-artifacts-descriptor.json`
+3. Use [Stack Manager Messenger](https://github.com/shinesolutions/aem-stack-manager-messenger) with `deploy-artifacts-full-set` or `deploy-artifacts-full-set` target in order to trigger the deployment on demand
+4. Alternatively, you can set configuration property `aem.enable_deploy_on_init` to `true` and the AEM packages and Dispatcher artifacts will be deployed during AEM environment creation. Note that this feature is currently only available for AEM Consolidated architecture.
 
 ### Package Backup Descriptor
 
@@ -42,12 +42,12 @@ Also check out the following examples:
 * [Package Backup descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/consolidated/export-backup-descriptor.json)
 * [Package Backup descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/full-set/export-backup-descriptor.json)
 
-Usage:
+#### Usage:
 
-# Create the Package Backup Descriptor following the above guide and examples
-# Place the descriptor at `stage/export-backup-descriptor.json`
-# Use [Stack Manager Messenger](https://github.com/shinesolutions/aem-stack-manager-messenger) with `export-packages-full-set` or `export-packages-consolidated` target to export backup AEM packages on demand
-# For scheduled export backup, you can set the [configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md#aem-full-set-specific-configuration-properties) properties `scheduled_jobs.author_primary.export.*` and `scheduled_jobs.publish.export.*` to enable/disable it and to set the schedule when the export backup should run.
+1. Create the Package Backup Descriptor following the above guide and examples
+2. Place the descriptor at `stage/export-backup-descriptor.json`
+3. Use [Stack Manager Messenger](https://github.com/shinesolutions/aem-stack-manager-messenger) with `export-packages-full-set` or `export-packages-consolidated` target to export backup AEM packages on demand
+4. For scheduled export backup, you can set the [configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md#aem-full-set-specific-configuration-properties) properties `scheduled_jobs.author_primary.export.*` and `scheduled_jobs.publish.export.*` to enable/disable it and to set the schedule when the export backup should run.
 
 ### Content Health Check Descriptor
 
@@ -60,8 +60,8 @@ Also check out the following examples:
 * [Content Health Check descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/consolidated/deploy-artifacts-descriptor.json)
 * [Content Health Check descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/full-set/deploy-artifacts-descriptor.json)
 
-Usage:
+#### Usage:
 
-# Create the Content Health Check Descriptor following the above guide and examples
-# Place the descriptor at `stage/content-healthcheck-descriptor.json`
-# For scheduled content health check, you can set the [configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md#aem-full-set-specific-configuration-properties) properties `scheduled_jobs.publish_dispatcher.content_health_check.*`to enable/disable it and to set the schedule when the check should run.
+1. Create the Content Health Check Descriptor following the above guide and examples
+2. Place the descriptor at `stage/content-healthcheck-descriptor.json`
+3. For scheduled content health check, you can set the [configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md#aem-full-set-specific-configuration-properties) properties `scheduled_jobs.publish_dispatcher.content_health_check.*`to enable/disable it and to set the schedule when the check should run.
