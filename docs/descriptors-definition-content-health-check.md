@@ -1,5 +1,5 @@
-Content Health Check Definition
--------------------------------
+Content Health Check Descriptor Definition
+------------------------------------------
 
 [Content Health Check Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md#content-health-check-descriptor) file is a JSON file that defines the list of content URLs running on AEM Publish to be checked from its AEM Publish-Dispatcher pair.
 
