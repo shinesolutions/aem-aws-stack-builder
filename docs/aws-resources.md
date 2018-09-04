@@ -1,48 +1,11 @@
+AWS Resources
+-------------
 
+For creating AEM environments using AEM AWS Stack Builder, the following resources must be available:
 
-
-Requirements:
-
-The following resources need to be provisioned separate from AEM AWS Stack Builder due to various security policies at various organisations.
-
-* Set up SSL certificate in [AWS IAM](https://aws.amazon.com/iam), check out `create-cert`, `upload-cert`, and `delete-cert` targets in the Makefile for examples.
-* Set up [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html). The key pair name is configured in `compute.key_pair_name` field.
-* Set up an S3 bucket to store stack state information. The bucket name is configured in  `s3.data_bucket_name` field.
-
-TODO:
-* ami images for publish-dispatcher, publish, author, author-dispatcher, orchestrator, chaos-monkey (with component and version tags)
-* dns hosted zone
-* provisioning init script accessible via s3 bucket
-* inbound_from_bastion_host_security_group
-* nat gateway / internet proxy
-
-To create the network setup (VPC, subnets, etc):
-
-    make create-set-network stack_prefix=mynetwork
-
-To delete the network setup:
-
-    make delete-set-network stack_prefix=mynetwork
-
-Before creating AEM infrastructure, make sure the network resources Id's are captured in app.yaml file. This is to decouple the network stacks and AEM stacks, as we may not always have control over the underlying network infrastructure.
-
-To create AEM infrastructure:
-
-    make create-set-aem stack_prefix=myaem
-
-It is also possible to specify custom configuration files:
-
-    make create-set-aem stack_prefix=myaem config_path=/path/to/myconf
-
-To delete AEM infrastructure:
-
-    make delete-set-aem stack_prefix=myaem
-
-Makefile variables:
-
-| Name         | Description                                      |
-|--------------|--------------------------------------------------|
-| stack_prefix | Prefix string added to all stack names           |
-| config_path  | Path to directory containing configuration files |
-
-It is also possible to create specific components without the complete set. Check out the Makefile for the complete list of targets.
+- Create [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html), this key pair name needs to be set in `compute.key_pair_name` [configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) property.
+- Provision an SSL/TLS certificate either on [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/getting-started/) or [IAM](https://docs.aws.amazon.com/cli/latest/reference/iam/upload-server-certificate.html)
+- Create an S3 Data Bucket for storing AEM environment states, this bucket path needs to be set in `s3.data_bucket_name` property
+- Create the AMIs using [Packer AEM](https://github.com/shinesolutions/packer-aem/) and configure the IDs in `ami_ids.<component>` properties
+- Create a [Route53 private hosted zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-creating.html), the hosted zone name needs to be set in `dns_records.route53_hosted_zone_name` property, and don't forget to include the trailing dot as part of the name
+- If your bastion host doesn't have any security group yet then you need to create one for it, and configure that security group in `compute.inbound_from_bastion_host_security_group` property
