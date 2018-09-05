@@ -1,5 +1,5 @@
 ### 2.2.2
-*
+* Lock down awscli version
 
 ### 2.2.1
 * Add configuration chaos_monkey.include_stack to include/exclude Chaos Monkey nested stack
