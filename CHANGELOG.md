@@ -1,4 +1,5 @@
 ### 3.1.1
+* Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
 *
 
 ### 3.1.0
