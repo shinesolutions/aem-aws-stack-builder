@@ -1,3 +1,6 @@
+### 2.2.3
+* Lock down ansible and upgrade awscli versions
+
 ### 2.2.2
 * Lock down awscli version
 
