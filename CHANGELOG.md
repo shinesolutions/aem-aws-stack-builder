@@ -1,5 +1,5 @@
 ### 2.4.1
-*
+* Lock awscli version to 1.16.10, boto3 to 1.8.5, ansible to 2.8.5
 
 ### 2.4.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
