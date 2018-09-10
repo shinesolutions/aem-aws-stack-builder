@@ -274,7 +274,7 @@ logrotation:
       rotate: 4
   default_config:
     rotate: 4
-    rotate_every: week
+    rotate_every: daily
     compress: true
     create: true
     dateext: true
@@ -287,8 +287,11 @@ logrotation:
       path: /var/log/amazon/ssm/*.log
       olddir: /var/log/amazon/ssm/
       postrotate: '/bin/systemctl restart amazon-ssm-agent > /dev/null 2>/dev/null||true'
-    scheduled_jobs:
+    opencloud_scheduled_jobs:
       path: "%{hiera('common::log_dir')}/cron*.log"
+      olddir: "%{hiera('common::log_dir')}"
+    opencloud_ssm_commands:
+      path: "%{hiera('common::log_dir')}/ssm*.log"
       olddir: "%{hiera('common::log_dir')}"
   author_primary:
     config:
