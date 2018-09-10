@@ -1,5 +1,5 @@
 ### 2.2.3
-* Lock down ansible and upgrade awscli versions
+* Lock down ansible to 2.5.8, awscli to 1.15.41, and boto3 to 1.7.41 
 
 ### 2.2.2
 * Lock down awscli version
