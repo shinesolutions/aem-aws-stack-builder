@@ -31,7 +31,7 @@ aem:
 
 compute:
   key_pair_name: aem-stack-key-pair
-  inbound_from_bastion_host_security_group: sg-62153b04
+  inbound_from_bastion_host_security_group: sg-a2ac6cc5
 
 security_groups:
   stack_name: aem-security-groups-stack
@@ -44,7 +44,7 @@ security_groups:
     tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
     extra_groups:
-      - sg-62153b04
+      - sg-a2ac6cc5
 
   publish_dispatcher:
     tag_name: AEM Publish Dispatcher Security Group
@@ -65,7 +65,7 @@ security_groups:
     tag_name: AEM Author Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
     extra_groups:
-      - sg-62153b04
+      - sg-a2ac6cc5
 
   author_publish_dispatcher:
     inbound_cidr_ip: 10.0.8.128/25
