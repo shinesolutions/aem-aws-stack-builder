@@ -35,7 +35,7 @@ security_groups:
 
 compute:
   key_pair_name: aem-stack-key-pair
-  inbound_from_bastion_host_security_group: sg-62153b04
+  inbound_from_bastion_host_security_group: sg-a2ac6cc5
 
 s3:
   data_bucket_name: aem-opencloud
