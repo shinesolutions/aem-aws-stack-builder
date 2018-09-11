@@ -19,4 +19,4 @@ s3:
   data_bucket_name: aem-opencloud
 
 library:
-  aem_stack_manager_version: 1.3.0
+  aem_stack_manager_version: 1.3.1

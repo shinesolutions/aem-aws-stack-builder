@@ -1,5 +1,6 @@
 ### 2.4.1
 * Lock awscli version to 1.16.10, boto3 to 1.8.5, ansible to 2.8.5
+* Upgrade AEM AWS Stack Provisioner to 2.7.2 and AEM Stack Manager to 1.3.1
 
 ### 2.4.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
