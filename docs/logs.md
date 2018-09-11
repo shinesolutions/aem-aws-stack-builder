@@ -68,3 +68,7 @@ The tables below are handy when you need to troubleshoot directly on the EC2 ins
 |----------|-------------|------------|
 | /var/lib/amazon/ssm/<instance_id>/document/orchestration/<execution_id>/stdout | SSM standard output log file. | All |
 | /var/lib/amazon/ssm/<instance_id>/document/orchestration/<execution_id>/stderr | SSM standard error log file. | All |
+| /var/log/shinesolutions/ssm-offline-compaction-snapshot.log | Log file for the SSM Output running the offline-compaction-snapshot. | author, publish, author-publish-dispatcher |
+| /var/log/shinesolutions/ssm-offline-snapshot.log | Log file for the SSM Output running the offline-snapshot. | author, publish, author-publish-dispatcher |
+| /var/log/shinesolutions/ssm-wait-until-service-rady.log | Log file for the SSM output wait until AEM service is ready. | author, publish |
+| /var/log/shinesolutions/ssm-manage-service.log | Log file for the SSM output manging the AEM Service. | author, publish |
