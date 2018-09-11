@@ -24,6 +24,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/wait-until-ready.sh >>{{ logDir }}/ssm-wait-until-service-rady.log 2>&1'
+        - '/opt/shinesolutions/aem-tools/wait-until-ready.sh >>{{ logDir }}/ssm-wait-until-service-ready.log 2>&1'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
