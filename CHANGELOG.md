@@ -1,5 +1,6 @@
 ### 3.1.1
-*
+* Add new parameters to enable removing of old bak files in AEM repository
+* 
 
 ### 3.1.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation
