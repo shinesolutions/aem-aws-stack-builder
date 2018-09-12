@@ -1,4 +1,6 @@
 ### 3.1.1
+* Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
+* Lock awscli version to 1.16.10, boto3 to 1.8.5, ansible to 2.8.5
 * Add new parameters to enable removing of old bak files in AEM repository
 * 
 
