@@ -1,5 +1,6 @@
 ### 2.4.2
-*
+* Fix hiera parameter for config parameter deployment_delay_in_seconds
+* 
 
 ### 2.4.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
