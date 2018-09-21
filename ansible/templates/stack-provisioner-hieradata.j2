@@ -108,7 +108,8 @@ aem_curator::config_collectd::proxy_port: '{{ proxy.port }}'
 aem_curator::action_deploy_artifacts::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifacts::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifacts::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
-
+ aem_curator::action_deploy_artifacts::deployment_sleep_seconds: {{ aem.deployment_delay_in_seconds }}
+ 
 aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
@@ -144,8 +145,6 @@ aem_orchestrator::logrotation:
 {{ logrotation.orchestrator | to_nice_yaml | indent(width=2, first=True) }}
 simianarmy::logrotation:
 {{ logrotation.simianarmy | to_nice_yaml | indent(width=2, first=True) }}
-
-aem_resources::deploy_packages::sleep_seconds: '{{ aem.deployment_delay_in_seconds }}'
 
 aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'
 aem_orchestrator::application_properties::alarm_content_health_check_terminate_instance_enable: '{{ aem.enable_content_healthcheck_terminate_instance }}'
