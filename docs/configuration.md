@@ -137,9 +137,78 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
+| stack_manager.stack_name | The stack name (to be appended to stack prefix) of the stack manager stack. This is where the AEM Stack Manager application itself runs. | Optional | `aem-stack-manager` |
+| stack_manager.utilities_stack_name | The stack name (to be appended to stack prefix) of the stack manager's utilities stack. This is where the utility AWS Lambda functions run. | Optional | `utilities` |
+| stack_manager.s3_prefix | The S3 prefix path specifying the location where Stack Manager objects (e.g. SSM logs) will be stored. This prefix will be appended to the S3 data bucket location for the given stack prefix, e.g. `s3://<data_bucket_name>/<stack_prefix>/<stack_manager_s3_prefix>` . | Optional | `stack-manager` |
 | stack_manager.purge.live_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | 10 20 1/3 * ? * |
 | stack_manager.purge.live_snapshots.max_age_in_hours | The number of hours to keep a live snapshot before it expires and will be removed | Optional | 24 |
 | stack_manager.purge.offline_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | 15 19 ? * SUN * |
 | stack_manager.purge.offline_snapshots.max_age_in_hours | The number of hours to keep an offline snapshot before it expires and will be removed  | Optional | 61320 |
 | stack_manager.purge.orchestration_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | 5 0/4 * * ? * |
 | stack_manager.purge.orchestration_snapshots.max_age_in_hours | The number of hours to keep an orchestration snapshot before it expires and will be removed  | Optional | 4 |
+
+### Log rotation configuration properties
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| logrotation.default_config.rotate | The default log rotation configuration for how many rotated log files to be kept on disk. | Optional | `4` |
+| logrotation.default_config.rotate_every | The default log rotation configuration for how often the log files should be rotated. | Optional | `daily` |
+| logrotation.default_config.compress | The default log rotation configuration for determining whether the rotated log files should be compressed. | Optional | `true` |
+| logrotation.default_config.create | The default log rotation configuration for determining whether a new log file should be created immediately after rotation. | Optional | `true` |
+| logrotation.default_config.dateext | The default log rotation configuration for determining whether the rotated log file should be archived by adding date extension. If false, then it will simply use a number. | Optional | `true` |
+| logrotation.default_config.ifempty | The default log rotation configuration for determining whether the log file needs to be rotated if it's empty. | Optional | `false` |
+| logrotation.default_config.olddir | The default log rotation configuration for the directory where the rotated log files would be kept. If set to false, then it will use the same directory where the original log file is located. | Optional | `false` |
+| logrotation.default_config.size | The default log rotation configuration for the log file size (in bytes, add K for Kb, add M for Mb) limit that should be reached before the file will be rotated. | Optional | `10M` |
+| logrotation.config./etc/logrotate.conf.<param> | The global log rotation config file path (`/etc/logrotate.conf`) and the initial parameter `<param>` to be set. | Optional, at minimum specify one parameter for Puppet create_resources compatibility | |
+| logrotation.rules.<rule_name>.path | The log files path to be rotated for this specific rule. | Optional | |
+| logrotation.rules.<rule_name>.olddir | The directory where the rotated log files to be kept for this specific rule. | Optional | |
+| logrotation.rules.<rule_name>.postrotate | The command to be executed after the rotation of the log files for this specific rule. | Optional | |
+| logrotation.<component>.config | Component specific configuration, which overwrites the default defined in `logrotation.config` . | Optional, at minimum specify one parameter for Puppet create_resources compatibility | |
+| logrotation.<component>.rules | Component specific log rotation rules. | Optional | |
+
+### Scheduled jobs configuration properties
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| scheduled_jobs.author_primary.offline_compaction.enable | If true, then offline compaction will be scheduled on `author-primary` component. | Optional | `false` |
+| scheduled_jobs.author_primary.offline_compaction.weekday | The day of the week when the offline compaction job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `2` |
+| scheduled_jobs.author_primary.offline_compaction.hour | The hour of the day when the offline compaction job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `3` |
+| scheduled_jobs.author_primary.offline_compaction.minute | The minute of the hour when the offline compaction job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.author_primary.export.enable | If true, then export backup will be scheduled on `author-primary` component. | Optional | `true` |
+| scheduled_jobs.author_primary.export.weekday | The day of the week when the export backup job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `0-7` |
+| scheduled_jobs.author_primary.export.hour | The hour of the day when the export backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `2` |
+| scheduled_jobs.author_primary.export.minute | The minute of the hour when the export backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.author_primary.live_snapshot.enable | If true, then live snapshot backup backup will be scheduled on `author-primary` component. | Optional | `true` |
+| scheduled_jobs.author_primary.live_snapshot.weekday | The day of the week when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `0-7` |
+| scheduled_jobs.author_primary.live_snapshot.hour | The hour of the day when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `*` |
+| scheduled_jobs.author_primary.live_snapshot.minute | The minute of the hour when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.author_standby.live_snapshot.enable | If true, then live snapshot backup backup will be scheduled on `author-standby` component. | Optional | `true` |
+| scheduled_jobs.author_standby.live_snapshot.weekday | The day of the week when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `0-7` |
+| scheduled_jobs.author_standby.live_snapshot.hour | The hour of the day when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `*` |
+| scheduled_jobs.author_standby.live_snapshot.minute | The minute of the hour when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.publish.offline_compaction.enable | If true, then offline compaction will be scheduled on `publish` component. | Optional | `false` |
+| scheduled_jobs.publish.offline_compaction.weekday | The day of the week when the offline compaction job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `2` |
+| scheduled_jobs.publish.offline_compaction.hour | The hour of the day when the offline compaction job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `3` |
+| scheduled_jobs.publish.offline_compaction.minute | The minute of the hour when the offline compaction job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.publish.export.enable | If true, then export backup will be scheduled on `publish` component. | Optional | `true` |
+| scheduled_jobs.publish.export.weekday | The day of the week when the export backup job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `0-7` |
+| scheduled_jobs.publish.export.hour | The hour of the day when the export backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `2` |
+| scheduled_jobs.publish.export.minute | The minute of the hour when the export backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.publish.live_snapshot.enable | If true, then live snapshot backup backup will be scheduled on `publish` component. | Optional | `true` |
+| scheduled_jobs.publish.live_snapshot.weekday | The day of the week when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `0-7` |
+| scheduled_jobs.publish.live_snapshot.hour | The hour of the day when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `*` |
+| scheduled_jobs.publish.live_snapshot.minute | The minute of the hour when the live snapshot backup backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.publish_dispatcher.content_health_check.enable | If true, then content health check backup will be scheduled on `publish-dispatcher` component. | Optional | `true` |
+| scheduled_jobs.publish_dispatcher.content_health_check.weekday | The day of the week when the content health check backup job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `0-7` |
+| scheduled_jobs.publish_dispatcher.content_health_check.hour | The hour of the day when the content health check backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `*` |
+| scheduled_jobs.publish_dispatcher.content_health_check.minute | The minute of the hour when the content health check backup job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `0` |
+| scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_prefix | The stack prefix of the Stack Manager stack, which will be paired to the `orchestrator` component. | Optional | None |
+| scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name | The name of the Stack Manager stack, which will be paired to the `orchestrator` component. | Optional | `aem-stack-manager-main-stack` |
+| scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.enable | If true, then offline compaction snapshot will be scheduled on `orchestrator` component. | Optional | `true` |
+| scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.weekday | The day of the week when the offline compaction snapshot job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `1` |
+| scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.hour | The hour of the day when the offline compaction snapshot job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `1` |
+| scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.minute | The minute of the hour when the offline compaction snapshot job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `15` |
+| scheduled_jobs.aem_orchestrator.offline_snapshot.enable | If true, then offline snapshot will be scheduled on `orchestrator` component. | Optional | `true` |
+| scheduled_jobs.aem_orchestrator.offline_snapshot.weekday | The day of the week when the offline snapshot job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `2-7` |
+| scheduled_jobs.aem_orchestrator.offline_snapshot.hour | The hour of the day when the offline snapshot job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `1` |
+| scheduled_jobs.aem_orchestrator.offline_snapshot.minute | The minute of the hour when the offline snapshot job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `15` |
