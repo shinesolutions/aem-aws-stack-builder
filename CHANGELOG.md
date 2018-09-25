@@ -1,5 +1,5 @@
 ### 3.2.0
-*
+* Remove deprecated configuration properties: instance_profile_stack_prefix, security_groups_stack_prefix 
 
 ### 3.1.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready

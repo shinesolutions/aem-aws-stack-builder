@@ -1,8 +1,6 @@
 ---
 permission_type: b
 network_stack_prefix: overwrite-me
-instance_profile_stack_prefix: overwrite-me
-security_groups_stack_prefix: overwrite-me
 
 main:
   stack_name: overwrite-me
