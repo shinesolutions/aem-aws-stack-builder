@@ -9,8 +9,6 @@ Check out the [example configuration files](https://github.com/shinesolutions/ae
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
-| main.stack_name | The stack name (to be appended to stack prefix) of the main parent stack of the corresponding architecture | Mandatory | |
-| prerequisites.stack_name | The stack name (to be appended to stack prefix) of the prerequisites parent stack of the corresponding architecture | Mandatory for AEM Consolidated and AEM Full-Set architectures, not needed for AEM Stack Manager | |
 | aws.region | [AWS region name](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) | Optional | `ap-southeast-2` |
 | aws.availability_zone_list | Comma separated list of [AWS availability zones](https://howto.lintel.in/list-of-aws-regions-and-availability-zones/) within the region defined in `aws.region` . | Optional | `ap-southeast-2a, ap-southeast-2b` |
 | proxy.enabled | If true, then web proxy will be used during provisioning steps. Note: this web proxy setting is not used for cron jobs | Optional | `false` |
@@ -63,6 +61,18 @@ network.hosted_zone | | Optional | `aem.` |
 | network_exports.PublicRouteTable | Public [route table](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html) used by the public subnets. | Mandatory | |
 | network_exports.PrivateRouteTable | Private [route table](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html) used by the public subnets. | Mandatory | |
 
+### AEM environment configuration properties
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| main.stack_name | The stack name (to be appended to stack prefix) of the main parent stack of the corresponding architecture | Mandatory | |
+| prerequisites.stack_name | The stack name (to be appended to stack prefix) of the prerequisites parent stack of the corresponding architecture | Mandatory for AEM Consolidated and AEM Full-Set architectures, not needed for AEM Stack Manager | Mandatory | |
+| permission_type | AEM AWS Stack Builder [permission type](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/permission-types.md). | Optional | `b` |
+| network_stack_prefix | The stack prefix of the network stack where the AEM environment will be running on. If you're using the VPC which was created by AEM AWS Stack Builder, then the value of `network.stack_name` configuration should be the value of this `network_stack_prefix` configuration property. If you're using a non-AEM AWS Stack Builder VPC and you have to rely on network exports, then the value of `network_exports.stack_name` configuration should be the value of this `network_stack_prefix` configuration property. | Mandatory | |
+| ami_ids.[author|publish|author_dispatcher|publish_dispatcher|author_publish_dispatcher|orchestrator|chaos_monkey] | AMI ID of the machine images created by [Packer AEM](https://github.com/shinesolutions/packer-aem). | Mandatory | |
+| snapshots.[author|publish].use_data_vol_snapshot | If set to true, the volume of the snapshot which ID is  specified in `snapshots.[author|publish].data_vol_snapshot_id` will then be attached to the data volume. | Optional | `false` |
+| snapshots.[author|publish].data_vol_snapshot_id | The snapshot ID which volume will be attached to the corresponding `author` or `publish` component's data volume. | Mandatory if `snapshots.[author|publish].use_data_vol_snapshot` is set to `true`, otherwise optional | |
+
 ### Library dependencies configuration properties:
 
 It's recommended to not overwrite the library version configuration properties below, and let AEM AWS Stack Builder determines the versions to be used.
@@ -112,6 +122,16 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | aem.enable_deploy_on_init | If true and if deployment descriptor is provided, the deployment process will be executed during cloud init as part of AEM environment creation. | Optional | `false` |
+
+### AEM reconfiguration configuration properties
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| reconfiguration.enable_create_system_users | If set to true, any existing system users on the repository to be reconfigured will be deleted and then recreated with AEM OpenCloud system users. This is only needed when the source repository to be reconfigured contains non-AEM OpenCloud system users. | Optional | `false` |
+| reconfiguration.certs_base | Source URL path of TLS certificate, it could be s3://..., http://..., https://..., or file://.... In [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md) case, it could be an S3 Bucket path, e.g. s3://somebucket/certs/  | Mandatory | |
+| reconfiguration.keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
+| system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user username. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
+| system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user path in the repository. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
 
 ### AEM Stack Manager configuration properties:
 
