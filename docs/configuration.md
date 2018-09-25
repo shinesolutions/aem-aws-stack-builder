@@ -69,9 +69,43 @@ network.hosted_zone | | Optional | `aem.` |
 | prerequisites.stack_name | The stack name (to be appended to stack prefix) of the prerequisites parent stack of the corresponding architecture | Mandatory for AEM Consolidated and AEM Full-Set architectures, not needed for AEM Stack Manager | Mandatory | |
 | permission_type | AEM AWS Stack Builder [permission type](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/permission-types.md). | Optional | `b` |
 | network_stack_prefix | The stack prefix of the network stack where the AEM environment will be running on. If you're using the VPC which was created by AEM AWS Stack Builder, then the value of `network.stack_name` configuration should be the value of this `network_stack_prefix` configuration property. If you're using a non-AEM AWS Stack Builder VPC and you have to rely on network exports, then the value of `network_exports.stack_name` configuration should be the value of this `network_stack_prefix` configuration property. | Mandatory | |
+
+### AWS resources configuration properties
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
 | ami_ids.[author|publish|author_dispatcher|publish_dispatcher|author_publish_dispatcher|orchestrator|chaos_monkey] | AMI ID of the machine images created by [Packer AEM](https://github.com/shinesolutions/packer-aem). | Mandatory | |
 | snapshots.[author|publish].use_data_vol_snapshot | If set to true, the volume of the snapshot which ID is  specified in `snapshots.[author|publish].data_vol_snapshot_id` will then be attached to the data volume. | Optional | `false` |
 | snapshots.[author|publish].data_vol_snapshot_id | The snapshot ID which volume will be attached to the corresponding `author` or `publish` component's data volume. | Mandatory if `snapshots.[author|publish].use_data_vol_snapshot` is set to `true`, otherwise optional | |
+| security_groups.secure_shell.inbound_cidr_ip | | Mandatory | |
+| security_groups.private_subnet_internet_outbound_cidr_ip | | Optional | |
+| security_groups.publish_dispatcher_elb.inbound_cidr_ip | | Mandatory | |
+| security_groups.publish_dispatcher_elb.extra_groups | | Mandatory | |
+| security_groups.author_dispatcher_elb.inbound_cidr_ip | | Mandatory | |
+| security_groups.author_dispatcher_elb.extra_groups | | Mandatory | |
+| security_groups.author_publish_dispatcher.inbound_cidr_ip | | Mandatory | |
+| messaging.asg_event_sqs_queue_name | | Optional | `aem-asg-event-queue` |
+| messaging.asg_event_sns_topic_name | | Optional | `aem-asg-event-topic` |
+| messaging.asg_event_sns_topic_display_name | | Optional | `AEM ASG Event Topic` |
+| messaging.alarm_notification.contact_email | Recipient email address where alarm notification will be sent to.  | Mandatory | |
+| compute.key_pair_name | [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to be provisioned on all EC2 instances within the AEM environment. | Mandatory | |
+| compute.inbound_from_bastion_host_security_group | Security group to allow inbound access from a bastion host. | Mandatory | |
+| s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors and credentials. | Mandatory | |
+| dns_records.route53_hosted_zone_name | | Mandatory | |
+| dns_records.author.record_set_name | | Optional | `author` |
+| dns_records.author_dispatcher.record_set_name | | Optional | `author-dispatcher` |
+| dns_records.publish_dispatcher.record_set_name | | Optional | `publish-dispatcher` |
+| dns_records.author_publish_dispatcher.record_set_name | | Optional | `author-publish-dispatcher` |
+| dns_records.author_publish_dispatcher.ttl | | Optional | `300` |
+
+### Component configuration properties
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| <component>.instance_profile | | Mandatory for instance profile exports | |
+| <component>.instance_type | | Optional | |
+| <component>.root_vol_size | | Optional | |
+| <component>.data_vol_size | | Optional | |
 
 ### Library dependencies configuration properties:
 
