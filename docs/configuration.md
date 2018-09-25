@@ -63,26 +63,55 @@ network.hosted_zone | | Optional | `aem.` |
 | network_exports.PublicRouteTable | Public [route table](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html) used by the public subnets. | Mandatory | |
 | network_exports.PrivateRouteTable | Private [route table](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html) used by the public subnets. | Mandatory | |
 
-### AEM configuration properties:
+### Library dependencies configuration properties:
+
+It's recommended to not overwrite the library version configuration properties below, and let AEM AWS Stack Builder determines the versions to be used.
+
+However, there could be circumstances where you can't upgrade AEM AWS Stack Builder yet, but at the same time you might need (for example) a newer version of Oak Run library. In that case, you can set the corresponding configuration property with the newer Oak Run version number.
+
+| Name | Description | Required? | Default |
+|------|-------------| ----------|---------|
+| library.aem_aws_stack_provisioner_version | The version number of [AEM AWS Stack Provisioner](https://github.com/shinesolutions/aem-aws-stack-provisioner) library. This library is used for provisioning the components during AEM environment creation. | Optional | |
+| library.aem_orchestrator_version | The version number of [AEM Orchestrator](https://github.com/shinesolutions/aem-orchestrator/) library. (Full-Set only) | Optional | |
+| library.aem_password_reset_version | The version number of [AEM Password Reset](https://github.com/shinesolutions/aem-password-reset/) library. | Optional | |
+| library.aem_healthcheck_version | The version number of [AEM Health Check](https://github.com/shinesolutions/aem-healthcheck) library. This version number will be used during Stack Manager event for reconfiguring AEM, which will provision AEM Health Check. | Optional | |
+| library.aem_stack_manager_version | The version number of [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud) library. | Optional | |
+| library.oak_run_version | The version number of [Oak Run](https://github.com/apache/jackrabbit-oak/blob/trunk/oak-run/README.md) library. This version number must be compatible with the AEM version that you're using. Oak Run version numbers are available from [Maven repository](https://mvnrepository.com/artifact/org.apache.jackrabbit/oak-run) | Mandatory | |
+| library.simian_army_version | The version number of [Simian Army](https://github.com/Netflix/SimianArmy) library. Simian Army runs on `chaos-monkey` component. (Full-Set only) | Optional | |
+
+### AEM generic configuration properties:
 
 | Name | Description | Required? | Default |
 |------|-------------| ----------|---------|
 | aem.version | AEM version number, used for version-specific feature implementations. Valid values are `6.2`, `6.3`, or `6.4` | Mandatory | |
-| aem.enable_reverse_replication | If true, reverse replication from AEM Publish to AEM Author will be enabled (Full-Set only) | Optional | true |
-| aem.deployment_delay_in_seconds | The number of seconds delay after AEM package deployment upload/installation, before resuming to perform health checks | Optional | 60 |
-| aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | 120 |
-| aem.deployment_check_delay_in_seconds | The number of seconds delay before retrying the deployment status check | Optional | 15 |
-| library.oak_run_version | The version number of [Oak Run](https://github.com/apache/jackrabbit-oak/blob/trunk/oak-run/README.md) library. This version number must be compatible with the AEM version that you're using. Oak Run version numbers are available from [Maven repository](https://mvnrepository.com/artifact/org.apache.jackrabbit/oak-run) | Mandatory | |
-| library.aem_healthcheck_version | The version number of [AEM Health Check](https://github.com/shinesolutions/aem-healthcheck) library. This version number will be used during Stack Manager event for reconfiguring AEM, which will provision AEM Health Check. | Optional | |
+| aem.enable_crxde | If true, then [CRXDE](https://helpx.adobe.com/experience-manager/6-3/sites/developing/using/developing-with-crxde-lite.html) will be enabled. Set to false by default for security reason. | Optional | `false` |
+| aem.enable_default_passwords | If true, admin and other system users will be provisioned with default password, which is the same as their username. E.g. `admin` user will have password `admin`. If false, their passwords will be randomly generated, unique for each single AEM environment. Set to false by default for security reason. | Optional | `false` |
+| aem.enable_reconfiguration | If true, the initial repository attached to the volume will be reconfigured for the current AEM OpenCloud version. | Optional | `false` |
+| aem.deployment_delay_in_seconds | The number of seconds delay after AEM package deployment upload/installation, before resuming to perform health checks | Optional | `60` |
+| aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | `120` |
+| aem.deployment_check_delay_in_seconds | The number of seconds delay before retrying the deployment status check | Optional | `15` |
+| aem.client_timeout | The number of seconds before [AEM API client](https://github.com/shinesolutions/ruby_aem) HTTP request times out. | Optional | `1200` |
+| aem.[author|publish].jvm_mem_opts | AEM Author/Publish's memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xss4m -Xms4096m -Xmx8192m` |
+| aem.[author|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
+| aem.author.jmxremote.port | AEM Author's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
+| aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 
 ### AEM Full-Set specific configuration properties:
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
-| aem.enable_content_healthcheck | If true, content health check will be performed from each AEM Publish-Dispatcher instance, checking the content on its AEM Publish instance pair | Optional | true |
+| aem.enable_reverse_replication | If true, reverse replication from AEM Publish to AEM Author will be enabled. | Optional | `true` |
+| aem.enable_content_healthcheck | If true, content health check will be scheduled (Full-Set only). Content health check will be performed from each AEM Publish-Dispatcher instance, checking the content on its AEM Publish instance pair. | Optional | `true` |
+| aem.enable_content_healthcheck_terminate_instance | If true, content health check failure will cause the `publish` and `publish-dispatcher` pair to be terminated. | Optional | `false` |
 | aem.revert_snapshot_type | Sets the Publisher launch configuration's default snapshot ID. Valid values are `offline`, `live`, or none. If no value is set, in the event of catastrophic failure where all publish instances are terminated, then the newly recovered AEM Publish instance will use the original snapshot from when the environment was first created. | Optional | |
 | scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_prefix | The stack prefix of the Stack Manager pair which will be used by the AEM environment to execute offline snapshot and offline compaction snapshot events. Failing to configure this, those events will not be executed | Mandatory | |
 | scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name | The main stack name of the Stack Manager pair which will be used by the AEM environment to execute offline snapshot and offline compaction snapshot events | Optional | aem-stack-manager-main-stack |
+
+### AEM Consolidated specific configuration properties:
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| aem.enable_deploy_on_init | If true and if deployment descriptor is provided, the deployment process will be executed during cloud init as part of AEM environment creation. | Optional | `false` |
 
 ### AEM Stack Manager configuration properties:
 
