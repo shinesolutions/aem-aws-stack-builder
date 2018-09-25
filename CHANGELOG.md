@@ -1,5 +1,6 @@
-### 3.2.0
-*
+### 3.1.2
+* Add Scripts to support the AEM64 Upgrade for consolidated & full-set
+* 
 
 ### 3.1.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
