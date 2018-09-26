@@ -7,6 +7,8 @@ Check out the [example configuration files](https://github.com/shinesolutions/ae
 
 ### Global configuration properties:
 
+These configurations are applicable to both network and AEM application infrastructure.
+
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | aws.region | [AWS region name](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) | Optional | `ap-southeast-2` |
@@ -21,6 +23,8 @@ Check out the [example configuration files](https://github.com/shinesolutions/ae
 | cron.no_proxy | A comma separated value of domain suffixes that you don't want to use with the web proxy, e.g. `localhost,127.0.0.1` | Optional | None |
 
 ### Network configuration properties
+
+These configurations are applicable only to network infrastructure when you can create VPC using AEM AWS Stack Builder.
 
 | Name | Description | Required? | Default |
 |------|-------------| ----------|---------|
@@ -44,6 +48,8 @@ network.hosted_zone | | Optional | `aem.` |
 
 ### Network exports configuration properties
 
+These configurations are applicable only to network infrastructure when you can't create VPC using AEM AWS Stack Builder, so you have to rely on existing VPC, and you have to utilise network exports configurations to specify the resources (VPC ID, subnet IDs) on the existing VPC.
+
 | Name | Description | Required? | Default |
 |------|-------------| ----------|---------|
 | network_exports.stack_name | The stack name (to be appended to stack prefix) of the network exports stack where the network configuration will reside. | Optional | `aem-network-exports-stack` |
@@ -63,6 +69,8 @@ network.hosted_zone | | Optional | `aem.` |
 
 ### AEM environment configuration properties
 
+These configurations are applicable to AEM environment infrastructure.
+
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | main.stack_name | The stack name (to be appended to stack prefix) of the main parent stack of the corresponding architecture | Mandatory | |
@@ -72,40 +80,91 @@ network.hosted_zone | | Optional | `aem.` |
 
 ### AWS resources configuration properties
 
+These configurations are applicable to AWS resources used by the AEM environment.
+
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | ami_ids.[author|publish|author_dispatcher|publish_dispatcher|author_publish_dispatcher|orchestrator|chaos_monkey] | AMI ID of the machine images created by [Packer AEM](https://github.com/shinesolutions/packer-aem). | Mandatory | |
+| ami_root_device_name | The device name of the root volume. | Optional | `/dev/sda1` |
 | snapshots.[author|publish].use_data_vol_snapshot | If set to true, the volume of the snapshot which ID is  specified in `snapshots.[author|publish].data_vol_snapshot_id` will then be attached to the data volume. | Optional | `false` |
 | snapshots.[author|publish].data_vol_snapshot_id | The snapshot ID which volume will be attached to the corresponding `author` or `publish` component's data volume. | Mandatory if `snapshots.[author|publish].use_data_vol_snapshot` is set to `true`, otherwise optional | |
 | security_groups.secure_shell.inbound_cidr_ip | | Mandatory | |
-| security_groups.private_subnet_internet_outbound_cidr_ip | | Optional | |
-| security_groups.publish_dispatcher_elb.inbound_cidr_ip | | Mandatory | |
-| security_groups.publish_dispatcher_elb.extra_groups | | Mandatory | |
-| security_groups.author_dispatcher_elb.inbound_cidr_ip | | Mandatory | |
-| security_groups.author_dispatcher_elb.extra_groups | | Mandatory | |
+| security_groups.private_subnet_internet_outbound_cidr_ip | CIDR block of the outbound access from private subnets. For example, if you want to lock down outbound access to an outbound proxy, then put the CIDR block of the outbound proxy here. If you want to allow access to everywhere, use `0.0.0.0/0` . | Mandatory | |
+| security_groups.publish_dispatcher_elb.inbound_cidr_ip | CIDR block of the inbound access to the ELB sitting in front of `publish-dispatcher` component. For example, if you want to lock down inbound access from a CDN service, then put the CIDR block of the CDN service here. If you want to allow access from everywhere, use `0.0.0.0/0` . | Mandatory | |
+| security_groups.publish_dispatcher_elb.extra_groups | Additional security groups to be attached to the ELB sitting in front of `publish-dispatcher` component. This is handy when you have some pre-existing security groups with custom rules that you'd like to add to the ELB. | Optional | |
+| security_groups.author_dispatcher_elb.inbound_cidr_ip | CIDR block of the inbound access to the ELB sitting in front of `author-dispatcher` component. For example, if you want to lock down inbound access from a reverse proxy, then put the CIDR block of the reverse proxy here. If you want to allow access from everywhere, use `0.0.0.0/0` . | Mandatory | |
+| security_groups.author_dispatcher_elb.extra_groups | Additional security groups to be attached to the ELB sitting in front of `author-dispatcher` component. This is handy when you have some pre-existing security groups with custom rules that you'd like to add to the ELB. | Mandatory | |
 | security_groups.author_publish_dispatcher.inbound_cidr_ip | | Mandatory | |
-| messaging.asg_event_sqs_queue_name | | Optional | `aem-asg-event-queue` |
-| messaging.asg_event_sns_topic_name | | Optional | `aem-asg-event-topic` |
-| messaging.asg_event_sns_topic_display_name | | Optional | `AEM ASG Event Topic` |
+| messaging.asg_event_sqs_queue_name | Scaling event SQS queue name to be appended to the stack prefix. | Optional | `aem-asg-event-queue` |
+| messaging.asg_event_sns_topic_name | Scaling event SNS topic resource name to be appended to the stack prefix. | Optional | `aem-asg-event-topic` |
+| messaging.asg_event_sns_topic_display_name | Scaling event SNS topic display name. | Optional | `AEM ASG Event Topic` |
 | messaging.alarm_notification.contact_email | Recipient email address where alarm notification will be sent to.  | Mandatory | |
 | compute.key_pair_name | [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to be provisioned on all EC2 instances within the AEM environment. | Mandatory | |
 | compute.inbound_from_bastion_host_security_group | Security group to allow inbound access from a bastion host. | Mandatory | |
 | s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors and credentials. | Mandatory | |
-| dns_records.route53_hosted_zone_name | | Mandatory | |
-| dns_records.author.record_set_name | | Optional | `author` |
-| dns_records.author_dispatcher.record_set_name | | Optional | `author-dispatcher` |
-| dns_records.publish_dispatcher.record_set_name | | Optional | `publish-dispatcher` |
-| dns_records.author_publish_dispatcher.record_set_name | | Optional | `author-publish-dispatcher` |
-| dns_records.author_publish_dispatcher.ttl | | Optional | `300` |
+| dns_records.route53_hosted_zone_name | A Route 53 hosted zone which the AEM environment DNS records will be created on. | Mandatory | |
+| dns_records.author.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing to the ELB sitting in front of `author-primary` and `author-standby` components. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `author` |
+| dns_records.author_dispatcher.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing to the ELB sitting in front of the `author-dispatcher` component. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `author-dispatcher` |
+| dns_records.publish_dispatcher.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing to the ELB sitting in front of the `publish-dispatcher` component. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `publish-dispatcher` |
+| dns_records.author_publish_dispatcher.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing directly to the `author-publish-dispatcher` component. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `author-publish-dispatcher` |
+| dns_records.author_publish_dispatcher.ttl | Time to live of the Author Publish Dispatcher DNS record. | Optional | `300` |
 
 ### Component configuration properties
 
+These configurations are applicable to the components used within AEM Full-Set and Consolidated architectures.
+
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
-| <component>.instance_profile | | Mandatory for instance profile exports | |
-| <component>.instance_type | | Optional | |
-| <component>.root_vol_size | | Optional | |
-| <component>.data_vol_size | | Optional | |
+| publish_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `publish-dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
+| publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish-dispatcher` component instances. | Optional | `t2.micro` |
+| publish_dispatcher.root_vol_size | The root volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
+| publish_dispatcher.data_vol_size | The data volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
+| publish_dispatcher.desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
+| publish_dispatcher.min_size | The minimum number of `publish-dispatcher` component instances. | Optional | `2` |
+| publish_dispatcher.max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
+| publish_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `publish-dispatcher` component. | Optional | `HTTPS:443/system/health?tags=shallow` |
+| publish_dispatcher.elb_scheme | The [scheme](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-ec2-elb-scheme) for the ELB sitting in front of `publish-dispatcher` component. | Optional | `internet-facing` |
+| publish_dispatcher.allowed_client | The allowed source IP address where AEM Dispatcher running on `publish-dispatcher` component. Default to everything because users tend to have different network design, some might restrict inbound access from AEM Publish, some might allow external resource such as a CDN service to flush the cache. | Optional | `*.*.*.*` |
+| publish.instance_profile | ARN of the IAM instance profile to be used on `publish` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
+| publish.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish` component instances. | Optional | `m3.large` |
+| publish.root_vol_size | The root volume size in Gb of `publish` component instances. | Optional | `20` |
+| publish.data_vol_size | The data volume size in Gb of `publish` component instances. | Optional | `75` |
+| publish.desired_capacity | The desired number of `publish` component instances. | Optional | `2` |
+| publish.min_size | The minimum number of `publish` component instances. | Optional | `2` |
+| publish.max_size | The maximum number of `publish` component instances. | Optional | `2` |
+| author.instance_profile | ARN of the IAM instance profile to be used on `author` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
+| author.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author` component instances. | Optional | `m3.large` |
+| author.root_vol_size | The root volume size in Gb of `author` component instances. | Optional | `20` |
+| author.data_vol_size | The data volume size in Gb of `author` component instances. | Optional | `75` |
+| author_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `author-dispatcher` component. | Optional | `HTTPS:5432/system/health?tags=shallow` |
+| author_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `author_dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
+| author_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_dispatcher` component instances. | Optional | `t2.micro` |
+| author_dispatcher.root_vol_size | The root volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
+| author_dispatcher.data_vol_size | The data volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
+| author_dispatcher.desired_capacity | The desired number of `author_dispatcher` component instances. | Optional | `2` |
+| author_dispatcher.min_size | The minimum number of `author_dispatcher` component instances. | Optional | `2` |
+| author_dispatcher.max_size | The maximum number of `author_dispatcher` component instances. | Optional | `2` |
+| author_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `author-dispatcher` component. | Optional | `HTTPS:443/system/health?tags=shallow` |
+| author_publish_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `author_publish_dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
+| author_publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_publish_dispatcher` component instances. | Optional | `m4.xlarge` |
+| author_publish_dispatcher.root_vol_size | The root volume size in Gb of `author_publish_dispatcher` component instances. | Optional | `20` |
+| author_publish_dispatcher.data_vol_size | The data volume size in Gb of `author_publish_dispatcher` component instances. | Optional | `20` |
+| author_publish_dispatcher.associate_public_ip_address | If true, then a public IP address will be associated to the `author-publish-dispatcher` instance. | Optional | `true` |
+| orchestrator.instance_profile | ARN of the IAM instance profile to be used on `orchestrator` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
+| orchestrator.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `orchestrator` component instances. | Optional | `t2.small` |
+| orchestrator.root_vol_size | The root volume size in Gb of `orchestrator` component instances. | Optional | `20` |
+| orchestrator.data_vol_size | The data volume size in Gb of `orchestrator` component instances. | Optional | `20` |
+| chaos_monkey.instance_profile | ARN of the IAM instance profile to be used on `chaos_monkey` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
+| chaos_monkey.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `chaos_monkey` component instances. | Optional | `t2.micro` |
+| chaos_monkey.root_vol_size | The root volume size in Gb of `chaos_monkey` component instances. | Optional | `20` |
+| chaos_monkey.include_stack | If true, `chaos-monkey` component will be included in the created AEM environment. If false, then the environment won't have `chaos-monkey` component. | Optional | `true` |
+| chaos_monkey.termination_settings.calendar_open_hour | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendaropenhour) specifying the starting hour of the day when Chaos Monkey starts operating. | Optional | `9` |
+| chaos_monkey.termination_settings.calendar_close_hour | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendarclosehour) specifying the ending hour of the day when Chaos Monkey starts operating. | Optional | `15` |
+| chaos_monkey.termination_settings.calendar_timezone | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendartimezone) specifying the timezone for the operating hours. | Optional | `Australia/Sydney` |
+| chaos_monkey.termination_settings.scheduler_frequency_in_minutes | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmyschedulerfrequency) specifying how often (in minutes) Chaos Monkey should attempt to terminate a random instance. Default is set to 5, which means Chaos Monkey will attempt to terminate a random instance every 5 minutes, until max termination is reached. | Optional | `5` |
+| chaos_monkey.termination_settings.asg_probability | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendartimezone) specifying the timezone for the operating hours. | Optional | `1.0` |
+| chaos_monkey.termination_settings.asg_max_terminations_per_day | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Chaos-Settings#simianarmychaosasgprobability) specifying the probability of termination per day. Note that this number will be divided by the hours between `chaos_monkey.termination_settings.calendar_open_hour` and `chaos_monkey.termination_settings.calendar_close_hour` . | Optional | `1.0` |
+
 
 ### Library dependencies configuration properties:
 
@@ -125,6 +184,8 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 
 ### AEM generic configuration properties:
 
+These configurations are applicable for both AEM Full-Set and Consolidated architectures.
+
 | Name | Description | Required? | Default |
 |------|-------------| ----------|---------|
 | aem.version | AEM version number, used for version-specific feature implementations. Valid values are `6.2`, `6.3`, or `6.4` | Mandatory | |
@@ -142,6 +203,8 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 
 ### AEM Full-Set specific configuration properties:
 
+These configurations are applicable specific to Full-Set AEM architecture.
+
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | aem.enable_reverse_replication | If true, reverse replication from AEM Publish to AEM Author will be enabled. | Optional | `true` |
@@ -153,11 +216,15 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 
 ### AEM Consolidated specific configuration properties:
 
+These configurations are applicable specific to Consolidated AEM architecture.
+
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | aem.enable_deploy_on_init | If true and if deployment descriptor is provided, the deployment process will be executed during cloud init as part of AEM environment creation. | Optional | `false` |
 
 ### AEM reconfiguration configuration properties
+
+These configurations are applicable only when you run repository reconfiguration on AEM Full-Set or Consolidated.
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
@@ -168,6 +235,8 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 | system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user path in the repository. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
 
 ### AEM Stack Manager configuration properties:
+
+These configurations are applicable specific to AEM Stack Manager.
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
@@ -182,6 +251,8 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 | stack_manager.purge.orchestration_snapshots.max_age_in_hours | The number of hours to keep an orchestration snapshot before it expires and will be removed  | Optional | 4 |
 
 ### Log rotation configuration properties
+
+These are log rotation configurations applicable to AEM Full-Set and Consolidated architectures depending on the `<component>` value in the configuration property.
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
@@ -201,6 +272,8 @@ However, there could be circumstances where you can't upgrade AEM AWS Stack Buil
 | logrotation.<component>.rules | Component specific log rotation rules. | Optional | |
 
 ### Scheduled jobs configuration properties
+
+The scheduled jobs configurations are applicable to AEM Full-Set and Consolidated architectures depending on the component.
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
