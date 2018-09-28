@@ -32,10 +32,6 @@ aem:
     jmxremote:
       port: 59182
 
-instance_profiles:
-  stack_name: aem-instance-profiles-stack
-  stack_manager: aem-stack-manager-instance-profiles-stack
-
 ami_ids:
   author: overwrite-me
   publish: overwrite-me
@@ -45,59 +41,33 @@ ami_ids:
   orchestrator: overwrite-me
   chaos_monkey: overwrite-me
 
+# depends on the AMIs, OS on the AMIs
 ami_root_device_name: /dev/sda1
 
 security_groups:
-  stack_name: aem-security-groups-stack
   secure_shell:
     inbound_cidr_ip: overwrite-me
 
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
 
   publish_dispatcher_elb:
-    tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: overwrite-me
     extra_groups:
       - sg-1234567
 
-  publish_dispatcher:
-    tag_name: AEM Publish Dispatcher Security Group
-
-  publish:
-    tag_name: AEM Publish Security Group
-
-  author:
-    tag_name: AEM Author Security Group
-
-  author_elb:
-    tag_name: AEM Author ELB Security Group
-
-  author_dispatcher:
-    tag_name: AEM Author Dispatcher Security Group
-
   author_dispatcher_elb:
-    tag_name: AEM Author Dispatcher ELB Security Group
     inbound_cidr_ip: overwrite-me
     extra_groups:
       - sg-1234567
 
   author_publish_dispatcher:
-    tag_name: AEM Author Publish Dispatcher Security Group
     inbound_cidr_ip: overwrite-me
 
-  orchestrator:
-    tag_name: AEM Orchestrator Security Group
-
-  chaos_monkey:
-    tag_name: AEM Chaos Monkey Security Group
-
 messaging:
-  stack_name: aem-messaging-stack
   asg_event_sqs_queue_name: aem-asg-event-queue
   asg_event_sns_topic_name: aem-asg-event-topic
   asg_event_sns_topic_display_name: AEM ASG Event Topic
   alarm_notification:
-    topic_name: alarm-notification-topic
     contact_email: overwrite-me
 
 compute:
@@ -116,46 +86,6 @@ library:
   simian_army_version: 2.5.3
   aem_healthcheck_version: 1.3.3
 
-publish_dispatcher:
-  stack_name: aem-publish-dispatcher-stack
-  instance_profile: overwrite-me
-  instance_type: t2.micro
-  min_size: 2
-  desired_capacity: 2
-  max_size: 2
-  root_vol_size: 20
-  data_vol_size: 20
-  load_balancer:
-    tag_name: AEM Publish Dispatcher Load Balancer
-  tag_name: AEM Publish Dispatcher
-  elb_health_check: HTTPS:443/system/health?tags=shallow
-  elb_scheme: internet-facing
-  allowed_client: '*.*.*.*'
-  certificate_name: aem-stack-builder
-
-publish:
-  stack_name: aem-publish-stack
-  instance_profile: overwrite-me
-  instance_type: m3.large
-  min_size: 2
-  desired_capacity: 2
-  max_size: 2
-  root_vol_size: 20
-  data_vol_size: 75
-  tag_name: AEM Publish
-
-author:
-  stack_name: aem-author-stack
-  instance_profile: overwrite-me
-  instance_type: m3.large
-  root_vol_size: 20
-  data_vol_size: 75
-  load_balancer:
-    tag_name: AEM Author Load Balancer
-  tag_name: AEM Author
-  elb_health_check: HTTPS:5432/system/health?tags=shallow
-  certificate_name: overwrite-me
-
 snapshots:
   author:
     use_data_vol_snapshot: false
@@ -164,7 +94,6 @@ snapshots:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
 
-# Parameters needed for AEM reconfiguration
 reconfiguration:
   enable_create_system_users: false
   certs_base: s3://overwrite/me
@@ -190,45 +119,61 @@ system_users:
     name: replicator
     path:  /home/users/r
 
-author_dispatcher:
-  stack_name: aem-author-dispatcher-stack
+publish_dispatcher:
   instance_profile: overwrite-me
   instance_type: t2.micro
-  min_size: 0
+  min_size: 2
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
-  load_balancer:
-    tag_name: AEM Author Dispatcher Load Balancer
-  tag_name: AEM Author Dispatcher
   elb_health_check: HTTPS:443/system/health?tags=shallow
-  certificate_name: aem-stack-builder
+  elb_scheme: internet-facing
+  allowed_client: '*.*.*.*'
+
+publish:
+  instance_profile: overwrite-me
+  instance_type: m3.large
+  min_size: 2
+  desired_capacity: 2
+  max_size: 2
+  root_vol_size: 20
+  data_vol_size: 75
+
+author:
+  instance_profile: overwrite-me
+  instance_type: m3.large
+  root_vol_size: 20
+  data_vol_size: 75
+  elb_health_check: HTTPS:5432/system/health?tags=shallow
+
+author_dispatcher:
+  instance_profile: overwrite-me
+  instance_type: t2.micro
+  min_size: 2
+  desired_capacity: 2
+  max_size: 2
+  root_vol_size: 20
+  data_vol_size: 20
+  elb_health_check: HTTPS:443/system/health?tags=shallow
 
 author_publish_dispatcher:
-  stack_name: aem-author-publish-dispatcher-stack
   instance_profile: overwrite-me
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 20
-  tag_name: AEM Author Publish Dispatcher
   associate_public_ip_address: true
-  security_group: overwrite-me
 
 orchestrator:
-  stack_name: aem-orchestrator-stack
   instance_profile: overwrite-me
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
-  tag_name: AEM Orchestrator
 
 chaos_monkey:
-  stack_name: aem-chaos-monkey-stack
   instance_profile: overwrite-me
   instance_type: t2.micro
   root_vol_size: 20
-  tag_name: AEM Chaos Monkey
   include_stack: true
   termination_settings:
     calendar_open_hour: '9'
@@ -239,7 +184,6 @@ chaos_monkey:
     asg_max_terminations_per_day: '1.0'
 
 dns_records:
-  stack_name: aem-dns-records
   route53_hosted_zone_name: overwrite-me.com.
   author:
     record_set_name: author
@@ -269,6 +213,9 @@ stack_manager:
 logrotation:
   config:
     /etc/logrotate.conf:
+      # this `rotate` property needs to be declared here for Puppet create_resources to work
+      # the rotate can also be declared in `logrotation.default_config.rotate` and
+      # if one is defined there, that will overwrite the `logrotation.config./etc/logrotate.conf.rotate`
       rotate: 4
   default_config:
     rotate: 4
