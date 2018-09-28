@@ -177,6 +177,8 @@ define config_examples
 	cp examples/descriptors/$(3)/*.json stage/
 endef
 
+config-examples-all: config-examples-aem62-rhel7-full-set config-examples-aem62-rhel7-consolidated config-examples-aem63-rhel7-full-set config-examples-aem63-rhel7-consolidated config-examples-aem64-rhel7-full-set config-examples-aem64-rhel7-consolidated config-examples-aem-stack-manager
+
 config-examples-aem62-rhel7-full-set: stage
 	$(call config_examples,aem62,rhel7,full-set)
 
