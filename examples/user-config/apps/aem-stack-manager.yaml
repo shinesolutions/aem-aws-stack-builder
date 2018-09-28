@@ -16,7 +16,7 @@ stack_manager:
       schedule: '5 0/4 * * ? *'
       max_age_in_hours: 4
 s3:
-  data_bucket_name: aem-stack-builder
+  data_bucket_name: aem-opencloud
 
 library:
   aem_stack_manager_version: 1.2.3

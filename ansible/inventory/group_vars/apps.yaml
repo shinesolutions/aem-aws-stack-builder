@@ -105,7 +105,7 @@ compute:
   inbound_from_bastion_host_security_group: overwrite-me
 
 s3:
-  data_bucket_name: aem-stack-builder
+  data_bucket_name: aem-opencloud
 
 library:
   aem_aws_stack_provisioner_version: 2.5.3
@@ -133,7 +133,7 @@ publish_dispatcher:
   elb_health_check: HTTPS:443/system/health?tags=shallow
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
-  certificate_name: aem-stack-builder
+  certificate_name: aem-opencloud
 
 publish:
   stack_name: aem-publish-stack
@@ -179,7 +179,7 @@ author_dispatcher:
     tag_name: AEM Author Dispatcher Load Balancer
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTPS:443/system/health?tags=shallow
-  certificate_name: aem-stack-builder
+  certificate_name: aem-opencloud
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack

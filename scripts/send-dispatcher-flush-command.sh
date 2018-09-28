@@ -12,7 +12,7 @@ else
 fi
 
 echo "Stack prefix: ${STACK_PREFIX:?You must set the STACK_PREFIX environment variable}"
-echo "Output S3 bucket name: ${OUTPUT_S3_BUCKET_NAME:=mb-aem-stack-builder}"
+echo "Output S3 bucket name: ${OUTPUT_S3_BUCKET_NAME:=mb-aem-opencloud}"
 echo "Output S3 key prefix: ${OUTPUT_S3_KEY_PREFIX:=${STACK_PREFIX}/run-command-output/}"
 
 DISPATCHER_TYPE="${1:-publish-dispatcher}"
