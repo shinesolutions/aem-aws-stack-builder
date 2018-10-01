@@ -127,6 +127,7 @@ publish_dispatcher:
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
+  enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
@@ -139,6 +140,7 @@ publish:
   max_size: 2
   root_vol_size: 20
   data_vol_size: 75
+  enable_random_termination: true
 
 author:
   instance_profile: overwrite-me
@@ -155,6 +157,7 @@ author_dispatcher:
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
+  enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
 
 author_publish_dispatcher:
@@ -169,12 +172,14 @@ orchestrator:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
+  enable_random_termination: true
 
 chaos_monkey:
   instance_profile: overwrite-me
   instance_type: t2.micro
   root_vol_size: 20
   include_stack: true
+  enable_random_termination: true
   termination_settings:
     calendar_open_hour: '9'
     calendar_close_hour: '15'
