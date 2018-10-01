@@ -1,4 +1,5 @@
 ### 2.4.2
+* Add configuration parameters to enable random termination for each component except Author
 *
 
 ### 2.4.1
