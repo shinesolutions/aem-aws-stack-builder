@@ -1,5 +1,5 @@
 ### 2.4.2
-*
+* Add configuration parameters to configure wait until login page is ready during Stack Provisioning #184
 
 ### 2.4.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready

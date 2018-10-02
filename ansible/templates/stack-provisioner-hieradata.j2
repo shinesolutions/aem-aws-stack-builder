@@ -149,3 +149,8 @@ aem_resources::deploy_packages::sleep_seconds: '{{ aem.deployment_delay_in_secon
 
 aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'
 aem_orchestrator::application_properties::alarm_content_health_check_terminate_instance_enable: '{{ aem.enable_content_healthcheck_terminate_instance }}'
+
+# Configure Wait until login page is ready timeout for AEM Author & Publisher
+common::login_ready_max_tries: '{{ aem.login_ready_max_tries }}'
+common::login_ready_base_sleep_seconds: '{{ aem.login_ready_base_sleep_seconds }}'
+common::login_ready_max_sleep_seconds: '{{ aem.login_ready_max_sleep_seconds }}'
