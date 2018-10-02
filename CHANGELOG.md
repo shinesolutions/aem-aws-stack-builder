@@ -1,3 +1,6 @@
+### 3.2.1
+* Add configuration parameters to configure wait until login page is ready during Stack Provisioning #184
+
 ### 3.2.0
 * Remove deprecated configuration properties: instance_profile_stack_prefix, security_groups_stack_prefix, instance_profiles.stack_name, instance_profiles.stack_manager, security_groups.stack_name, security_groups.*.tag_name, messaging.stack_name, messaging.alarm_notification.topic_name, <component>.stack_name, <component>.tag_name, <component>.instance_profile, <component>.certificate_name, messaging.stack_name, hosted_zone
 
