@@ -1,3 +1,7 @@
+### 3.2.1
+* Add configuration parameters to enable random termination for each component except Author
+* 
+
 ### 3.2.0
 * Fix hiera parameter for config parameter deployment_delay_in_seconds
 * Add Scripts to support the AEM64 Upgrade for consolidated & full-set
