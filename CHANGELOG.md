@@ -1,5 +1,5 @@
 ### 2.4.2
-*
+* Update deprecated ansible s3 module references to aws_s3. #188
 
 ### 2.4.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready

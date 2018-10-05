@@ -49,7 +49,7 @@
         - create
 
     - name: Upload system user credentials
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/system-users-credentials.json"
         src: ../../../../stage/system-users-credentials.json
@@ -79,7 +79,7 @@
       - create
 
     - name: Upload stack Facter facts
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/stack-facts.txt"
         src: ../../../../stage/stack-facts.txt
@@ -89,7 +89,7 @@
       - create
 
     - name: Upload stack init script
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/stack-init.sh"
         src: ../../../../scripts/stack-init.sh
@@ -115,7 +115,7 @@
       - create
 
     - name: Upload deploy-artifacts-descriptor from stage directory to data bucket when supplied
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
         src: ../../../../stage/deploy-artifacts-descriptor.json
@@ -142,7 +142,7 @@
       - create
 
     - name: Upload export-backups-descriptor from stage directory to data bucket when supplied
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/export-backups-descriptor.json"
         src: ../../../../stage/export-backups-descriptor.json
@@ -169,7 +169,7 @@
       - create
 
     - name: Upload content-healthcheck-descriptor from stage directory to data bucket when supplied
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/content-healthcheck-descriptor.json"
         src: ../../../../stage/content-healthcheck-descriptor.json
@@ -187,7 +187,7 @@
       - create
 
     - name: Upload Hieradata configuration
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/data/local.yaml"
         src: ../../../../stage/stack-provisioner-hieradata.yaml
@@ -259,7 +259,7 @@
       - create
 
     - name: Upload custom AEM Stack Provisioner
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/aem-custom-stack-provisioner.tar.gz"
         src: ../../../../stage/aem-custom-stack-provisioner.tar.gz
@@ -276,7 +276,7 @@
         - delete
 
     - name: Delete system user credentials from S3 bucket
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/system-users-credentials.json"
         mode: delobj
