@@ -1,4 +1,5 @@
 ### 3.2.0
+* Fix hiera parameter for config parameter deployment_delay_in_seconds
 * Add Scripts to support the AEM64 Upgrade for consolidated & full-set
 * Remove deprecated configuration properties: instance_profile_stack_prefix, security_groups_stack_prefix, instance_profiles.stack_name, instance_profiles.stack_manager, security_groups.stack_name, security_groups.*.tag_name, messaging.stack_name, messaging.alarm_notification.topic_name, <component>.stack_name, <component>.tag_name, <component>.instance_profile, <component>.certificate_name, messaging.stack_name, hosted_zone
 * Update deprecated ansible s3 module references to aws_s3. #188
