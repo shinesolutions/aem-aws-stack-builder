@@ -191,6 +191,8 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.version | AEM version number, used for version-specific feature implementations. Valid values are `6.2`, `6.3`, or `6.4` | Mandatory | |
 | aem.enable_crxde | If true, then [CRXDE](https://helpx.adobe.com/experience-manager/6-3/sites/developing/using/developing-with-crxde-lite.html) will be enabled. Set to false by default for security reason. | Optional | `false` |
 | aem.enable_default_passwords | If true, admin and other system users will be provisioned with default password, which is the same as their username. E.g. `admin` user will have password `admin`. If false, their passwords will be randomly generated, unique for each single AEM environment. Set to false by default for security reason. | Optional | `false` |
+| aem.enable_bak_files_cleanup | If true, .bak files older than `aem.bak_files_cleanup_max_age_in_days` will be deleted during repository compaction. | Optional | `false` |
+| aem.bak_files_cleanup_max_age_in_days | The number of maximum age in days for repository .bak files to be kept. Files older than this will be deleted during compaction. | Optional | `30` |
 | aem.enable_reconfiguration | If true, the initial repository attached to the volume will be reconfigured for the current AEM OpenCloud version. | Optional | `false` |
 | aem.deployment_delay_in_seconds | The number of seconds delay after AEM package deployment upload/installation, before resuming to perform health checks | Optional | `60` |
 | aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | `120` |
