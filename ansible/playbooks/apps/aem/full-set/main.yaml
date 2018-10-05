@@ -185,7 +185,7 @@
       - delete
 
     - name: Delete default deployment descriptor
-      s3:
+      aws_s3:
         bucket: '{{ s3.data_bucket_name }}'
         region: '{{ aws.region }}'
         object: '{{ stack_prefix }}/deploy-artifacts-descriptor.json'
