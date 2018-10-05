@@ -18,7 +18,7 @@ aem:
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
-  compaction_remove_bak_files_older_than_in_days: 30
+  bak_files_cleanup_max_age_in_days: 30
   deployment_delay_in_seconds: 60
   deployment_check_retries: 120
   deployment_check_delay_in_seconds: 15
