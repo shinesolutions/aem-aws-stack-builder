@@ -12,6 +12,8 @@ aem:
   enable_default_passwords: true
   enable_deploy_on_init: true
   enable_reconfiguration: false
+  enable_bak_files_cleanup: false
+  bak_files_cleanup_max_age_in_days: 30
   deployment_delay_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
@@ -27,7 +29,6 @@ aem:
       port: 59182
 
 security_groups:
-  stack_name: aem-security-groups-stack
   author_publish_dispatcher:
     inbound_cidr_ip: 10.0.8.128/25
   secure_shell:
@@ -42,7 +43,6 @@ s3:
 
 library:
   aem_aws_stack_provisioner_version: 3.1.2
-  aem_orchestrator_version:
 
 snapshots:
   author:
@@ -52,7 +52,6 @@ snapshots:
     use_data_vol_snapshot: false
     data_vol_snapshot_id:
 
-# Parameters needed for AEM reconfiguration
 reconfiguration:
   enable_create_system_users: false
   certs_base: s3://aem-opencloud/certs
@@ -79,7 +78,6 @@ system_users:
     path:  /home/users/r
 
 author_publish_dispatcher:
-  instance_profile: cliffs0-aem-consolidated-prerequisites-stack-InstanceProfilesStack-1IMSEFFH-AuthorPublishDispatcherInstanceProfile-DRJP0OXRCRU2
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 100
@@ -87,7 +85,6 @@ author_publish_dispatcher:
   associate_public_ip_address: true
 
 dns_records:
-  stack_name: aem-dns-records
   route53_hosted_zone_name: aem-stack.com.
   author_publish_dispatcher:
     record_set_name: "{{ stack_prefix }}-aem-consolidated"

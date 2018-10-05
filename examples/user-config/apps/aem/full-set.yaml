@@ -16,6 +16,8 @@ aem:
   enable_content_healthcheck: true
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
+  enable_bak_files_cleanup: false
+  bak_files_cleanup_max_age_in_days: 30
   deployment_delay_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
@@ -36,47 +38,23 @@ compute:
   inbound_from_bastion_host_security_group: sg-a2ac6cc5
 
 security_groups:
-  stack_name: aem-security-groups-stack
   secure_shell:
     inbound_cidr_ip: 10.0.8.128/25
 
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
 
   publish_dispatcher_elb:
-    tag_name: AEM Publish Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
     extra_groups:
       - sg-a2ac6cc5
 
-  publish_dispatcher:
-    tag_name: AEM Publish Dispatcher Security Group
-
-  publish:
-    tag_name: AEM Publish Security Group
-
-  author:
-    tag_name: AEM Author Security Group
-
-  author_elb:
-    tag_name: AEM Author ELB Security Group
-
-  author_dispatcher:
-    tag_name: AEM Author Dispatcher Security Group
-
   author_dispatcher_elb:
-    tag_name: AEM Author Dispatcher ELB Security Group
     inbound_cidr_ip: 10.0.8.128/25
     extra_groups:
       - sg-a2ac6cc5
 
   author_publish_dispatcher:
     inbound_cidr_ip: 10.0.8.128/25
-
-  orchestrator:
-    tag_name: AEM Orchestrator Security Group
-
-  chaos_monkey:
-    tag_name: AEM Chaos Monkey Security Group
 
 s3:
   data_bucket_name: aem-opencloud
@@ -85,7 +63,6 @@ library:
   aem_aws_stack_provisioner_version: 3.1.2
   aem_orchestrator_version: 2.0.0
   simian_army_version: 2.5.3
-  # AEM Reconfiguration
   aem_healthcheck_version: 1.3.3
 
 certificate_manager:
@@ -99,7 +76,6 @@ snapshots:
     use_data_vol_snapshot: false
     data_vol_snapshot_id:
 
-# Parameters needed for AEM reconfiguration
 reconfiguration:
   enable_create_system_users: false
   certs_base: s3://aem-opencloud/certs
@@ -123,8 +99,6 @@ system_users:
     path:  /home/users/r
 
 publish_dispatcher:
-  stack_name: aem-publish-dispatcher-stack
-  instance_profile: aem-instance-profiles-stack-PublishDispatcherInstanceProfile-FSFBXO7Q2ESY
   instance_type: t2.micro
   min_size: 2
   desired_capacity: 2
@@ -137,7 +111,6 @@ publish_dispatcher:
   elb_health_check: HTTPS:443/system/health?tags=shallow
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
-  certificate_name: aem-stack-builder
   asg_cpu_scaling_threshold: 49
   asg_cpu_high_period: 300
   asg_cpu_high_eval_period: 1
@@ -145,57 +118,37 @@ publish_dispatcher:
   asg_cpu_low_eval_period: 2
 
 publish:
-  stack_name: aem-publish-stack
-  instance_profile: aem-instance-profiles-stack-PublishInstanceProfile-MHV78N8CCU6O
   instance_type: m4.xlarge
   min_size: 2
   desired_capacity: 2
   max_size: 4
   root_vol_size: 20
   data_vol_size: 75
-  tag_name: AEM Publish
 
 author:
-  stack_name: aem-author-stack
   instance_profile: aem-instance-profiles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 75
-  load_balancer:
-    tag_name: AEM Author Load Balancer
-  tag_name: AEM Author
   elb_health_check: HTTPS:5432/system/health?tags=shallow
-  certificate_name: aem-stack-builder
 
 author_dispatcher:
-  stack_name: aem-author-dispatcher-stack
-  instance_profile: aem-instance-profiles-stack-AuthorDispatcherInstanceProfile-1Q5WZ99PPURIY
   instance_type: t2.micro
   min_size: 2
   desired_capacity: 2
   max_size: 2
   root_vol_size: 20
   data_vol_size: 75
-  load_balancer:
-    tag_name: AEM Author Dispatcher Load Balancer
-  tag_name: AEM Author Dispatcher
   elb_health_check: HTTPS:443/system/health?tags=shallow
-  certificate_name: aem-stack-builder
 
 orchestrator:
-  stack_name: aem-orchestrator-stack
-  instance_profile: aem-instance-profiles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 75
-  tag_name: AEM Orchestrator
 
 chaos_monkey:
-  stack_name: aem-chaos-monkey-stack
-  instance_profile: aem-instance-profiles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
   instance_type: t2.micro
   root_vol_size: 20
-  tag_name: AEM Chaos Monkey
   include_stack: true
   termination_settings:
     calendar_open_hour: '9'
@@ -206,7 +159,6 @@ chaos_monkey:
     asg_max_terminations_per_day: '1.0'
 
 dns_records:
-  stack_name: aem-dns-records
   route53_hosted_zone_name: aem-stack.com.
   author:
     record_set_name: "{{ stack_prefix }}-author"
@@ -216,7 +168,6 @@ dns_records:
     record_set_name: "{{ stack_prefix }}-publish-dispatcher"
 
 messaging:
-  stack_name: aem-messaging-stack
   asg_event_sqs_queue_name: aem-asg-event-queue
   asg_event_sns_topic_name: aem-asg-event-topic
   asg_event_sns_topic_display_name: AEM ASG Event Topic
