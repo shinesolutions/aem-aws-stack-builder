@@ -12,6 +12,8 @@ aem:
   enable_default_passwords: true
   enable_deploy_on_init: true
   enable_reconfiguration: false
+  enable_bak_files_cleanup: false
+  bak_files_cleanup_max_age_in_days: 30
   deployment_delay_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5

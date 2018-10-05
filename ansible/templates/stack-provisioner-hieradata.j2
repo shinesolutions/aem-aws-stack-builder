@@ -58,10 +58,17 @@ publish_dispatcher::enable_content_healthcheck: {{ aem.enable_content_healthchec
 orchestrator::aem_orchestrator_version: '{{ library.aem_orchestrator_version }}'
 orchestrator::stack_manager_stack_name: '{{ scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_prefix }}-{{ scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name }}'
 
+# Configure Chaos Monkey
 chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 
 chaos_monkey::asg_probability: '{{ chaos_monkey.termination_settings.asg_probability }}'
 chaos_monkey::asg_max_terminations_per_day: '{{ chaos_monkey.termination_settings.asg_max_terminations_per_day }}'
+
+chaos_monkey::orchestrator_enable_random_termination: {{ orchestrator.enable_random_termination }}
+chaos_monkey::chaos_monkey_enable_random_termination: {{ chaos_monkey.enable_random_termination }}
+chaos_monkey::publish_enable_random_termination: {{ publish.enable_random_termination }}
+chaos_monkey::publish_dispatcher_enable_random_termination: {{ publish_dispatcher.enable_random_termination }}
+chaos_monkey::author_dispatcher_enable_random_termination: {{ author_dispatcher.enable_random_termination }}
 
 simianarmy::simianarmy_properties::simianarmy_calendar_open_hour: '{{ chaos_monkey.termination_settings.calendar_open_hour }}'
 simianarmy::simianarmy_properties::simianarmy_calendar_close_hour: '{{ chaos_monkey.termination_settings.calendar_close_hour }}'
@@ -96,6 +103,8 @@ aem_curator::config_publish::jvm_opts: {{ aem.publish.jvm_opts }}
 aem_curator::config_publish::publish_timeout: {{ aem.client_timeout }}
 
 aem_curator::config_aem_tools::oak_run_version: '{{ library.oak_run_version }}'
+aem_curator::config_aem_tools::enable_compaction_remove_bak_files: '{{ aem.enable_bak_files_cleanup }}'
+aem_curator::config_aem_tools::compaction_remove_bak_files_older_than_in_days: '{{ aem.bak_files_cleanup_max_age_in_days }}'
 
 aem_curator::config_author_primary::aem_version: '{{ aem.version }}'
 aem_curator::config_author_standby::aem_version: '{{ aem.version }}'
@@ -108,7 +117,8 @@ aem_curator::config_collectd::proxy_port: '{{ proxy.port }}'
 aem_curator::action_deploy_artifacts::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifacts::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifacts::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
-
+ aem_curator::action_deploy_artifacts::deployment_sleep_seconds: {{ aem.deployment_delay_in_seconds }}
+ 
 aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
@@ -144,8 +154,6 @@ aem_orchestrator::logrotation:
 {{ logrotation.orchestrator | to_nice_yaml | indent(width=2, first=True) }}
 simianarmy::logrotation:
 {{ logrotation.simianarmy | to_nice_yaml | indent(width=2, first=True) }}
-
-aem_resources::deploy_packages::sleep_seconds: '{{ aem.deployment_delay_in_seconds }}'
 
 aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'
 aem_orchestrator::application_properties::alarm_content_health_check_terminate_instance_enable: '{{ aem.enable_content_healthcheck_terminate_instance }}'

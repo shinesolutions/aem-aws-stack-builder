@@ -16,6 +16,8 @@ aem:
   enable_content_healthcheck: true
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
+  enable_bak_files_cleanup: false
+  bak_files_cleanup_max_age_in_days: 30
   deployment_delay_in_seconds: 60
   deployment_check_retries: 120
   deployment_check_delay_in_seconds: 15
@@ -130,6 +132,7 @@ publish_dispatcher:
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
+  enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
@@ -142,6 +145,7 @@ publish:
   max_size: 2
   root_vol_size: 20
   data_vol_size: 75
+  enable_random_termination: true
 
 author:
   instance_profile: overwrite-me
@@ -158,6 +162,7 @@ author_dispatcher:
   max_size: 2
   root_vol_size: 20
   data_vol_size: 20
+  enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
 
 author_publish_dispatcher:
@@ -172,12 +177,14 @@ orchestrator:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
+  enable_random_termination: true
 
 chaos_monkey:
   instance_profile: overwrite-me
   instance_type: t2.micro
   root_vol_size: 20
   include_stack: true
+  enable_random_termination: true
   termination_settings:
     calendar_open_hour: '9'
     calendar_close_hour: '15'

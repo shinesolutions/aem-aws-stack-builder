@@ -1,12 +1,18 @@
-### 3.2.1
-* Add configuration parameters to configure wait until login page is ready during Stack Provisioning #184
-
 ### 3.2.0
+* Fix hiera parameter for config parameter deployment_delay_in_seconds
+* Add Scripts to support the AEM64 Upgrade for consolidated & full-set
 * Remove deprecated configuration properties: instance_profile_stack_prefix, security_groups_stack_prefix, instance_profiles.stack_name, instance_profiles.stack_manager, security_groups.stack_name, security_groups.*.tag_name, messaging.stack_name, messaging.alarm_notification.topic_name, <component>.stack_name, <component>.tag_name, <component>.instance_profile, <component>.certificate_name, messaging.stack_name, hosted_zone
+* Update deprecated ansible s3 module references to aws_s3. #188
+* Add new configuration properties aem: aem.enable_bak_files_cleanup, aem.bak_files_cleanup_max_age_in_days
+* Add configuration parameters to configure wait until login page is ready during Stack Provisioning #184
+* Add configuration parameters to enable random termination for each component except Author
+
 
 ### 3.1.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
 * Lock awscli version to 1.16.10, boto3 to 1.8.5, ansible to 2.8.5
+* Add new parameters to enable removing of old bak files in AEM repository
+* 
 
 ### 3.1.0
 * Add new configuration parameters to enabling support for reconfigure existing AEM installation

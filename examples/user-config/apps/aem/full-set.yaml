@@ -16,6 +16,8 @@ aem:
   enable_content_healthcheck: true
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
+  enable_bak_files_cleanup: false
+  bak_files_cleanup_max_age_in_days: 30
   deployment_delay_in_seconds: 10
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
@@ -117,6 +119,7 @@ publish_dispatcher:
   asg_cpu_high_eval_period: 1
   asg_cpu_low_period: 300
   asg_cpu_low_eval_period: 2
+  enable_random_termination: false
 
 publish:
   instance_type: m4.xlarge
@@ -125,6 +128,7 @@ publish:
   max_size: 4
   root_vol_size: 20
   data_vol_size: 75
+  enable_random_termination: false
 
 author:
   instance_profile: aem-instance-profiles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
@@ -141,16 +145,19 @@ author_dispatcher:
   root_vol_size: 20
   data_vol_size: 75
   elb_health_check: HTTPS:443/system/health?tags=shallow
+  enable_random_termination: true
 
 orchestrator:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 75
+  enable_random_termination: false
 
 chaos_monkey:
   instance_type: t2.micro
   root_vol_size: 20
   include_stack: true
+  enable_random_termination: false
   termination_settings:
     calendar_open_hour: '9'
     calendar_close_hour: '15'
