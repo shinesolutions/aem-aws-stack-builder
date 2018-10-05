@@ -22,6 +22,9 @@ aem:
   deployment_delay_in_seconds: 60
   deployment_check_retries: 120
   deployment_check_delay_in_seconds: 15
+  login_ready_max_tries: 60
+  login_ready_base_sleep_seconds: 5
+  login_ready_max_sleep_seconds: 10
   revert_snapshot_type:
   client_timeout: 1200
   publish:
