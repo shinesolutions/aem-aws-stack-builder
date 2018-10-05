@@ -146,6 +146,7 @@ publish_dispatcher:
   asg_cpu_high_eval_period: 1
   asg_cpu_low_period: 300
   asg_cpu_low_eval_period: 2
+  enable_random_termination: false
 
 publish:
   stack_name: aem-publish-stack
@@ -157,6 +158,7 @@ publish:
   root_vol_size: 20
   data_vol_size: 75
   tag_name: AEM Publish
+  enable_random_termination: false
 
 author:
   stack_name: aem-author-stack
@@ -184,6 +186,7 @@ author_dispatcher:
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTPS:443/system/health?tags=shallow
   certificate_name: aem-stack-builder
+  enable_random_termination: true
 
 orchestrator:
   stack_name: aem-orchestrator-stack
@@ -192,6 +195,7 @@ orchestrator:
   root_vol_size: 20
   data_vol_size: 75
   tag_name: AEM Orchestrator
+  enable_random_termination: false
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
@@ -200,6 +204,7 @@ chaos_monkey:
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
   include_stack: true
+  enable_random_termination: false
   termination_settings:
     calendar_open_hour: '9'
     calendar_close_hour: '15'

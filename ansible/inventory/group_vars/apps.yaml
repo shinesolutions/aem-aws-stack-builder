@@ -139,6 +139,7 @@ publish_dispatcher:
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
   certificate_name: aem-stack-builder
+  enable_random_termination: true
 
 publish:
   stack_name: aem-publish-stack
@@ -150,6 +151,7 @@ publish:
   root_vol_size: 20
   data_vol_size: 75
   tag_name: AEM Publish
+  enable_random_termination: true
 
 author:
   stack_name: aem-author-stack
@@ -211,6 +213,7 @@ author_dispatcher:
   tag_name: AEM Author Dispatcher
   elb_health_check: HTTPS:443/system/health?tags=shallow
   certificate_name: aem-stack-builder
+  enable_random_termination: true
 
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
@@ -229,6 +232,7 @@ orchestrator:
   root_vol_size: 20
   data_vol_size: 20
   tag_name: AEM Orchestrator
+  enable_random_termination: true
 
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
@@ -237,6 +241,7 @@ chaos_monkey:
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
   include_stack: true
+  enable_random_termination: true
   termination_settings:
     calendar_open_hour: '9'
     calendar_close_hour: '15'
