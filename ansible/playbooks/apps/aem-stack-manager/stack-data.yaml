@@ -27,7 +27,7 @@
       - create
 
     - name: Download aem-stack-manager-cloud library
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "library/aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip"
         dest: ../../../../stage/aem-stack-manager-cloud.zip
@@ -55,7 +55,7 @@
       - create
 
     - name: Upload Lambda functions
-      s3:
+      aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/{{ item }}.zip"
         src: ../../../../stage/{{ item }}.zip
