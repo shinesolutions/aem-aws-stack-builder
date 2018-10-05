@@ -1,6 +1,8 @@
 ### 2.4.2
 * Fix hiera parameter for config parameter deployment_delay_in_seconds
-* 
+* Update deprecated ansible s3 module references to aws_s3. #188
+* Add new parameters to enable removing of old bak files in AEM repository
+* Add new configuration properties aem: aem.enable_bak_files_cleanup, aem.bak_files_cleanup_max_age_in_days
 
 ### 2.4.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
