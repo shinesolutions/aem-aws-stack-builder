@@ -78,8 +78,6 @@ network:
   private_route_table:
     tag_name: AEM VPC Private Route Table
 
-  hosted_zone: aem.
-
 bastion:
   stack_name: aem-bastion-stack
   key_pair_name: overwrite-me
