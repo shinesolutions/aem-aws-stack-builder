@@ -1,4 +1,4 @@
-### 3.1.2
+### 3.2.0
 * Add Scripts to support the AEM64 Upgrade for consolidated & full-set
 * 
 
