@@ -202,6 +202,9 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.deployment_delay_in_seconds | The number of seconds delay after AEM package deployment upload/installation, before resuming to perform health checks | Optional | `60` |
 | aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | `120` |
 | aem.deployment_check_delay_in_seconds | The number of seconds delay before retrying the deployment status check | Optional | `15` |
+| aem.login_ready_max_tries | The number of times AEM login page will be checked | Optional | 60 |
+| aem.login_ready_base_sleep_seconds | The number of seconds to wait at least before retrying the login page ready check | Optional | 5 |
+| aem.login_ready_max_sleep_seconds | The number of seconds to wait maximum before retrying the login page ready check | Optional | 10 |
 | aem.client_timeout | The number of seconds before [AEM API client](https://github.com/shinesolutions/ruby_aem) HTTP request times out. | Optional | `1200` |
 | aem.[author|publish].jvm_mem_opts | AEM Author/Publish's memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xss4m -Xms4096m -Xmx8192m` |
 | aem.[author|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
