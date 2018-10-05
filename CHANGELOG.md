@@ -1,5 +1,6 @@
 ### 2.4.2
 * Add configuration parameters to enable random termination for each component except Author
+* Fix hiera parameter for config parameter deployment_delay_in_seconds
 * Update deprecated ansible s3 module references to aws_s3. #188
 * Add new parameters to enable removing of old bak files in AEM repository
 * Add new configuration properties aem: aem.enable_bak_files_cleanup, aem.bak_files_cleanup_max_age_in_days
