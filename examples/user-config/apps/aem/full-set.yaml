@@ -218,7 +218,7 @@ chaos_monkey:
 
 dns_records:
   stack_name: aem-dns-records
-  route53_hosted_zone_name: aem-stack.com.
+  route53_hosted_zone_name: aemopencloud.cms.
   author:
     record_set_name: "{{ stack_prefix }}-author"
   author_dispatcher:
