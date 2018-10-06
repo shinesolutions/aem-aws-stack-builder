@@ -39,7 +39,7 @@ security_groups:
     inbound_cidr_ip: 10.0.8.128/25
 
 compute:
-  key_pair_name: aem-stack-key-pair
+  key_pair_name: aemopencloud-sandpit
   inbound_from_bastion_host_security_group: sg-a2ac6cc5
 
 s3:
