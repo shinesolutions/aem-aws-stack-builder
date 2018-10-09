@@ -48,6 +48,10 @@ make test-full-set \
   "stack_prefix=${test_id}-stack-manager" \
   "target_aem_stack_prefix=${test_id}-full-set"
 
+# TODO: remove after we upgrade everything to aws-sdk 3
+# temporary while inspec still requires aws-sdk 2
+gem uninstall aws-sdk
+
 # Download AEM Test Suite and resolve dependencies
 cd "${workspace_dir}"
 wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
@@ -64,8 +68,13 @@ make test-recovery-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
 # placeholder security test for now, TODO: retrieve author, publish, and publish_dispatcher hosts
 # make test-security config_path=conf/
 
+# TODO: remove after we upgrade everything to aws-sdk 3
+# temporary while inspec still requires aws-sdk 2
+gem uninstall aws-sdk
+
 # Delete all created AEM environments
 cd "${workspace_dir}"
+make deps
 (make "config-examples-${aem_version}-${os_type}-full-set" && make delete-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/") &
 (make "config-examples-${aem_version}-${os_type}-consolidated" && make delete-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/") &
 (make config-examples-aem-stack-manager && make delete-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/) &
