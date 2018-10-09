@@ -127,7 +127,7 @@ library:
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
   instance_profile: overwrite-me
-  instance_type: t3.micro
+  instance_type: t2.micro
   min_size: 2
   desired_capacity: 2
   max_size: 4
@@ -203,7 +203,7 @@ system_users:
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
   instance_profile: overwrite-me
-  instance_type: t3.micro
+  instance_type: t2.micro
   min_size: 0
   desired_capacity: 2
   max_size: 2
@@ -219,7 +219,7 @@ author_dispatcher:
 author_publish_dispatcher:
   stack_name: aem-author-publish-dispatcher-stack
   instance_profile: overwrite-me
-  instance_type: m5.xlarge
+  instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 20
   tag_name: AEM Author Publish Dispatcher
@@ -229,7 +229,7 @@ author_publish_dispatcher:
 orchestrator:
   stack_name: aem-orchestrator-stack
   instance_profile: overwrite-me
-  instance_type: t3.small
+  instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
   tag_name: AEM Orchestrator
@@ -238,7 +238,7 @@ orchestrator:
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
   instance_profile: overwrite-me
-  instance_type: t3.micro
+  instance_type: t2.micro
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
   include_stack: true
