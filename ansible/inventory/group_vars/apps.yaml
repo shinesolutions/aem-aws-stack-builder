@@ -58,7 +58,7 @@ security_groups:
   secure_shell:
     inbound_cidr_ip: overwrite-me
 
-  private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
+  private_subnet_internet_outbound_cidr_ip: overwrite-me
 
   publish_dispatcher_elb:
     tag_name: AEM Publish Dispatcher ELB Security Group

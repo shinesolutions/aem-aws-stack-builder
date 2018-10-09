@@ -7,6 +7,7 @@
 * Add new configuration properties aem: aem.enable_bak_files_cleanup, aem.bak_files_cleanup_max_age_in_days
 * Upgrade AEM AWS Stack Provisioner to 2.7.3 and AEM Stack Manager to 1.5.3
 * Change default AEM Publish-Dispatcher max ASG size to 4
+* Change security_groups.private_subnet_internet_outbound_cidr_ip configuration to be mandatory
 
 ### 2.4.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready

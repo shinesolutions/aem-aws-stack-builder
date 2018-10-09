@@ -33,6 +33,7 @@ aem:
 
 security_groups:
   stack_name: aem-security-groups-stack
+  private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
   author_publish_dispatcher:
     inbound_cidr_ip: 10.0.8.128/25
   secure_shell:
