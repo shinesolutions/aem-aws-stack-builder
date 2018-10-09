@@ -8,6 +8,7 @@
 * Upgrade AEM AWS Stack Provisioner to 2.7.3 and AEM Stack Manager to 1.5.3
 * Change default AEM Publish-Dispatcher max ASG size to 4
 * Change security_groups.private_subnet_internet_outbound_cidr_ip configuration to be mandatory
+* Change default security_groups.author_dispatcher_elb.extra_groups and security_groups.publish_dispatcher_elb.extra_groups to be empty
 
 ### 2.4.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
