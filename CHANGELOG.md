@@ -9,6 +9,7 @@
 * Change default AEM Publish-Dispatcher max ASG size to 4
 * Change security_groups.private_subnet_internet_outbound_cidr_ip configuration to be mandatory
 * Change default security_groups.author_dispatcher_elb.extra_groups and security_groups.publish_dispatcher_elb.extra_groups to be empty
+* Enforce default Java to use Oracle JDK
 
 ### 2.4.1
 * Add output redirection in Cloudformation templates for SSM Commands Offline Snapshot, Offline Compaction Snapshot, manage service & wait until ready
