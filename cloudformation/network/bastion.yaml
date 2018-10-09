@@ -22,7 +22,7 @@ Resources:
     Properties:
       ImageId:
         Ref: BastionImageId
-      InstanceType: t2.micro
+      InstanceType: t3.micro
       KeyName:
         Ref: BastionKeyPairName
       NetworkInterfaces:

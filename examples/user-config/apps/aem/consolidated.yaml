@@ -89,7 +89,7 @@ system_users:
 
 author_publish_dispatcher:
   instance_profile: cliffs0-aem-consolidated-prerequisites-stack-InstanceProfilesStack-1IMSEFFH-AuthorPublishDispatcherInstanceProfile-DRJP0OXRCRU2
-  instance_type: m4.xlarge
+  instance_type: m5.xlarge
   root_vol_size: 20
   data_vol_size: 100
   tag_name: AEM Author Publish Dispatcher

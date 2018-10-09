@@ -131,7 +131,7 @@ system_users:
 publish_dispatcher:
   stack_name: aem-publish-dispatcher-stack
   instance_profile: aem-instance-profiles-stack-PublishDispatcherInstanceProfile-FSFBXO7Q2ESY
-  instance_type: t2.micro
+  instance_type: t3.micro
   min_size: 2
   desired_capacity: 2
   max_size: 4
@@ -154,7 +154,7 @@ publish_dispatcher:
 publish:
   stack_name: aem-publish-stack
   instance_profile: aem-instance-profiles-stack-PublishInstanceProfile-MHV78N8CCU6O
-  instance_type: m4.xlarge
+  instance_type: m5.xlarge
   min_size: 2
   desired_capacity: 2
   max_size: 4
@@ -166,7 +166,7 @@ publish:
 author:
   stack_name: aem-author-stack
   instance_profile: aem-instance-profiles-stack-AuthorInstanceProfile-OYGRS9FHB0L9
-  instance_type: m4.xlarge
+  instance_type: m5.xlarge
   root_vol_size: 20
   data_vol_size: 75
   load_balancer:
@@ -178,7 +178,7 @@ author:
 author_dispatcher:
   stack_name: aem-author-dispatcher-stack
   instance_profile: aem-instance-profiles-stack-AuthorDispatcherInstanceProfile-1Q5WZ99PPURIY
-  instance_type: t2.micro
+  instance_type: t3.micro
   min_size: 2
   desired_capacity: 2
   max_size: 2
@@ -194,7 +194,7 @@ author_dispatcher:
 orchestrator:
   stack_name: aem-orchestrator-stack
   instance_profile: aem-instance-profiles-stack-OrchestratorInstanceProfile-1VWFVJ2JNUY3S
-  instance_type: t2.small
+  instance_type: t3.small
   root_vol_size: 20
   data_vol_size: 75
   tag_name: AEM Orchestrator
@@ -203,7 +203,7 @@ orchestrator:
 chaos_monkey:
   stack_name: aem-chaos-monkey-stack
   instance_profile: aem-instance-profiles-stack-ChaosMonkeyInstanceProfile-1C63DS268SWHK
-  instance_type: t2.micro
+  instance_type: t3.micro
   root_vol_size: 20
   tag_name: AEM Chaos Monkey
   include_stack: true
