@@ -8,6 +8,7 @@
 * Add configuration parameters to configure wait until login page is ready during Stack Provisioning #184
 * Add configuration parameters to enable random termination for each component except Author
 * Change security_groups.private_subnet_internet_outbound_cidr_ip configuration to be mandatory
+* Change default security_groups.author_dispatcher_elb.extra_groups and security_groups.publish_dispatcher_elb.extra_groups to be empty
 
 
 ### 3.1.1
