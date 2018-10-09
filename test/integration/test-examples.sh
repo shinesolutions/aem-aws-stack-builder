@@ -14,7 +14,7 @@ test_id=$1
 aem_version=${2:-aem63}
 os_type=${3:-rhel7}
 integration_config_file=examples/user-config/common/zzz-test.yaml
-aem_stack_manager_messenger_version=1.5.4
+aem_stack_manager_messenger_version=1.5.6
 aem_test_suite_version=0.9.3
 workspace_dir=$(pwd)
 
