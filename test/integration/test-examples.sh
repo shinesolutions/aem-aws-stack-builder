@@ -15,7 +15,7 @@ aem_version=${2:-aem63}
 os_type=${3:-rhel7}
 integration_config_file=examples/user-config/common/zzz-test.yaml
 aem_stack_manager_messenger_version=1.5.6
-aem_test_suite_version=0.9.4
+aem_test_suite_version=0.9.6
 workspace_dir=$(pwd)
 
 # Create AEM environments: a Stack Manager, an AEM Consolidated, and an AEM Full-Set
@@ -54,12 +54,6 @@ wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_t
 mkdir -p "stage/aem-test-suite-${aem_test_suite_version}"
 tar -xvzf "stage/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory "stage/aem-test-suite-${aem_test_suite_version}"
 cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
-
-# TODO: remove after we upgrade everything to aws-sdk 3
-# temporary while inspec still requires aws-sdk 2
-gem uninstall --all --force aws-sdk
-rm -f Gemfile.lock
-
 make deps
 
 # Run AEM Test Suite integration tests
@@ -69,10 +63,6 @@ make test-acceptance-full-set "stack_prefix=${test_id}-full-set" config_path=con
 make test-recovery-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
 # placeholder security test for now, TODO: retrieve author, publish, and publish_dispatcher hosts
 # make test-security config_path=conf/
-
-# TODO: remove after we upgrade everything to aws-sdk 3
-# temporary while inspec still requires aws-sdk 2
-gem uninstall --all --force aws-sdk
 
 # Delete all created AEM environments
 cd "${workspace_dir}"
