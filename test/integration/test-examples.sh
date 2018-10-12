@@ -63,7 +63,7 @@ make test-acceptance-full-set "stack_prefix=${test_id}-full-set" config_path=con
 # TODO: temporarily disable recovery testing to allow CodeBuild to pass
 #       will re-enable when we've improved buildspec for CodeBuild, and this script
 #       can return to be used by developers only
-make test-recovery-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
+# make test-recovery-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
 
 # placeholder security test for now, TODO: retrieve author, publish, and publish_dispatcher hosts
 # make test-security config_path=conf/
