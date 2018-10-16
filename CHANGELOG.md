@@ -1,3 +1,6 @@
+### 2.5.2
+*
+
 ### 2.5.1
 * Upgrade AEM AWS Stack Provisioner to 2.7.8 for improved AEM Author Standby readiness check
 
