@@ -8,7 +8,7 @@
 * Update deprecated ansible s3 module references to aws_s3. #188
 * Add new parameters to enable removing of old bak files in AEM repository
 * Add new configuration properties aem: aem.enable_bak_files_cleanup, aem.bak_files_cleanup_max_age_in_days
-* Upgrade AEM AWS Stack Provisioner to 2.7.7 and AEM Stack Manager to 1.5.3
+* Upgrade AEM AWS Stack Provisioner to 2.7.8 and AEM Stack Manager to 1.5.3
 * Change default AEM Publish-Dispatcher max ASG size to 4
 * Change security_groups.private_subnet_internet_outbound_cidr_ip configuration to be mandatory
 * Change default security_groups.author_dispatcher_elb.extra_groups and security_groups.publish_dispatcher_elb.extra_groups to be empty
