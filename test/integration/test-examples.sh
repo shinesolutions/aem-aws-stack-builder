@@ -20,10 +20,10 @@ workspace_dir=$(pwd)
 
 # Create AEM environments: a Stack Manager, an AEM Consolidated, and an AEM Full-Set
 rm -f "${integration_config_file}"
-echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix: ${test_id}-stack-manager" > "${integration_config_file}"
-make config-examples-aem-stack-manager && make create-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/
-make "config-examples-${aem_version}-${os_type}-full-set" && make create-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
-make "config-examples-${aem_version}-${os_type}-consolidated" && make create-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
+echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix: ${test_id}-sm" > "${integration_config_file}"
+make config-examples-aem-stack-manager && make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager/
+make "config-examples-${aem_version}-${os_type}-full-set" && make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
+make "config-examples-${aem_version}-${os_type}-consolidated" && make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
 
 # Download Stack Manager Messenger and resolve dependencies
 cd "${workspace_dir}"
@@ -42,11 +42,11 @@ tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_versi
 # Run integration tests via Stack Manager Messenger
 cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
 make test-consolidated \
-  "stack_prefix=${test_id}-stack-manager" \
-  "target_aem_stack_prefix=${test_id}-consolidated"
+  "stack_prefix=${test_id}-sm" \
+  "target_aem_stack_prefix=${test_id}-con"
 make test-full-set \
-  "stack_prefix=${test_id}-stack-manager" \
-  "target_aem_stack_prefix=${test_id}-full-set"
+  "stack_prefix=${test_id}-sm" \
+  "target_aem_stack_prefix=${test_id}-fs"
 
 # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
 #       will re-enable when we've improved buildspec for CodeBuild, and this script
@@ -61,9 +61,9 @@ make test-full-set \
 #
 # # Run AEM Test Suite integration tests
 # cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
-# make test-readiness-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
-# make test-acceptance-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
-# make test-recovery-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
+# make test-readiness-full-set "stack_prefix=${test_id}-fs" config_path=conf/
+# make test-acceptance-full-set "stack_prefix=${test_id}-fs" config_path=conf/
+# make test-recovery-full-set "stack_prefix=${test_id}-fs" config_path=conf/
 
 # placeholder security test for now, TODO: retrieve author, publish, and publish_dispatcher hosts
 # make test-security config_path=conf/
@@ -71,7 +71,7 @@ make test-full-set \
 # Delete all created AEM environments
 cd "${workspace_dir}"
 make deps
-(make "config-examples-${aem_version}-${os_type}-full-set" && make delete-full-set "stack_prefix=${test_id}-full-set" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/") &
-(make "config-examples-${aem_version}-${os_type}-consolidated" && make delete-consolidated "stack_prefix=${test_id}-consolidated" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/") &
-(make config-examples-aem-stack-manager && make delete-stack-manager "stack_prefix=${test_id}-stack-manager" config_path=stage/user-config/aem-stack-manager/) &
+(make "config-examples-${aem_version}-${os_type}-full-set" && make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/") &
+(make "config-examples-${aem_version}-${os_type}-consolidated" && make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/") &
+(make config-examples-aem-stack-manager && make delete-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager/) &
 wait
