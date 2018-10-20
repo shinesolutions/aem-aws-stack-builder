@@ -88,7 +88,7 @@ author_publish_dispatcher:
   associate_public_ip_address: true
 
 dns_records:
-  route53_hosted_zone_name: aem-stack.com.
+  route53_hosted_zone_name: aemopencloud.cms.
   author_publish_dispatcher:
     record_set_name: "{{ stack_prefix }}-aem-consolidated"
     ttl: 300

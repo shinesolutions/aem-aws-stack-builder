@@ -167,7 +167,7 @@ chaos_monkey:
     asg_max_terminations_per_day: '1.0'
 
 dns_records:
-  route53_hosted_zone_name: aem-stack.com.
+  route53_hosted_zone_name: aemopencloud.cms.
   author:
     record_set_name: "{{ stack_prefix }}-author"
   author_dispatcher:
