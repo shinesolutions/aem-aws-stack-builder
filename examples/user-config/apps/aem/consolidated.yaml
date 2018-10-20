@@ -32,6 +32,7 @@ aem:
       port: 59182
 
 security_groups:
+  private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
   author_publish_dispatcher:
     inbound_cidr_ip: 10.0.8.128/25
   secure_shell:

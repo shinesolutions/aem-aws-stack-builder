@@ -7,6 +7,7 @@
 * Change default AEM Publish-Dispatcher max ASG size to 4
 * Add configuration parameters to configure wait until login page is ready during Stack Provisioning #184
 * Add configuration parameters to enable random termination for each component except Author
+* Change security_groups.private_subnet_internet_outbound_cidr_ip configuration to be mandatory
 
 
 ### 3.1.1
