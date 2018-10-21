@@ -117,8 +117,8 @@ aem_curator::config_collectd::proxy_port: '{{ proxy.port }}'
 aem_curator::action_deploy_artifacts::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifacts::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifacts::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
- aem_curator::action_deploy_artifacts::deployment_sleep_seconds: {{ aem.deployment_delay_in_seconds }}
- 
+aem_curator::action_deploy_artifacts::deployment_sleep_seconds: {{ aem.deployment_delay_in_seconds }}
+
 aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
