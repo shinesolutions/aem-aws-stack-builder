@@ -1,4 +1,7 @@
-### 2.5.2
+### 2.6.1
+*
+
+### 2.6.0
 * Change default JMX ports to 5982 for AEM Author and 5983 for AEM Publish #213
 * Upgrade AEM AWS Stack Provisioner to 2.8.0
 
