@@ -34,6 +34,12 @@ cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messe
 make deps
 
 # Run Stack Manager Messenger integration tests
+cd "${workspace_dir}"
+wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
+mkdir -p "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+
+# Run integration tests via Stack Manager Messenger
 cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
 make test-consolidated \
   "stack_prefix=${test_id}-sm" \
@@ -42,25 +48,7 @@ make test-full-set \
   "stack_prefix=${test_id}-sm" \
   "target_aem_stack_prefix=${test_id}-fs"
 
-# Download AEM Test Suite and resolve dependencies
-cd "${workspace_dir}"
-wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
-mkdir -p "stage/aem-test-suite-${aem_test_suite_version}"
-tar -xvzf "stage/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory "stage/aem-test-suite-${aem_test_suite_version}"
-cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
-
-# TODO: remove after we upgrade everything to aws-sdk 3
-# temporary while inspec still requires aws-sdk 2
-gem uninstall --all --force aws-sdk
-rm -f Gemfile.lock
-
-make deps
-
-# Run AEM Test Suite integration tests
-cd "${workspace_dir}/stage/aem-test-suite-${aem_test_suite_version}"
-make test-readiness-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
-make test-acceptance-full-set "stack_prefix=${test_id}-full-set" config_path=conf/
-# TODO: temporarily disable recovery testing to allow CodeBuild to pass
+# TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
 #       will re-enable when we've improved buildspec for CodeBuild, and this script
 #       can return to be used by developers only, or aws-sdk is upgraded to 3.x.x
 # # Download AEM Test Suite and resolve dependencies
@@ -79,10 +67,6 @@ make test-acceptance-full-set "stack_prefix=${test_id}-full-set" config_path=con
 
 # placeholder security test for now, TODO: retrieve author, publish, and publish_dispatcher hosts
 # make test-security config_path=conf/
-
-# TODO: remove after we upgrade everything to aws-sdk 3
-# temporary while inspec still requires aws-sdk 2
-gem uninstall --all --force aws-sdk
 
 # Delete all created AEM environments
 cd "${workspace_dir}"
