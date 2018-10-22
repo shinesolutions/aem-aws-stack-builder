@@ -1,3 +1,6 @@
+### 3.2.1
+*
+
 ### 3.2.0
 * Change default JMX ports to 5982 for AEM Author and 5983 for AEM Publish #213
 * Fix hiera parameter for config parameter deployment_delay_in_seconds
