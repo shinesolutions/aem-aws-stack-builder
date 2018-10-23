@@ -126,11 +126,11 @@ Parameters:
     Description: >-
       The name of the file containing the ReconfigureAEM SSM command.
 
-  ScheduleOfflineSnapshotIncludeFileParameter:
+  ScheduleSnapshotIncludeFileParameter:
     Type: String
-    Default: AEM-ScheduleOfflineSnapshot.yaml
+    Default: AEM-ScheduleSnapshot.yaml
     Description: >-
-      The name of the file containing the ScheduleOfflineSnapshot SSM command.
+      The name of the file containing the ScheduleSnapshot SSM command.
 
   TestReadinessFullsetIncludeFileParameter:
     Type: String
@@ -338,7 +338,7 @@ Resources:
           Name: 'AWS::Include'
           Parameters: !Sub '${S3BucketAndPrefixParameter}/${FlushDispatcherCacheIncludeFileParameter}'
 
-  ScheduleOfflineSnapshot:
+  ScheduleSnapshot:
     Type: AWS::SSM::Document
     Properties:
       DocumentType: Command
@@ -346,7 +346,7 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ScheduleOfflineSnapshotIncludeFileParameter}'
+            Location: !Sub '${S3BucketAndPrefixParameter}/${ScheduleSnapshotIncludeFileParameter}'
 
   TestReadinessFullset:
     Type: AWS::SSM::Document
@@ -449,9 +449,9 @@ Outputs:
     Description: Document name for FlushDispatcherCache
     Value: !Ref FlushDispatcherCache
 
-  ScheduleOfflineSnapshot:
+  ScheduleSnapshot:
     Description: Documention name for Test Readiness Fullset
-    Value: !Ref ScheduleOfflineSnapshot
+    Value: !Ref ScheduleSnapshot
 
   TestReadinessFullset:
     Description: Documention name for Test Readiness Fullset

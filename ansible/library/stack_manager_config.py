@@ -154,7 +154,7 @@ class config:
             "PromoteAuthor": "promote-author",
             "ReconfigureAEM": "reconfigure-aem",
             "RunAdhocPuppet": "run-adhoc-puppet",
-            "ScheduleOfflineSnapshot": "schedule-offline-snapshot",
+            "ScheduleSnapshot": "schedule-snapshot",
             "TestReadinessConsolidated": "test-readiness-consolidated",
             "TestReadinessFullset": "test-readiness-full-set",
             "WaitUntilReady": "wait-until-ready"

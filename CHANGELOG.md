@@ -1,5 +1,5 @@
 ### 2.6.1
-*
+* Extend schedule snapshot stack manager event to un/schedule live snapshots #212
 
 ### 2.6.0
 * Change default JMX ports to 5982 for AEM Author and 5983 for AEM Publish #213
