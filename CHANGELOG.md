@@ -1,3 +1,6 @@
+### 3.2.2
+* Extend schedule snapshot stack manager event to un/schedule live snapshots #212
+
 ### 3.2.1
 * Upgrade AEM AWS Stack Provisioner to 3.2.0 and AEM Stack Manager to 1.5.6
 * Change default JMX ports to 5982 for AEM Author and 5983 for AEM Publish #213
