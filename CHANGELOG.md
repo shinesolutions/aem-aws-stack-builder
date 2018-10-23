@@ -1,3 +1,6 @@
+### 3.2.2
+* Update Stack Manager events for Offline-Snapshot & offline-compaction-snapshot to enable scheduling feature #182
+
 ### 3.2.1
 * Upgrade AEM AWS Stack Provisioner to 3.2.0 and AEM Stack Manager to 1.5.6
 * Change default JMX ports to 5982 for AEM Author and 5983 for AEM Publish #213
