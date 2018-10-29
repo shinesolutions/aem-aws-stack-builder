@@ -68,5 +68,5 @@ Resources:
           Version: '2012-10-17'
         PolicyName: AuthorPublishDispatcherRolePolicy
       RoleName:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackAuthorPublishDispatcherRole
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherRole
     Type: AWS::IAM::Role
