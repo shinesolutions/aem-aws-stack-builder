@@ -29,8 +29,7 @@ download_provisioner() {
   s3_object_name=$2
   mkdir -p "${dest_dir}"
   pushd "${dest_dir}"
-  # aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/${s3_object_name}" .
-  aws s3 cp "s3://engn-aem-opencloud-test/${s3_object_name}" .
+  aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/${s3_object_name}" .
   tar -xzvf "${s3_object_name}"
   rm "${s3_object_name}"
   chown -R root:root .
