@@ -123,12 +123,11 @@ aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_
 aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 
-
 # AEM Reconfiguration Parameters
 common::aem_healthcheck_version: {{ library.aem_healthcheck_version }}
 common::enable_aem_reconfiguration: {{ aem.enable_reconfiguration }}
 common::cert_base_url: {{ reconfiguration.certs_base }}
-common::aem_keystore_password: {{ reconfiguration.keystore_password }}
+common::aem_ssl_keystore_password: {{ reconfiguration.ssl_keystore_password }}
 common::enable_create_system_users: {{ reconfiguration.enable_create_system_users }}
 common::aem_system_users:
 {{ system_users | to_nice_yaml | indent(width=2, first=True) }}
@@ -154,6 +153,20 @@ aem_orchestrator::logrotation:
 {{ logrotation.orchestrator | to_nice_yaml | indent(width=2, first=True) }}
 simianarmy::logrotation:
 {{ logrotation.simianarmy | to_nice_yaml | indent(width=2, first=True) }}
+
+# Keystore parameters
+common::authorizable_keystore::enable_creation: {{ aem.authorizable_keystore.enable_creation }}
+common::authorizable_keystore::enable_certificate_chain_upload: {{ aem.authorizable_keystore.enable_certificate_chain_upload }}
+
+# Truststore parameters
+common::truststore::enable_creation: {{ aem.truststore.enable_creation }}
+common::truststore::password: {{ aem.truststore.password }}
+
+# SAML Configuration parameters
+common::saml::enable: {{ aem.enable_saml }}
+common::saml::enable_saml_certificate_upload: {{ aem.truststore.enable_saml_certificate_upload }}
+common::saml::configuration:
+{{ saml | to_nice_yaml | indent(width=2, first=True) }}
 
 aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'
 aem_orchestrator::application_properties::alarm_content_health_check_terminate_instance_enable: '{{ aem.enable_content_healthcheck_terminate_instance }}'

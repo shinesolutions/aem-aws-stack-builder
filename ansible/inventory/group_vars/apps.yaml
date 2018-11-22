@@ -18,6 +18,7 @@ aem:
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
   bak_files_cleanup_max_age_in_days: 30
+  enable_saml: false
   deployment_delay_in_seconds: 60
   deployment_check_retries: 120
   deployment_check_delay_in_seconds: 15
@@ -26,6 +27,15 @@ aem:
   login_ready_max_sleep_seconds: 10
   revert_snapshot_type:
   client_timeout: 1200
+  # Parameters for managing AEM Authorizable Keystore
+  authorizable_keystore:
+    enable_creation: false
+    enable_certificate_chain_upload: false
+  # Parameters for managing AEM Truststore
+  truststore:
+    enable_creation: false
+    enable_saml_certificate_upload: false
+    password:
   publish:
     jvm_mem_opts: "-Xss4m -Xms4096m -Xmx8192m"
     jvm_opts: ""
@@ -100,12 +110,20 @@ snapshots:
 reconfiguration:
   enable_create_system_users: false
   certs_base: s3://overwrite/me
-  keystore_password: changeit
+  ssl_keystore_password: changeit
 
 system_users:
   admin:
     name: admin
     path: /home/users/d
+  authentication-service:
+    name: authentication-service
+    path: /home/users/system
+    authorizable_keystore:
+      password:
+      certificate_chain:
+      private_key:
+      private_key_alias:
   deployer:
     name: deployer
     path: /home/users/q
@@ -121,6 +139,36 @@ system_users:
   replicator:
     name: replicator
     path:  /home/users/r
+
+# Parameters needed for SAML configuration
+saml:
+  add_group_memberships:
+  clock_tolerance:
+  create_user:
+  default_groups:
+  default_redirect_url:
+  digest_method:
+  group_membership_attribute:
+  handle_logout:
+  # The password of the key-store of the 'authentication-service' system user
+  key_store_password:
+  idp_http_redirect:
+  idp_url:
+  logout_url:
+  name_id_format:
+  path:
+  service_provider_entity_id:
+  service_ranking:
+  signature_method:
+  sp_private_key_alias:
+  synchronize_attributes:
+  use_encryption:
+  user_id_attribute:
+  user_intermediate_path:
+  # Parameters for providing the certificate used for SAML authentication
+  idp_cert_alias:
+  file:
+  serial:
 
 publish_dispatcher:
   instance_profile: overwrite-me
