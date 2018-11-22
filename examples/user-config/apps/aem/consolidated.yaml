@@ -113,7 +113,7 @@ saml:
   digest_method: http://www.w3.org/2001/04/xmlenc#sha256
   group_membership_attribute: http://temp/variable/aem-groups
   handle_logout: true
-  keystore_password: admin
+  key_store_password: admin
   idp_http_redirect: true
   idp_url: https://federation.prod.com/adfs/ls/IdpInitiatedSignOn.aspx?RequestBinding\=HTTPPost&loginToRp\=https://prod-aemauthor.com/saml_login
   logout_url: https://federation.prod.com/adfs/ls/IdpInitiatedSignOn.aspx
