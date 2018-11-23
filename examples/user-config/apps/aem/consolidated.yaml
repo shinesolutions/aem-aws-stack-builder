@@ -25,9 +25,9 @@ aem:
   deployment_check_retries: 60
   deployment_check_delay_in_seconds: 5
   # Parameters for managing AEM Authorizable Keystore
-  keystore:
+  authorizable_keystore:
     enable_creation: false
-    upload_keystore_certificate: false
+    enable_certificate_chain_upload: false
   # Parameters for managing AEM Truststore
   truststore:
     enable_creation: false

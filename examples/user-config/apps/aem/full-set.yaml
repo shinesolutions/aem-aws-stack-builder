@@ -27,9 +27,9 @@ aem:
   login_ready_max_sleep_seconds: 30
   revert_snapshot_type: offline
   # Parameters for managing AEM Authorizable Keystore
-  keystore:
+  authorizable_keystore:
     enable_creation: false
-    upload_keystore_certificate: false
+    enable_certificate_chain_upload: false
   # Parameters for managing AEM Truststore
   truststore:
     enable_creation: false
