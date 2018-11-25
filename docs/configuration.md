@@ -84,10 +84,10 @@ These configurations are applicable to AWS resources used by the AEM environment
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
-| ami_ids.[author|publish|author_dispatcher|publish_dispatcher|author_publish_dispatcher|orchestrator|chaos_monkey] | AMI ID of the machine images created by [Packer AEM](https://github.com/shinesolutions/packer-aem). | Mandatory | |
+| ami_ids.[author\|publish|author_dispatcher|publish_dispatcher|author_publish_dispatcher|orchestrator|chaos_monkey] | AMI ID of the machine images created by [Packer AEM](https://github.com/shinesolutions/packer-aem). | Mandatory | |
 | ami_root_device_name | The device name of the root volume. | Optional | `/dev/sda1` |
-| snapshots.[author|publish].use_data_vol_snapshot | If set to true, the volume of the snapshot which ID is  specified in `snapshots.[author|publish].data_vol_snapshot_id` will then be attached to the data volume. | Optional | `false` |
-| snapshots.[author|publish].data_vol_snapshot_id | The snapshot ID which volume will be attached to the corresponding `author` or `publish` component's data volume. | Mandatory if `snapshots.[author|publish].use_data_vol_snapshot` is set to `true`, otherwise optional | |
+| snapshots.[author\|publish].use_data_vol_snapshot | If set to true, the volume of the snapshot which ID is  specified in `snapshots.[author\|publish].data_vol_snapshot_id` will then be attached to the data volume. | Optional | `false` |
+| snapshots.[author\|publish].data_vol_snapshot_id | The snapshot ID which volume will be attached to the corresponding `author` or `publish` component's data volume. | Mandatory if `snapshots.[author\|publish].use_data_vol_snapshot` is set to `true`, otherwise optional | |
 | security_groups.secure_shell.inbound_cidr_ip | | Mandatory | |
 | security_groups.private_subnet_internet_outbound_cidr_ip | CIDR block of the outbound access from private subnets. For example, if you want to lock down outbound access to an outbound proxy, then put the CIDR block of the outbound proxy here. If you want to allow access to everywhere, use `0.0.0.0/0` . | Mandatory | |
 | security_groups.publish_dispatcher_elb.inbound_cidr_ip | CIDR block of the inbound access to the ELB sitting in front of `publish-dispatcher` component. For example, if you want to lock down inbound access from a CDN service, then put the CIDR block of the CDN service here. If you want to allow access from everywhere, use `0.0.0.0/0` . | Mandatory | |
@@ -206,8 +206,8 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.login_ready_base_sleep_seconds | The number of seconds to wait at least before retrying the login page ready check | Optional | 5 |
 | aem.login_ready_max_sleep_seconds | The number of seconds to wait maximum before retrying the login page ready check | Optional | 10 |
 | aem.client_timeout | The number of seconds before [AEM API client](https://github.com/shinesolutions/ruby_aem) HTTP request times out. | Optional | `1200` |
-| aem.[author|publish].jvm_mem_opts | AEM Author/Publish's memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xss4m -Xms4096m -Xmx8192m` |
-| aem.[author|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
+| aem.[author\|publish].jvm_mem_opts | AEM Author/Publish's memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xss4m -Xms4096m -Xmx8192m` |
+| aem.[author\|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
 | aem.author.jmxremote.port | AEM Author's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 
