@@ -46,7 +46,7 @@ Usage
 
 ### Network
 
-Ensure [configuration file for network]() has been set up.
+Ensure [configuration file for network](configuration.md) has been set up.
 
 From the above base configuration, generate template network configuration file:
 
@@ -70,7 +70,7 @@ Alternatively, if you don't have the permission to create VPC and/or network res
 
 <img width="800" alt="AEM Full-Set Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png"/>
 
-Ensure [configuration file for AEM Full-Set architecture]() has been set up.
+Ensure [configuration file for AEM Full-Set architecture](configuration.md) has been set up.
 
 The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
 
@@ -90,7 +90,7 @@ Create main stack which contains EC2 and Route53 resources:
 
 <img width="500" alt="AEM Consolidated Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-consolidated.png"/>
 
-Ensure [configuration file for AEM Consolidated architecture]() has been set up.
+Ensure [configuration file for AEM Consolidated architecture](configuration.md) has been set up.
 
 The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
 
@@ -110,7 +110,7 @@ Create main stack which contains EC2 and Route53 resources:
 
 <img width="600" alt="AEM Stack Manager Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-stack-manager.png"/>
 
-Ensure [configuration file for AEM Stack Manager]() has been set up.
+Ensure [configuration file for AEM Stack Manager](configuration.md) has been set up.
 
 Create AEM Stack Manager stacks:
 
