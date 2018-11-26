@@ -11,7 +11,9 @@ The diagrams further below describe the relationship between the stacks, which d
 
 ### Prerequisites and main stacks
 
-Each AEM architecture has a prerequisites stack and a main stack. The prerequisites stacks contain AWS resources that are slow(er) to provision. The main stacks contain AWS resources that are fast(er) to provision. The associations between these stacks depend on the AEM architecture:
+Each AEM architecture has a prerequisites stack and a main stack. The prerequisites stacks contain AWS resources that are slow(er) to provision. The main stacks contain AWS resources that are fast(er) to provision. This allows the flexibility for the user to keep the prerequisites stacks and only terminate/stop the main stacks in order to save cost but still be able to start the AEM environment in a timely manner.
+
+The associations between these stacks depend on the AEM architecture:
 
 * AEM Consolidated architecture allows one prerequisite stack to be associated to one or more main stacks
 * AEM Full-Set architecture requires one prerequisites stack to be associated to one main stack
@@ -19,6 +21,8 @@ Each AEM architecture has a prerequisites stack and a main stack. The prerequisi
 ### Exports stacks
 
 For a stack that contains AWS resources which the user doesn't have permission to provision, the stack would be referred to as an exports stack (`*-exports`). You should provision the AWS resources separate from AEM AWS Stack Builder, and then [https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md](configure) those resources to be referenced by the exports.
+
+For example, `instance-profiles` stack contains AWS resources that will be provisioned when you're using permission type b. However, if you're using permission type c, it will use `instance-profiles-exports` stack instead, containing the ARNs/values of the AWS resources which are generated external to AEM AWS Stack Builder.
 
 ### Stack structure diagram for permission type b
 
