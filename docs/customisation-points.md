@@ -5,7 +5,7 @@ Since every user has a unique standard operating environment and security requir
 
 ### Configuration
 
-You can set up a number of [configuration properties](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) to suit your requirements.
+You can set up a number of [configuration properties](configuration.md) to suit your requirements.
 Have a look at the [user config examples](https://github.com/shinesolutions/aem-aws-stack-builder/tree/master/examples/user-config) for reference on what configuration values you need to set for various architectures and permission types.
 
 This allows you to create a number of configuration profiles. For example, you might have the following configuration profiles like these:

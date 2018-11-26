@@ -1,7 +1,7 @@
 Package Backup Descriptor Definition
 ------------------------------------
 
-[Package Backup Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md#package-backup-descriptor) file is a JSON file that defines the list of AEM packages to be exported as a backup and then uploaded to S3.
+[Package Backup Descriptor](descriptors.md#package-backup-descriptor) file is a JSON file that defines the list of AEM packages to be exported as a backup and then uploaded to S3.
 
 Please find below the properties that you can define within the descriptor file:
 
