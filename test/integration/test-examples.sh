@@ -33,7 +33,14 @@ tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_versi
 cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
 make deps
 
+# Run Stack Manager Messenger integration tests
+cd "${workspace_dir}"
+wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
+mkdir -p "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
+
 # Run integration tests via Stack Manager Messenger
+cd "${workspace_dir}/stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}"
 make test-consolidated \
   "stack_prefix=${test_id}-sm" \
   "target_aem_stack_prefix=${test_id}-con"
