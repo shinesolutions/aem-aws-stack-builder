@@ -18,8 +18,8 @@ For a stack that contains AWS resources which the user doesn't have permission t
 
 ### Permission Type b
 
-[diagram of stacks structure for permission type b](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/stacks-structure-permission-type-b.png)
+<img width="800" alt="AEM Full-Set Stacks Structure For Permission Type b Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/stacks-structure-permission-type-b.png"/>
 
 ### Permission Type c
 
-[diagram of stacks structure for permission type c](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/stacks-structure-permission-type-c.png)
+<img width="800" alt="AEM Full-Set Stacks Structure For Permission Type c Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/stacks-structure-permission-type-c.png"/>
