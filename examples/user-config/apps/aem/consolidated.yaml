@@ -20,6 +20,19 @@ aem:
   login_ready_max_tries: 120
   login_ready_base_sleep_seconds: 15
   login_ready_max_sleep_seconds: 30
+  enable_saml: false
+  deployment_delay_in_seconds: 10
+  deployment_check_retries: 60
+  deployment_check_delay_in_seconds: 5
+  # Parameters for managing AEM Authorizable Keystore
+  authorizable_keystore:
+    enable_creation: false
+    enable_certificate_chain_upload: false
+  # Parameters for managing AEM Truststore
+  truststore:
+    enable_creation: false
+    enable_saml_certificate_upload: false
+    password: changeit
   publish:
     jvm_mem_opts: "-Xss4m -Xms2048m -Xmx8192m"
     jvm_opts: "-Dkey=value"
@@ -59,9 +72,17 @@ snapshots:
 reconfiguration:
   enable_create_system_users: false
   certs_base: s3://aem-opencloud/certs
-  keystore_password: changeit
+  ssl_keystore_password: changeit
 
 system_users:
+  authentication-service:
+    name: authentication-service
+    path: /home/users/system
+    authorizable_keystore:
+      password: changeit
+      certificate_chain: s3://aem-opencloud/certs/keystore_example_cert_chain.crt
+      private_key: s3://aem-opencloud/certs/keystore_example_private.der
+      private_key_alias: alias_123
   admin:
     name: admin
     path: /home/users/d
@@ -80,6 +101,37 @@ system_users:
   replicator:
     name: replicator
     path:  /home/users/r
+
+# Parameters needed for SAML configuration
+saml:
+  add_group_memberships: true
+  clock_tolerance: 60
+  create_user: true
+  default_groups:
+    - def-groups
+  default_redirect_url: /sites.html
+  digest_method: http://www.w3.org/2001/04/xmlenc#sha256
+  group_membership_attribute: http://temp/variable/aem-groups
+  handle_logout: true
+  key_store_password: admin
+  idp_http_redirect: true
+  idp_url: https://federation.prod.com/adfs/ls/IdpInitiatedSignOn.aspx?RequestBinding\=HTTPPost&loginToRp\=https://prod-aemauthor.com/saml_login
+  logout_url: https://federation.prod.com/adfs/ls/IdpInitiatedSignOn.aspx
+  name_id_format: urn:oasis:names:tc:SAML:2.0:nameid-format:transient
+  path:
+    - /
+  service_provider_entity_id: https://prod-aemauthor.com/saml_login
+  service_ranking: 5002
+  signature_method: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+  sp_private_key_alias:
+  synchronize_attributes:
+    - http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname\=profile/givenName
+    - http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname\=profile/familyName
+    - http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress\=profile/email
+  use_encryption: false
+  user_id_attribute: NameID
+  user_intermediate_path:
+  file: s3://aem-opencloud/certs/saml_certificate.crt
 
 author_publish_dispatcher:
   instance_type: m4.xlarge
