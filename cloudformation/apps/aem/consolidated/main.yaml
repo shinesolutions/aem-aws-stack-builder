@@ -29,7 +29,7 @@ Parameters:
     Description: AMI Id used for the Host
     Type: AWS::EC2::Image::Id
   AuthorPublishDispatcherImageRootDevice:
-    Default: /dev/sda1
+    Default: /dev/xvda
     Description: The root device name for the Author Publish Dispatcher Image Id
     Type: String
   AuthorPublishDispatcherInstanceTypeParameter:
@@ -88,7 +88,7 @@ Resources:
           VolumeSize:
             Ref: AuthorPublishDispatcherRootVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdb
+      - DeviceName: /dev/xvdb
         Ebs:
           DeleteOnTermination: true
           SnapshotId:
@@ -99,7 +99,7 @@ Resources:
           VolumeSize:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdc
+      - DeviceName: /dev/xvdc
         Ebs:
           DeleteOnTermination: true
           SnapshotId:

@@ -185,6 +185,9 @@ config-examples-aem62-rhel7-full-set: stage
 config-examples-aem62-rhel7-consolidated: stage
 	$(call config_examples,aem62,rhel7,consolidated)
 
+config-examples-aem62-amazon-linux2-consolidated: stage
+	$(call config_examples,aem62,amazon-linux2,consolidated)
+
 config-examples-aem63-rhel7-full-set: stage
 	$(call config_examples,aem63,rhel7,full-set)
 
@@ -205,6 +208,9 @@ config-examples-aem-stack-manager:
 test-integration-aem62-rhel7:
 	./test/integration/test-examples.sh $(test_id) aem62 rhel7
 
+test-integration-aem62-amazon-linux2:
+	./test/integration/test-examples.sh $(test_id) aem62 amazon-linux2
+
 test-integration-aem63-rhel7:
 	./test/integration/test-examples.sh $(test_id) aem63 rhel7
 
@@ -213,6 +219,9 @@ test-integration-aem64-rhel7:
 
 test-integration-local-aem62-rhel7:
 	./test/integration/test-examples-local.sh $(test_id) aem62 rhel7
+
+test-integration-local-aem62-amazon-linux2:
+	./test/integration/test-examples-local.sh $(test_id) aem62 amazon-linux2
 
 test-integration-local-aem63-rhel7:
 	./test/integration/test-examples-local.sh $(test_id) aem63 rhel7
