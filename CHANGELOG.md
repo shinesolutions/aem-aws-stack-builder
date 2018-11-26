@@ -1,4 +1,5 @@
 ### 3.2.2
+* Extend schedule snapshot stack manager event to un/schedule live snapshots #212
 * Add configuration parameters for configuring SAML authentication
 * Add configuration parameters for configuring AEM Truststore
 * Add configuration parameters for configuring AEM Authorizable Keystores
