@@ -1,7 +1,7 @@
 ---
 schemaVersion: '2.0'
 description: >-
-  Setting scheduled job for offline snapshot and offline compaction snapshot
+  Setting scheduled job for live snapshot, offline snapshot and offline compaction snapshot
 parameters:
   executionTimeout:
     description: >-
@@ -10,11 +10,11 @@ parameters:
       hours).
     type: String
     allowedPattern: ([1-9][0-9]{0,3})|(1[0-9]{1,4})|(2[0-7][0-9]{1,3})|(28[0-7][0-9]{1,2})|(28800)
-    default: '14400'
+    default: '3600'
   jobName:
       description: >-
         (Required) Name of the scheduled job.
-        Allowed are <all | offline_snapshot | offline_compaction_snapshot>.
+        Allowed are <offline_snapshot | offline_compaction_snapshot | live_snapshot>.
       type: String
   State:
       description:  >-
@@ -28,6 +28,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/schedule-offline-snapshots.sh {{ jobName }} {{ State }}'
+        - '/opt/shinesolutions/aem-tools/schedule-snapshots.sh {{ jobName }} {{ State }}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
