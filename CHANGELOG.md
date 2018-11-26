@@ -4,6 +4,7 @@
 * Add configuration parameters for configuring SAML authentication
 * Add configuration parameters for configuring AEM Truststore
 * Add configuration parameters for configuring AEM Authorizable Keystores
+* Upgrade AEM AWS Stack Provisioner to 3.3.0 and AEM Stack Manager Messenger to 1.5.7
 
 ### 3.2.1
 * Upgrade AEM AWS Stack Provisioner to 3.2.0 and AEM Stack Manager to 1.5.6
