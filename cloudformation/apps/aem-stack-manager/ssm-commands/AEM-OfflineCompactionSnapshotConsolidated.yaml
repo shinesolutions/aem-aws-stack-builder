@@ -23,6 +23,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/offline-compaction-snapshot-backup.sh >>{{ logDir }}/ssm-offline-compaction-snapshot.log 2>&1'
+        - '/opt/shinesolutions/aem-tools/stack-offline-compaction-snapshot.sh >>{{ logDir }}/ssm-offline-compaction-snapshot.log 2>&1'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp

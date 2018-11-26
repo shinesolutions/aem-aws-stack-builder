@@ -1,4 +1,5 @@
 ### 3.2.2
+* Update Stack Manager events for Offline-Snapshot & offline-compaction-snapshot to enable scheduling feature #182
 * Extend schedule snapshot stack manager event to un/schedule live snapshots #212
 * Add configuration parameters for configuring SAML authentication
 * Add configuration parameters for configuring AEM Truststore
