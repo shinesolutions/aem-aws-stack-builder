@@ -9,4 +9,4 @@ In order to identify the AWS resources (e.g. EC2 instance, snapshot, ELB, ASG) t
 | Name | The name of the resource. |
 | Component | Value is either one of `author-primary`, `author-standby`, `publish`, `author-dispatcher`, `publish-dispatcher`, `orchestrator`, `chaos-monkey`, `author-publish-dispatcher` |
 | AemId | Value is either `author` or `publish`. |
-| SnapshotType | Please check out the [snapshot types](snapshot-types.md). |
+| SnapshotType | Please check out the [snapshot types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/snapshot-types.md). |

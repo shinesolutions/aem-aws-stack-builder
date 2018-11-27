@@ -75,7 +75,7 @@ These configurations are applicable to AEM environment infrastructure.
 |------|-------------|-----------|---------|
 | main.stack_name | The stack name (to be appended to stack prefix) of the main parent stack of the corresponding architecture | Mandatory | |
 | prerequisites.stack_name | The stack name (to be appended to stack prefix) of the prerequisites parent stack of the corresponding architecture | Mandatory for AEM Consolidated and AEM Full-Set architectures, not needed for AEM Stack Manager | Mandatory | |
-| permission_type | AEM AWS Stack Builder [permission type](permission-types.md). | Optional | `b` |
+| permission_type | AEM AWS Stack Builder [permission type](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/permission-types.md). | Optional | `b` |
 | network_stack_prefix | The stack prefix of the network stack where the AEM environment will be running on. If you're using the VPC which was created by AEM AWS Stack Builder, then the value of `network.stack_name` configuration should be the value of this `network_stack_prefix` configuration property. If you're using a non-AEM AWS Stack Builder VPC and you have to rely on network exports, then the value of `network_exports.stack_name` configuration should be the value of this `network_stack_prefix` configuration property. | Mandatory | |
 
 ### AWS resources configuration properties
@@ -239,7 +239,7 @@ These configurations are applicable only when you run repository reconfiguration
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | reconfiguration.enable_create_system_users | If set to true, any existing system users on the repository to be reconfigured will be deleted and then recreated with AEM OpenCloud system users. This is only needed when the source repository to be reconfigured contains non-AEM OpenCloud system users. | Optional | `false` |
-| reconfiguration.certs_base | Source URL path of TLS certificate, it could be s3://..., http://..., https://..., or file://.... In [AWS Resources](aws-resources.md) case, it could be an S3 Bucket path, e.g. s3://somebucket/certs/  | Mandatory | |
+| reconfiguration.certs_base | Source URL path of TLS certificate, it could be s3://..., http://..., https://..., or file://.... In [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md) case, it could be an S3 Bucket path, e.g. s3://somebucket/certs/  | Mandatory | |
 | reconfiguration.keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
 | system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user username. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
 | system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user path in the repository. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |

@@ -17,11 +17,11 @@ Stack Builder has been designed with a focus on modularity, allowing the separat
 * `author-publish-dispatcher` - contains AEM Author, AEM Publish, and AEM Dispatcher
 
 Stack Builder currently supports the following AEM architectures:
-* Full Set ([diagram](architecture-full-set.png)) - includes AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
-* Consolidated ([diagram](architecture-consolidated.png)) - includes AEM Author, Publish, and Dispatcher on a single EC2 instance, suitable for development environments
+* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - includes AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
+* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - includes AEM Author, Publish, and Dispatcher on a single EC2 instance, suitable for development environments
 
 Other than the above AEM architectures, Stack Builder also provides the following utilities:
-* Stack Manager([diagram](architecture-stack-manager.png)) - includes [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud), set of AWS Lambda functions that will execute AEM functionalities via an SSM agent
+* Stack Manager([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-stack-manager.png)) - includes [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud), set of AWS Lambda functions that will execute AEM functionalities via an SSM agent
 * Network - includes CloudFormation templates for creating VPC, subnets, and some sample NAT Gateway and Bastion set up
 
 AEM AWS Stack Builder is part of [AEM OpenCloud](https://shinesolutions.github.io/aem-opencloud/) platform.
@@ -39,8 +39,8 @@ Installation
 Usage
 -----
 
-- Set up the required [AWS resources](aws-resources.md)
-- Create [configuration file](configuration.md)
+- Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
+- Create [configuration file](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
 - Set up the configuration files by running `make config config_path=<path/to/config/dir>`
 - Download open source library artifacts and upload them to S3 by running `make library config_path=<path/to/config/dir>`
 
