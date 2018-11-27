@@ -20,7 +20,7 @@ The associations between these stacks depend on the AEM architecture:
 
 ### Exports stacks
 
-For a stack that contains AWS resources which the user doesn't have permission to provision, the stack would be referred to as an exports stack (`*-exports`). You should provision the AWS resources separate from AEM AWS Stack Builder, and then [configure](configuration.md) those resources to be referenced by the exports.
+For a stack that contains AWS resources which the user doesn't have permission to provision, the stack would be referred to as an exports stack (`*-exports`). You should provision the AWS resources separate from AEM AWS Stack Builder, and then [configure](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) those resources to be referenced by the exports.
 
 For example, `instance-profiles` stack contains AWS resources that will be provisioned when you're using permission type b. However, if you're using permission type c, it will use `instance-profiles-exports` stack instead, containing the ARNs/values of the AWS resources which are generated external to AEM AWS Stack Builder.
 
