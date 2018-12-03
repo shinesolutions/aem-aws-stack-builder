@@ -1,3 +1,6 @@
+### 3.3.1
+*
+
 ### 3.3.0
 * Update Stack Manager events for Offline-Snapshot & offline-compaction-snapshot to enable scheduling feature #182
 * Extend schedule snapshot stack manager event to un/schedule live snapshots #212
