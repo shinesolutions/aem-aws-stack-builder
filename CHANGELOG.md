@@ -1,4 +1,7 @@
 ### 3.3.1
+* Add new SSM Documents for automating AEM Upgrade
+
+### 3.3.1
 * Upgrade AEM AWS Stack Provisioner to 3.3.1, AEM Stack Manager Messenger to 1.5.8, AEM Test Suite to 0.9.10
 
 ### 3.3.0
