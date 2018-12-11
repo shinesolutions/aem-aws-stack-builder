@@ -1,5 +1,5 @@
 ### 3.3.2
-* Update deployment descriptor documentation for uninstall package feature $224
+* Update deployment descriptor documentation for uninstall package feature #224
 
 ### 3.3.1
 * Upgrade AEM AWS Stack Provisioner to 3.3.1, AEM Stack Manager Messenger to 1.5.8, AEM Test Suite to 0.9.10
