@@ -1,5 +1,5 @@
 permission_type: b
-network_stack_prefix: aemopencloud
+network_stack_prefix: aemopencloud2
 
 main:
   stack_name: aem-consolidated-main-stack
