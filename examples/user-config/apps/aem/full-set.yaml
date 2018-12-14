@@ -48,26 +48,26 @@ aem:
 
 compute:
   key_pair_name: aemopencloud-sandpit
-  inbound_from_bastion_host_security_group: sg-a2ac6cc5
+  inbound_from_bastion_host_security_group: sg-451d903d
 
 security_groups:
   secure_shell:
-    inbound_cidr_ip: 10.0.8.128/25
+    inbound_cidr_ip: 10.2.18.64/26
 
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
 
   publish_dispatcher_elb:
-    inbound_cidr_ip: 10.0.8.128/25
+    inbound_cidr_ip: 10.2.18.64/26
     extra_groups:
-      - sg-a2ac6cc5
+      - sg-451d903d
 
   author_dispatcher_elb:
-    inbound_cidr_ip: 10.0.8.128/25
+    inbound_cidr_ip: 10.2.18.64/26
     extra_groups:
-      - sg-a2ac6cc5
+      - sg-451d903d
 
   author_publish_dispatcher:
-    inbound_cidr_ip: 10.0.8.128/25
+    inbound_cidr_ip: 10.2.18.64/26
 
 s3:
   data_bucket_name: aem-opencloud
