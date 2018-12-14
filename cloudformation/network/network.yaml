@@ -8,6 +8,13 @@ Conditions:
         - ''
 Description: Create Subnets, Internet Gateway, and Route Tables for AEM Stack
 Outputs:
+  AuthorPublishDispatcherSubnet:
+    Description: The Author Publish Dispatcher Subnet
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnet
+    Value:
+      Ref:  AuthorDispatcherSubnetA
   AuthorDispatcherSubnetA:
     Description: The Author Dispatcher Subnet in Availability Zone A
     Export:
@@ -35,7 +42,14 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetList
     Value:
-      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
+      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB},${AuthorDispatcherSubnetC}
+  AuthorDispatcherELBSubnetList:
+    Description: The Author Dispatcher ELB Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetList
+    Value:
+      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB},${AuthorDispatcherSubnetC}
   AuthorSubnetA:
     Description: The Author Subnet in Availability Zone A
     Export:
@@ -57,27 +71,48 @@ Outputs:
         Fn::Sub: ${StackPrefix}-AuthorSubnetC
     Value:
       Ref:  AuthorSubnetC
+  AuthorPrimarySubnet:
+    Description: The Author Primary Subnet
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorPrimarySubnet
+    Value:
+      Ref:  AuthorSubnetA
+  AuthorStandbySubnet:
+    Description: The Author Standby Subnet
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorStandbySubnet
+    Value:
+      Ref:  AuthorSubnetB
   AuthorSubnetList:
     Description: The Author Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-AuthorSubnetList
     Value:
-      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB}
+      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB},${AuthorSubnetC}
+  AuthorELBSubnetList:
+    Description: The Author ELB Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorELBSubnetList
+    Value:
+      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB},${AuthorSubnetC}
   ChaosMonkeySubnetList:
     Description: The ChaosMonkey Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-ChaosMonkeySubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
+      Fn::Sub: ${ToolSubnetA},${ToolSubnetB},${ToolSubnetC}
   OrchestratorSubnetList:
     Description: The Orchestrator Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-OrchestratorSubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
+      Fn::Sub: ${ToolSubnetA},${ToolSubnetB},${ToolSubnetC}
   PrivateRouteTable:
     Description: The Private Route Table for AEM OpenCloud VPC
     Export:
@@ -119,7 +154,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetList
     Value:
-      Fn::Sub: ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
+      Fn::Sub: ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB},${PublishDispatcherELBSubnetC}
   PublishDispatcherSubnetA:
     Description: The Publish Dispatcher Subnet in Availability Zone A
     Export:
@@ -147,7 +182,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetList
     Value:
-      Fn::Sub: ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
+      Fn::Sub: ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB},${PublishDispatcherSubnetC}
   PublishSubnetA:
     Description: The Publish Subnet in Availability Zone A
     Export:
@@ -175,7 +210,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PublishSubnetList
     Value:
-      Fn::Sub: ${PublishSubnetA},${PublishSubnetB}
+      Fn::Sub: ${PublishSubnetA},${PublishSubnetB},${PublishSubnetC}
   ToolSubnetA:
     Description: The Tool Subnet in Availability Zone A
     Export:
@@ -203,7 +238,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-ToolSubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
+      Fn::Sub: ${ToolSubnetA},${ToolSubnetB},${ToolSubnetC}
 Parameters:
   AuthorDispatcherSubnetACidrBlockParameter:
     Default: 10.2.24.0/26
