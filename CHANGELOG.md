@@ -1,4 +1,5 @@
 ### 3.3.2
+* Add missing SAML configuration documentation
 * Add new hiera parameter common::aws_region #187
 * Update deployment descriptor documentation for uninstall package feature #224
 * Add new SSM Documents for automating AEM Upgrade
