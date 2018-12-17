@@ -33,6 +33,7 @@ aem:
   # Parameters for managing AEM Truststore
   truststore:
     enable_creation: false
+    enable_migration: false
     enable_saml_certificate_upload: false
     password: changeit
   publish:

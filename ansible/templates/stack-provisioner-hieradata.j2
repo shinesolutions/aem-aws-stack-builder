@@ -160,6 +160,7 @@ common::authorizable_keystore::enable_certificate_chain_upload: {{ aem.authoriza
 
 # Truststore parameters
 common::truststore::enable_creation: {{ aem.truststore.enable_creation }}
+common::truststore::enable_migration: {{ aem.reconfiguration.enable_truststore_migration }}
 common::truststore::password: {{ aem.truststore.password }}
 
 # SAML Configuration parameters
