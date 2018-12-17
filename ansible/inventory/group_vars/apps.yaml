@@ -17,6 +17,7 @@ aem:
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
+  enable_upgrade_tools: false
   bak_files_cleanup_max_age_in_days: 30
   enable_saml: false
   deployment_delay_in_seconds: 60
