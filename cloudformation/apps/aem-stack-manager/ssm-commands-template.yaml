@@ -144,6 +144,24 @@ Parameters:
     Description: >-
       The name of the file containing the TestReadinessConsolidated SSM command.
 
+  RunAemUpgradeIncludeFileParameter:
+    Type: String
+    Default: AEM-RunAemUpgrade.yaml
+    Description: >-
+      The name of the file containing the RunAemUpgrade SSM command.
+
+  UpgradeRepositoryMigrationIncludeFileParameter:
+    Type: String
+    Default: AEM-UpgradeRepositoryMigration.yaml
+    Description: >-
+      The name of the file containing the UpgradeRepositoryMigration SSM command.
+
+  UpgradeUnpackJarIncludeFileParameter:
+    Type: String
+    Default: AEM-UpgradeUnpackJar.yaml
+    Description: >-
+      The name of the file containing the UpgradeUnpackJar SSM command.
+
 Resources:
   DeployArtifact:
     Type: AWS::SSM::Document
@@ -368,6 +386,36 @@ Resources:
           Parameters:
             Location: !Sub '${S3BucketAndPrefixParameter}/${TestReadinessConsolidatedIncludeFileParameter}'
 
+  RunAemUpgrade:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${RunAemUpgradeIncludeFileParameter}'
+
+  UpgradeRepositoryMigration:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${UpgradeRepositoryMigrationIncludeFileParameter}'
+
+  UpgradeUnpackJar:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${UpgradeUnpackJarIncludeFileParameter}'
+
 Outputs:
   DeployArtifact:
     Description: Document name for Deploy Artifact
@@ -449,6 +497,10 @@ Outputs:
     Description: Document name for FlushDispatcherCache
     Value: !Ref FlushDispatcherCache
 
+  RunAemUpgrade:
+    Description: Documention name for AEM Upgrade.
+    Value: !Ref RunAemUpgrade
+
   ScheduleSnapshot:
     Description: Documention name for Test Readiness Fullset
     Value: !Ref ScheduleSnapshot
@@ -460,3 +512,11 @@ Outputs:
   TestReadinessConsolidated:
     Description: Documention name for Test Readiness Consolidated
     Value: !Ref TestReadinessConsolidated
+
+  UpgradeRepositoryMigration:
+    Description: Documention name for AEM Upgrade preperation repository migration
+    Value: !Ref UpgradeRepositoryMigration
+
+  UpgradeUnpackJar:
+    Description: Documention name for AEM Upgrade preperation unpack AEM Jar
+    Value: !Ref UpgradeUnpackJar

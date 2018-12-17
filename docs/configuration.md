@@ -199,6 +199,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.enable_bak_files_cleanup | If true, .bak files older than `aem.bak_files_cleanup_max_age_in_days` will be deleted during repository compaction. | Optional | `false` |
 | aem.bak_files_cleanup_max_age_in_days | The number of maximum age in days for repository .bak files to be kept. Files older than this will be deleted during compaction. | Optional | `30` |
 | aem.enable_reconfiguration | If true, the initial repository attached to the volume will be reconfigured for the current AEM OpenCloud version. | Optional | `false` |
+| aem.enable_upgrade_tools | If true, the AEM upgrade tools will be installed on AEM Author & AEM Publish. | Optional | `false` |
 | aem.deployment_delay_in_seconds | The number of seconds delay after AEM package deployment upload/installation, before resuming to perform health checks | Optional | `60` |
 | aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | `120` |
 | aem.deployment_check_delay_in_seconds | The number of seconds delay before retrying the deployment status check | Optional | `15` |
@@ -210,6 +211,8 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.[author\|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
 | aem.author.jmxremote.port | AEM Author's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
+| aem.truststore.enable_creation | If set to true, AEM Global Truststore will be created for AEM Author | Optional | false |
+| aem.truststore.password | AEM Global Truststore password | Optional | false |
 
 ### AEM Full-Set specific configuration properties:
 
@@ -244,6 +247,45 @@ These configurations are applicable only when you run repository reconfiguration
 | reconfiguration.ssl_keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
 | system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user username. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
 | system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user path in the repository. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
+
+### AEM SAML configuration properties:
+
+These configuration are applicable only when you want to enable SAML authentication during Stack creation.
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| aem.enable_saml | If set to true, SAML authentication configuration will be created. Following option need to be set `saml.*` | Mandatory | false |
+| aem.truststore.enable_saml_certificate_upload | If set to true, the SAML Certificate defined at `saml.file` get's uploaded to the AEM Global Truststore. The options `saml.file` & `aem.enable_saml` needs to be defined. | Optional | false |
+| saml.* | Paramteres to configure SAML authentication | Mandatory | |
+| saml.path | Repository path for which this authentication handler should be used by Sling. | Mandatory | / |
+| saml.service_ranking | OSGi Framework Service Ranking value to indicate the order in which to call this service. This is an int value where higher values designate higher precedence.| Optional | 5002 |
+| saml.idp_url | URL of the IDP where the SAML Authentication Request should be sent to. | Mandatory | |
+| saml.idp_http_redirect | Use an HTTP Redirect to the IDP URL instead of sending an AuthnRequest-message to request credentials. Use this for IDP initiated authentication. | Optional | False |
+| saml.service_provider_entity_id | ID which uniquely identifies this service provider with the identity provider. | Mandatory | |
+| saml.sp_private_key_alias | The alias of the SP's private key in the key-store of the 'authentication-service' system user. If this property is empty the handler will not be able to sign or decrypt messages. | Optional | |
+| saml.key_store_password | The password of the key-store of the 'authentication-service' system user. | Optional | |
+| saml.default_redirect_url | The default location to redirect to after successful authentication. | Mandatory | / |
+| saml.user_id_attribute | The name of the attribute containing the user ID used to authenticate and create the user in the CRX repository. Leave empty to use the Subject:NameId. | Optional | uid |
+| saml.use_encryption | Whether or not this authentication handler expects encrypted SAML assertions. If this is enabled the SP's private key must be provided in the key-store of the 'authentication-service' system user (see SP Private Key Alias above). | Mandatory | True |
+| saml.create_user | Whether or not to autocreate nonexisting users in the repository. | Optional | True |
+| saml.add_group_memberships | Whether or not a user should be automatically added to CRX groups after successful authentication. | Optional | True |
+| saml.group_membership_attribute | The name of the attribute containing a list of CRX groups this user should be added to. | Optional | groupMembership |
+| saml.default_groups | A list of default CRX groups users are added to after successful authentication. | Optional | |
+| saml.name_id_format | The value of the NameIDPolicy format parameter to send in the AuthnRequest message. | Optional | urn:oasis:names:tc:SAML:2.0:nameid-format:transient |
+| saml.synchronize_attributes | A list of attribute mappings (in the format "attributename=path/relative/to/user/node") which should be stored in the repository on user-synchronization. | Optional | |
+| saml.handle_logout | Whether or not logout (dropCredentials) requests will be processed by this handler. (handleLogout). | Optional | False |
+| saml.logout_url | URL of the IDP where the SAML Logout Request should be sent to. If this property is empty the authentication handler won't handle logouts. | Optional | |
+| saml.clock_tolerance | Time tolerance in seconds to compensate clock skew between IDP and SP when validating Assertions. | Optional | 60 |
+| aem.authorizable_keystore.enable_creation | If set to true, the Authorizable Keystore for user authentication-service will be created. Options `aem.enable_saml` `aem.authorizable_keystore.enable_certificate_chain_upload` needs to be set true as preconditions. | Optional | false |
+| saml.idp_cert_alias | The alias of the IdP's certificate in the global truststore. If this property is empty property `saml.file` or `saml.serial` has to be set. | Optional | |
+| saml.file | Source URL path of SAML certificate, it could be s3://..., http://..., https://..., or file://.... In [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md) case, it could be an S3 Bucket path, e.g. s3://somebucket/certs/saml.crt. If this property is empty property `saml.idp_cert_alias` or `saml.serial` has to be set. | Optional | |
+| saml.serial | The Serial number of the IdP's certificate in the global truststore. If this property is empty property `saml.idp_cert_alias` or `saml.file` has to be set. | Optional | |
+| aem.authorizable_keystore.enable_certificate_chain_upload | If set to true, the certificates defined at `system_users.authentication-service.authorizable_keystore.certificate_chain` & `system_users.authentication-service.authorizable_keystore.private_key` for user authentication-service will be uploaded to the Authorizable Keystore. Option `aem.enable_saml` need to be set to true and options `system_users.authentication-service.authorizable_keystore.password`, `system_users.authentication-service.authorizable_keystore.certificate_chain`, `system_users.authentication-service.authorizable_keystore.private_key` & `system_users.authentication-service.authorizable_keystore.private_key_alias` needs to be defined. | Optional | false |
+| system_users.authentication-service.authorizable_keystore.password | Password for the authorizable Keystore | Optional | |
+| system_users.authentication-service.authorizable_keystore.certificate_chain | Source URL path of Certificate-Chain, it could be s3://..., http://..., https://..., or file://.... In [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md) case, it could be an S3 Bucket path, e.g. s3://somebucket/certs/cert-chain.crt | Optional | |
+| system_users.authentication-service.authorizable_keystore.private_key | Source URL path of Private Key, it could be s3://..., http://..., https://..., or file://.... In [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md) case, it could be an S3 Bucket path, e.g. s3://somebucket/certs/cert-chain.crt | Optional | |
+| system_users.authentication-service.authorizable_keystore.private_key_alias | Human readable name for storing `system_users.authentication-service.authorizable_keystore.private_key` + `system_users.authentication-service.authorizable_keystore.certificate_chain` in the Authorizable Keystore  | Optional | |
+
 
 ### AEM Stack Manager configuration properties:
 

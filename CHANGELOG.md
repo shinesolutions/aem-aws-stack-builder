@@ -1,5 +1,10 @@
 ### 3.3.2
 * Add new feature to enable/disable migration of AEM Global Truststore #229
+* Add missing SAML configuration documentation
+* Add new hiera parameter common::aws_region #187
+* Update deployment descriptor documentation for uninstall package feature #224
+* Add new SSM Documents for automating AEM Upgrade
+* Add new configuration parameter enable_upgrade_tools
 
 ### 3.3.1
 * Upgrade AEM AWS Stack Provisioner to 3.3.1, AEM Stack Manager Messenger to 1.5.8, AEM Test Suite to 0.9.10
