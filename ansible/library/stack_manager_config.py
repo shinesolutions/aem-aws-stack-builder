@@ -156,8 +156,11 @@ class config:
             "ScheduleSnapshot": "schedule-snapshot",
             "InstallAEMProfile": "install-aem-profile",
             "ReconfigureAEM": "reconfigure-aem",
+            "RunAemUpgrade": "run-aem-upgrade",
             "TestReadinessConsolidated": "test-readiness-consolidated",
             "TestReadinessFullset": "test-readiness-full-set",
+            "UpgradeRepositoryMigration": "upgrade-repository-migration",
+            "UpgradeUnpackJar": "upgrade-unpack-jar",
             "WaitUntilReady": "wait-until-ready"
             }
 
