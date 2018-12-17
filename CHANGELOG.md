@@ -1,7 +1,6 @@
 ### 3.3.2
+* Add new hiera parameter common::aws_region #187
 * Update deployment descriptor documentation for uninstall package feature #224
-
-### 3.3.1
 * Add new SSM Documents for automating AEM Upgrade
 * Add new configuration parameter enable_upgrade_tools
 
