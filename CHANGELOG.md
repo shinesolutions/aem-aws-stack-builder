@@ -1,4 +1,5 @@
 ### 3.3.2
+* Add new feature to enable/disable migration of AEM Global Truststore #229
 * Add missing SAML configuration documentation
 * Add new hiera parameter common::aws_region #187
 * Update deployment descriptor documentation for uninstall package feature #224
