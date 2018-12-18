@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new SSM Documents for automating AEM Upgrade
 - Add new configuration parameter enable_upgrade_tools
 - Add customisable cipher suite for ELBs #223
+- Add new feature to configure AEM Apache http proxy configurator settings #235 
 
 ### Changed
 - Update deployment descriptor documentation for uninstall package feature #224

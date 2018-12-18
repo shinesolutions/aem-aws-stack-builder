@@ -17,6 +17,9 @@ These configurations are applicable to both network and AEM application infrastr
 | proxy.protocol | Web proxy server protocol used during provisioning steps | Optional | None |
 | proxy.host | Web proxy server host used during provisioning steps | Optional | None |
 | proxy.port | Web proxy server port number used during provisioning steps | Optional | None |
+| proxy.user | Web proxy user to authenticate against the configured proxy host in `proxy.host` | Optional | None |
+| proxy.password | Web proxy user password for the proxy user defined in `proxy.user` | Optional | None |
+| proxy.exceptions | A list of proxy exceptions  | Optional | localhost, 127.0.0.1 |
 | cron.env_path | Executable path used when running cron jobs. | Optional | `/sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin` |
 | cron.http_proxy | Web proxy server for http URLs, e.g. `http://someproxy:3128`, leave empty if the cron job needs to directly connect to the Internet. | Optional | None |
 | cron.https_proxy | Web proxy server for https URLs, e.g. `http://someproxy:3128`, leave empty if the cron job needs to directly connect to the Internet. | Optional | None |

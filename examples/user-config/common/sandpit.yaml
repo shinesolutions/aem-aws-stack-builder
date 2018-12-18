@@ -12,9 +12,14 @@ aws:
 
 proxy:
   enabled: false
-  protocol:
-  host:
-  port:
+  protocol: http
+  host: proxy.aws
+  port: 8080
+  user:
+  password:
+  exceptions:
+    - localhost
+    - 127.0.0.1
 
 cron:
   env_path: /sbin:/bin:/usr/sbin:/usr/bin:/opt/puppetlabs/bin
