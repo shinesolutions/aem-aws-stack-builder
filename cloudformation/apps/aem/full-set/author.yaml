@@ -201,7 +201,8 @@ Resources:
           VolumeSize:
             Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
-      - DeviceName: AuthorImageDataDevice
+      - DeviceName:
+          Ref: AuthorImageDataDevice
         Ebs:
           DeleteOnTermination: true
           SnapshotId:
