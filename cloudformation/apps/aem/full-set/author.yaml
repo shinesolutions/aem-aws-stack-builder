@@ -69,7 +69,7 @@ Parameters:
     Type: String
   ELBCipherSuiteParameter:
     Description: ELB Cipher Suite Policy
-    Type: String 
+    Type: String
   InboundFromBastionHostSecurityGroupParameter:
     Description: Inbound Bound from Bastion Host Security Group Id
     Type: String
@@ -117,7 +117,7 @@ Resources:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
         PolicyNames:
-        - ELBCipherSuiteParameter
+        - Ref: ELBCipherSuiteParameter
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:

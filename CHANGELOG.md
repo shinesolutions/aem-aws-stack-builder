@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new hiera parameter common::aws_region #187
 - Add new SSM Documents for automating AEM Upgrade
 - Add new configuration parameter enable_upgrade_tools
+- Add customisable cipher suite for ELBs #223
 
 ### Changed
 - Update deployment descriptor documentation for uninstall package feature #224
