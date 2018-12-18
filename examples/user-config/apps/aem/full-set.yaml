@@ -51,6 +51,7 @@ aem:
 compute:
   key_pair_name: aemopencloud-sandpit
   inbound_from_bastion_host_security_group: sg-451d903d
+  elb_cipher_suite: ELBSecurityPolicy-TLS-1-2-2017-01
 
 security_groups:
   secure_shell:
