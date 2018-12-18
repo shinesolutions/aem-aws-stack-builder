@@ -19,16 +19,8 @@ lint:
 	done
 
 validate:
-	for template in cloudformation/*/*.yaml; do \
-		echo "Checking template $${template} ...."; \
-		aws cloudformation validate-template --template-body "file://$$template"; \
-	done
-	for template in cloudformation/*/*/*.yaml; do \
-		echo "Checking template $${template} ...."; \
-		aws cloudformation validate-template --template-body "file://$$template"; \
-	done
-	for template in cloudformation/*/*/*/*.yaml; do \
-		echo "Checking template $${template} ...."; \
+	for template in $$(find cloudformation -type f -not -path "cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
+		echo "Checking template $$template ...."; \
 		aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 
