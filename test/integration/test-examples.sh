@@ -14,8 +14,8 @@ test_id=$1
 aem_version=${2:-aem63}
 os_type=${3:-rhel7}
 integration_config_file=examples/user-config/common/zzz-test.yaml
-aem_stack_manager_messenger_version=1.5.7
-# aem_test_suite_version=0.9.9
+aem_stack_manager_messenger_version=1.5.8
+# aem_test_suite_version=0.9.10
 workspace_dir=$(pwd)
 
 # Create AEM environments: a Stack Manager, an AEM Consolidated, and an AEM Full-Set

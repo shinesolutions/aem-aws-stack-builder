@@ -17,6 +17,7 @@ aem:
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
+  enable_upgrade_tools: false
   bak_files_cleanup_max_age_in_days: 30
   enable_saml: false
   deployment_delay_in_seconds: 60
@@ -91,7 +92,7 @@ s3:
   data_bucket_name: overwrite-me
 
 library:
-  aem_aws_stack_provisioner_version: 3.3.0
+  aem_aws_stack_provisioner_version: 3.3.1
   aem_orchestrator_version: 2.0.0
   aem_password_reset_version: 1.1.0
   oak_run_version: 1.8.3
@@ -109,6 +110,8 @@ snapshots:
 
 reconfiguration:
   enable_create_system_users: false
+  # Migration only needed for upgraded AEM instane.
+  enable_truststore_migration: false
   certs_base: s3://overwrite/me
   ssl_keystore_password: changeit
 

@@ -1,5 +1,5 @@
 permission_type: b
-network_stack_prefix: aemopencloud
+network_stack_prefix: aemopencloud2
 
 main:
   stack_name: aem-consolidated-main-stack
@@ -13,6 +13,7 @@ aem:
   enable_deploy_on_init: true
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
+  enable_upgrade_tools: false
   bak_files_cleanup_max_age_in_days: 30
   deployment_delay_in_seconds: 10
   deployment_check_retries: 60
@@ -31,6 +32,7 @@ aem:
   # Parameters for managing AEM Truststore
   truststore:
     enable_creation: false
+    enable_migration: false
     enable_saml_certificate_upload: false
     password: changeit
   publish:
@@ -47,19 +49,19 @@ aem:
 security_groups:
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
   author_publish_dispatcher:
-    inbound_cidr_ip: 10.0.8.128/25
+    inbound_cidr_ip: 10.2.18.64/26
   secure_shell:
-    inbound_cidr_ip: 10.0.8.128/25
+    inbound_cidr_ip: 10.2.18.64/26
 
 compute:
   key_pair_name: aemopencloud-sandpit
-  inbound_from_bastion_host_security_group: sg-a2ac6cc5
+  inbound_from_bastion_host_security_group: sg-451d903d
 
 s3:
   data_bucket_name: aem-opencloud
 
 library:
-  aem_aws_stack_provisioner_version: 3.3.0
+  aem_aws_stack_provisioner_version: 3.3.1
 
 snapshots:
   author:
