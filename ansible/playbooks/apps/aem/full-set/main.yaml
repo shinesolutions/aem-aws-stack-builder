@@ -80,7 +80,8 @@
           AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
-          ImageRootDevice: "{{ ami_root_device_name }}"
+          ImageRootDevice: "{{ ami_device[os_type].root_name }}"
+          ImageDataDevice: "{{ ami_device[os_type].data_name }}"
       tags:
       - create
       when:
@@ -153,7 +154,8 @@
           AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
-          ImageRootDevice: "{{ ami_root_device_name }}"
+          ImageRootDevice: "{{ aws[os_type].ami_root_device_name }}"
+          ImageDataDevice: "{{ aws[os_type].ami_data_device_name }}"
       tags:
       - create
       when:

@@ -54,6 +54,10 @@ Parameters:
     Default: /dev/sda1
     Description: The root device name for the Author Dispatcher Image Id
     Type: String
+  AuthorDispatcherImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Author Dispatcher Image Id
+    Type: String
   AuthorDispatcherInstanceTypeParameter:
     Description: The Author Dispatcher Instance Type
     Type: String
@@ -149,7 +153,8 @@ Resources:
           VolumeSize:
             Ref: AuthorDispatcherRootVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdb
+      - DeviceName:
+          Ref: AuthorDispatcherImageDataDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:

@@ -64,6 +64,10 @@ Parameters:
     Default: /dev/sda1
     Description: The root device name for the Publish Image Id
     Type: String
+  PublishImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Publish Image Id
+    Type: String
   PublishInstanceTypeParameter:
     Description: The Publish Instance Type
     Type: String
@@ -139,7 +143,8 @@ Resources:
           VolumeSize:
             Ref: PublishRootVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdb
+      - DeviceName:
+          Ref: PublishImageDataDevice
         Ebs:
           DeleteOnTermination: true
           SnapshotId:
