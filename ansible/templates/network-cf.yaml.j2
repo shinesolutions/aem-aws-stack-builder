@@ -9,17 +9,10 @@ Conditions:
         - ''
 Description: Create Subnets, Internet Gateway, and Route Tables for AEM Stack
 Outputs:
-  AuthorPublishDispatcherSubnet:
-    Description: The Author Publish Dispatcher Subnet
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnet
-    Value:
-      Ref:  AuthorDispatcherSubnetA
 {% for az in az_array %}
   {# Here we are grabbing the last char of the region name, and using it in our template.
      The last char is listed as the identifier, so we are assuming it is unique to the region.
-     You can view the AWS documentation here:
+     You can view the AWS documentaion here:
      https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-regions-availability-zones #}
   AuthorDispatcherSubnet{{ az[-1] | upper }}:
     Description: The Author Dispatcher Subnet in Availability Zone {{ az[-1] | upper }}
@@ -35,14 +28,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetList
     Value:
-      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB},${AuthorDispatcherSubnetC}
-  AuthorDispatcherELBSubnetList:
-    Description: The Author Dispatcher ELB Subnet List
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorDispatcherELBSubnetList
-    Value:
-      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB},${AuthorDispatcherSubnetC}
+      Fn::Sub: ${AuthorDispatcherSubnetA},${AuthorDispatcherSubnetB}
 {% for az in az_array %}
   AuthorSubnet{{ az[-1] | upper }}:
     Description: The Author Subnet in Availability Zone {{ az[-1] | upper }}
@@ -52,48 +38,27 @@ Outputs:
     Value:
       Ref:  AuthorSubnet{{ az[-1] | upper }}
 {% endfor %}
-  AuthorPrimarySubnet:
-    Description: The Author Primary Subnet
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorPrimarySubnet
-    Value:
-      Ref:  AuthorSubnetA
-  AuthorStandbySubnet:
-    Description: The Author Standby Subnet
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorStandbySubnet
-    Value:
-      Ref:  AuthorSubnetB
   AuthorSubnetList:
     Description: The Author Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-AuthorSubnetList
     Value:
-      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB},${AuthorSubnetC}
-  AuthorELBSubnetList:
-    Description: The Author ELB Subnet List
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorELBSubnetList
-    Value:
-      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB},${AuthorSubnetC}
+      Fn::Sub: ${AuthorSubnetA},${AuthorSubnetB}
   ChaosMonkeySubnetList:
     Description: The ChaosMonkey Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-ChaosMonkeySubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA},${ToolSubnetB},${ToolSubnetC}
+      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
   OrchestratorSubnetList:
     Description: The Orchestrator Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-OrchestratorSubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA},${ToolSubnetB},${ToolSubnetC}
+      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
   PrivateRouteTable:
     Description: The Private Route Table for AEM OpenCloud VPC
     Export:
@@ -123,7 +88,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PublishDispatcherELBSubnetList
     Value:
-      Fn::Sub: ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB},${PublishDispatcherELBSubnetC}
+      Fn::Sub: ${PublishDispatcherELBSubnetA},${PublishDispatcherELBSubnetB}
 {% for az in az_array %}
   PublishDispatcherSubnet{{ az[-1] | upper }}:
     Description: The Publish Dispatcher Subnet in Availability Zone {{ az[-1] | upper }}
@@ -139,7 +104,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PublishDispatcherSubnetList
     Value:
-      Fn::Sub: ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB},${PublishDispatcherSubnetC}
+      Fn::Sub: ${PublishDispatcherSubnetA},${PublishDispatcherSubnetB}
 {% for az in az_array %}
   PublishSubnet{{ az[-1] | upper }}:
     Description: The Publish Subnet in Availability Zone {{ az[-1] | upper }}
@@ -155,7 +120,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PublishSubnetList
     Value:
-      Fn::Sub: ${PublishSubnetA},${PublishSubnetB},${PublishSubnetC}
+      Fn::Sub: ${PublishSubnetA},${PublishSubnetB}
 {% for az in az_array %}
   ToolSubnet{{ az[-1] | upper }}:
     Description: The Tool Subnet in Availability Zone {{ az[-1] | upper }}
@@ -171,7 +136,7 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-ToolSubnetList
     Value:
-      Fn::Sub: ${ToolSubnetA},${ToolSubnetB},${ToolSubnetC}
+      Fn::Sub: ${ToolSubnetA}, ${ToolSubnetB}
 Parameters:
 {% for az in az_array %}
   AuthorDispatcherSubnet{{ az[-1] | upper }}CidrBlockParameter:

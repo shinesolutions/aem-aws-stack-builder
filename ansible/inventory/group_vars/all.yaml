@@ -1,6 +1,6 @@
 aws:
   region: ap-southeast-2
-  availability_zone_list: ap-southeast-2a, ap-southeast-2b, ap-southeast-2c
+  availability_zone_list: ap-southeast-2a, ap-southeast-2b
 
 proxy:
   enabled: false

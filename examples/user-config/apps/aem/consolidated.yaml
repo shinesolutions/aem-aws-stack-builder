@@ -1,5 +1,5 @@
 permission_type: b
-network_stack_prefix: aemopencloud2
+network_stack_prefix: aemopencloud
 
 main:
   stack_name: aem-consolidated-main-stack
@@ -48,13 +48,13 @@ aem:
 security_groups:
   private_subnet_internet_outbound_cidr_ip: 0.0.0.0/0
   author_publish_dispatcher:
-    inbound_cidr_ip: 10.2.18.64/26
+    inbound_cidr_ip: 10.0.8.128/25
   secure_shell:
-    inbound_cidr_ip: 10.2.18.64/26
+    inbound_cidr_ip: 10.0.8.128/25
 
 compute:
   key_pair_name: aemopencloud-sandpit
-  inbound_from_bastion_host_security_group: sg-451d903d
+  inbound_from_bastion_host_security_group: sg-a2ac6cc5
 
 s3:
   data_bucket_name: aem-opencloud
