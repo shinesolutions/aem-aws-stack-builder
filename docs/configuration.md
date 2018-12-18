@@ -254,19 +254,19 @@ These configuration are applicable only when you want to enable SAML authenticat
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
-| aem.enable_saml | If set to true, SAML authentication configuration will be created. Following option need to be set `saml.*` | Mandatory | false |
+| aem.enable_saml | If set to true, SAML authentication configuration will be created. Following option need to be set `saml.*` | Optional | false |
 | aem.truststore.enable_saml_certificate_upload | If set to true, the SAML Certificate defined at `saml.file` get's uploaded to the AEM Global Truststore. The options `saml.file` & `aem.enable_saml` needs to be defined. | Optional | false |
-| saml.* | Paramteres to configure SAML authentication | Mandatory | |
-| saml.path | Repository path for which this authentication handler should be used by Sling. | Mandatory | / |
+| saml.* | Paramteres to configure SAML authentication | Mandatory only when `aem.enable_saml` is `true` | |
+| saml.path | Repository path for which this authentication handler should be used by Sling. | Mandatory only when `aem.enable_saml` is `true` | / |
 | saml.service_ranking | OSGi Framework Service Ranking value to indicate the order in which to call this service. This is an int value where higher values designate higher precedence.| Optional | 5002 |
-| saml.idp_url | URL of the IDP where the SAML Authentication Request should be sent to. | Mandatory | |
+| saml.idp_url | URL of the IDP where the SAML Authentication Request should be sent to. | Mandatory only when `aem.enable_saml` is `true` | |
 | saml.idp_http_redirect | Use an HTTP Redirect to the IDP URL instead of sending an AuthnRequest-message to request credentials. Use this for IDP initiated authentication. | Optional | False |
-| saml.service_provider_entity_id | ID which uniquely identifies this service provider with the identity provider. | Mandatory | |
+| saml.service_provider_entity_id | ID which uniquely identifies this service provider with the identity provider. | Mandatory only when `aem.enable_saml` is `true` | |
 | saml.sp_private_key_alias | The alias of the SP's private key in the key-store of the 'authentication-service' system user. If this property is empty the handler will not be able to sign or decrypt messages. | Optional | |
 | saml.key_store_password | The password of the key-store of the 'authentication-service' system user. | Optional | |
-| saml.default_redirect_url | The default location to redirect to after successful authentication. | Mandatory | / |
+| saml.default_redirect_url | The default location to redirect to after successful authentication. | Mandatory only when `aem.enable_saml` is `true` | / |
 | saml.user_id_attribute | The name of the attribute containing the user ID used to authenticate and create the user in the CRX repository. Leave empty to use the Subject:NameId. | Optional | uid |
-| saml.use_encryption | Whether or not this authentication handler expects encrypted SAML assertions. If this is enabled the SP's private key must be provided in the key-store of the 'authentication-service' system user (see SP Private Key Alias above). | Mandatory | True |
+| saml.use_encryption | Whether or not this authentication handler expects encrypted SAML assertions. If this is enabled the SP's private key must be provided in the key-store of the 'authentication-service' system user (see SP Private Key Alias above). | Mandatory only when `aem.enable_saml` is `true` | True |
 | saml.create_user | Whether or not to autocreate nonexisting users in the repository. | Optional | True |
 | saml.add_group_memberships | Whether or not a user should be automatically added to CRX groups after successful authentication. | Optional | True |
 | saml.group_membership_attribute | The name of the attribute containing a list of CRX groups this user should be added to. | Optional | groupMembership |
