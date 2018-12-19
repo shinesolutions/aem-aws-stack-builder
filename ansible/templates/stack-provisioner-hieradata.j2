@@ -84,6 +84,10 @@ common::proxy_enabled: {{ proxy.enabled }}
 common::proxy_protocol: '{{ proxy.protocol }}'
 common::proxy_host: '{{ proxy.host }}'
 common::proxy_port: '{{ proxy.port }}'
+common::proxy_user: '{{ proxy.user }}'
+common::proxy_password: '{{ proxy.password }}'
+common::proxy_noproxy:
+{{ proxy.noproxy | to_nice_yaml | indent(width=2, first=True) }}
 
 aem_curator::config_author_primary::aem_password_reset_version: '{{ library.aem_password_reset_version }}'
 aem_curator::config_author_primary::enable_crxde: {{ aem.enable_crxde }}
