@@ -1,6 +1,7 @@
 ---
 permission_type: b
 network_stack_prefix: overwrite-me
+os_type: rhel7
 
 main:
   stack_name: overwrite-me
@@ -47,9 +48,6 @@ aem:
     jvm_opts: ""
     jmxremote:
       port: 5982
-
-
-os_type: overwrite-me
 
 ami_ids:
   author: overwrite-me
