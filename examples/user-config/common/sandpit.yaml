@@ -17,7 +17,7 @@ proxy:
   port: 8080
   user:
   password:
-  exceptions:
+  noproxy:
     - localhost
     - 127.0.0.1
 
