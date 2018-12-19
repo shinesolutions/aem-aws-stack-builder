@@ -17,6 +17,12 @@ Parameters:
     Default: ''
     Description: Used to Namespace the Exported Resources
     Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
 Resources:
   Bastion:
     Properties:
@@ -34,5 +40,90 @@ Resources:
           Ref: BastionSubnet
       Tags:
       - Key: Name
-        Value: bastion
+        Value: AEM OpenCloud Bastion
     Type: AWS::EC2::Instance
+  BastionHostSecurityGroup:
+    Properties:
+      GroupDescription: Bastion Host Security Group
+      Tags:
+      - Key: Name
+        Value: Bastion Host Security Group
+      - Key: StackPrefix
+        Value:
+          Ref: PrerequisitesStackPrefixParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+    Type: AWS::EC2::SecurityGroup
+  BastionHostSecurityGroupEgress0:
+    Properties:
+      CidrIp:  '0.0.0.0/0'
+      FromPort: '80'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+    Type: AWS::EC2::SecurityGroupEgress
+  BastionHostSecurityGroupEgress1:
+    Properties:
+      CidrIp:  '0.0.0.0/0'
+      FromPort: '5432'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupEgress
+  BastionHostSecurityGroupEgress2:
+    Properties:
+      CidrIp:  '0.0.0.0/0'
+      FromPort: '22'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '22'
+    Type: AWS::EC2::SecurityGroupEgress
+  BastionHostSecurityGroupEgress3:
+    Properties:
+      CidrIp:  '0.0.0.0/0'
+      FromPort: '4502'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4503'
+    Type: AWS::EC2::SecurityGroupEgress
+  BastionHostSecurityGroupEgress4:
+    Properties:
+      CidrIpv6:  '::/0'
+      FromPort: '80'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '80'
+    Type: AWS::EC2::SecurityGroupEgress
+  BastionHostSecurityGroupEgress5:
+    Properties:
+      CidrIpv6:  '::/0'
+      FromPort: '5432'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupEgress
+  BastionHostSecurityGroupEgress6:
+    Properties:
+      CidrIpv6:  '::/0'
+      FromPort: '22'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '22'
+    Type: AWS::EC2::SecurityGroupEgress
+  BastionHostSecurityGroupEgress7:
+    Properties:
+      CidrIpv6:  '::/0'
+      FromPort: '4502'
+      GroupId:
+        Ref: BastionHostSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4503'
+    Type: AWS::EC2::SecurityGroupEgress
