@@ -9,7 +9,7 @@ proxy:
   port:
   user:
   password:
-  exceptions:
+  noproxy:
     - localhost
     - 127.0.0.1
 
