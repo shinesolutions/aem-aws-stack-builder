@@ -60,6 +60,10 @@ Parameters:
     Default: /dev/sda1
     Description: The root device name for the Orchestrator Image Id
     Type: String
+  OrchestratorImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Orchestrator Image Id
+    Type: String
   OrchestratorInstanceTypeParameter:
     Description: The Orchestrator Instance Type
     Type: String
@@ -131,7 +135,8 @@ Resources:
           VolumeSize:
             Ref: OrchestratorRootVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdb
+      - DeviceName:
+          Ref: OrchestratorImageDataDevice
         Ebs:
           DeleteOnTermination: true
           VolumeSize:

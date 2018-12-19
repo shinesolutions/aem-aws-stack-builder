@@ -85,7 +85,7 @@ These configurations are applicable to AWS resources used by the AEM environment
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | ami_ids.[author\|publish|author_dispatcher|publish_dispatcher|author_publish_dispatcher|orchestrator|chaos_monkey] | AMI ID of the machine images created by [Packer AEM](https://github.com/shinesolutions/packer-aem). | Mandatory | |
-| ami_root_device_name | The device name of the root volume. | Optional | `/dev/sda1` |
+| os_type | The os type of the ami. rhel7 or amazon-linux2 | Mandatory |  |
 | snapshots.[author\|publish].use_data_vol_snapshot | If set to true, the volume of the snapshot which ID is  specified in `snapshots.[author\|publish].data_vol_snapshot_id` will then be attached to the data volume. | Optional | `false` |
 | snapshots.[author\|publish].data_vol_snapshot_id | The snapshot ID which volume will be attached to the corresponding `author` or `publish` component's data volume. | Mandatory if `snapshots.[author\|publish].use_data_vol_snapshot` is set to `true`, otherwise optional | |
 | security_groups.secure_shell.inbound_cidr_ip | | Mandatory | |

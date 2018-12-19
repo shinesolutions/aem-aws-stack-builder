@@ -48,6 +48,9 @@ aem:
     jmxremote:
       port: 5982
 
+
+os_type: overwrite-me
+
 ami_ids:
   author: overwrite-me
   publish: overwrite-me
@@ -57,8 +60,13 @@ ami_ids:
   orchestrator: overwrite-me
   chaos_monkey: overwrite-me
 
-# depends on the AMIs, OS on the AMIs
-ami_root_device_name: /dev/sda1
+ami_device:
+  rhel7:
+    root_name: /dev/sda1
+    data_name: /dev/sdb
+  amazon-linux2:
+    root_name: /dev/xvda
+    data_name: /dev/xvdb
 
 security_groups:
   secure_shell:

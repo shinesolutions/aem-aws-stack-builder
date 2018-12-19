@@ -48,6 +48,10 @@ Parameters:
     Default: /dev/sda1
     Description: The root device name for the Author Image Id
     Type: String
+  AuthorImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Author Image Id
+    Type: String
   AuthorInstanceTypeParameter:
     Description: The Author Instance Type
     Type: String
@@ -142,7 +146,8 @@ Resources:
           VolumeSize:
             Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdb
+      - DeviceName:
+          Ref: AuthorImageDataDevice
         Ebs:
           DeleteOnTermination: true
           SnapshotId:
@@ -196,7 +201,8 @@ Resources:
           VolumeSize:
             Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdb
+      - DeviceName:
+          Ref: AuthorImageDataDevice
         Ebs:
           DeleteOnTermination: true
           SnapshotId:
