@@ -5,7 +5,7 @@ AEM AWS Stack Builder
 
 A set of [Ansible](https://www.ansible.com/) playbooks for building [Adobe Experience Manager (AEM)](http://www.adobe.com/au/marketing-cloud/enterprise-content-management.html) architectures on [AWS](https://aws.amazon.com/) using CloudFormation stacks.
 
-Stack Builder has been designed with a focus on modularity, allowing the separation between network and application components, while also providing a flexible way to support multiple architectures that run a combination of the following components:
+Stack Builder has been designed with a focus on modularity, allowing the separation between network and application components, while also providing a flexible way to support multiple architectures that run a combination of the following components across multiple AEM versions:
 
 * `author-primary` - contains [AEM Author](https://helpx.adobe.com/experience-manager/6-3/sites/authoring/using/author.html) running in primary mode
 * `author-standby` - contains [AEM Author](https://helpx.adobe.com/experience-manager/6-3/sites/authoring/using/author.html) running in [standby](https://helpx.adobe.com/experience-manager/6-3/sites/deploying/using/tarmk-cold-standby.html) mode
@@ -18,22 +18,50 @@ Stack Builder has been designed with a focus on modularity, allowing the separat
 
 Stack Builder currently supports the following AEM architectures:
 * Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - includes AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
-* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - includes AEM Author, Publish, and Dispatcher on a single EC2 instance, suitable for development environments
+* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - includes AEM Author, Publish, and Dispatcher on a single EC2 instance with backup and compaction support and a much lower AWS cost footprint, suitable for testing and development environments
 
 Other than the above AEM architectures, Stack Builder also provides the following utilities:
 * Stack Manager([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-stack-manager.png)) - includes [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud), set of AWS Lambda functions that will execute AEM functionalities via an SSM agent
 * Network - includes CloudFormation templates for creating VPC, subnets, and some sample NAT Gateway and Bastion set up
 
-AEM AWS Stack Builder is part of [AEM OpenCloud](https://shinesolutions.github.io/aem-opencloud/) platform.
+Learn more about AEM AWS Stack Builder:
+
+* [Installation](https://github.com/shinesolutions/aem-aws-stack-builder#installation)
+* [Configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
+* [Usage](https://github.com/shinesolutions/aem-aws-stack-builder#usage)
+  * [Network](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/network.md)
+  * [AEM Full-Set Architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aem-full-set-architecture.md)
+  * [AEM Consolidated Architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aem-consolidated-architecture.md)
+  * [AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aem-stack -manager.md)
+* [Testing](https://github.com/shinesolutions/aem-aws-stack-builder#testing)
+* [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
+* [AWS System Tags](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-system-tags.md)
+* [Customisation Points](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/customisation-points.md)
+* [Descriptors](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md)
+  * [Deployment Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-deployment.md)
+  * [Package Backup Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-package-backup.md)
+  * [Content Health Check Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-content-health-check.md)
+* [Logs](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/logs.md)
+* [Permission Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/permission-types.md)
+* [Snapshot Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/snapshot-types.md)
+* [Frequently Asked Questions](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/faq.md)
+* [Troubleshooting Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/troubleshooting-guide.md)
+* [Upgrade Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/upgrade-guide.md)
+* [Stacks Structure](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/stacks-structure.md)
+* [Presentations](https://github.com/shinesolutions/aem-aws-stack-builder/#presentations)
+
+AEM AWS Stack Builder is part of [AEM OpenCloud](https://aemopencloud.io) platform.
 
 Installation
 ------------
 
-- Install the following required tools:
-  * [Ruby](https://www.ruby-lang.org/en/) version 2.0.0 or later
-  * [Python](https://www.python.org/downloads/) version 2.7.x
-  * [GNU Make](https://www.gnu.org/software/make/)
 - Either clone AEM AWS Stack Builder `git clone https://github.com/shinesolutions/aem-aws-stack-builder.git` or download one of the [released versions](https://github.com/shinesolutions/aem-aws-stack-builder/releases)
+- Install the following required tools:
+  * [Ruby](https://www.ruby-lang.org/en/) version 2.3.0 or later
+  * [Python](https://www.python.org/downloads/) version 2.7.x
+  * [GNU Make](https://www.gnu.org/software/make/)<br/>
+
+  Alternatively, you can use [AEM Platform BuildEnv](https://github.com/shinesolutions/aem-platform-buildenv) Docker container to run Packer AEM build targets.
 - Resolve the [Python packages](https://pip.readthedocs.io/en/1.1/requirements.html) dependencies by running `make deps`
 
 Usage
@@ -116,9 +144,10 @@ Create AEM Stack Manager stacks:
 
     make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
 
-More
-----
+Presentations
+-------------
 
-Further information about AEM AWS Stack Builder:
-
+* [AEM OpenCloud](https://www.slideshare.net/cliffano/aem-opencloud)
+* [AEM OpenCloud - What's New Since 2.0.0](https://www.slideshare.net/cliffano/aem-opencloud-whats-new-since-200)
+* [AEM Open Cloud - The First Two Years](https://www.slideshare.net/cliffano/aem-open-cloud-the-first-two-years)
 * [Open Source AEM Platform: A Short Intro](https://www.slideshare.net/cliffano/open-source-aem-platform-a-short-intro-89967729)
