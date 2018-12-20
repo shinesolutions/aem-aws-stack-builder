@@ -192,6 +192,9 @@ config-examples-aem64-rhel7-full-set: stage
 config-examples-aem64-rhel7-consolidated: stage
 	$(call config_examples,aem64,rhel7,consolidated)
 
+config-examples-aem64-amazon-linux2-full-set: stage
+	$(call config_examples,aem64,amazon-linux2,full-set)
+
 config-examples-aem-stack-manager:
 	mkdir -p stage/user-config/aem-stack-manager/
 	cp examples/user-config/apps/aem-stack-manager.yaml stage/user-config/aem-stack-manager/

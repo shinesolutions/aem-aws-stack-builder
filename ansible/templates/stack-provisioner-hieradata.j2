@@ -187,3 +187,11 @@ aem_orchestrator::jarfile_checksum_value: 133ad0f9a6c083701b2531b677a4458ebe021a
 common::login_ready_max_tries: '{{ aem.login_ready_max_tries }}'
 common::login_ready_base_sleep_seconds: '{{ aem.login_ready_base_sleep_seconds }}'
 common::login_ready_max_sleep_seconds: '{{ aem.login_ready_max_sleep_seconds }}'
+
+# Configure Device names. device alias is used by snapshot_attach.py Depending on the block device driver of the kernel, the device could be attached with a different name than you specified.
+common::ami::device_name: {{ ami_device[os_type].data_name }}
+common::ami::device_alias: {{ ami_device[os_type].data_attached_name }}
+common::ami::author_device_name: {{ ami_device[os_type].author_data_name }}
+common::ami::author_device_alias: {{ ami_device[os_type].author_data_attached_name }}
+common::ami::publish_device_name: {{ ami_device[os_type].publish_data_name }}
+common::ami::publish_device_alias: {{ ami_device[os_type].publish_data_attached_name }}

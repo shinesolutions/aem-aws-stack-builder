@@ -88,7 +88,7 @@ Parameters:
     Type: String
   ImageDevices:
     Default: "/dev/sda1, /dev/sdb"
-    Description: The root device name for the Image Ids
+    Description: The device names for the Image Id
     Type: List<String>
   InboundFromBastionHostSecurityGroupParameter:
     Description: Inbound Bound from Bastion Host Security Group Id

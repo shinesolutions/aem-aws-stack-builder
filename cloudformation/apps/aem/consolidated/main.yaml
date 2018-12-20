@@ -28,14 +28,10 @@ Parameters:
   AuthorPublishDispatcherImageParameter:
     Description: AMI Id used for the Host
     Type: AWS::EC2::Image::Id
-  AuthorPublishDispatcherImageRootDevice:
-    Default: /dev/sda1
-    Description: The root device name for the Author Publish Dispatcher Image Id
-    Type: String
-  AuthorPublishDispatcherImageDataDevice:
-    Default: /dev/sdb
-    Description: The data device name for the Author Publish Dispatcher Image Id
-    Type: String
+  ImageDevices:
+    Default: "/dev/sda1, /dev/sdb  /dev/sdc"
+    Description: The device names for the Image Id
+    Type: List<String>
   AuthorPublishDispatcherInstanceTypeParameter:
     Description: The Author Publish Dispatcher Instance Type
     Type: String
@@ -86,14 +82,18 @@ Resources:
     Properties:
       BlockDeviceMappings:
       - DeviceName:
-          Ref: AuthorPublishDispatcherImageRootDevice
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
           VolumeSize:
             Ref: AuthorPublishDispatcherRootVolSizeParameter
           VolumeType: gp2
       - DeviceName:
-          Ref: AuthorPublishDispatcherImageDataDevice
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
           SnapshotId:
@@ -104,7 +104,10 @@ Resources:
           VolumeSize:
             Ref: AuthorPublishDispatcherDataVolSizeParameter
           VolumeType: gp2
-      - DeviceName: /dev/sdc
+      - DeviceName:
+          Fn::Select:
+            - 2
+            - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
           SnapshotId:
