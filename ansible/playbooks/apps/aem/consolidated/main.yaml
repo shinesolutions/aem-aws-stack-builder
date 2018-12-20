@@ -32,6 +32,7 @@
           Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
           UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot | lower }}"
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot | lower }}"
+          ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}"
       tags:
       - create
       when:
@@ -62,6 +63,7 @@
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
           UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot | lower }}"
           UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot | lower }}"
+          ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}"
       tags:
       - create
       when:

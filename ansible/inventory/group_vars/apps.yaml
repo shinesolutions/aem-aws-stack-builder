@@ -59,12 +59,30 @@ ami_ids:
   chaos_monkey: overwrite-me
 
 ami_device:
-  rhel7:
-    root_name: /dev/sda1
-    data_name: /dev/sdb
   amazon-linux2:
     root_name: /dev/xvda
     data_name: /dev/xvdb
+    data_attached_name: ""
+    author_data_name: /dev/xvdb
+    author_data_attached_name: ""
+    publish_data_name: /dev/xvdc
+    publish_data_attached_name: ""
+  centos7:
+    root_name: /dev/sda1
+    data_name: /dev/sdb
+    data_attached_name: /dev/xvdb
+    author_data_name: /dev/sdb
+    author_data_attached_name: /dev/xvdb
+    publish_data_name: /dev/sdc
+    publish_data_attached_name: /dev/xvdc
+  rhel7:
+    root_name: /dev/sda1
+    data_name: /dev/sdb
+    data_attached_name: /dev/xvdb
+    author_data_name: /dev/sdb
+    author_data_attached_name: /dev/xvdb
+    publish_data_name: /dev/sdc
+    publish_data_attached_name: /dev/xvdc
 
 security_groups:
   secure_shell:

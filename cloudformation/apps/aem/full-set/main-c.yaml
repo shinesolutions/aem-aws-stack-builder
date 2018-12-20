@@ -86,10 +86,10 @@ Parameters:
   ELBCipherSuiteParameter:
     Description: ELB Cipher Suite Policy
     Type: String
-  ImageRootDevice:
-    Default: /dev/sda1
-    Description: The root device name for the Image Ids
-    Type: String
+  ImageDevices:
+    Default: "/dev/sda1, /dev/sdb"
+    Description: The device names for the Image Id
+    Type: List<String>
   InboundFromBastionHostSecurityGroupParameter:
     Description: Inbound Bound from Bastion Host Security Group Id
     Type: String
@@ -217,7 +217,13 @@ Resources:
         AuthorDispatcherImageParameter:
           Ref: AuthorDispatcherImageParameter
         AuthorDispatcherImageRootDevice:
-          Ref: ImageRootDevice
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        AuthorDispatcherImageDataDevice:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
         AuthorDispatcherInstanceTypeParameter:
           Ref: AuthorDispatcherInstanceTypeParameter
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
@@ -253,7 +259,13 @@ Resources:
         AuthorImageParameter:
           Ref: AuthorImageParameter
         AuthorImageRootDevice:
-          Ref: ImageRootDevice
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        AuthorImageDataDevice:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
         AuthorInstanceTypeParameter:
           Ref: AuthorInstanceTypeParameter
         AuthorLoadBalancerHealthCheckTargetParameter:
@@ -298,7 +310,9 @@ Resources:
         ChaosMonkeyImageParameter:
           Ref: ChaosMonkeyImageParameter
         ChaosMonkeyImageRootDevice:
-          Ref: ImageRootDevice
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
         ChaosMonkeyInstanceTypeParameter:
           Ref: ChaosMonkeyInstanceTypeParameter
         ChaosMonkeyRootVolSizeParameter:
@@ -352,7 +366,13 @@ Resources:
         OrchestratorImageParameter:
           Ref: OrchestratorImageParameter
         OrchestratorImageRootDevice:
-          Ref: ImageRootDevice
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        OrchestratorImageDataDevice:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
         OrchestratorInstanceTypeParameter:
           Ref: OrchestratorInstanceTypeParameter
         OrchestratorRootVolSizeParameter:
@@ -414,7 +434,13 @@ Resources:
         PublishDispatcherImageParameter:
           Ref: PublishDispatcherImageParameter
         PublishDispatcherImageRootDevice:
-          Ref: ImageRootDevice
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        PublishDispatcherImageDataDevice:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
         PublishDispatcherInstanceTypeParameter:
           Ref: PublishDispatcherInstanceTypeParameter
         PublishDispatcherLoadBalancerHealthCheckTargetParameter:
@@ -460,7 +486,13 @@ Resources:
         PublishImageParameter:
           Ref: PublishImageParameter
         PublishImageRootDevice:
-          Ref: ImageRootDevice
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        PublishImageDataDevice:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
         PublishInstanceTypeParameter:
           Ref: PublishInstanceTypeParameter
         PublishRootVolSizeParameter:

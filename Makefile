@@ -192,6 +192,9 @@ config-examples-aem64-rhel7-full-set: stage
 config-examples-aem64-rhel7-consolidated: stage
 	$(call config_examples,aem64,rhel7,consolidated)
 
+config-examples-aem64-amazon-linux2-full-set: stage
+	$(call config_examples,aem64,amazon-linux2,full-set)
+
 config-examples-aem-stack-manager:
 	mkdir -p stage/user-config/aem-stack-manager/
 	cp examples/user-config/apps/aem-stack-manager.yaml stage/user-config/aem-stack-manager/
@@ -209,6 +212,10 @@ test-integration-aem63-rhel7:
 test-integration-aem64-rhel7:
 	./test/integration/test-examples.sh $(test_id) aem64 rhel7
 
+test-integration-aem64-amazon-linux2:
+	./test/integration/test-examples.sh $(test_id) aem64 amazon-linux2
+
+
 test-integration-local-aem62-rhel7:
 	./test/integration/test-examples-local.sh $(test_id) aem62 rhel7
 
@@ -220,6 +227,9 @@ test-integration-local-aem63-rhel7:
 
 test-integration-local-aem64-rhel7:
 	./test/integration/test-examples-local.sh $(test_id) aem64 rhel7
+
+test-integration-local-aem64-amazon-linux2:
+	./test/integration/test-examples-local.sh $(test_id) aem64 amazon-linux2
 
 # convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
 CERT_NAME=aem-stack-builder
