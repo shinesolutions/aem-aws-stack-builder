@@ -7,9 +7,6 @@ clean:
 	rm -f *.cert *.key
 	rm -f ansible/playbooks/apps/*.retry
 
-deps:
-	pip install -r requirements.txt
-
 lint:
 	# TODO: re-enable at a later release, post transition to aem-platform-buildenv
 	# shellcheck scripts/*.sh
@@ -25,13 +22,31 @@ validate:
 	done
 
 stage:
-	mkdir -p stage/
+	mkdir -p stage/ stage/user-config/
 
 config:
 	scripts/set-config.sh "${config_path}"
 
 library: stage
 	scripts/fetch-library.sh "${config_path}"
+
+################################################################################
+# Dependencies resolution targets.
+# For deps-local and deps-test-local targets, the local dependencies must be
+# available on the same directory level where aem-aws-stack-builder is at. The
+# idea is that you can test AEM AWS Stack Builder while also developing those
+# dependencies locally.
+################################################################################
+
+# resolve dependencies from remote artifact registries
+deps:
+	pip install -r requirements.txt
+
+# resolve test dependencies from remote artifact registries
+deps-test: stage
+	rm -rf stage/aem-helloworld-config/ stage/user-config/*
+	cd stage && git clone https://github.com/shinesolutions/aem-helloworld-config
+	cp -R stage/aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
 
 ########################################
 # Network stacks
@@ -280,4 +295,4 @@ git-archive:
 	mkdir -p stage
 	git archive --format=tar.gz --prefix=aaem-aws-stack-builder-$(version)/ HEAD -o stage/aem-aws-stack-builder-$(version).tar.gz
 
-.PHONY: create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert package git-archive generate-network-config
+.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint validate create-cert upload-cert delete-cert package git-archive generate-network-config
