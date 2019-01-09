@@ -22,7 +22,7 @@ for p in "${temp_config_paths[@]}"; do
 done
 
 run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
-log_path=logs/$stack_prefix/$run_id-${tag}-$(echo "$stack_type" | sed 's/\//-/g').log
+log_path=logs/$stack_prefix/$run_id-${tag}-${(echo "${stack_type}" | sed 's/\//-/g')}.log
 
 # Construct Ansible extra_vars flags. If `config_path` is set, all files
 # directly under the directory with extension `.yaml` or `.yml` will be added.
