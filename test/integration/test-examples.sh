@@ -30,6 +30,7 @@ make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-co
 # Create, test, and delete AEM Consolidated environment
 cp "${integration_test_config_file}" "stage/user-config/${aem_version}-${os_type}-consolidated/"
 echo "Creating AEM Consolidated environment..."
+cp -R stage/user-config/descriptors/consolidated/* stage/
 make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
 echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con"
@@ -39,6 +40,7 @@ make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-c
 # Create, test, and delete AEM Full-Set environment
 cp "${integration_test_config_file}" "stage/user-config/${aem_version}-${os_type}-full-set/"
 echo "Creating AEM Full-Set environment..."
+cp -R stage/user-config/descriptors/full-set/* stage/
 make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
 echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-fs"
