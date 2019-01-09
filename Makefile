@@ -50,6 +50,7 @@ deps-test: stage
 	rm -rf stage/aem-helloworld-config/ stage/user-config/*
 	cd stage && git clone https://github.com/shinesolutions/aem-helloworld-config
 	cp -R stage/aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
+	cp stage/user-config/aem-aws-stack-builder/descriptors/* stage/
 	# setup AEM Test Suite from GitHub
 	rm -rf stage/aem-test-suite*/
 	wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
@@ -70,6 +71,7 @@ deps-test-local: stage
 	# setup AEM Hello World Config from local clone
 	rm -rf stage/aem-helloworld-config/ stage/user-config/*
 	cp -R ../aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
+	cp stage/user-config/aem-aws-stack-builder/descriptors/* stage/
 	# setup AEM Test Suite from local clone
 	rm -rf stage/aem-test-suite/
 	mkdir -p stage/aem-test-suite/
