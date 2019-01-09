@@ -24,7 +24,7 @@ validate:
 	done
 
 stage:
-	mkdir -p stage/ stage/user-config/
+	mkdir -p stage/ stage/user-config/ stage/descriptors/
 
 config:
 	scripts/set-config.sh "${config_path}"
@@ -47,10 +47,10 @@ deps: stage
 # resolve test dependencies from remote artifact registries
 deps-test: stage
 	# setup AEM Hello World Config from GitHub
-	rm -rf stage/aem-helloworld-config/ stage/user-config/*
+	rm -rf stage/aem-helloworld-config/ stage/user-config/* stage/descriptors/*
 	cd stage && git clone https://github.com/shinesolutions/aem-helloworld-config
 	cp -R stage/aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
-	cp -R stage/aem-helloworld-config/descriptors/* stage/user-config/
+	cp -R stage/aem-helloworld-config/descriptors/* stage/descriptors/
 	# setup AEM Test Suite from GitHub
 	rm -rf stage/aem-test-suite*/
 	wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
@@ -69,9 +69,9 @@ deps-test-local: stage
 	# setup AEM AWS Stack Provisioner from local clone
 	cd ../aem-aws-stack-provisioner && make deps-local package && aws s3 cp stage/aem-aws-stack-provisioner-*.tar.gz s3://aem-opencloud/library/
 	# setup AEM Hello World Config from local clone
-	rm -rf stage/aem-helloworld-config/ stage/user-config/*
+	rm -rf stage/aem-helloworld-config/ stage/user-config/* stage/descriptors/*
 	cp -R ../aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
-	cp -R ../aem-helloworld-config/descriptors/* stage/user-config/
+	cp -R ../aem-helloworld-config/descriptors/* stage/descriptors/
 	# setup AEM Test Suite from local clone
 	rm -rf stage/aem-test-suite/
 	mkdir -p stage/aem-test-suite/
