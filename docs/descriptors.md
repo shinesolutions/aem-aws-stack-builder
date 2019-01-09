@@ -25,8 +25,8 @@ Have a look at [Deployment Descriptor Definition](https://github.com/shinesoluti
 
 Also check out the following examples:
 
-* [Deployment descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/consolidated/deploy-artifacts-descriptor.json)
-* [Deployment descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/full-set/deploy-artifacts-descriptor.json)
+* [Deployment descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/consolidated/deploy-artifacts-descriptor.json)
+* [Deployment descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/full-set/deploy-artifacts-descriptor.json)
 
 #### Usage:
 
@@ -43,8 +43,8 @@ Have a look at [Package Backup Descriptor Definition](https://github.com/shineso
 
 Also check out the following examples:
 
-* [Package Backup descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/consolidated/export-backup-descriptor.json)
-* [Package Backup descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/full-set/export-backup-descriptor.json)
+* [Package Backup descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/consolidated/export-backup-descriptor.json)
+* [Package Backup descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/full-set/export-backup-descriptor.json)
 
 #### Usage:
 
@@ -61,8 +61,8 @@ Have a look at [Content Health Check Descriptor Definition](https://github.com/s
 
 Also check out the following examples:
 
-* [Content Health Check descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/consolidated/deploy-artifacts-descriptor.json)
-* [Content Health Check descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/descriptors/full-set/deploy-artifacts-descriptor.json)
+* [Content Health Check descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/consolidated/deploy-artifacts-descriptor.json)
+* [Content Health Check descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/full-set/deploy-artifacts-descriptor.json)
 
 #### Usage:
 

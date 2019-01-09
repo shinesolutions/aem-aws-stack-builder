@@ -9,6 +9,6 @@ stage
 *.pyc
 backup/
 output/
-examples/user-config/*/zzz-*.yaml
+zzz-*.yaml
 ansible/playbooks/network/network-resources-generated.yaml
 testconfig/*

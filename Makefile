@@ -206,51 +206,6 @@ create-ssm-documents:
 delete-ssm-documents:
 	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
-# convenient targets for setting up configuration files
-
-define config_examples
-  rm -rf stage/user-config/$(1)-$(2)-$(3)/
-	mkdir -p stage/user-config/$(1)-$(2)-$(3)/
-	cp examples/user-config/common/*.yaml stage/user-config/$(1)-$(2)-$(3)/
-	cp examples/user-config/apps/aem/$(1)-$(2).yaml stage/user-config/$(1)-$(2)-$(3)/
-	cp examples/user-config/apps/aem/$(3).yaml stage/user-config/$(1)-$(2)-$(3)/
-	cp examples/descriptors/$(3)/*.json stage/
-endef
-
-config-examples-all: config-examples-aem62-rhel7-full-set config-examples-aem62-rhel7-consolidated config-examples-aem63-rhel7-full-set config-examples-aem63-rhel7-consolidated config-examples-aem64-rhel7-full-set config-examples-aem64-rhel7-consolidated config-examples-aem-stack-manager
-
-config-examples-aem62-rhel7-full-set: stage
-	$(call config_examples,aem62,rhel7,full-set)
-
-config-examples-aem62-rhel7-consolidated: stage
-	$(call config_examples,aem62,rhel7,consolidated)
-
-config-examples-aem62-amazon-linux2-consolidated: stage
-	$(call config_examples,aem62,amazon-linux2,consolidated)
-
-config-examples-aem63-rhel7-full-set: stage
-	$(call config_examples,aem63,rhel7,full-set)
-
-config-examples-aem63-rhel7-consolidated: stage
-	$(call config_examples,aem63,rhel7,consolidated)
-
-config-examples-aem64-rhel7-full-set: stage
-	$(call config_examples,aem64,rhel7,full-set)
-
-config-examples-aem64-rhel7-consolidated: stage
-	$(call config_examples,aem64,rhel7,consolidated)
-
-config-examples-aem64-amazon-linux2-full-set: stage
-	$(call config_examples,aem64,amazon-linux2,full-set)
-
-config-examples-aem64-amazon-linux2-consolidated: stage
-	$(call config_examples,aem64,amazon-linux2,consolidated)
-
-config-examples-aem-stack-manager:
-	mkdir -p stage/user-config/aem-stack-manager/
-	cp examples/user-config/apps/aem-stack-manager.yaml stage/user-config/aem-stack-manager/
-	cp examples/user-config/common/*.yaml stage/user-config/aem-stack-manager/
-
 test-integration-aem62-rhel7:
 	./test/integration/test-examples.sh $(test_id) aem62 rhel7
 

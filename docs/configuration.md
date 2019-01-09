@@ -3,7 +3,7 @@ Configuration
 
 The following configurations are available for users to customise the creation process and the resulting machine images.
 
-Check out the [example configuration files](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/examples/user-config/) as reference.
+Check out the [example configuration files](https://github.com/shinesolutions/aem-helloworld-config/tree/master/aem-aws-stack-builder/) as reference.
 
 ### Global configuration properties:
 
