@@ -1,4 +1,6 @@
 version ?= 3.3.1
+aem_stack_manager_messenger_version = 1.5.8
+aem_test_suite_version = 0.9.10
 
 ci: clean deps lint package
 
@@ -39,14 +41,43 @@ library: stage
 ################################################################################
 
 # resolve dependencies from remote artifact registries
-deps:
+deps: stage
 	pip install -r requirements.txt
 
 # resolve test dependencies from remote artifact registries
 deps-test: stage
+	# setup AEM Hello World Config from GitHub
 	rm -rf stage/aem-helloworld-config/ stage/user-config/*
 	cd stage && git clone https://github.com/shinesolutions/aem-helloworld-config
 	cp -R stage/aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
+	# setup AEM Test Suite from GitHub
+	rm -rf stage/aem-test-suite*/
+	wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
+	mkdir -p stage/aem-test-suite
+	tar -xvzf "stage/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory stage/aem-test-suite/
+	cd stage/aem-test-suite/ && make deps
+	# setup AEM Stack Manager Messenger from GitHub
+	rm -rf stage/aem-stack-manager-messenger*/
+	wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
+	mkdir -p stage/aem-stack-manager-messenger/
+	tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory stage/aem-stack-manager-messenger/
+	cd stage/aem-stack-manager-messenger/ && make deps
+
+# resolve test dependencies from local directories
+deps-test-local: stage
+	# setup AEM AWS Stack Provisioner from local clone
+	cd ../aem-aws-stack-provisioner && make deps-local package && aws s3 cp stage/aem-aws-stack-provisioner-*.tar.gz s3://aem-opencloud/library/
+	# setup AEM Hello World Config from local clone
+	rm -rf stage/aem-helloworld-config/ stage/user-config/*
+	cp -R ../aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
+	# setup AEM Test Suite from local clone
+	rm -rf stage/aem-test-suite/
+	mkdir -p stage/aem-test-suite/
+	cp -R ../aem-test-suite/* stage/aem-test-suite/
+	# setup AEM Stack Manager Messenger from local clone
+	rm -rf stage/aem-stack-manager-messenger/
+	mkdir -p stage/aem-stack-manager-messenger/
+	cp -R ../aem-stack-manager-messenger/* stage/aem-stack-manager-messenger/
 
 ########################################
 # Network stacks
