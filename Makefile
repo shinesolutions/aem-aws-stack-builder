@@ -16,7 +16,7 @@ lint:
 	done
 	for template in $$(find cloudformation -type f -not -path "cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
 		echo "Checking template $$template ...."; \
-		aws cloudformation validate-template --template-body "file://$$template"; \
+		AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
 	done
 
 stage:
