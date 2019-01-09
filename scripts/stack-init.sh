@@ -12,7 +12,7 @@ stack_prefix=$2
 component=$3
 aem_aws_stack_provisioner_version=$4
 
-label="[aem-aws-stack-builder]"
+label=[aem-aws-stack-builder]
 
 aws_builder_dir=/opt/shinesolutions/aem-aws-stack-builder
 aws_provisioner_dir=/opt/shinesolutions/aem-aws-stack-provisioner
