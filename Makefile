@@ -10,16 +10,15 @@ clean:
 	rm -f ansible/playbooks/apps/*.retry
 
 lint:
-	# TODO: re-enable at a later release, post transition to aem-platform-buildenv
-	# shellcheck scripts/*.sh
-	shellcheck test/integration/*.sh
+	shellcheck scripts/*.sh test/integration/*.sh
 	for playbook in ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
-	for template in $$(find cloudformation -type f -not -path "cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
-		echo "Checking template $$template ...."; \
-		AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
-	done
+	# TODO: re-enable template validation after sorting out CI credential
+	# for template in $$(find cloudformation -type f -not -path "cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
+	# 	echo "Checking template $$template ...."; \
+	# 	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
+	# done
 
 stage:
 	mkdir -p stage/ stage/user-config/ stage/descriptors/

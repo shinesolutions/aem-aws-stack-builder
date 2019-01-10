@@ -22,6 +22,7 @@ for p in "${temp_config_paths[@]}"; do
 done
 
 run_id=${RUN_ID:-$(date +%Y-%m-%d:%H:%M:%S)}
+# shellcheck disable=SC2001
 log_path=logs/$stack_prefix/$run_id-${tag}-$(echo "$stack_type" | sed 's/\//-/g').log
 
 # Construct Ansible extra_vars flags. If `config_path` is set, all files
