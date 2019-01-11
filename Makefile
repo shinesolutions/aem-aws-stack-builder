@@ -5,9 +5,39 @@ aem_test_suite_version = 0.9.10
 ci: clean deps lint package
 
 clean:
-	rm -rf logs stage
-	rm -f *.cert *.key
-	rm -f ansible/playbooks/apps/*.retry
+	rm -rf logs/ stage/ *.cert *.key ansible/playbooks/apps/*.retry
+
+stage:
+	mkdir -p stage/ stage/user-config/ stage/descriptors/
+
+config:
+	scripts/set-config.sh "${config_path}"
+
+library: stage
+	scripts/fetch-library.sh "${config_path}"
+
+package:
+	rm -rf stage
+	mkdir -p stage
+	tar \
+	    --exclude='.git*' \
+	    --exclude='.librarian*' \
+	    --exclude='.tmp*' \
+	    --exclude='stage*' \
+	    --exclude='.idea*' \
+	    --exclude='.DS_Store*' \
+	    --exclude='logs*' \
+	    --exclude='*.retry' \
+	    --exclude='*.iml' \
+	    -cvf \
+	    stage/aem-aws-stack-builder-$(version).tar ./
+	gzip stage/aem-aws-stack-builder-$(version).tar
+
+################################################################################
+# Code styling check and validation targets:
+# - lint Ansible inventory and playbook files
+# - check shell scripts
+################################################################################
 
 lint:
 	shellcheck scripts/*.sh test/integration/*.sh
@@ -19,15 +49,6 @@ lint:
 	# 	echo "Checking template $$template ...."; \
 	# 	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
 	# done
-
-stage:
-	mkdir -p stage/ stage/user-config/ stage/descriptors/
-
-config:
-	scripts/set-config.sh "${config_path}"
-
-library: stage
-	scripts/fetch-library.sh "${config_path}"
 
 ################################################################################
 # Dependencies resolution targets.
@@ -78,9 +99,9 @@ deps-test-local: stage
 	mkdir -p stage/aem-stack-manager-messenger/
 	cp -R ../aem-stack-manager-messenger/* stage/aem-stack-manager-messenger/
 
-########################################
-# Network stacks
-########################################
+################################################################################
+# Network targets.
+################################################################################
 
 generate-network-config:
 	./scripts/generate-network-config.sh "$(config_path)"
@@ -115,9 +136,9 @@ create-bastion:
 delete-bastion:
 	./scripts/delete-stack.sh network/bastion "$(config_path)" "$(stack_prefix)"
 
-########################################
-# AEM Stack Data
-########################################
+################################################################################
+# AEM Stack Data targets.
+################################################################################
 
 create-aem-stack-data:
 	./scripts/create-stack.sh apps/aem/stack-data "$(config_path)" "$(stack_prefix)"
@@ -125,9 +146,9 @@ create-aem-stack-data:
 delete-aem-stack-data:
 	./scripts/delete-stack.sh apps/aem/stack-data "$(config_path)" "$(stack_prefix)"
 
-########################################
-# AEM Consolidated architecture stacks
-########################################
+################################################################################
+# AEM Consolidated architecture targets.
+################################################################################
 
 create-consolidated-prerequisites:
 	./scripts/create-stack.sh apps/aem/consolidated/prerequisites "$(config_path)" "$(stack_prefix)"
@@ -147,9 +168,9 @@ create-consolidated:
 
 delete-consolidated: delete-consolidated-main delete-consolidated-prerequisites
 
-########################################
-# AEM Full Set architecture stacks
-########################################
+################################################################################
+# AEM Full Set architecture targets.
+################################################################################
 
 create-full-set-prerequisites:
 	./scripts/create-stack.sh apps/aem/full-set/prerequisites "$(config_path)" "$(stack_prefix)"
@@ -169,9 +190,9 @@ create-full-set:
 
 delete-full-set: delete-full-set-main delete-full-set-prerequisites
 
-########################################
-# AEM Stack Manager
-########################################
+################################################################################
+# AEM Stack Manager targets.
+################################################################################
 
 create-aem-stack-manager-stack-data:
 	./scripts/create-stack.sh apps/aem-stack-manager/stack-data "$(config_path)" "$(stack_prefix)"
@@ -180,28 +201,16 @@ delete-aem-stack-manager-stack-data:
 	./scripts/delete-stack.sh apps/aem-stack-manager/stack-data "$(config_path)" "$(stack_prefix)"
 
 create-stack-manager: create-aem-stack-manager-stack-data
-	 #create-ssm-documents
 	./scripts/create-stack.sh apps/aem-stack-manager/main "$(config_path)" "$(stack_prefix)"
 
 delete-stack-manager:
-	 #delete-ssm-documents
 	./scripts/delete-stack.sh apps/aem-stack-manager/main "$(config_path)" "$(stack_prefix)"
 
-########################################
-# Utility stacks
-########################################
-
-create-snapshots-purge:
-	./scripts/create-stack.sh apps/utilities "$(config_path)" "$(stack_prefix)"
-
-delete-snapshots-purge:
-	./scripts/delete-stack.sh apps/utilities "$(config_path)" "$(stack_prefix)"
-
-create-ssm-documents:
-	./scripts/create-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
-
-delete-ssm-documents:
-	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
+################################################################################
+# Integration test targets.
+# Provides convenient targets for testing against the supported permutation of
+# AEM versions and OSes.
+################################################################################
 
 test-integration-aem62-rhel7:
 	./test/integration/test-examples.sh $(test_id) aem62 rhel7
@@ -218,7 +227,6 @@ test-integration-aem64-rhel7:
 test-integration-aem64-amazon-linux2:
 	./test/integration/test-examples.sh $(test_id) aem64 amazon-linux2
 
-
 test-integration-local-aem62-rhel7:
 	./test/integration/test-examples-local.sh $(test_id) aem62 rhel7
 
@@ -234,50 +242,20 @@ test-integration-local-aem64-rhel7:
 test-integration-local-aem64-amazon-linux2:
 	./test/integration/test-examples-local.sh $(test_id) aem64 amazon-linux2
 
-# convenient targets for creating certificate using OpenSSL, upload to and remove from AWS IAM
-CERT_NAME=aem-stack-builder
+########################################
+# Utility stacks
+########################################
 
-create-cert:
-	openssl req \
-	    -new \
-	    -newkey rsa:4096 \
-			-nodes \
-	    -days 365 \
-	    -x509 \
-	    -subj "/C=AU/ST=Victoria/L=Melbourne/O=Sample Organisation/CN=*.*.*.amazonaws.com" \
-	    -keyout $(CERT_NAME).key \
-	    -out $(CERT_NAME).cert
+create-snapshots-purge:
+	./scripts/create-stack.sh apps/utilities "$(config_path)" "$(stack_prefix)"
 
-upload-cert:
-	aws iam upload-server-certificate \
-	    --server-certificate-name $(CERT_NAME) \
-	    --certificate-body "file://$(CERT_NAME).cert" \
-	    --private-key "file://$(CERT_NAME).key"
+delete-snapshots-purge:
+	./scripts/delete-stack.sh apps/utilities "$(config_path)" "$(stack_prefix)"
 
-delete-cert:
-	aws iam delete-server-certificate \
-	    --server-certificate-name $(CERT_NAME)
+create-ssm-documents:
+	./scripts/create-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
-package:
-	rm -rf stage
-	mkdir -p stage
-	tar \
-	    --exclude='.git*' \
-	    --exclude='.librarian*' \
-	    --exclude='.tmp*' \
-	    --exclude='stage*' \
-	    --exclude='.idea*' \
-	    --exclude='.DS_Store*' \
-	    --exclude='logs*' \
-	    --exclude='*.retry' \
-	    --exclude='*.iml' \
-	    -cvf \
-	    stage/aem-aws-stack-builder-$(version).tar ./
-	gzip stage/aem-aws-stack-builder-$(version).tar
-
-git-archive:
-	rm -rf stage
-	mkdir -p stage
-	git archive --format=tar.gz --prefix=aaem-aws-stack-builder-$(version)/ HEAD -o stage/aem-aws-stack-builder-$(version).tar.gz
+delete-ssm-documents:
+	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
 .PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config
