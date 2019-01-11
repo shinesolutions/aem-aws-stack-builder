@@ -18,7 +18,7 @@
 
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../../../cloudformation/apps/aem/consolidated
+              aws s3 sync ../../../../../../templates/cloudformation/apps/aem/consolidated
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
                   --include "*.yaml" --acl public-read
       tags:
@@ -30,7 +30,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../../cloudformation/apps/aem/consolidated/prerequisites-{{ permission_type }}.yaml"
+        template: "../../../../../../templates/cloudformation/apps/aem/consolidated/prerequisites-{{ permission_type }}.yaml"
         template_parameters:
           PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
@@ -48,7 +48,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../../cloudformation/apps/aem/consolidated/prerequisites-{{ permission_type }}.yaml"
+        template: "../../../../../../templates/cloudformation/apps/aem/consolidated/prerequisites-{{ permission_type }}.yaml"
         template_parameters:
           PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"

@@ -17,7 +17,7 @@
 
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../../cloudformation/apps/aem-stack-manager
+              aws s3 sync ../../../../../templates/cloudformation/apps/aem-stack-manager
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
                   --include "*.yaml" --acl public-read
       tags:
@@ -26,8 +26,8 @@
     - name: Generate CloudFormation Template for SSM Documents
       ssm_template:
         dest_file: "{{ playbook_dir }}/../../../../stage/ssm-commands.yaml"
-        ssm_command_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands-template.yaml"
-        ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands/"
+        ssm_command_cf_template: "{{ playbook_dir }}/../../../../../templates/cloudformation/apps/aem-stack-manager/ssm-commands-template.yaml"
+        ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../../templates/cloudformation/apps/aem-stack-manager/ssm-commands/"
       tags:
         - create
 
@@ -44,7 +44,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../cloudformation/apps/aem-stack-manager/main.yaml"
+        template: "../../../../../templates/cloudformation/apps/aem-stack-manager/main.yaml"
         template_parameters:
           MainStackPrefixParameter: "{{ stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
@@ -95,7 +95,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../cloudformation/apps/aem-stack-manager/main-c.yaml"
+        template: "../../../../../templates/cloudformation/apps/aem-stack-manager/main-c.yaml"
         template_parameters:
           MainStackPrefixParameter: "{{ stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"

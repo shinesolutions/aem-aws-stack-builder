@@ -21,8 +21,8 @@ echo "Extra vars:"
 echo "  ${extra_vars[*]}"
 
 PYTHONPATH=../python-modules \
-ANSIBLE_CONFIG=ansible/ansible.cfg \
-  ansible-playbook ansible/playbooks/fetch-library.yaml \
-  -i ansible/inventory/hosts \
-  --module-path ansible/library/ \
+ANSIBLE_CONFIG=conf/ansible/ansible.cfg \
+  ansible-playbook provisioners/ansible/playbooks/fetch-library.yaml \
+  -i conf/ansible/inventory/hosts \
+  --module-path provisioners/ansible/library/ \
   "${extra_vars[@]}"

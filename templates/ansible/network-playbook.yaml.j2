@@ -6,7 +6,7 @@
     state: present
     region: "{{ aws.region }}"
     disable_rollback: true
-    template: "../../../cloudformation/network/network.yaml"
+    template: "../../../../templates/cloudformation/network/network.yaml"
     template_parameters:
       StackPrefix: "{{ stack_prefix}}"
       Ec2InternetGatewayTagNameParameter: "{{ stack_prefix }}-{{ network.internet_gateway.tag_name }}"

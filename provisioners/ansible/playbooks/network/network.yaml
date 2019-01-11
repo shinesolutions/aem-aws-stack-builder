@@ -11,15 +11,15 @@
 
     - name: Generate network resources playbook from jinja2 template
       template:
-        src: "../../templates/network-playbook.yaml.j2"
+        src: "../../../templates/ansible/network-playbook.yaml.j2"
         dest: "./network-resources-generated.yaml"
       tags:
         - create
 
     - name: Create network CloudFormation template from jinja2 template
       template:
-        src: "../../templates/network-cf.yaml.j2"
-        dest: "../../../cloudformation/network/network.yaml"
+        src: "../../../templates/ansible/network-cf.yaml.j2"
+        dest: "../../../../templates/cloudformation/network/network.yaml"
       tags:
         - create
 

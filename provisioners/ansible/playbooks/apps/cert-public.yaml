@@ -10,7 +10,7 @@
         stack_name: "{{ stack_prefix }}-{{ cert_public.stack_name }}"
         region: us-east-1
         state: present
-        template: "../../../cloudformation/apps/cert-public.yaml"
+        template: "../../../../templates/cloudformation/apps/cert-public.yaml"
         template_parameters:
           MainStackPrefixParameter: "{{ stack_prefix }}"
           ApexDomainParameter: "{{ dns.apex_domain_name | regex_replace('(.*)\\.', '\\1') }}"

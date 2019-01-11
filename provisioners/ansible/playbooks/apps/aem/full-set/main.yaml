@@ -7,7 +7,7 @@
   tasks:
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../../../cloudformation/apps/aem/full-set
+              aws s3 sync ../../../../../../templates/cloudformation/apps/aem/full-set
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
                   --include "*.yaml" --acl public-read
       tags:
@@ -19,7 +19,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../../cloudformation/apps/aem/full-set/main.yaml"
+        template: "../../../../../../templates/cloudformation/apps/aem/full-set/main.yaml"
         template_parameters:
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
@@ -92,7 +92,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../../cloudformation/apps/aem/full-set/main-c.yaml"
+        template: "../../../../../../templates/cloudformation/apps/aem/full-set/main-c.yaml"
         template_parameters:
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"

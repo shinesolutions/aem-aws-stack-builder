@@ -11,7 +11,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../../cloudformation/apps/aem/consolidated/main.yaml"
+        template: "../../../../../../templates/cloudformation/apps/aem/consolidated/main.yaml"
         template_parameters:
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
           AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"
@@ -44,7 +44,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../../cloudformation/apps/aem/consolidated/main-{{ permission_type }}.yaml"
+        template: "../../../../../../templates/cloudformation/apps/aem/consolidated/main-{{ permission_type }}.yaml"
         template_parameters:
           AemAwsStackProvisionerVersionParameter: "{{ library.aem_aws_stack_provisioner_version }}"
           AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"

@@ -11,7 +11,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../cloudformation/network/vpc.yaml"
+        template: "../../../../templates/cloudformation/network/vpc.yaml"
         template_parameters:
           StackPrefix: "{{ stack_prefix }}"
           Ec2VpcCidrBlockParameter: "{{ ec2_vpc.cidr_block }}"

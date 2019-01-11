@@ -11,7 +11,7 @@
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
-        template: "../../../cloudformation/network/nat-gateway.yaml"
+        template: "../../../../templates/cloudformation/network/nat-gateway.yaml"
         template_parameters:
           StackPrefix: "{{ stack_prefix }}"
           Ec2NatGatewayElasticIpAllocationIdParameter: "{{ nat_gateway.elastic_ip_allocation_id }}"

@@ -28,8 +28,8 @@ EXAMPLES = '''
 - name: Create SSM Document cloudformation tempalte
   ssm_template:
     dest_file: "{{ playbook_dir }}/../../../../stage/ssm_template.json"
-    ssm_command_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands-cloudformation.yaml"
-    ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../cloudformation/apps/aem-stack-manager/ssm-commands/"
+    ssm_command_cf_template: "{{ playbook_dir }}/../../../../../templates/cloudformation/apps/aem-stack-manager/ssm-commands-cloudformation.yaml"
+    ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../../templates/cloudformation/apps/aem-stack-manager/ssm-commands/"
 '''
 
 import os

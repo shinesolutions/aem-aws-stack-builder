@@ -13,7 +13,7 @@
         region: "{{ aws.region }}"
         state: present
         disable_rollback: false
-        template: "{{ playbook_dir}}/../../../cloudformation/apps/snapshots-purge.yaml"
+        template: "{{ playbook_dir}}/../../../../templates/cloudformation/apps/snapshots-purge.yaml"
         template_parameters:
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"

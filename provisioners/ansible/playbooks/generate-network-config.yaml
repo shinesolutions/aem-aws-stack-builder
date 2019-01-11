@@ -11,5 +11,5 @@
 
     - name: Create network config file from template
       template:
-        src: "../templates/network-config.yaml.j2"
+        src: "../../templates/ansible/network-config.yaml.j2"
         dest: "../../{{ config_path }}/network.yaml"

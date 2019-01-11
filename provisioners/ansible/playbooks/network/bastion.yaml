@@ -11,7 +11,7 @@
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
-        template: "../../../cloudformation/network/bastion.yaml"
+        template: "../../../../templates/cloudformation/network/bastion.yaml"
         template_parameters:
           BastionImageId: "{{ bastion.ami_id }}"
           BastionKeyPairName: "{{ bastion.key_pair_name }}"

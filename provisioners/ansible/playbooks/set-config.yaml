@@ -10,15 +10,15 @@
         template_dir: "{{ item }}"
         global_tags: "{{ aws['tags'] }}"
       with_items:
-        - ../../cloudformation/apps/aem/consolidated/
-        - ../../cloudformation/apps/aem/full-set/
-        - ../../cloudformation/apps/aem-stack-manager/
-        - ../../cloudformation/apps/
-        - ../../cloudformation/network/
+        - ../../../templates/cloudformation/apps/aem/consolidated/
+        - ../../../templates/cloudformation/apps/aem/full-set/
+        - ../../../templates/cloudformation/apps/aem-stack-manager/
+        - ../../../templates/cloudformation/apps/
+        - ../../../templates/cloudformation/network/
 
     - name: Add extra AWS Security Groups to CloudFormation template files
       cf_security_groups:
-        template_dir: '../../cloudformation/apps/aem/full-set/'
+        template_dir: '../../../templates/cloudformation/apps/aem/full-set/'
         elb_resource: "{{ item.resource }}"
         security_groups: "{{ security_groups[item.property]['extra_groups'] }}"
       with_items:

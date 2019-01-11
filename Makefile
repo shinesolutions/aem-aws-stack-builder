@@ -5,7 +5,7 @@ aem_test_suite_version = 0.9.10
 ci: clean deps lint package
 
 clean:
-	rm -rf logs/ stage/ *.cert *.key ansible/playbooks/apps/*.retry
+	rm -rf logs/ stage/ *.cert *.key provisioners/ansible/playbooks/apps/*.retry
 
 stage:
 	mkdir -p stage/ stage/user-config/ stage/descriptors/
@@ -41,11 +41,11 @@ package:
 
 lint:
 	shellcheck scripts/*.sh test/integration/*.sh
-	for playbook in ansible/playbooks/*/*.yaml; do \
-		ANSIBLE_LIBRARY=ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
+	for playbook in provisioners/ansible/playbooks/*/*.yaml; do \
+		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
 	# TODO: re-enable template validation after sorting out CI credential
-	# for template in $$(find cloudformation -type f -not -path "cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
+	# for template in $$(find cloudformation -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
 	# 	echo "Checking template $$template ...."; \
 	# 	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
 	# done
@@ -74,13 +74,13 @@ deps-test: stage
 	wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
 	mkdir -p stage/aem-test-suite
 	tar -xvzf "stage/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory stage/aem-test-suite/
-	cd stage/aem-test-suite/ && make deps
+	cd stage/aem-test-suite/ #& make deps
 	# setup AEM Stack Manager Messenger from GitHub
 	rm -rf stage/aem-stack-manager-messenger*/
 	wget "https://github.com/shinesolutions/aem-stack-manager-messenger/releases/download/${aem_stack_manager_messenger_version}/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory-prefix=stage
 	mkdir -p stage/aem-stack-manager-messenger/
 	tar -xvzf "stage/aem-stack-manager-messenger-${aem_stack_manager_messenger_version}.tar.gz" --directory stage/aem-stack-manager-messenger/
-	cd stage/aem-stack-manager-messenger/ && make deps
+	cd stage/aem-stack-manager-messenger/ #& make deps
 
 # resolve test dependencies from local directories
 deps-test-local: stage

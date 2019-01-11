@@ -47,10 +47,10 @@ echo "  ${extra_vars[*]}"
 mkdir -p "logs/$stack_prefix"
 echo "Start ${action_verb} $stack_prefix $stack_type stack"
 ANSIBLE_LOG_PATH=$log_path \
-ANSIBLE_CONFIG=ansible/ansible.cfg \
-  ansible-playbook -v ansible/playbooks/"$stack_type".yaml \
-  -i ansible/inventory/hosts \
-  --module-path ansible/library/ \
+ANSIBLE_CONFIG=conf/ansible/ansible.cfg \
+  ansible-playbook -v provisioners/ansible/playbooks/"$stack_type".yaml \
+  -i conf/ansible/inventory/hosts \
+  --module-path provisioners/ansible/library/ \
   --tags "${tag}" \
   "${extra_vars[@]}"
 echo "Finished ${action_verb} $stack_prefix $stack_type stack"

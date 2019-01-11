@@ -10,5 +10,5 @@ stage
 backup/
 output/
 zzz-*.yaml
-ansible/playbooks/network/network-resources-generated.yaml
+provisioners/ansible/playbooks/network/network-resources-generated.yaml
 testconfig/*

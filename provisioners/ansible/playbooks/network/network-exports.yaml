@@ -12,7 +12,7 @@
         state: present
         region: "{{ aws.region }}"
         disable_rollback: true
-        template: "../../../cloudformation/network/network-exports.yaml"
+        template: "../../../../templates/cloudformation/network/network-exports.yaml"
         template_parameters:
           StackPrefix: "{{ stack_prefix }}"
           VPCId: "{{ network_exports.VPCId }}"
