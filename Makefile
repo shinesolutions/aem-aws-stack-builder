@@ -23,6 +23,7 @@ package:
 	    --exclude='.git*' \
 	    --exclude='.librarian*' \
 	    --exclude='.tmp*' \
+			--exclude='.yamllint' \
 	    --exclude='stage*' \
 	    --exclude='.idea*' \
 	    --exclude='.DS_Store*' \
@@ -40,6 +41,13 @@ package:
 ################################################################################
 
 lint:
+	# yamllint \
+	#   conf/ansible/inventory/group_vars/*.yaml \
+	#   provisioners/ansible/playbooks/*.yaml \
+	#   provisioners/ansible/playbooks/*/*.yaml \
+	#   provisioners/ansible/playbooks/*/*/*.yaml \
+	#   templates/cloudformation/*/*.yaml \
+	# 	templates/cloudformation/*/*/*.yaml
 	shellcheck scripts/*.sh test/integration/*.sh
 	for playbook in provisioners/ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \

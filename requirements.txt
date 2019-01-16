@@ -3,3 +3,4 @@ awscli==1.16.10
 boto3==1.8.5
 jinja2==2.10
 ruamel.yaml==0.15.66
+yamllint==1.13.0
