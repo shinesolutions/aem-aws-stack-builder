@@ -30,7 +30,13 @@ download_provisioner() {
   mkdir -p "${dest_dir}"
   pushd "${dest_dir}"
   aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/${s3_object_name}" .
-  tar -xzvf "${s3_object_name}"
+  # Don't add verbose flag while unarchiving the provisioner artifact in order
+  # to avoid dumping the list of files within the artifact onto cloud-init
+  # output which is then (by default) also configured to go to syslog, which
+  # in turn might cause `serial8250: too much work for irq4` error which would
+  # then cause cloud-init to error and exit, causing the whole provisioning step
+  # to fail.
+  tar -xzf "${s3_object_name}"
   rm "${s3_object_name}"
   chown -R root:root .
   popd
