@@ -25,23 +25,23 @@ echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        
 
 # Create AEM Stack Manager environment
 echo "Creating AEM Stack Manager environment..."
-make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager/
+make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager-sandpit/
 
 # Create, test, and delete AEM Consolidated environment
-cp "${integration_test_config_file}" "stage/user-config/${aem_version}-${os_type}-consolidated/"
+cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 echo "Creating AEM Consolidated environment..."
 cp -R stage/descriptors/consolidated/* stage/
-make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
+make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" && cd ../../
 echo "Deleting AEM Consolidated environment..."
-make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/${aem_version}-${os_type}-consolidated/"
+make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 
 # Create, test, and delete AEM Full-Set environment
-cp "${integration_test_config_file}" "stage/user-config/${aem_version}-${os_type}-full-set/"
+cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 echo "Creating AEM Full-Set environment..."
 cp -R stage/descriptors/full-set/* stage/
-make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
+make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-fs" && cd ../../
 # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
@@ -53,8 +53,8 @@ cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test
 # echo "Testing AEM Full-Set environment recovery with AEM Test Suite..."
 # cd /stage/aem-test-suite/ && make test-recovery-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
 echo "Deleting AEM Full-Set environment..."
-make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/${aem_version}-${os_type}-full-set/"
+make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 
 # Delete AEM Stack Manager
 echo "Deleting AEM Stack Manager environment..."
-make delete-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager/
+make delete-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager-sandpit/
