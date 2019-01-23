@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new feature to configure AEM Apache http proxy configurator settings #235
 - Add new parameters for all image device names
 - Add new heira parameters for image device names
+- Add new configuraiton parameters for post start sleep timer to give the AEM service more time to start before configuring AEM #214
 
 ### Changed
 - Update deployment descriptor documentation for uninstall package feature #224
