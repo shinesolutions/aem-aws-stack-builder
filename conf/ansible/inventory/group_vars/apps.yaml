@@ -62,7 +62,7 @@ ami_device:
   amazon-linux2:
     root_name: /dev/xvda
     data_name: /dev/xvdb
-    data_attached_name: ""
+    data_attached_name: /dev/xvdb
     author_data_name: /dev/xvdb
     author_data_attached_name: /dev/xvdb
     publish_data_name: /dev/xvdc
