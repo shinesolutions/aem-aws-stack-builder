@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Update deployment descriptor documentation for uninstall package feature #224
+- Upgrade AEM Stack Manager to 1.3.2
 
 ## [3.3.1] - 2018-12-06
 
