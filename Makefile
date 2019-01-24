@@ -229,6 +229,9 @@ test-integration-aem62-amazon-linux2: deps deps-test
 test-integration-aem63-rhel7: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem63 rhel7
 
+test-integration-aem63-amazon-linux2: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem63 amazon-linux2
+
 test-integration-aem64-rhel7: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem64 rhel7
 
