@@ -16,10 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new feature to configure AEM Apache http proxy configurator settings #235
 - Add new parameters for all image device names
 - Add new heira parameters for image device names
-- Add new configuraiton parameters for post start sleep timer to give the AEM service more time to start before configuring AEM #214
+- Add new configuration parameters for post start sleep timer to give the AEM service more time to start before configuring AEM #214
+- Add Amazon Linux 2 OS type support
 
 ### Changed
 - Update deployment descriptor documentation for uninstall package feature #224
+- Upgrade AEM Stack Manager to 1.3.2
 
 ## [3.3.1] - 2018-12-06
 

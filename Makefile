@@ -220,19 +220,22 @@ delete-stack-manager:
 # AEM versions and OSes.
 ################################################################################
 
-test-integration-aem62-rhel7:
+test-integration-aem62-rhel7: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem62 rhel7
 
-test-integration-aem62-amazon-linux2:
+test-integration-aem62-amazon-linux2: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem62 amazon-linux2
 
-test-integration-aem63-rhel7:
+test-integration-aem63-rhel7: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem63 rhel7
 
-test-integration-aem64-rhel7:
+test-integration-aem63-amazon-linux2: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem63 amazon-linux2
+
+test-integration-aem64-rhel7: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem64 rhel7
 
-test-integration-aem64-amazon-linux2:
+test-integration-aem64-amazon-linux2: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem64 amazon-linux2
 
 test-integration-local-aem62-rhel7:

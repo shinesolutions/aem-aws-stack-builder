@@ -1,9 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - make deps deps-test
   pre_build:
     commands:
       - chmod +x scripts/*.sh test/*/*.sh
