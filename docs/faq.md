@@ -22,3 +22,7 @@ Frequently Asked Questions
 
 * __Q:__ How to check if the component provisioning has been completed successfully?<br/>
   __A:__ Please follow this [AEM Environment Provisioning Troubleshooting Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/troubleshooting-guide.md#aem-environment-provisioning).
+
+
+* __Q:__ Why is the stack provisioning failing with the error message `unexpected response code` ?<br/>
+  __A:__ This may happen as some Bundles e.g. `Adobe Granite CRX Package Manager` are starting some `Declarative Service Components`. Since it may take a while until all `Declarative Service Components` are started. Though the AEM Healthcheck is showing all bundles are up and running. To give AEM more time after starting the service set the option `aem.enable_post_start_sleep` to true and modify the wait time `aem.post_start_sleep_seconds`to your own needs.
