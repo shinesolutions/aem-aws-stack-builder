@@ -144,6 +144,13 @@ Create AEM Stack Manager stacks:
 
     make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
 
+Testing
+-------
+
+### Testing with remote dependencies
+
+You can run integration test for creating, testing, and deleting the AEM Stack Manager, AEM Consolidated, AEM Full-Set environments using the command `make test-integration test_id=<sometestid>`, which downloads the dependencies from the Internet.
+
 Presentations
 -------------
 
