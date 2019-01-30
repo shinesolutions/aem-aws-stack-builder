@@ -203,7 +203,7 @@ Resources:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
         PolicyNames:
-        - ELBCipherSuiteParameter
+        - Ref: ELBCipherSuiteParameter
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
