@@ -1,4 +1,4 @@
-version ?= 3.3.1
+version ?= 3.4.0
 aem_stack_manager_messenger_version = 1.5.8
 aem_test_suite_version = 0.9.10
 
