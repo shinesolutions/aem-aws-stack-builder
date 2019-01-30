@@ -69,6 +69,9 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
+  ELBCipherSuiteParameter:
+    Description: ELB Cipher Suite Policy
+    Type: String
   InboundFromBastionHostSecurityGroupParameter:
     Description: Inbound Bound from Bastion Host Security Group Id
     Type: String
@@ -199,6 +202,8 @@ Resources:
         SSLCertificateId:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
+        PolicyNames:
+        - ELBCipherSuiteParameter
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
