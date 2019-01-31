@@ -1,5 +1,6 @@
 ### 2.2.3
-* Lock down ansible to 2.5.8, awscli to 1.15.41, and boto3 to 1.7.41 
+* Lock down ansible to 2.5.8, awscli to 1.15.41, and boto3 to 1.7.41
+* Add compute.elb_cipher_suite configuration property for customising ELB cipher suite
 
 ### 2.2.2
 * Lock down awscli version
