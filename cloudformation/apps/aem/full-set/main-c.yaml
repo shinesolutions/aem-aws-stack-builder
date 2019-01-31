@@ -83,6 +83,9 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
+  ELBCipherSuiteParameter:
+    Description: ELB Cipher Suite Policy
+    Type: String
   ImageRootDevice:
     Default: /dev/sda1
     Description: The root device name for the Image Ids
@@ -225,6 +228,8 @@ Resources:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
+        ELBCipherSuiteParameter:
+          Ref: ELBCipherSuiteParameter
         InboundFromBastionHostSecurityGroupParameter:
           Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
@@ -259,6 +264,8 @@ Resources:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
+        ELBCipherSuiteParameter:
+          Ref: ELBCipherSuiteParameter
         InboundFromBastionHostSecurityGroupParameter:
           Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
@@ -378,6 +385,8 @@ Resources:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
+        ELBCipherSuiteParameter:
+          Ref: ELBCipherSuiteParameter
         InboundFromBastionHostSecurityGroupParameter:
           Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
