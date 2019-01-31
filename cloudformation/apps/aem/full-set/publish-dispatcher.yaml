@@ -315,11 +315,14 @@ Resources:
         SSLCertificateId:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
-        PolicyNames: CipherSuitePolicy
-        PolicyType: SSLNegoiationPolicyType
+        PolicyNames: 
+        - CipherSuitePolicy
+      Policies:
+      - PolicyName: CipherSuitePolicy
+        PolicyType: SSLNegotiationPolicyType
         - Name: Reference-Security-Policy
           Value:
-          - Ref: ELBCipherSuiteParameter
+            Ref: ELBCipherSuiteParameter
       Scheme:
         Ref: PublishDispatcherLoadBalancerSchemeParameter
       SecurityGroups:
