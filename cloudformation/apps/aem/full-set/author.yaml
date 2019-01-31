@@ -117,6 +117,7 @@ Resources:
       Policies:
       - PolicyName: CipherSuitePolicy
         PolicyType: SSLNegotiationPolicyType
+        Attributes:
         - Name: Reference-Security-Policy
           Value:
             Ref: ELBCipherSuiteParameter
