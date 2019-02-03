@@ -26,6 +26,6 @@ Frequently Asked Questions
 
 * __Q:__ Why is the stack provisioning failing with the error message `unexpected response code` ?<br/>
   __A:__ This may happen as some Bundles e.g. `Adobe Granite CRX Package Manager` are starting some `Declarative Service Components`. Since it may take a while until all `Declarative Service Components` are started. Though the AEM Healthcheck is showing all bundles are up and running. To give AEM more time after starting the service set the option `aem.enable_post_start_sleep` to true and modify the wait time `aem.post_start_sleep_seconds`to your own needs.
-  
- * __Q:__ Why does create stack manager build fail with error `Export with name abc-InstanceProfilesStackName is already exported by stack abc-aem-consolidated-prerequisites-stack` ?<br/>
-  __A:__ This happens when we give same prefix name while creating prerequisite/main stack and stack manager. It is important to give different prefix while creating stack manager.
+
+ * __Q:__ Why does create CloudFormation stack build fail with error `Export with name <stack_prefix>-InstanceProfilesStackName is already exported by stack <stack_prefix>-<stack_nanme>-stack` ?<br/>
+  __A:__ This happens when we use a stack prefix which has been used by another CloudFormation stack, regardless whether they are of the same environment type (whether it be AEM Stack Manager, AEM Full-Set, or AEM Consolidated) or not.
