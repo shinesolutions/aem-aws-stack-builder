@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 3.5.0
+
+### Fixed
+- Fix intermittent AEM 6.4 start timeout failure due to Package Manager Servlet unreadiness
+
 ## [3.4.0] - 2019-01-31
 
 ### Added
