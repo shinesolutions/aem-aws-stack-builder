@@ -208,7 +208,14 @@ Resources:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
         PolicyNames:
-        - Ref: ELBCipherSuiteParameter
+        - Ref: CipherSuitePolicy
+      Policies:
+      - PolicyName: CipherSuitePolicy
+        PolicyType: SSLNegotiationPolicyType
+        Attributes:
+        - Name: Reference-Security-Policy
+          Value:
+            Ref: ELBCipherSuiteParameter
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
