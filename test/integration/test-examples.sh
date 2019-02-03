@@ -33,7 +33,7 @@ echo "Creating AEM Consolidated environment..."
 cp -R stage/descriptors/consolidated/* stage/
 make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
-cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" config_path=stage/user-config/aem-stack-manager-sandpit/ && cd ../../
+cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" config_path=../user-config/aem-stack-manager-messenger-sandpit/ && cd ../../
 echo "Deleting AEM Consolidated environment..."
 make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 
@@ -43,7 +43,7 @@ echo "Creating AEM Full-Set environment..."
 cp -R stage/descriptors/full-set/* stage/
 make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
-cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-fs" config_path=stage/user-config/aem-stack-manager-sandpit/ && cd ../../
+cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-fs" config_path=../user-config/aem-stack-manager-messenger-sandpit/ && cd ../../
 # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
 #       will re-enable when InSpec already upgrades aws-sdk sub dependency to version 3.x
 # echo "Testing AEM Full-Set environment readiness with AEM Test Suite..."
