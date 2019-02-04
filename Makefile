@@ -1,5 +1,5 @@
 version ?= 3.5.0-pre
-aem_stack_manager_messenger_version = 2.1.0
+aem_stack_manager_messenger_version = 2.2.0
 aem_test_suite_version = 0.9.10
 
 ci: clean deps lint package
