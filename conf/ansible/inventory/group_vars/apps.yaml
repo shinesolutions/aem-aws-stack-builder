@@ -138,7 +138,8 @@ snapshots:
 
 reconfiguration:
   enable_create_system_users: false
-  # Migration only needed for upgraded AEM instane.
+  enable_truststore_removal: false
+  # Migration only needed for upgraded AEM instance.
   enable_truststore_migration: false
   certs_base: s3://overwrite/me
   ssl_keystore_password: changeit
