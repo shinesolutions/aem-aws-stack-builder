@@ -5,7 +5,7 @@
   connection: local
 
   vars:
-    artifacts_dir: ../../stage/library-artifacts/
+    artifacts_dir: ../../../stage/library-artifacts/
 
   # Artifact download tasks unfortunately have to use a mix of proper get_url
   # and wget shell command. This is deliberately done in order to support environments

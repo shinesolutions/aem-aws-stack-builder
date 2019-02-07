@@ -43,7 +43,7 @@
     - name: Create temporary file containing generated credentials
       copy:
         content: "{{ system_users_credentials.meta }}"
-        dest: ../../../../stage/system-users-credentials.json
+        dest: ../../../../../stage/system-users-credentials.json
       when: "stack_query.rc != 0"
       tags:
         - create
@@ -52,7 +52,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/system-users-credentials.json"
-        src: ../../../../stage/system-users-credentials.json
+        src: ../../../../../stage/system-users-credentials.json
         mode: put
         encrypt: yes
       when: "stack_query.rc != 0"
@@ -74,7 +74,7 @@
     - name: Create custom file containing generated stack Facter facts
       copy:
         content: "{{ stack_facter_facts.meta }}"
-        dest: ../../../../stage/stack-facts.txt
+        dest: ../../../../../stage/stack-facts.txt
       tags:
       - create
 
@@ -82,7 +82,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/stack-facts.txt"
-        src: ../../../../stage/stack-facts.txt
+        src: ../../../../../stage/stack-facts.txt
         mode: put
         encrypt: yes
       tags:
@@ -109,7 +109,7 @@
 
     - name: Check deploy-artifacts-descriptor existence
       stat:
-        path: ../../../../../stage/deploy-artifacts-descriptor.json
+        path: ../../../../../../stage/deploy-artifacts-descriptor.json
       register: deploy_artifacts_descriptor_stat_result
       tags:
       - create
@@ -118,7 +118,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
-        src: ../../../../../stage/deploy-artifacts-descriptor.json
+        src: ../../../../../../stage/deploy-artifacts-descriptor.json
         mode: put
       when: deploy_artifacts_descriptor_stat_result.stat.exists == True
       tags:
@@ -136,7 +136,7 @@
 
     - name: Check export-backups-descriptor existence
       stat:
-        path: ../../../../../stage/export-backups-descriptor.json
+        path: ../../../../../../stage/export-backups-descriptor.json
       register: export_backups_descriptor_stat_result
       tags:
       - create
@@ -145,7 +145,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/export-backups-descriptor.json"
-        src: ../../../../../stage/export-backups-descriptor.json
+        src: ../../../../../../stage/export-backups-descriptor.json
         mode: put
       when: export_backups_descriptor_stat_result.stat.exists == True
       tags:
@@ -163,7 +163,7 @@
 
     - name: Check content-healthcheck-descriptor existence
       stat:
-        path: ../../../../../stage/content-healthcheck-descriptor.json
+        path: ../../../../../../stage/content-healthcheck-descriptor.json
       register: content_health_check_descriptor_stat_result
       tags:
       - create
@@ -172,7 +172,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/content-healthcheck-descriptor.json"
-        src: ../../../../../stage/content-healthcheck-descriptor.json
+        src: ../../../../../../stage/content-healthcheck-descriptor.json
         mode: put
       when: content_health_check_descriptor_stat_result.stat.exists == True
       tags:
@@ -181,7 +181,7 @@
     - name: Generate Hieradata configuration
       template:
         src: ../../../../../templates/ansible/stack-provisioner-hieradata.j2
-        dest: ../../../../stage/stack-provisioner-hieradata.yaml
+        dest: ../../../../../stage/stack-provisioner-hieradata.yaml
         mode: 0644
       tags:
       - create
@@ -190,7 +190,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/data/local.yaml"
-        src: ../../../../stage/stack-provisioner-hieradata.yaml
+        src: ../../../../../stage/stack-provisioner-hieradata.yaml
         mode: put
         encrypt: yes
       tags:
@@ -253,7 +253,7 @@
 
     - name: Check that custom AEM Stack Provisioner exists
       stat:
-        path: ../../../../stage/aem-custom-stack-provisioner.tar.gz
+        path: ../../../../../stage/aem-custom-stack-provisioner.tar.gz
       register: custom_provisioner_stat_result
       tags:
       - create
@@ -262,7 +262,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/aem-custom-stack-provisioner.tar.gz"
-        src: ../../../../stage/aem-custom-stack-provisioner.tar.gz
+        src: ../../../../../stage/aem-custom-stack-provisioner.tar.gz
         mode: put
       when: custom_provisioner_stat_result.stat.exists == True
       tags:
@@ -270,7 +270,7 @@
 
     - name: Delete temporary file containing generated credentials
       file:
-        path: ../../../../stage/system-users-credentials.json
+        path: ../../../../../stage/system-users-credentials.json
         state: absent
       tags:
         - delete
