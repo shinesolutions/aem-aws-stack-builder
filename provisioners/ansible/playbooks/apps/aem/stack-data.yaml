@@ -109,7 +109,7 @@
 
     - name: Check deploy-artifacts-descriptor existence
       stat:
-        path: ../../../../../../stage/deploy-artifacts-descriptor.json
+        path: ../../../../../stage/deploy-artifacts-descriptor.json
       register: deploy_artifacts_descriptor_stat_result
       tags:
       - create
@@ -118,7 +118,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
-        src: ../../../../../../stage/deploy-artifacts-descriptor.json
+        src: ../../../../../stage/deploy-artifacts-descriptor.json
         mode: put
       when: deploy_artifacts_descriptor_stat_result.stat.exists == True
       tags:
@@ -136,7 +136,7 @@
 
     - name: Check export-backups-descriptor existence
       stat:
-        path: ../../../../../../stage/export-backups-descriptor.json
+        path: ../../../../../stage/export-backups-descriptor.json
       register: export_backups_descriptor_stat_result
       tags:
       - create
@@ -145,7 +145,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/export-backups-descriptor.json"
-        src: ../../../../../../stage/export-backups-descriptor.json
+        src: ../../../../../stage/export-backups-descriptor.json
         mode: put
       when: export_backups_descriptor_stat_result.stat.exists == True
       tags:
@@ -163,7 +163,7 @@
 
     - name: Check content-healthcheck-descriptor existence
       stat:
-        path: ../../../../../../stage/content-healthcheck-descriptor.json
+        path: ../../../../../stage/content-healthcheck-descriptor.json
       register: content_health_check_descriptor_stat_result
       tags:
       - create
@@ -172,7 +172,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{ stack_prefix }}/content-healthcheck-descriptor.json"
-        src: ../../../../../../stage/content-healthcheck-descriptor.json
+        src: ../../../../../stage/content-healthcheck-descriptor.json
         mode: put
       when: content_health_check_descriptor_stat_result.stat.exists == True
       tags:
