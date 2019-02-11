@@ -29,5 +29,5 @@ Frequently Asked Questions
  * __Q:__ Why does create CloudFormation stack build fail with error `Export with name <stack_prefix>-InstanceProfilesStackName is already exported by stack <stack_prefix>-<stack_nanme>-stack` ?<br/>
   __A:__ This happens when we use a stack prefix which has been used by another CloudFormation stack, regardless whether they are of the same environment type (whether it be AEM Stack Manager, AEM Full-Set, or AEM Consolidated) or not.
 
-* __Q:__ What value should I put in the deployment descriptor's package `group`, `name`, and `version`?<br/>
-  __A:__ Have a look at `META-INF/vault/properties.xml` in the AEM package zip file, you can find the entry keys `group`, `name`, and `version`, which values you should supply in the deployment descriptor.
+* __Q:__ What values should I put in the deployment descriptor's package `group`, `name`, and `version`?<br/>
+  __A:__ Have a look at `META-INF/vault/properties.xml` in the AEM package zip file, you can find the entry keys `group`, `name`, and `version`, which values you should supply in the deployment descriptor. Please also note that the file name must be formatted as `<name>-<version>.zip` . This consistency is important to ensure that the physical file to be deployed is actually the one expected as defined in the deployment descriptor.
