@@ -43,7 +43,7 @@ Frequently Asked Questions
   Author:
   ```
   {
-     "ensure": "reinstall",
+     "ensure": "reinstalled",
      "source": "",
      "group
      ": "day/cq60/product",
@@ -59,7 +59,7 @@ Frequently Asked Questions
   Publish:
   ```
   {
-     "ensure": "reinstall",
+     "ensure": "reinstalled",
      "source": "",
      "group": "day/cq60/product",
      "name": "cq-ui-wcm-admin-content",
