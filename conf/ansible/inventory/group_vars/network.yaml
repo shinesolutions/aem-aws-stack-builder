@@ -1,4 +1,4 @@
-
+---
 
 network:
   stack_name: aem-network-stack
@@ -85,7 +85,7 @@ bastion:
   subnet_id: overwrite-me
   security_groups: overwrite-me
 
-#TODO: create a new elastic ip option?
+# TODO: create a new elastic ip option?
 nat_gateway:
   stack_name: aem-nat-gateway-stack
   elastic_ip_allocation_id: eipalloc-32711957

@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create AWS Lambda Implementation of AEM Stack Mananger Resources
 Outputs:
@@ -73,8 +75,8 @@ Resources:
     Type: AWS::Lambda::Alias
   BackupLambdaPermission:
     DependsOn:
-    - BackupLambdaProdAlias
-    - OfflineBackupTopic
+      - BackupLambdaProdAlias
+      - OfflineBackupTopic
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -85,8 +87,8 @@ Resources:
     Type: AWS::Lambda::Permission
   BackupLambdaProdAlias:
     DependsOn:
-    - OfflineBackupLambda
-    - BackupInitialVersion
+      - OfflineBackupLambda
+      - BackupInitialVersion
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName:
@@ -97,8 +99,8 @@ Resources:
     Type: AWS::Lambda::Alias
   BackupSNSSubscription:
     DependsOn:
-    - BackupLambdaProdAlias
-    - OfflineBackupTopic
+      - BackupLambdaProdAlias
+      - OfflineBackupTopic
     Properties:
       Endpoint:
         Ref: BackupLambdaProdAlias
@@ -159,8 +161,8 @@ Resources:
     Type: AWS::Lambda::Function
   ManagerTopicPermission:
     DependsOn:
-    - StackManagerTopic
-    - LambdaProdAlias
+      - StackManagerTopic
+      - LambdaProdAlias
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -171,8 +173,8 @@ Resources:
     Type: AWS::Lambda::Permission
   ManagerTopicSubscription:
     DependsOn:
-    - StackManagerTopic
-    - LambdaProdAlias
+      - StackManagerTopic
+      - LambdaProdAlias
     Properties:
       Endpoint:
         Ref: LambdaProdAlias
@@ -264,8 +266,8 @@ Resources:
     Type: AWS::Lambda::Alias
   StatusTopicPermission:
     DependsOn:
-    - LambdaProdAlias
-    - TaskStatusTopic
+      - LambdaProdAlias
+      - TaskStatusTopic
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -283,24 +285,24 @@ Resources:
       Path: /
       PolicyDocument:
         Statement:
-        - Action:
-          - dynamodb:PutItem
-          - dynamodb:DeleteItem
-          - dynamodb:GetItem
-          - dynamodb:UpdateItem
-          - dynamodb:UpdateTimeToLive
-          Effect: Allow
-          Resource:
-            Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}
-        - Action:
-          - dynamodb:Query
-          Effect: Allow
-          Resource:
-          - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}/index/
+          - Action:
+              - dynamodb:PutItem
+              - dynamodb:DeleteItem
+              - dynamodb:GetItem
+              - dynamodb:UpdateItem
+              - dynamodb:UpdateTimeToLive
+            Effect: Allow
+            Resource:
+              Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}
+          - Action:
+              - dynamodb:Query
+            Effect: Allow
+            Resource:
+              - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${StackManagerTable}/index/
         Version: 2012-10-17
       Roles:
-      - Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
     Type: AWS::IAM::ManagedPolicy
   StackManagerLambdaSSMPolicy:
     DependsOn: TaskStatusTopic
@@ -311,15 +313,15 @@ Resources:
       Path: /
       PolicyDocument:
         Statement:
-        - Action:
-          - sns:Publish
-          Effect: Allow
-          Resource:
-            Ref: TaskStatusTopic
+          - Action:
+              - sns:Publish
+            Effect: Allow
+            Resource:
+              Ref: TaskStatusTopic
         Version: 2012-10-17
       Roles:
-      - Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
     Type: AWS::IAM::ManagedPolicy
   StackManagerSSMPolicy:
     Properties:
@@ -329,43 +331,43 @@ Resources:
       Path: /
       PolicyDocument:
         Statement:
-        - Action:
-          - sns:Publish
-          Effect: Allow
-          Resource:
-          - Ref: OfflineBackupTopic
-          - Ref: TaskStatusTopic
+          - Action:
+              - sns:Publish
+            Effect: Allow
+            Resource:
+              - Ref: OfflineBackupTopic
+              - Ref: TaskStatusTopic
         Version: 2012-10-17
       Roles:
-      - Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerSSMServiceRoleName
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerSSMServiceRoleName
     Type: AWS::IAM::ManagedPolicy
   StackManagerTable:
     Properties:
       AttributeDefinitions:
-      - AttributeName: command_id
-        AttributeType: S
-      - AttributeName: externalId
-        AttributeType: S
-      - AttributeName: timestamp
-        AttributeType: S
-      GlobalSecondaryIndexes:
-      - IndexName: ExternalQuery
-        KeySchema:
+        - AttributeName: command_id
+          AttributeType: S
         - AttributeName: externalId
-          KeyType: HASH
+          AttributeType: S
         - AttributeName: timestamp
-          KeyType: RANGE
-        Projection:
-          NonKeyAttributes:
-          - state
-          ProjectionType: INCLUDE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          AttributeType: S
+      GlobalSecondaryIndexes:
+        - IndexName: ExternalQuery
+          KeySchema:
+            - AttributeName: externalId
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+              - state
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
       KeySchema:
-      - AttributeName: command_id
-        KeyType: HASH
+        - AttributeName: command_id
+          KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
@@ -384,8 +386,8 @@ Resources:
     Type: AWS::SNS::Topic
   StatusTopicSubscription:
     DependsOn:
-    - LambdaProdAlias
-    - TaskStatusTopic
+      - LambdaProdAlias
+      - TaskStatusTopic
     Properties:
       Endpoint:
         Ref: LambdaProdAlias

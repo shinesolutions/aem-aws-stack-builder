@@ -41,22 +41,22 @@ package:
 ################################################################################
 
 lint:
-	# yamllint \
-	#   conf/ansible/inventory/group_vars/*.yaml \
-	#   provisioners/ansible/playbooks/*.yaml \
-	#   provisioners/ansible/playbooks/*/*.yaml \
-	#   provisioners/ansible/playbooks/*/*/*.yaml \
-	#   templates/cloudformation/*/*.yaml \
-	# 	templates/cloudformation/*/*/*.yaml
+	 yamllint \
+	   conf/ansible/inventory/group_vars/*.yaml \
+	   provisioners/ansible/playbooks/*.yaml \
+	   provisioners/ansible/playbooks/*/*.yaml \
+	   provisioners/ansible/playbooks/*/*/*.yaml \
+	   templates/cloudformation/*/*.yaml \
+	 	templates/cloudformation/*/*/*.yaml
 	shellcheck scripts/*.sh test/integration/*.sh
 	for playbook in provisioners/ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
 	# TODO: re-enable template validation after sorting out CI credential
-	# for template in $$(find cloudformation -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
-	# 	echo "Checking template $$template ...."; \
-	# 	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
-	# done
+	 for template in $$(find cloudformation -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
+	 	echo "Checking template $$template ...."; \
+	 	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
+	 done
 
 ################################################################################
 # Dependencies resolution targets.

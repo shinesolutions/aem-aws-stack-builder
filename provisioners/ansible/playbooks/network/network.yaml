@@ -1,7 +1,7 @@
 ---
 - name: AEM Network CloudFormation Stack
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   vars:
@@ -32,7 +32,7 @@
       command: >
        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ network.stack_name }}"
             --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
       tags:
         - delete

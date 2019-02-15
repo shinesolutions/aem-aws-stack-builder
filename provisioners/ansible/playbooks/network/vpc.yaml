@@ -1,7 +1,7 @@
 ---
 - name: AEM VPC CloudFormation Stack
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -18,13 +18,13 @@
           Ec2VpcTagNameParameter: "{{ stack_prefix }}-{{ ec2_vpc.tag_name }}"
           Ec2VpcDhcpOptionSetParameter: " {{ ec2_vpc.dhcp_option}}"
       tags:
-      - create
+        - create
 
     - name: Check if a Stack Exists
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ ec2_vpc.stack_name }}"
             --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
       tags:
         - delete
@@ -45,4 +45,4 @@
       when:
         "stack_query.rc == 0"
       tags:
-      - delete
+        - delete

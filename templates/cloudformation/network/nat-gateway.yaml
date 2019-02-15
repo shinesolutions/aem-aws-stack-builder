@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create Nat Gateway and add to private Route Table for AEM Stack
 Outputs:

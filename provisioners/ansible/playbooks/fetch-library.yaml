@@ -1,7 +1,7 @@
 ---
 - name: Download library artifacts from public sites and upload them to an S3 bucket
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   vars:

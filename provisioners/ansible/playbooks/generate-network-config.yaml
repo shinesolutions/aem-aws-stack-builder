@@ -1,7 +1,7 @@
 ---
 - name: Playbook to generate network config file
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   vars:

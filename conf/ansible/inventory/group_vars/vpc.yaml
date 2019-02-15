@@ -1,4 +1,4 @@
-
+---
 
 ec2_vpc:
   stack_name: overwrite-me
