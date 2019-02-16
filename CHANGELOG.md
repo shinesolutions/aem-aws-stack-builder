@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
 
 ### Added
 - Add AEM 6.4 SP3 Bugfix to FAQ
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 3.6.0
 
 ### Fixed
 - Fix path to staging dir in Ansible playbooks
