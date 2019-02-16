@@ -1,7 +1,7 @@
 ---
 - name: AEM Stack Data Tasks
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -9,7 +9,7 @@
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
             --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
       tags:
         - always
@@ -20,7 +20,7 @@
         state: directory
         mode: 0755
       tags:
-      - create
+        - create
 
     - name: Inspect content of data bucket
       aws_s3:
@@ -35,7 +35,7 @@
       system_users_credentials:
         enable_default_passwords: "{{ aem.enable_default_passwords }}"
       register: system_users_credentials
-      no_log: True
+      no_log: true
       when: "stack_query.rc != 0"
       tags:
         - create
@@ -54,7 +54,7 @@
         object: "{{ stack_prefix }}/system-users-credentials.json"
         src: ../../../../../stage/system-users-credentials.json
         mode: put
-        encrypt: yes
+        encrypt: true
       when: "stack_query.rc != 0"
       tags:
         - create
@@ -69,14 +69,14 @@
         publish_dispatcher_allowed_client: "{{ publish_dispatcher.allowed_client }}"
       register: stack_facter_facts
       tags:
-      - create
+        - create
 
     - name: Create custom file containing generated stack Facter facts
       copy:
         content: "{{ stack_facter_facts.meta }}"
         dest: ../../../../../stage/stack-facts.txt
       tags:
-      - create
+        - create
 
     - name: Upload stack Facter facts
       aws_s3:
@@ -84,9 +84,9 @@
         object: "{{ stack_prefix }}/stack-facts.txt"
         src: ../../../../../stage/stack-facts.txt
         mode: put
-        encrypt: yes
+        encrypt: true
       tags:
-      - create
+        - create
 
     - name: Upload stack init script
       aws_s3:
@@ -95,7 +95,7 @@
         src: ../../../../../scripts/stack-init.sh
         mode: put
       tags:
-      - create
+        - create
 
     - name: Copy deploy-artifacts-descriptor from source bucket to data bucket when source stack is specified
       s3_copy_object:
@@ -105,14 +105,14 @@
         dest_key: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
       when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
       tags:
-      - create
+        - create
 
     - name: Check deploy-artifacts-descriptor existence
       stat:
         path: ../../../../../stage/deploy-artifacts-descriptor.json
       register: deploy_artifacts_descriptor_stat_result
       tags:
-      - create
+        - create
 
     - name: Upload deploy-artifacts-descriptor from stage directory to data bucket when supplied
       aws_s3:
@@ -122,7 +122,7 @@
         mode: put
       when: deploy_artifacts_descriptor_stat_result.stat.exists == True
       tags:
-      - create
+        - create
 
     - name: Copy export-backups-descriptor from source bucket to data bucket
       s3_copy_object:
@@ -132,14 +132,14 @@
         dest_key: "{{ stack_prefix }}/export-backups-descriptor.json"
       when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
       tags:
-      - create
+        - create
 
     - name: Check export-backups-descriptor existence
       stat:
         path: ../../../../../stage/export-backups-descriptor.json
       register: export_backups_descriptor_stat_result
       tags:
-      - create
+        - create
 
     - name: Upload export-backups-descriptor from stage directory to data bucket when supplied
       aws_s3:
@@ -149,7 +149,7 @@
         mode: put
       when: export_backups_descriptor_stat_result.stat.exists == True
       tags:
-      - create
+        - create
 
     - name: Copy content-healthcheck-descriptor from source bucket to data bucket
       s3_copy_object:
@@ -159,14 +159,14 @@
         dest_key: "{{ stack_prefix }}/content-healthcheck-descriptor.json"
       when: not((source_stack_prefix is undefined) or (source_stack_prefix is none) or (source_stack_prefix | trim == ''))
       tags:
-      - create
+        - create
 
     - name: Check content-healthcheck-descriptor existence
       stat:
         path: ../../../../../stage/content-healthcheck-descriptor.json
       register: content_health_check_descriptor_stat_result
       tags:
-      - create
+        - create
 
     - name: Upload content-healthcheck-descriptor from stage directory to data bucket when supplied
       aws_s3:
@@ -176,7 +176,7 @@
         mode: put
       when: content_health_check_descriptor_stat_result.stat.exists == True
       tags:
-      - create
+        - create
 
     - name: Generate Hieradata configuration
       template:
@@ -184,7 +184,7 @@
         dest: ../../../../../stage/stack-provisioner-hieradata.yaml
         mode: 0644
       tags:
-      - create
+        - create
 
     - name: Upload Hieradata configuration
       aws_s3:
@@ -192,9 +192,9 @@
         object: "{{ stack_prefix }}/data/local.yaml"
         src: ../../../../../stage/stack-provisioner-hieradata.yaml
         mode: put
-        encrypt: yes
+        encrypt: true
       tags:
-      - create
+        - create
 
     - name: Copy AEM Stack Provisioner from library to data bucket
       s3_copy_object:
@@ -203,7 +203,7 @@
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem-aws-stack-provisioner-{{ library.aem_aws_stack_provisioner_version }}.tar.gz"
       tags:
-      - create
+        - create
 
     - name: Copy AEM Orchestrator from library to data bucket
       s3_copy_object:
@@ -212,7 +212,7 @@
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem-orchestrator-{{ library.aem_orchestrator_version }}.jar"
       tags:
-      - create
+        - create
 
     - name: Copy AEM Password Reset from library to data bucket
       s3_copy_object:
@@ -221,7 +221,7 @@
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem-password-reset-content-{{ library.aem_password_reset_version }}.zip"
       tags:
-      - create
+        - create
 
     - name: Copy Oak run from library to data bucket
       s3_copy_object:
@@ -230,7 +230,7 @@
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/oak-run-{{ library.oak_run_version }}.jar"
       tags:
-      - create
+        - create
 
     - name: Copy Simian Army from library to data bucket
       s3_copy_object:
@@ -239,7 +239,7 @@
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/simianarmy-{{ library.simian_army_version }}.war"
       tags:
-      - create
+        - create
 
     - name: Copy AEM Healthcheck Content from library to data bucket
       s3_copy_object:
@@ -249,14 +249,14 @@
         dest_key: "{{ stack_prefix }}/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
       when: aem.enable_reconfiguration == True
       tags:
-      - create
+        - create
 
     - name: Check that custom AEM Stack Provisioner exists
       stat:
         path: ../../../../../stage/aem-custom-stack-provisioner.tar.gz
       register: custom_provisioner_stat_result
       tags:
-      - create
+        - create
 
     - name: Upload custom AEM Stack Provisioner
       aws_s3:
@@ -266,7 +266,7 @@
         mode: put
       when: custom_provisioner_stat_result.stat.exists == True
       tags:
-      - create
+        - create
 
     - name: Delete temporary file containing generated credentials
       file:

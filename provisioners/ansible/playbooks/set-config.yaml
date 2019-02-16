@@ -1,7 +1,7 @@
 ---
 - name: Set configuration tasks
   hosts: localhost
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -22,6 +22,6 @@
         elb_resource: "{{ item.resource }}"
         security_groups: "{{ security_groups[item.property]['extra_groups'] }}"
       with_items:
-        - { resource: 'AuthorDispatcherLoadBalancer', property: 'author_dispatcher_elb' }
-        - { resource: 'PublishDispatcherLoadBalancer', property: 'publish_dispatcher_elb' }
+        - {resource: 'AuthorDispatcherLoadBalancer', property: 'author_dispatcher_elb'}
+        - {resource: 'PublishDispatcherLoadBalancer', property: 'publish_dispatcher_elb'}
       when: security_groups is defined and security_groups[item.property] is defined and security_groups[item.property]['extra_groups'] is defined

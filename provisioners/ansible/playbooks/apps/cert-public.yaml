@@ -1,7 +1,7 @@
 ---
 - name: AEM App Stack Public Cert Creation
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -17,13 +17,13 @@
           StackSubdomainParameter: "{{ stack_prefix }}.{{ dns.stack_sub_domain }}"
           BlueGreenSubdomainParameter: "{{ dns.blue_green_sub_domain }}"
       tags:
-      - create
+        - create
 
     - name: Check if a Stack Exists
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ cert_public.stack_name}}"
              --query 'Stacks[].StackName' --region us-east-1
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
       tags:
         - delete
@@ -44,4 +44,4 @@
       when:
         "stack_query.rc == 0"
       tags:
-      - delete
+        - delete

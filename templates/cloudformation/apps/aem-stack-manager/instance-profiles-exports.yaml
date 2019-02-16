@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create Instance Profiles for AEM Stack Manager
 Outputs:
@@ -43,13 +45,13 @@ Parameters:
     Description: Stack Manager SSM Service Role Name
     Type: String
   AEMStackManagerSSMServiceRoleArnParameter:
-    Description: Stack Manager SSM Service Role Arn 
+    Description: Stack Manager SSM Service Role Arn
     Type: String
   AEMStackManagerLambdaServiceRoleNameParameter:
-    Description: Stack Manager Lambda Service Role Name 
+    Description: Stack Manager Lambda Service Role Name
     Type: String
   AEMStackManagerLambdaServiceRoleArnParameter:
-    Description: Stack Manager Lambda Service Role Arn 
+    Description: Stack Manager Lambda Service Role Arn
     Type: String
 Resources:
   DummyParameter:

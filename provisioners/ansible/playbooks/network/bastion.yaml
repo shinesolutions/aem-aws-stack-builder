@@ -1,7 +1,7 @@
 ---
 - name: AEM Bastion Host CloudFormation Stack
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -20,13 +20,13 @@
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
       tags:
-      - create
+        - create
 
     - name: Check if a Stack Exists
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ bastion.stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
       tags:
         - delete

@@ -1,7 +1,7 @@
 ---
 - name: AEM Stack Managers Main Resources Creation and Deletion Tasks
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -148,7 +148,7 @@
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
       tags:
         - delete

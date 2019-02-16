@@ -1,7 +1,7 @@
 ---
 - name: AEM Stack Data Tasks
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -10,21 +10,21 @@
         path: ../../../../../stage/
         state: directory
       tags:
-      - create
+        - create
 
     - name: Create Stack Manager Cloud directory
       file:
         path: ../../../../../stage/aem-stack-manager-cloud
         state: directory
       tags:
-      - create
+        - create
 
     - name: Check AEM Stack Manager artifact existence
       stat:
         path: ../../../../../stage/aem-stack-manager-cloud.zip
       register: check_aem_stack_manager_cloud_result
       tags:
-      - create
+        - create
 
     - name: Download aem-stack-manager-cloud library
       aws_s3:
@@ -34,14 +34,14 @@
         mode: get
       when: check_aem_stack_manager_cloud_result.stat.exists == False
       tags:
-      - create
+        - create
 
     - name: Unpack aem-stack-manager-cloud library to stage directory
       unarchive:
         src: ../../../../../stage/aem-stack-manager-cloud.zip
         dest: ../../../../../stage/aem-stack-manager-cloud
       tags:
-      - create
+        - create
 
     - name: Package Lambda functions
       command: >
@@ -52,7 +52,7 @@
         - aem_task_query
         - purge_snapshots
       tags:
-      - create
+        - create
 
     - name: Upload Lambda functions
       aws_s3:
@@ -66,10 +66,10 @@
         - aem_task_query
         - purge_snapshots
       tags:
-      - create
+        - create
 
     - name: Delete AEM Stack Manager artifact
-      ignore_errors: True
+      ignore_errors: true
       file:
         path: ../../../../../stage/aem-stack-manager-cloud.zip
         state: absent
@@ -78,7 +78,7 @@
         - create
 
     - name: Delete Lambda function packages
-      ignore_errors: True
+      ignore_errors: true
       file:
         path: ../../../../../stage/{{ item }}.zip
         state: absent

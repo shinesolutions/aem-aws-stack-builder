@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create Instance Profiles for AEM Stack Manager
 Outputs:
@@ -45,47 +47,47 @@ Resources:
     Properties:
       AssumeRolePolicyDocument:
         Statement:
-        - Action:
-          - sts:AssumeRole
-          Effect: Allow
-          Principal:
-            Service:
-            - lambda.amazonaws.com
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
         Version: 2012-10-17
       ManagedPolicyArns:
-      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Path: /
       Policies:
-      - PolicyDocument:
-          Statement:
-          - Action:
-            - ec2:Describe*
-            - ec2:CreateTags
-            - ec2:DeleteTags
-            - ec2:DeleteSnapshot
-            - autoscaling:Describe*
-            - autoscaling:UpdateAutoScalingGroup
-            - autoscaling:EnterStandby
-            - autoscaling:ExitStandby
-            Effect: Allow
-            Resource: '*'
-          - Action:
-            - s3:*
-            Effect: Allow
-            Resource:
-              Fn::Sub: arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/*
-          - Action:
-            - ssm:SendCommand
-            - ssm:CancelCommand
-            Effect: Allow
-            Resource: '*'
-          - Action:
-            - iam:PassRole
-            Effect: Allow
-            Resource:
-              Fn::GetAtt: StackmanagerSSMServiceRole.Arn
-          Version: 2012-10-17
-        PolicyName: StackManagerPolicy
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - ec2:Describe*
+                  - ec2:CreateTags
+                  - ec2:DeleteTags
+                  - ec2:DeleteSnapshot
+                  - autoscaling:Describe*
+                  - autoscaling:UpdateAutoScalingGroup
+                  - autoscaling:EnterStandby
+                  - autoscaling:ExitStandby
+                Effect: Allow
+                Resource: '*'
+              - Action:
+                  - s3:*
+                Effect: Allow
+                Resource:
+                  Fn::Sub: arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/*
+              - Action:
+                  - ssm:SendCommand
+                  - ssm:CancelCommand
+                Effect: Allow
+                Resource: '*'
+              - Action:
+                  - iam:PassRole
+                Effect: Allow
+                Resource:
+                  Fn::GetAtt: StackmanagerSSMServiceRole.Arn
+            Version: 2012-10-17
+          PolicyName: StackManagerPolicy
       RoleName:
         Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerLambdaRole
     Type: AWS::IAM::Role
@@ -93,24 +95,24 @@ Resources:
     Properties:
       AssumeRolePolicyDocument:
         Statement:
-        - Action:
-          - sts:AssumeRole
-          Effect: Allow
-          Principal:
-            Service:
-            - ssm.amazonaws.com
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - ssm.amazonaws.com
         Version: 2012-10-17
       Path: /
       Policies:
-      - PolicyDocument:
-          Statement:
-          - Action:
-            - s3:*
-            Effect: Allow
-            Resource:
-            - Fn::Sub: arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/SSMOutput/*
-          Version: 2012-10-17
-        PolicyName: AemBackupPolicy
+        - PolicyDocument:
+            Statement:
+              - Action:
+                  - s3:*
+                Effect: Allow
+                Resource:
+                  - Fn::Sub: arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/SSMOutput/*
+            Version: 2012-10-17
+          PolicyName: AemBackupPolicy
       RoleName:
         Fn::Sub: ${MainStackPrefixParameter}-AEMStackManagerSSMRole
     Type: AWS::IAM::Role

@@ -2,7 +2,7 @@
 
 - name: Deploy AEM Snapshots Purge Cloud Native Solution
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -32,7 +32,7 @@
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ stack_manager.utilities_stack_name }}"
              --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
       tags:
         - delete
