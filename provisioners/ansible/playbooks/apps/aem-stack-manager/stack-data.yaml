@@ -7,21 +7,21 @@
   tasks:
     - name: Create stage directory
       file:
-        path: ../../../../stage/
+        path: ../../../../../stage/
         state: directory
       tags:
       - create
 
     - name: Create Stack Manager Cloud directory
       file:
-        path: ../../../../stage/aem-stack-manager-cloud
+        path: ../../../../../stage/aem-stack-manager-cloud
         state: directory
       tags:
       - create
 
     - name: Check AEM Stack Manager artifact existence
       stat:
-        path: ../../../../stage/aem-stack-manager-cloud.zip
+        path: ../../../../../stage/aem-stack-manager-cloud.zip
       register: check_aem_stack_manager_cloud_result
       tags:
       - create
@@ -30,7 +30,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "library/aem-stack-manager-cloud-{{ library.aem_stack_manager_version }}.zip"
-        dest: ../../../../stage/aem-stack-manager-cloud.zip
+        dest: ../../../../../stage/aem-stack-manager-cloud.zip
         mode: get
       when: check_aem_stack_manager_cloud_result.stat.exists == False
       tags:
@@ -38,14 +38,14 @@
 
     - name: Unpack aem-stack-manager-cloud library to stage directory
       unarchive:
-        src: ../../../../stage/aem-stack-manager-cloud.zip
-        dest: ../../../../stage/aem-stack-manager-cloud
+        src: ../../../../../stage/aem-stack-manager-cloud.zip
+        dest: ../../../../../stage/aem-stack-manager-cloud
       tags:
       - create
 
     - name: Package Lambda functions
       command: >
-        zip -j "../../../../stage/{{ item }}.zip" "../../../../stage/aem-stack-manager-cloud/lambda/{{ item }}.py"
+        zip -j "../../../../../stage/{{ item }}.zip" "../../../../../stage/aem-stack-manager-cloud/lambda/{{ item }}.py"
       with_items:
         - aem_stack_manager
         - aem_offline_snapshot
@@ -58,7 +58,7 @@
       aws_s3:
         bucket: "{{ s3.data_bucket_name }}"
         object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/{{ item }}.zip"
-        src: ../../../../stage/{{ item }}.zip
+        src: ../../../../../stage/{{ item }}.zip
         mode: put
       with_items:
         - aem_stack_manager
@@ -71,7 +71,7 @@
     - name: Delete AEM Stack Manager artifact
       ignore_errors: True
       file:
-        path: ../../../../stage/aem-stack-manager-cloud.zip
+        path: ../../../../../stage/aem-stack-manager-cloud.zip
         state: absent
       tags:
         - delete
@@ -80,7 +80,7 @@
     - name: Delete Lambda function packages
       ignore_errors: True
       file:
-        path: ../../../../stage/{{ item }}.zip
+        path: ../../../../../stage/{{ item }}.zip
         state: absent
       with_items:
         - aem_stack_manager
