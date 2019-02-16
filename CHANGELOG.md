@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add AEM 6.4 SP3 Bugfix to FAQ
+
 ### Fixed
 - Fix path to staging dir in Ansible playbooks
 
