@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
-- Update Deployment descriptor documentation
+### Added
+- Add AEM 6.4 SP3 Bugfix to FAQ
+
+### Fixed
+- Fix path to staging dir in Ansible playbooks
 
 ## [3.5.0] - 2019-02-04
 
@@ -16,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix intermittent AEM 6.4 start timeout failure due to Package Manager Servlet unreadiness
+
+### added
+- Add new parameter to remove the AEM Global Trusttore during reconfiguration
 
 ## [3.4.0] - 2019-01-31
 

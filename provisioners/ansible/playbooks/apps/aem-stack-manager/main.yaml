@@ -25,7 +25,7 @@
 
     - name: Generate CloudFormation Template for SSM Documents
       ssm_template:
-        dest_file: "{{ playbook_dir }}/../../../../stage/ssm-commands.yaml"
+        dest_file: "{{ playbook_dir }}/../../../../../stage/ssm-commands.yaml"
         ssm_command_cf_template: "{{ playbook_dir }}/../../../../../templates/cloudformation/apps/aem-stack-manager/ssm-commands-template.yaml"
         ssm_commands_dir_cf_template: "{{ playbook_dir }}/../../../../../templates/cloudformation/apps/aem-stack-manager/ssm-commands/"
       tags:
@@ -33,7 +33,7 @@
 
     - name: Upload SSM Documents CloudFormation Template to S3
       command: >
-              aws s3 cp ../../../../stage/ssm-commands.yaml
+              aws s3 cp ../../../../../stage/ssm-commands.yaml
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}/ssm-commands.yaml
       tags:
         - create
