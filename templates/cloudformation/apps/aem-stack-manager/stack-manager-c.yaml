@@ -44,6 +44,9 @@ Outputs:
     Value:
       Ref: TaskStatusTopic
 Parameters:
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
+    Type: String
   DataBucketNameParameter:
     Description: Bucket Name that Stores Files Used by the Function
     Type: String
@@ -57,6 +60,35 @@ Parameters:
     Description: Prefix within the Bucket to Locate Files
     Type: String
 Resources:
+  AemOfflineBackupAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemOfflineBackup-FAILS"
+      AlarmDescription: ""
+      AlarmActions:
+        - Ref: AlarmNotificationTopic
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemOfflineBackup"
+  AlarmNotificationTopic:
+    Properties:
+      DisplayName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemOfflineBackup-alarm-notification-topic
+      Subscription:
+      - Endpoint:
+          Ref: AEMCWEventNotificationEmail
+        Protocol: email
+    Type: AWS::SNS::Topic
   BackupInitialVersion:
     DependsOn: OfflineBackupLambda
     Properties:

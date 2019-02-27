@@ -309,6 +309,7 @@ These configurations are applicable specific to AEM Stack Manager.
 | stack_manager.purge.offline_snapshots.max_age_in_hours | The number of hours to keep an offline snapshot before it expires and will be removed  | Optional | 61320 |
 | stack_manager.purge.orchestration_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | 5 0/4 * * ? * |
 | stack_manager.purge.orchestration_snapshots.max_age_in_hours | The number of hours to keep an orchestration snapshot before it expires and will be removed  | Optional | 4 |
+| stack_manager.alarm_notification.contact_email | Recipient email address where alarm notification will be sent | Mandatory | |
 
 ### Log rotation configuration properties
 

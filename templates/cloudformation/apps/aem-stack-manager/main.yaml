@@ -25,6 +25,9 @@ Outputs:
     Value:
       Ref: UtilitiesStack
 Parameters:
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
+    Type: String
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
     Type: String
@@ -78,6 +81,8 @@ Resources:
       - InstanceProfilesStack
     Properties:
       Parameters:
+        AEMCWEventNotificationEmail:
+          Ref: AEMCWEventNotificationEmail
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         DynamoDBTTLAttribute:
@@ -94,6 +99,8 @@ Resources:
       - InstanceProfilesStack
     Properties:
       Parameters:
+        AEMCWEventNotificationEmail:
+          Ref: AEMCWEventNotificationEmail
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         LiveSnapshotsPurgeMaxAge:

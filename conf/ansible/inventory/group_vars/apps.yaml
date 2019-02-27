@@ -297,6 +297,8 @@ stack_manager:
     orchestration_snapshots:
       schedule: '5 0/4 * * ? *'
       max_age_in_hours: 4
+  alarm_notification:
+    contact_email: user@example.com
 
 logrotation:
   config:

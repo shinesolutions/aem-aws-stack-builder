@@ -17,6 +17,9 @@ Outputs:
     Value:
       Ref: LambdaProdAlias
 Parameters:
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
+    Type: String
   DataBucketNameParameter:
     Description: Bucket Name that Stores Files Used by the Function
     Type: String
@@ -45,6 +48,35 @@ Parameters:
     Description: Prefix within the Bucket to Locate Files
     Type: String
 Resources:
+  AemSnapshotsPurgeAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemSnapshotsPurge-FAILS"
+      AlarmDescription: ""
+      AlarmActions:
+        - Ref: AlarmNotificationTopic
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemSnapshotsPurge"
+  AlarmNotificationTopic:
+    Properties:
+      DisplayName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemSnapshotsPurge-alarm-notification-topic
+      Subscription:
+      - Endpoint:
+          Ref: AEMCWEventNotificationEmail
+        Protocol: email
+    Type: AWS::SNS::Topic
   InitialVersion:
     Properties:
       Description: Initial Version to Start With

@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add CW alarm and notifications for Stack Manager Lambda function errors #210
+
 ## [3.6.0] - 2019-02-17
 
 ### Added
