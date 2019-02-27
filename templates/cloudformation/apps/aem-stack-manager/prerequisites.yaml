@@ -1,0 +1,38 @@
+---
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Overarching CF Template to Create SNS Topic
+Conditions:
+  UseEventNotificationEmailCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: AEMCWEventNotificationEmail
+          - overwrite-me
+Outputs:
+  AlarmNotificationTopicArn:
+    Description: Arn for Alarm Notification Topic
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+    Value:
+      Ref: AlarmNotificationTopic
+Parameters:
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Main Resources Stack Prefix
+    Type: String
+Resources:
+  AlarmNotificationTopic:
+    Properties:
+      DisplayName:
+        Fn::Sub: ${MainStackPrefixParameter}-Utilities-alarm-notification-topic
+      Subscription:
+        - Fn::If:
+            - UseEventNotificationEmailCondition
+            - Endpoint:
+                Ref: AEMCWEventNotificationEmail
+              Protocol: email
+            - Ref: AWS::NoValue
+    Type: AWS::SNS::Topic

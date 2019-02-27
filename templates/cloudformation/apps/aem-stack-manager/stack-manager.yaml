@@ -57,6 +57,69 @@ Parameters:
     Description: Prefix within the Bucket to Locate Files
     Type: String
 Resources:
+  AemOfflineBackupAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemOfflineBackup-FAILS"
+      AlarmDescription: "Notifies if AemOfflineBackup execution fails"
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemOfflineBackup"
+  AemStackManagerAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemStackManager-FAILS"
+      AlarmDescription: "Notifies if AemStackManager execution fails"
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemStackManager"
+  AemTaskQueryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemTaskQuery-FAILS"
+      AlarmDescription: "Notifies if AemTaskQuery execution fails"
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemTaskQuery"
   BackupInitialVersion:
     DependsOn: OfflineBackupLambda
     Properties:
