@@ -2,7 +2,7 @@
 
 - name: Create Packer AEM AWS resources stack
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
