@@ -10,3 +10,4 @@ Resources:
     Properties:
       Value: "overwrite-me"
       Type: String
+      
