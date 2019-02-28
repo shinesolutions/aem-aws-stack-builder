@@ -1,0 +1,16 @@
+---
+
+- name: Create Packer AEM AWS resources stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: Create AWS resources stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ aws.resources.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../templates/cloudformation/aws-resources.yaml"

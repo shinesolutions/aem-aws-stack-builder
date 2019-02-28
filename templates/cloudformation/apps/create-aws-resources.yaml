@@ -1,0 +1,12 @@
+---
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Change-Me
+
+Resources:
+  AEMKeystorePassword:
+    #TODO: Move to SecureString when it is supported on AWS Cloudformation. For more information see: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html
+    Type: AWS::SSM::Parameter
+    Properties:
+      Value: "overwrite-me"
+      Type: String

@@ -145,6 +145,16 @@ delete-bastion:
 	./scripts/delete-stack.sh network/bastion "$(config_path)" "$(stack_prefix)"
 
 ################################################################################
+# AWS resources targets.
+################################################################################
+
+create-aws-resources:
+	./scripts/create-stack.sh apps/create-aws-resources "${config_path}" "${stack_prefix}"
+
+delete-aws-resources:
+	./scripts/delete-stack.sh apps/delete-aws-resources "${config_path}" "${stack_prefix}"
+
+################################################################################
 # AEM Stack Data targets.
 ################################################################################
 
