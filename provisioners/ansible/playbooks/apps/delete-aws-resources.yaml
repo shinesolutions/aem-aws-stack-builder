@@ -2,7 +2,7 @@
 
 - name: Delete Packer AEM AWS resources stack
   hosts: all
-  gather_facts: no
+  gather_facts: false
   connection: local
 
   tasks:
@@ -11,7 +11,7 @@
       command: >
                aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ aws.resources.stack_name }}"
                --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
+      ignore_errors: true
       register: stack_query
 
     - name: Report any stack problem
