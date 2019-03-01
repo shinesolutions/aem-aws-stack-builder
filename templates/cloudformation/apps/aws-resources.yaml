@@ -1,0 +1,10 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Template
+
+Resources:
+  AEMLicense:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Value: "overwrite-me"
+      Type: String
