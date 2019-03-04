@@ -2,8 +2,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Template
 
+#Resource that is currently a placeholder while makefile functionality is implemented.
 Resources:
-  AEMLicense:
+  Placeholder:
     Type: AWS::SSM::Parameter
     Properties:
       Value: "overwrite-me"
