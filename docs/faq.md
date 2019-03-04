@@ -91,7 +91,9 @@ __A:__ Please check the `error.log` for following messages `org.apache.sling.aut
 To solve this issue you have to place the whitelist configuration in the ```/install``` dir of the AEM instance e.g. ```/opt/aem/author/crx-quickstart/install```.
 
 Filename:
-```org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment-passwordreset.config```
+```
+org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment-passwordreset.config
+```
 
 Filecontent:
 ```
