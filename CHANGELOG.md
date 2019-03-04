@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add aem-password-reset bugfix to FAQ
+- Add offline-snapshot/live-snapshot issue to FAQ
+
 ## [3.6.0] - 2019-02-17
 
 ### Added
