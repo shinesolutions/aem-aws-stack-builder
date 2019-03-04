@@ -78,25 +78,25 @@ Frequently Asked Questions
 * __Q:__ Why did the Stack Provisioning failed with error code `500` at the step `Stop webdav bundle` ?<br/>
 __A:__ Please check the `error.log` for following messages `org.apache.sling.auth.core.impl.SlingAuthenticator handleLoginFailure: Unable to authenticate admin: UserId/Password mismatch`. This means the aem-password-reset bundle was not able to reset the passwords of the system-users. Most likely it's because the whitelisting for the bundle hasn't been done before the start of the bundle. In the `error.log` you will find messages similar like this
 
-```
-*ERROR* [OsgiInstallerImpl] com.adobe.granite.repository.impl.SlingRepositoryImpl Bundle com.shinesolutions.aem.passwordreset is NOT whitelisted to use SlingRepository.loginAdministrative
-```
+  ```
+  *ERROR* [OsgiInstallerImpl] com.adobe.granite.repository.impl.SlingRepositoryImpl Bundle com.shinesolutions.aem.passwordreset is NOT whitelisted to use SlingRepository.loginAdministrative
+  ```
 
- Whitelisting messages are looking like these
- ```
- 25.02.2019 11:50:16.748 *INFO* [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610)] org.apache.sling.jcr.base Service [org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610,7337, [org.apache.sling.jcr.base.internal.WhitelistFragment]] ServiceEvent REGISTERED
-25.02.2019 11:50:16.749 *INFO* [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610)] org.apache.sling.jcr.base.internal.LoginAdminWhitelist WhitelistFragment added 'passwordreset: [com.shinesolutions.aem.passwordreset]'
-```
+   Whitelisting messages are looking like these
+   ```
+   25.02.2019 11:50:16.748 *INFO* [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610)] org.apache.sling.jcr.base Service [org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610,7337, [org.apache.sling.jcr.base.internal.WhitelistFragment]] ServiceEvent REGISTERED
+  25.02.2019 11:50:16.749 *INFO* [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610)] org.apache.sling.jcr.base.internal.LoginAdminWhitelist WhitelistFragment added 'passwordreset: [com.shinesolutions.aem.passwordreset]'
+  ```
 
-To solve this issue you have to place the whitelist configuration in the ```/install``` dir of the AEM instance e.g. ```/opt/aem/author/crx-quickstart/install```.
+  To solve this issue you have to place the whitelist configuration in the ```/install``` dir of the AEM instance e.g. ```/opt/aem/author/crx-quickstart/install```.
 
-Filename:
-```
-org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment-passwordreset.config
-```
+  Filename:
+  ```
+  org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment-passwordreset.config
+  ```
 
-Filecontent:
-```
-whitelist.name="passwordreset"
-whitelist.bundles=["com.shinesolutions.aem.passwordreset"]
-```
+  Filecontent:
+  ```
+  whitelist.name="passwordreset"
+  whitelist.bundles=["com.shinesolutions.aem.passwordreset"]
+  ```
