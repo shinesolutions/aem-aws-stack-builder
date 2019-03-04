@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix path to staging dir in Ansible playbooks
+- Fixed logic error when running pre-common.sh #257
+
 
 ## [3.5.0] - 2019-02-04
 
