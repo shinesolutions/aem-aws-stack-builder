@@ -6,11 +6,13 @@
   connection: local
 
   tasks:
-  
+
     - name: Create AWS resources stack
       cloudformation:
         stack_name: "{{ stack_prefix }}-{{ aws.resources.stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
-        template: "../../../../templates/cloudformation/aws-resources.yaml"
+        template: "../../../../templates/cloudformation/apps/aws-resources.yaml"
+      tags:
+        - create
