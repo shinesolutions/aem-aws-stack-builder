@@ -1,0 +1,35 @@
+---
+
+- name: Delete Packer AEM AWS resources stack
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  tasks:
+
+    - name: Check if a stack exists
+      command: >
+               aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ aws.resources.stack_name }}"
+               --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: true
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report any stack problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ aws.resources.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete AWS resources stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ aws.resources.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+        - delete
