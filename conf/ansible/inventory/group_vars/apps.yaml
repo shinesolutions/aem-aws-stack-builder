@@ -119,6 +119,7 @@ compute:
 
 s3:
   data_bucket_name: overwrite-me
+  create_bucket_bool: true
 
 library:
   aem_aws_stack_provisioner_version: 3.6.0
@@ -272,6 +273,7 @@ chaos_monkey:
     asg_max_terminations_per_day: '1.0'
 
 dns_records:
+  create_hosted_zone_bool: true
   route53_hosted_zone_name: overwrite-me.com.
   author:
     record_set_name: author
