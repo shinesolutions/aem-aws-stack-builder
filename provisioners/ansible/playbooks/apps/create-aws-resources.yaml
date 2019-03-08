@@ -14,8 +14,8 @@
         disable_rollback: true
         template: "../../../../templates/cloudformation/apps/aws-resources.yaml"
         template_parameters:
-          CreateS3Bucket: "{{ s3.create_bucket_bool }}"
-          CreatePrivateHostedZone: "{{ dns_records.create_hosted_zone_bool }}"
+          CreateS3Bucket: "{{ s3.create_bucket_flag }}"
+          CreatePrivateHostedZone: "{{ dns_records.create_hosted_zone_flag }}"
           AemEnvS3BucketName: "{{ s3.data_bucket_name }}"
           PrivateHostedZoneName: "{{ dns_records.route53_hosted_zone_name }}"
           VPCId: "{{ network_exports.VPCId }}"

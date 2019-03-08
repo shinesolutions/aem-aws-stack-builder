@@ -1,7 +1,6 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Template
-
+Description: AWS resources stack for AEM Stack Builder/Manager
 
 Conditions:
   CreateS3BucketCondition:
@@ -19,14 +18,14 @@ Parameters:
     Type: String
     Description: Toggle creating the S3 bucket
     AllowedValues:
-      - true
-      - false
+      - "true"
+      - "false"
   CreatePrivateHostedZone:
     Type: String
     Description: Toggle creating a Private HostedZone in Route53
     AllowedValues:
-      - true
-      - false
+      - "true"
+      - "false"
   AemEnvS3BucketName:
     Type: String
     Description: Name of the S3 Bucket for storing AEM environment states
@@ -44,18 +43,19 @@ Parameters:
 Resources:
   AemEnvS3Bucket:
     Type: AWS::S3::Bucket
-    Conditions: CreateS3BucketCondition
+    Condition: CreateS3BucketCondition
     Properties:
       BucketName:
         Ref: AemEnvS3BucketName
   PrivateHostedZone:
     Type: AWS::Route53::HostedZone
-    Conditions: CreatePrivateHostedZone
+    Condition: CreatePrivateHostedZoneCondition
     Properties:
       Name:
         Ref: PrivateHostedZoneName
       VPCs:
-        - VPCId:
+        -
+          VPCId:
             Ref: VPCId
           VPCRegion:
-            Ref: VCPRegion
+            Ref: VPCRegion
