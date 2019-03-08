@@ -1,5 +1,5 @@
 ### 2.2.4
-*
+* Add ELB cipher suite policy 
 
 ### 2.2.3
 * Lock down ansible to 2.5.8, awscli to 1.15.41, and boto3 to 1.7.41
