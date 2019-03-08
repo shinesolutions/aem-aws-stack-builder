@@ -106,6 +106,8 @@ These configurations are applicable to AWS resources used by the AEM environment
 | compute.key_pair_name | [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to be provisioned on all EC2 instances within the AEM environment. | Mandatory | |
 | compute.inbound_from_bastion_host_security_group | Security group to allow inbound access from a bastion host. | Mandatory | |
 | s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors and credentials. | Mandatory | |
+| s3.create_bucket_flag | If "true", an S3 bucket with name: `s3.data_bucket_name` will be created as part of `make create-aws-resources` | Optional | "true" |
+| dns_records.create_hosted_zone_flag | If "true", a Route53 Private HostedZone with name: `dns_records.route53_hosted_zone_name` will be created as part of `make create-aws-resources` | Optional | "true" |
 | dns_records.route53_hosted_zone_name | A Route 53 hosted zone which the AEM environment DNS records will be created on. | Mandatory | |
 | dns_records.author.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing to the ELB sitting in front of `author-primary` and `author-standby` components. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `author` |
 | dns_records.author_dispatcher.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing to the ELB sitting in front of the `author-dispatcher` component. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `author-dispatcher` |
