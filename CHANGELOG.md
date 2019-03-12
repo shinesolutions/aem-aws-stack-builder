@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add CW alarm and notifications for Stack Manager Lambda function errors #210
+- Add aem-password-reset bugfix to FAQ
+- Add offline-snapshot/live-snapshot issue to FAQ
+- Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
 
 ## [3.6.0] - 2019-02-17
 
@@ -19,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix path to staging dir in Ansible playbooks
+- Fixed logic error when running pre-common.sh #257
+
 
 ## [3.5.0] - 2019-02-04
 
