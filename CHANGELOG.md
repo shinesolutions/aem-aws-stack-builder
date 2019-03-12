@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add aem-password-reset bugfix to FAQ
 - Add offline-snapshot/live-snapshot issue to FAQ
+- Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
 
 ## [3.6.0] - 2019-02-17
 
