@@ -45,6 +45,27 @@ Parameters:
     Description: Prefix within the Bucket to Locate Files
     Type: String
 Resources:
+  AemSnapshotsPurgeAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemSnapshotsPurge-FAILS"
+      AlarmDescription: "Notifies if AemSnapshotsPurge execution fails"
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemSnapshotsPurge"
   InitialVersion:
     Properties:
       Description: Initial Version to Start With

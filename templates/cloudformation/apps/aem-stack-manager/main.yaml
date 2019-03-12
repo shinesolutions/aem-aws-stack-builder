@@ -25,6 +25,9 @@ Outputs:
     Value:
       Ref: UtilitiesStack
 Parameters:
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
+    Type: String
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
     Type: String
@@ -73,9 +76,20 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles.yaml
     Type: AWS::CloudFormation::Stack
+  PrerequisitesStack:
+    Properties:
+      Parameters:
+        AEMCWEventNotificationEmail:
+          Ref: AEMCWEventNotificationEmail
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/prerequisites.yaml
+    Type: AWS::CloudFormation::Stack
   StackManagerStack:
     DependsOn:
       - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         DataBucketNameParameter:
@@ -92,6 +106,7 @@ Resources:
   UtilitiesStack:
     DependsOn:
       - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         DataBucketNameParameter:
