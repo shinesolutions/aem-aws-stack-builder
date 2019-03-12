@@ -71,3 +71,32 @@ Frequently Asked Questions
      "sleep_seconds": "120",
   }
   ```
+
+* __Q:__ Why does the offline-snapshot/live-snapshot fails after 10 minutes ?<br/>
+  __A:__ If the snapshotting for AEM-OpenCloud takes longer than `10 minutes`, the snapshotting will fail. Unfortunately this is a known limitation at the moment and already documented here https://github.com/shinesolutions/aem-aws-stack-provisioner/issues/121.
+
+* __Q:__ Why did the Stack Provisioning failed with error code `500` at the step `Stop webdav bundle` ?<br/>
+__A:__ Please check the `error.log` for following messages `org.apache.sling.auth.core.impl.SlingAuthenticator handleLoginFailure: Unable to authenticate admin: UserId/Password mismatch`. This means the aem-password-reset bundle was not able to reset the passwords of the system-users. Most likely it's because the whitelisting for the bundle hasn't been done before the start of the bundle. In the `error.log` you will find messages similar like this
+
+  ```
+  *ERROR* [OsgiInstallerImpl] com.adobe.granite.repository.impl.SlingRepositoryImpl Bundle com.shinesolutions.aem.passwordreset is NOT whitelisted to use SlingRepository.loginAdministrative
+  ```
+
+   Whitelisting messages are looking like these
+   ```
+   25.02.2019 11:50:16.748 *INFO* [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610)] org.apache.sling.jcr.base Service [org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610,7337, [org.apache.sling.jcr.base.internal.WhitelistFragment]] ServiceEvent REGISTERED
+  25.02.2019 11:50:16.749 *INFO* [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment.191f7c8a-eb98-4edf-a062-c4bd790bc610)] org.apache.sling.jcr.base.internal.LoginAdminWhitelist WhitelistFragment added 'passwordreset: [com.shinesolutions.aem.passwordreset]'
+  ```
+
+  To solve this issue you have to place the whitelist configuration in the ```/install``` dir of the AEM instance e.g. ```/opt/aem/author/crx-quickstart/install```.
+
+  Filename:
+  ```
+  org.apache.sling.jcr.base.internal.LoginAdminWhitelist.fragment-passwordreset.config
+  ```
+
+  Filecontent:
+  ```
+  whitelist.name="passwordreset"
+  whitelist.bundles=["com.shinesolutions.aem.passwordreset"]
+  ```
