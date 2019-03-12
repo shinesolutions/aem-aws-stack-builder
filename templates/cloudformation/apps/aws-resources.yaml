@@ -1,11 +1,55 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Template
+Description: AWS resources stack for AEM Stack Builder/Manager
 
-#Resource that is currently a placeholder while makefile functionality is implemented.
+Conditions:
+  CreateS3BucketCondition:
+    Fn::Equals:
+      - Ref: CreateS3Bucket
+      - "true"
+  CreatePrivateHostedZoneCondition:
+    Fn::Equals:
+      - Ref: CreatePrivateHostedZone
+      - "true"
+
+
+Parameters:
+  CreateS3Bucket:
+    Type: String
+    Description: Toggle creating the S3 bucket
+  CreatePrivateHostedZone:
+    Type: String
+    Description: Toggle creating a Private HostedZone in Route53
+  AemEnvS3BucketName:
+    Type: String
+    Description: Name of the S3 Bucket for storing AEM environment states
+  PrivateHostedZoneName:
+    Type: String
+    Description: Name of the Private HostedZone domain, fully qualified domain with trailing dot (.)
+  VPCId:
+    Type: String
+    Description: VPCId to associate with the Private HostedZone
+  VPCRegion:
+    Type: String
+    Description: VPC region to associate with the Private HostedZone
+
+
 Resources:
-  Placeholder:
-    Type: AWS::SSM::Parameter
+  AemEnvS3Bucket:
+    Type: AWS::S3::Bucket
+    Condition: CreateS3BucketCondition
     Properties:
-      Value: "overwrite-me"
-      Type: String
+      BucketName:
+        Ref: AemEnvS3BucketName
+  PrivateHostedZone:
+    Type: AWS::Route53::HostedZone
+    Condition: CreatePrivateHostedZoneCondition
+    Properties:
+      Name:
+        Ref: PrivateHostedZoneName
+      VPCs:
+        -
+          VPCId:
+            Ref: VPCId
+          VPCRegion:
+            Ref: VPCRegion
