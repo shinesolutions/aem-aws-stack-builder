@@ -6,26 +6,20 @@ Conditions:
   CreateS3BucketCondition:
     Fn::Equals:
       - Ref: CreateS3Bucket
-      - true
+      - "true"
   CreatePrivateHostedZoneCondition:
     Fn::Equals:
       - Ref: CreatePrivateHostedZone
-      - true
+      - "true"
 
 
 Parameters:
   CreateS3Bucket:
     Type: String
     Description: Toggle creating the S3 bucket
-    AllowedValues:
-      - "true"
-      - "false"
   CreatePrivateHostedZone:
     Type: String
     Description: Toggle creating a Private HostedZone in Route53
-    AllowedValues:
-      - "true"
-      - "false"
   AemEnvS3BucketName:
     Type: String
     Description: Name of the S3 Bucket for storing AEM environment states
