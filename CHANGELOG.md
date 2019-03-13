@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add offline-snapshot/live-snapshot issue to FAQ
 - Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 3.7.0
+
 ## [3.6.0] - 2019-02-17
 
 ### Added
