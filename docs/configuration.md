@@ -114,6 +114,7 @@ These configurations are applicable to AWS resources used by the AEM environment
 | dns_records.publish_dispatcher.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing to the ELB sitting in front of the `publish-dispatcher` component. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `publish-dispatcher` |
 | dns_records.author_publish_dispatcher.record_set_name | This name will be appended to the stack prefix, and used as the subdomain on the specified host zone, pointing directly to the `author-publish-dispatcher` component. E.g. `<stack_prefix>-<record_set_name>.<hosted_zone>` . | Optional | `author-publish-dispatcher` |
 | dns_records.author_publish_dispatcher.ttl | Time to live of the Author Publish Dispatcher DNS record. | Optional | `300` |
+| certificate_manager.ssl_certificate_arn | ARN of the SSL certificate in either IAM Server Certificates or AWS Certificate Manager | Mandatory | |
 
 ### Component configuration properties
 
