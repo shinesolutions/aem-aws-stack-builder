@@ -94,6 +94,16 @@ Alternatively, if you don't have the permission to create VPC and/or network res
 
     make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
 
+### AEM Stack Manager
+
+<img width="600" alt="AEM Stack Manager Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-stack-manager.png"/>
+
+Ensure [configuration file for AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
+
+Create AEM Stack Manager stacks:
+
+    make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
+
 ### AEM Full-Set Architecture
 
 <img width="800" alt="AEM Full-Set Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png"/>
@@ -133,16 +143,6 @@ Create prerequisites stack which contains the instance profiles and security gro
 Create main stack which contains EC2 and Route53 resources:
 
     make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> prerequisites_stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>
-
-### AEM Stack Manager
-
-<img width="600" alt="AEM Stack Manager Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-stack-manager.png"/>
-
-Ensure [configuration file for AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
-
-Create AEM Stack Manager stacks:
-
-    make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
 
 Testing
 -------
