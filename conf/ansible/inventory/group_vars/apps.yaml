@@ -79,7 +79,7 @@ ami_device:
     publish_data_name: /dev/sdc
     publish_data_attached_name: /dev/xvdc
   rhel7:
-    root_name: /dev/xvda
+    root_name: /dev/sda1
     data_name: /dev/xvdb
     data_attached_name: /dev/xvdb
     author_data_name: /dev/xvdb
