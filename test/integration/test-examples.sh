@@ -28,14 +28,14 @@ echo "Creating AEM Stack Manager environment..."
 make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager-sandpit/
 
 # Create, test, and delete AEM Consolidated environment
-# cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
-# echo "Creating AEM Consolidated environment..."
-# cp -R stage/descriptors/consolidated/* stage/
-# make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
-# echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
-# cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" && cd ../../
-# echo "Deleting AEM Consolidated environment..."
-# make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+echo "Creating AEM Consolidated environment..."
+cp -R stage/descriptors/consolidated/* stage/
+make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
+cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" && cd ../../
+echo "Deleting AEM Consolidated environment..."
+make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 
 # Create, test, and delete AEM Full-Set environment
 cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}/"
