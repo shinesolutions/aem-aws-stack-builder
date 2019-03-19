@@ -180,6 +180,9 @@ common::saml::enable_saml_certificate_upload: {{ aem.truststore.enable_saml_cert
 common::saml::configuration:
 {{ saml | to_nice_yaml | indent(width=2, first=True) }}
 
+# AEM Orchestrator only takes snapshot from Publish instance in a Full-Set architecture, hence it only needs the data volume device name
+aem_orchestrator::application_properties::aws_device_name: {{ ami_device[os_type].data_name }}
+
 aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'
 aem_orchestrator::application_properties::alarm_content_health_check_terminate_instance_enable: '{{ aem.enable_content_healthcheck_terminate_instance }}'
 aem_orchestrator::jarfile_checksum_value: 133ad0f9a6c083701b2531b677a4458ebe021af88b3ea0eba87374fb9b12dc94
