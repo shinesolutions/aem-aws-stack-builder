@@ -93,7 +93,9 @@ deps-test: stage
 # resolve test dependencies from local directories
 deps-test-local: stage
 	# setup AEM AWS Stack Provisioner from local clone
-	cd ../aem-aws-stack-provisioner && make deps-local package && aws s3 cp stage/aem-aws-stack-provisioner-*.tar.gz s3://aem-opencloud/library/
+	cd ../aem-aws-stack-provisioner && version=$(test_id) make deps-local package && aws s3 cp stage/aem-aws-stack-provisioner-$(test_id).tar.gz s3://aem-opencloud/library/
+	# setup AEM Stack Manager from local clone
+	cd ../aem-stack-manager-cloud && version=$(test_id) make deps package && aws s3 cp stage/aem-stack-manager-cloud-$(test_id).zip s3://aem-opencloud/library/
 	# setup AEM Hello World Config from local clone
 	rm -rf stage/aem-helloworld-config/ stage/user-config/* stage/descriptors/*
 	cp -R ../aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
@@ -248,19 +250,19 @@ test-integration-aem64-rhel7: deps deps-test
 test-integration-aem64-amazon-linux2: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem64 amazon-linux2
 
-test-integration-local-aem62-rhel7:
+test-integration-local-aem62-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem62 rhel7
 
-test-integration-local-aem62-amazon-linux2:
+test-integration-local-aem62-amazon-linux2: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem62 amazon-linux2
 
-test-integration-local-aem63-rhel7:
+test-integration-local-aem63-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem63 rhel7
 
-test-integration-local-aem64-rhel7:
+test-integration-local-aem64-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem64 rhel7
 
-test-integration-local-aem64-amazon-linux2:
+test-integration-local-aem64-amazon-linux2: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem64 amazon-linux2
 
 ########################################
