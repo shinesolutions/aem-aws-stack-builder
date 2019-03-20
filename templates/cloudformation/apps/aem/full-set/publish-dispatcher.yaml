@@ -103,7 +103,7 @@ Resources:
       Cooldown: 480
       DesiredCapacity:
         Ref: PublishDispatcherASGDesiredCapacityParameter
-      HealthCheckGracePeriod: 1200
+      HealthCheckGracePeriod: 1800
       HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: PublishDispatcherLaunchConfiguration
