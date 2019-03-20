@@ -204,6 +204,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.enable_crxde | If true, then [CRXDE](https://helpx.adobe.com/experience-manager/6-3/sites/developing/using/developing-with-crxde-lite.html) will be enabled. Set to false by default for security reason. | Optional | `false` |
 | aem.enable_default_passwords | If true, admin and other system users will be provisioned with default password, which is the same as their username. E.g. `admin` user will have password `admin`. If false, their passwords will be randomly generated, unique for each single AEM environment. Set to false by default for security reason. | Optional | `false` |
 | aem.enable_bak_files_cleanup | If true, .bak files older than `aem.bak_files_cleanup_max_age_in_days` will be deleted during repository compaction. | Optional | `false` |
+| aem.enable_launchpad_dir_cleanup | If true, directory crx-quickstart/launchpad will be deleted before AEM starts. | Optional | `false` |
 | aem.bak_files_cleanup_max_age_in_days | The number of maximum age in days for repository .bak files to be kept. Files older than this will be deleted during compaction. | Optional | `30` |
 | aem.enable_post_start_sleep | If true, the provisioning process will sleep for `aem.post_start_sleep_seconds` seconds after starting the AEM Service for the first time. | Optional | `false` |
 | aem.enable_reconfiguration | If true, the initial repository attached to the volume will be reconfigured for the current AEM OpenCloud version. | Optional | `false` |

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add aem-password-reset bugfix to FAQ
 - Add offline-snapshot/live-snapshot issue to FAQ
 - Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
+- Add parameter to remove the directory crx-quickstart/launchpad at provisioning #270
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 3.9.0

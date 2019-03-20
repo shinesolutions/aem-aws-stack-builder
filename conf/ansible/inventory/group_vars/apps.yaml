@@ -19,6 +19,7 @@ aem:
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
+  enable_launchpad_dir_cleanup: false
   enable_post_start_sleep: false
   enable_upgrade_tools: false
   bak_files_cleanup_max_age_in_days: 30
