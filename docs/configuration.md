@@ -126,9 +126,11 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish-dispatcher` component instances. | Optional | `t2.micro` |
 | publish_dispatcher.root_vol_size | The root volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
 | publish_dispatcher.data_vol_size | The data volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
-| publish_dispatcher.desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
-| publish_dispatcher.min_size | The minimum number of `publish-dispatcher` component instances. | Optional | `2` |
-| publish_dispatcher.max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
+| publish_dispatcher.asg_desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
+| publish_dispatcher.asg_min_size | The minimum number of `publish-dispatcher` component instances. | Optional | `2` |
+| publish_dispatcher.asg_max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
+| publish_dispatcher.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `1200` |
+| publish_dispatcher.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
 | publish_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `publish-dispatcher` component. | Optional | `HTTPS:443/system/health?tags=shallow` |
 | publish_dispatcher.elb_scheme | The [scheme](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-ec2-elb-scheme) for the ELB sitting in front of `publish-dispatcher` component. | Optional | `internet-facing` |
 | publish_dispatcher.allowed_client | The allowed source IP address where AEM Dispatcher running on `publish-dispatcher` component. Default to everything because users tend to have different network design, some might restrict inbound access from AEM Publish, some might allow external resource such as a CDN service to flush the cache. | Optional | `*.*.*.*` |
@@ -137,9 +139,11 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish` component instances. | Optional | `m3.large` |
 | publish.root_vol_size | The root volume size in Gb of `publish` component instances. | Optional | `20` |
 | publish.data_vol_size | The data volume size in Gb of `publish` component instances. | Optional | `75` |
-| publish.desired_capacity | The desired number of `publish` component instances. | Optional | `2` |
-| publish.min_size | The minimum number of `publish` component instances. | Optional | `2` |
-| publish.max_size | The maximum number of `publish` component instances. | Optional | `2` |
+| publish.asg_desired_capacity | The desired number of `publish` component instances. | Optional | `2` |
+| publish.asg_min_size | The minimum number of `publish` component instances. | Optional | `2` |
+| publish.asg_max_size | The maximum number of `publish` component instances. | Optional | `2` |
+| publish.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `900` |
+| publish.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
 | publish.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
 | author.instance_profile | ARN of the IAM instance profile to be used on `author` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
 | author.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author` component instances. | Optional | `m3.large` |
@@ -150,9 +154,11 @@ These configurations are applicable to the components used within AEM Full-Set a
 | author_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_dispatcher` component instances. | Optional | `t2.micro` |
 | author_dispatcher.root_vol_size | The root volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
 | author_dispatcher.data_vol_size | The data volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
-| author_dispatcher.desired_capacity | The desired number of `author_dispatcher` component instances. | Optional | `2` |
-| author_dispatcher.min_size | The minimum number of `author_dispatcher` component instances. | Optional | `2` |
-| author_dispatcher.max_size | The maximum number of `author_dispatcher` component instances. | Optional | `2` |
+| author_dispatcher.asg_desired_capacity | The desired number of `author_dispatcher` component instances. | Optional | `2` |
+| author_dispatcher.asg_min_size | The minimum number of `author_dispatcher` component instances. | Optional | `2` |
+| author_dispatcher.asg_max_size | The maximum number of `author_dispatcher` component instances. | Optional | `2` |
+| author_dispatcher.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `900` |
+| author_dispatcher.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
 | author_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `author-dispatcher` component. | Optional | `HTTPS:443/system/health?tags=shallow` |
 | author_dispatcher.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
 | author_publish_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `author_publish_dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |

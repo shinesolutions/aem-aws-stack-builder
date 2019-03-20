@@ -56,19 +56,13 @@ Parameters:
   PublishDispatcherASGAvailabilityZoneListParameter:
     Description: The Publish Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
+  PublishDispatcherASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: CommaDelimitedList
   PublishDispatcherASGCPUScalingParameters:
-    Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances
+    Description: The ASG CPU scaling parameters that extra Publish Dispatcher instances
       are scaled up/down at
     Type: CommaDelimitedList
-  PublishDispatcherASGDesiredCapacityParameter:
-    Description: The Publish Dispatcher Auto Scaling Group Desired Capacity
-    Type: String
-  PublishDispatcherASGMaxSizeParameter:
-    Description: The Publish Dispatcher Auto Scaling Group Maximum Size
-    Type: String
-  PublishDispatcherASGMinSizeParameter:
-    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
-    Type: String
   PublishDispatcherDataVolSizeParameter:
     Description: PublishDispatcher Instances Root EBS Volume Size
     Type: Number
@@ -100,17 +94,27 @@ Resources:
     Properties:
       AvailabilityZones:
         Ref: PublishDispatcherASGAvailabilityZoneListParameter
-      Cooldown: 480
+      Cooldown:
+        Fn::Select:
+          - 4
+          - Ref: PublishDispatcherASGConfigurationParameters
       DesiredCapacity:
-        Ref: PublishDispatcherASGDesiredCapacityParameter
-      HealthCheckGracePeriod: 1200
+        Fn::Select:
+          - 2
+          - Ref: PublishDispatcherASGConfigurationParameters
+      HealthCheckGracePeriod:
+        Fn::Select:
+          - 3
+          - Ref: PublishDispatcherASGConfigurationParameters
       HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: PublishDispatcherLaunchConfiguration
       LoadBalancerNames:
       - Ref: PublishDispatcherLoadBalancer
       MaxSize:
-        Ref: PublishDispatcherASGMaxSizeParameter
+        Fn::Select:
+          - 0
+          - Ref: PublishDispatcherASGConfigurationParameters
       MetricsCollection:
       - Granularity: 1Minute
         Metrics:
@@ -123,7 +127,9 @@ Resources:
         - GroupTerminatingInstances
         - GroupTotalInstances
       MinSize:
-        Ref: PublishDispatcherASGMinSizeParameter
+        Fn::Select:
+          - 1
+          - Ref: PublishDispatcherASGConfigurationParameters
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH

@@ -42,15 +42,9 @@ Parameters:
   PublishASGAvailabilityZoneListParameter:
     Description: The Publish Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  PublishASGDesiredCapacityParameter:
-    Description: The Publish Auto Scaling Group Desired Capacity
-    Type: String
-  PublishASGMaxSizeParameter:
-    Description: The Publish Auto Scaling Group Maximum Size
-    Type: String
-  PublishASGMinSizeParameter:
-    Description: The Publish Auto Scaling Group Minimum Size
-    Type: String
+  PublishASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: CommaDelimitedList
   PublishDataVolSizeParameter:
     Description: The Publish Instances Data EBS Volume Size
     Type: Number
@@ -85,14 +79,25 @@ Resources:
     Properties:
       AvailabilityZones:
         Ref: PublishASGAvailabilityZoneListParameter
+      Cooldown:
+        Fn::Select:
+          - 4
+          - Ref: PublishASGConfigurationParameters
       DesiredCapacity:
-        Ref: PublishASGDesiredCapacityParameter
-      HealthCheckGracePeriod: 900
+        Fn::Select:
+          - 2
+          - Ref: PublishASGConfigurationParameters
+      HealthCheckGracePeriod:
+        Fn::Select:
+          - 3
+          - Ref: PublishASGConfigurationParameters
       HealthCheckType: EC2
       LaunchConfigurationName:
         Ref: PublishLaunchConfiguration
       MaxSize:
-        Ref: PublishASGMaxSizeParameter
+        Fn::Select:
+          - 0
+          - Ref: PublishASGConfigurationParameters
       MetricsCollection:
       - Granularity: 1Minute
         Metrics:
@@ -105,7 +110,9 @@ Resources:
         - GroupTerminatingInstances
         - GroupTotalInstances
       MinSize:
-        Ref: PublishASGMinSizeParameter
+        Fn::Select:
+          - 1
+          - Ref: PublishASGConfigurationParameters
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH
