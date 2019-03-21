@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
 
 ### Changed
-- Upgrade AEM AWS Stack Provisioner to 3.10.0
+- Upgrade AEM AWS Stack Provisioner to 3.11.0
 - AEM Health Check package would be provisioned as stack data regardless whether reconfiguration is enabled or not
 
 ### Fixed
