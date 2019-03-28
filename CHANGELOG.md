@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix AEM Orchestrator data device name configuration to use user config
+- Fixed error in boolean hiera parameter
 
 ## [3.6.0] - 2019-02-17
 
