@@ -114,7 +114,7 @@ aem_curator::config_aem_tools::enable_compaction_remove_bak_files: '{{ aem.enabl
 aem_curator::config_aem_tools::compaction_remove_bak_files_older_than_in_days: '{{ aem.bak_files_cleanup_max_age_in_days }}'
 
 # Enable configuration of AEM Upgrade tools
-aem_curator::config_aem_upgrade_tools::enable_upgrade_tools: '{{ aem.enable_upgrade_tools }}'
+aem_curator::config_aem_upgrade_tools::enable_upgrade_tools: {{ aem.enable_upgrade_tools }}
 
 aem_curator::config_author_primary::aem_version: '{{ aem.version }}'
 aem_curator::config_author_standby::aem_version: '{{ aem.version }}'
