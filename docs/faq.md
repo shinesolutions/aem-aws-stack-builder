@@ -100,3 +100,32 @@ __A:__ Please check the `error.log` for following messages `org.apache.sling.aut
   whitelist.name="passwordreset"
   whitelist.bundles=["com.shinesolutions.aem.passwordreset"]
   ```
+* __Q:__ Why did the filesystem structure changed with Packer-AEM 3.8.0 & aem-aws-stack-provisioner 3.12.0 ?<br/>
+  __A:__ From Packer-AEM 3.8.0 and aem-aws-stack-provisioner 3.12.0 on the AEM installation and the AEM repository are no longer separated from each other and on the same Filesystem. Starting with AEM 6.4 the installation and repository can't be separated from each other, as the AEM startup will fail. This might change your backup/recovery scenarios and makes the AEM-OpenCloud v2 snapshots incompatible to AEM-OpenCloud v3 and therefor they need to be migrated.
+
+* __Q:__ How can I migrate my AEM-OpenCloud v2 snapshot to the latest AEM-OpenCloud v3 version ?<br/>
+  __A:__
+  * Enable reconfiguration in configuration profile
+  ```
+  aem:
+    enable_reconfiguration: true
+  ```
+  * Create AEM Stack with attached snapshots on AMIs created with Packer-AEM prior version 3.7.2.
+  * Check Readiness of the AEM Stack
+  * Run Offline-Snapshot or Offline-Compaction-Snapshot
+  * Use new snapshots to create new environments with latest AEM-AWS-Stack-Builder and Packer-AEM.
+
+  To save your money and time we recommend to run the reconfiguration on a consolidated AEM stack on a nightly base in your favourite CI/CD tool.
+
+* __Q:__ How can I make my AEM-OpenCloud snapshots compatible for other stages ?<br/>
+  __A:__ Your snapshots may has some configuration which are specific to a stage. To make these snapshots usable for other stages you can enable the reconfiguration during stack creation. The reconfiguration will remove all configuration stored at `/apps/system/config`. The reconfiguration can be enabled in the configuration profile.
+  ```
+  aem:
+    enable_reconfiguration: true
+  ```
+
+  To save your money and time we recommend you to run the reconfiguration on a consolidated AEM stack on a nightly base in your favourite CI/CD tool. A pipeline in your CI/CD tool can contain the following processes:
+  * Create AEM Stack
+  * Check Readiness of the AEM Stack
+  * Run Offline-Snapshot or Offline-Compaction-Snapshot
+  * Delete AEM Stack
