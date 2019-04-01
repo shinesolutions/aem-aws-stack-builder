@@ -126,6 +126,33 @@ Old FS structure | New Author FS structure           | New Publish FS structure
   ```
   aem:
     enable_reconfiguration: true
+
+  reconfiguration:
+    enable_create_system_users: true
+    enable_truststore_removal: true
+    enable_truststore_migration: false
+    certs_base: s3://aem-opencloud/artifacts/ssl
+    ssl_keystore_password: changeit
+
+  system_users:
+    admin:
+      name: admin
+      path: /home/users/d
+    deployer:
+      name: deployer
+      path: /home/users/q
+    exporter:
+      name: exporter
+      path: /home/users/e
+    importer:
+      name: importer
+      path: /home/users/i
+    orchestrator:
+      name: orchestrator
+      path: /home/users/o
+    replicator:
+      name: replicator
+      path: /home/users/r
   ```
 
   During the reconfiguration AEM OpenCloud will check if the FS contains the new structure. If not it will assume that the FS contains only the repository and therefore it tries to
@@ -133,6 +160,8 @@ Old FS structure | New Author FS structure           | New Publish FS structure
   - Backup the current FS
   - Copy the AEM Installation following the new FS structure
   - Copy the backup to the new location `crx-quickstart/repository`
+
+  Snapshots which are already AEM-OpenCloud compatible do not need to reconfigure again, unless you want to make them available for other stages. Further informations can be found at the section `How can I make my AEM-OpenCloud snapshots compatible for other stages ?`
 
 - **Q:** How can I migrate my AEM-OpenCloud v2 snapshot to the latest AEM-OpenCloud v3 version ?<br>
   **A:**
