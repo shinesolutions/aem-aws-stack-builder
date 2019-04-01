@@ -114,7 +114,7 @@ Old FS structure | New Author FS structure           | New Publish FS structure
 /index           | /author/crx-quickstart/repository | /publish/crx-quickstart/repository
 /segmentstore    | /author/crx-quickstart/install    | /publish/crx-quickstart/install
 /...             | /author/crx-quickstart/logs       | /publish/crx-quickstart/logs
-                 | /author/crx-quickstart/...        | /publish/crx-quickstart/...
+.                | /author/crx-quickstart/...        | /publish/crx-quickstart/...
 
 - **Q:** How can I migrate my non-AEM-OpenCloud snapshots to AEM-OpenCloud ?<br>
   **A:** If your snapshots are already containing the new or old FS structure you are lucky and just need to create a AEM Stack with enabled reconfiguration in the configuration profile.
@@ -147,7 +147,9 @@ Old FS structure | New Author FS structure           | New Publish FS structure
   - Create AEM Stack with attached snapshots on AMIs created with Packer-AEM prior version 3.7.2.
 
   - Check Readiness of the AEM Stack
+
   - Run Offline-Snapshot or Offline-Compaction-Snapshot
+
   - Use new snapshots to create new environments with latest AEM-AWS-Stack-Builder and Packer-AEM.
 
   To save your money and time we recommend to run the reconfiguration on a consolidated AEM stack on a nightly base in your favourite CI/CD tool.
