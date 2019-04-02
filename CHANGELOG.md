@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 3.12.0
 - AEM Health Check package would be provisioned as stack data regardless whether reconfiguration is enabled or not
+- Snapshot backup no longer contains just repository, it now contains the whole AEM installation
 
 ### Fixed
 - Fix AEM Orchestrator data device name configuration to use user config
