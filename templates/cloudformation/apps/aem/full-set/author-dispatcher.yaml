@@ -35,15 +35,9 @@ Parameters:
   AuthorDispatcherASGAvailabilityZoneListParameter:
     Description: The Author Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  AuthorDispatcherASGDesiredCapacityParameter:
-    Description: The Author Dispatcher Auto Scaling Desired Capacity
-    Type: String
-  AuthorDispatcherASGMaxSizeParameter:
-    Description: The Author Dispatcher Auto Scaling Group Maximum Size
-    Type: String
-  AuthorDispatcherASGMinSizeParameter:
-    Description: The Author Dispatcher Auto Scaling Group Minimum Size
-    Type: String
+  AuthorDispatcherASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: CommaDelimitedList
   AuthorDispatcherDataVolSizeParameter:
     Description: Author Dispatcher Instances Data EBS Volume Size
     Type: Number
@@ -93,16 +87,27 @@ Resources:
     Properties:
       AvailabilityZones:
         Ref: AuthorDispatcherASGAvailabilityZoneListParameter
+      Cooldown:
+        Fn::Select:
+          - 4
+          - Ref: AuthorDispatcherASGConfigurationParameters
       DesiredCapacity:
-        Ref: AuthorDispatcherASGDesiredCapacityParameter
-      HealthCheckGracePeriod: 900
+        Fn::Select:
+          - 2
+          - Ref: AuthorDispatcherASGConfigurationParameters
+      HealthCheckGracePeriod:
+        Fn::Select:
+          - 3
+          - Ref: AuthorDispatcherASGConfigurationParameters
       HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: AuthorDispatcherLaunchConfiguration
       LoadBalancerNames:
       - Ref: AuthorDispatcherLoadBalancer
       MaxSize:
-        Ref: AuthorDispatcherASGMaxSizeParameter
+        Fn::Select:
+          - 0
+          - Ref: AuthorDispatcherASGConfigurationParameters
       MetricsCollection:
       - Granularity: 1Minute
         Metrics:
@@ -115,7 +120,9 @@ Resources:
         - GroupTerminatingInstances
         - GroupTotalInstances
       MinSize:
-        Ref: AuthorDispatcherASGMinSizeParameter
+        Fn::Select:
+          - 1
+          - Ref: AuthorDispatcherASGConfigurationParameters
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH

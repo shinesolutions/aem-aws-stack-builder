@@ -206,25 +206,34 @@ saml:
 publish_dispatcher:
   instance_profile: overwrite-me
   instance_type: t2.micro
-  min_size: 2
-  desired_capacity: 2
-  max_size: 2
   root_vol_size: 20
   data_vol_size: 20
   enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
+  asg_min_size: 2
+  asg_desired_capacity: 2
+  asg_max_size: 2
+  asg_health_check_grace_period: 1200
+  asg_cooldown: 480
+  asg_cpu_scaling_threshold: 49
+  asg_cpu_high_period: 300
+  asg_cpu_high_eval_period: 1
+  asg_cpu_low_period: 300
+  asg_cpu_low_eval_period: 2
 
 publish:
   instance_profile: overwrite-me
   instance_type: m3.large
-  min_size: 2
-  desired_capacity: 2
-  max_size: 2
   root_vol_size: 20
   data_vol_size: 75
   enable_random_termination: true
+  asg_min_size: 2
+  asg_desired_capacity: 2
+  asg_max_size: 2
+  asg_health_check_grace_period: 900
+  asg_cooldown: 480
 
 author:
   instance_profile: overwrite-me
@@ -236,13 +245,15 @@ author:
 author_dispatcher:
   instance_profile: overwrite-me
   instance_type: t2.micro
-  min_size: 2
-  desired_capacity: 2
-  max_size: 2
   root_vol_size: 20
   data_vol_size: 20
   enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
+  asg_min_size: 2
+  asg_desired_capacity: 2
+  asg_max_size: 2
+  asg_health_check_grace_period: 900
+  asg_cooldown: 480
 
 author_publish_dispatcher:
   instance_profile: overwrite-me

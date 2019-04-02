@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add aem-password-reset bugfix to FAQ
 - Add offline-snapshot/live-snapshot issue to FAQ
 - Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
+- Add new parameter to configure ASG for Publish, Author-Dispatcher & Publish-Dispatcher
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 3.11.0
