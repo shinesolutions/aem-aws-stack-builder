@@ -1,4 +1,4 @@
-version ?= 4.0.0-pre.0
+version ?= 4.1.0-pre.0
 aem_stack_manager_messenger_version = 2.2.1
 aem_test_suite_version = 0.9.10
 
@@ -53,10 +53,10 @@ lint:
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
 	# TODO: re-enable template validation after sorting out CI credential
-	#  for template in $$(find cloudformation -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
-	#  	echo "Checking template $$template ...."; \
-	#  	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
-	#  done
+	# for template in $$(find templates/cloudformation/ -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
+	# 	echo "Checking template $$template ...."; \
+	# 	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
+	# done
 
 ################################################################################
 # Dependencies resolution targets.
