@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade AEM Test Suite to 0.9.11
+- Upgrade AEM AWS Stack Provisioner to 3.17.0
 
 ## [4.1.0] - 2019-04-18
 
