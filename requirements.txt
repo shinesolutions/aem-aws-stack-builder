@@ -1,6 +1,6 @@
-ansible==2.5.8
-awscli==1.16.10
-boto3==1.8.5
-jinja2==2.10
-ruamel.yaml==0.15.66
-yamllint==1.13.0
+ansible==2.7.10
+awscli==1.16.115
+boto3==1.9.145
+jinja2==2.10.1
+ruamel.yaml==0.15.94
+yamllint==1.15.0
