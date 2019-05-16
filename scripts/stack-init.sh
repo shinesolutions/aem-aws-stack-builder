@@ -70,7 +70,7 @@ translate_puppet_exit_code() {
     exit_code=0
   else
     # If puppet failed update ComponentInitStatus to Failed
-    aws ec2 create-tags --resources ${instance_id} --tags Key=ComponentInitStatus,Value=Failed
+    aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Failed
     exit "$exit_code"
   fi
 
@@ -79,7 +79,7 @@ translate_puppet_exit_code() {
 
 echo "${label} Initialising AEM Stack Builder provisioning..."
 # Set ec2 instance tag that provisioning is InProgress
-aws ec2 create-tags --resources ${instance_id} --tags Key=ComponentInitStatus,Value=InProgress
+aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 
 # List down version numbers of utility tools
 echo "${label} AWS CLI version: $(aws --version)"
@@ -190,5 +190,5 @@ echo "${label} Completed ${component} component initialisation"
 # The existence of this file is used as a pre-condition before executing Stack Manager events.
 #
 # Additionally we are setting a ec2 tags so the orchestrator can check if provisioning was a success.
-aws ec2 create-tags --resources ${instance_id} --tags Key=ComponentInitStatus,Value=Success
+aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Success
 touch "${aws_builder_dir}/stack-init-completed"
