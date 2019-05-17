@@ -190,5 +190,5 @@ echo "${label} Completed ${component} component initialisation"
 # The existence of this file is used as a pre-condition before executing Stack Manager events.
 #
 # Additionally we are setting a ec2 tags so the orchestrator can check if provisioning was a success.
-aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Success
 touch "${aws_builder_dir}/stack-init-completed"
+aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Success
