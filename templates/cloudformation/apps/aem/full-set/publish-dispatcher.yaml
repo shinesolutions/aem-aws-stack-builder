@@ -304,6 +304,13 @@ Resources:
     Type: AWS::AutoScaling::LaunchConfiguration
   PublishDispatcherLoadBalancer:
     Properties:
+      AccessLoggingPolicy:
+        EmitInterval: 5
+        Enabled: true
+        S3BucketName: 
+          Ref: 'DataBucketNameParameter'
+        S3BucketPrefix: 
+          Fn::Join: ['/', [ Ref: 'MainStackPrefixParameter', "elb-logs", "publish-dispatcher"]]
       ConnectionDrainingPolicy:
         Enabled: true
         Timeout: 300

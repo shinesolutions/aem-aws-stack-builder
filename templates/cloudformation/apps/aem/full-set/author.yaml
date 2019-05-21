@@ -91,6 +91,13 @@ Parameters:
 Resources:
   AuthorLoadBalancer:
     Properties:
+      AccessLoggingPolicy:
+        EmitInterval: 5
+        Enabled: true
+        S3BucketName: 
+          Ref: 'DataBucketNameParameter'
+        S3BucketPrefix: 
+          Fn::Join: ['/', [ Ref: 'MainStackPrefixParameter', "elb-logs", "author"]]
       ConnectionDrainingPolicy:
         Enabled: true
         Timeout: 300

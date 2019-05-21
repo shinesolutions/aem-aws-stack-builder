@@ -53,3 +53,18 @@ Resources:
             Ref: VPCId
           VPCRegion:
             Ref: VPCRegion
+  AemEnvS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: 
+        Fn::Ref: AemEnvS3Bucket
+      PolicyDocument: 
+        -
+          Action:
+          - s3:PutObject
+          Effect: Allow
+          Resource: 
+            Fn::Join: ['', [ Fn::GetAtt AemEnvS3Bucket.arn , '/', Ref: AemEnvS3BucketName, '/*' ]]
+          Principal:
+            AWS:
+            - '783225319266'
