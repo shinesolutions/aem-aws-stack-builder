@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added new ec2 tag ComponentInitStatus to check Component provisioning state
 
+### Changed
+- Upgrade AEM Stack Manager Messenger to 2.3.0, AEM Test Suite to 0.9.12
+
 ## [4.2.0] - 2019-05-03
 
 ### Changed
