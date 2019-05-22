@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added new ec2 tag ComponentInitStatus to check Component provisioning state
+
 ## [4.2.0] - 2019-05-03
 
 ### Changed
