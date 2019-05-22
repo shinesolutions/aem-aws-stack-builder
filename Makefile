@@ -1,5 +1,5 @@
 version ?= 4.3.0-pre.0
-aem_stack_manager_messenger_version = 2.3.0
+aem_stack_manager_messenger_version = 2.3.1
 aem_test_suite_version = 0.9.12
 
 ci: clean deps lint package
@@ -253,6 +253,12 @@ test-integration-aem64-rhel7: deps deps-test
 test-integration-aem64-amazon-linux2: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem64 amazon-linux2
 
+test-integration-aem65-rhel7: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem65 rhel7
+
+test-integration-aem65-amazon-linux2: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem65 amazon-linux2
+
 test-integration-local-aem62-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem62 rhel7
 
@@ -267,6 +273,12 @@ test-integration-local-aem64-rhel7: deps deps-test-local
 
 test-integration-local-aem64-amazon-linux2: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem64 amazon-linux2
+
+test-integration-local-aem65-rhel7: deps deps-test-local
+	./test/integration/test-examples-local.sh $(test_id) aem65 rhel7
+
+test-integration-local-aem65-amazon-linux2: deps deps-test-local
+	./test/integration/test-examples-local.sh $(test_id) aem65 amazon-linux2
 
 ########################################
 # Utility stacks
