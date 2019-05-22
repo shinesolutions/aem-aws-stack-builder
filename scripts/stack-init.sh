@@ -78,6 +78,8 @@ translate_puppet_exit_code() {
 }
 
 echo "${label} Initialising AEM Stack Builder provisioning..."
+# Set ec2 instance tag that provisioning is InProgress
+aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 
 # List down version numbers of utility tools
 echo "${label} AWS CLI version: $(aws --version)"
@@ -142,9 +144,6 @@ echo "${label} Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
 
 run_custom_stage pre-common
-
-# Set ec2 instance tag that provisioning is InProgress
-aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 
 set +o errexit
 
