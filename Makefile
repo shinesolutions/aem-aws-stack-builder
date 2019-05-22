@@ -34,6 +34,9 @@ package:
 	    stage/aem-aws-stack-builder-$(version).tar ./
 	gzip stage/aem-aws-stack-builder-$(version).tar
 
+release:
+	rtk release
+
 ################################################################################
 # Code styling check and validation targets:
 # - lint Ansible inventory and playbook files
@@ -281,4 +284,4 @@ create-ssm-documents:
 delete-ssm-documents:
 	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
-.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config
+.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config release
