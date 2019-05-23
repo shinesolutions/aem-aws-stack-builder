@@ -270,7 +270,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove unnecessary sleep during cloud init #51
 - Move aem_password_reset_version, aem_orchestrator_version, oak_run_version stack facts to stack-provisioner-hieradata config #11
 
-## [2.0.0] - unknown
+## [1.1.1] - 2017-06-07
 
 ### Added
 - Add Stack Provisioner custom hiera configuration support
@@ -279,17 +279,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add shortcode support to CloudFormation template global tagging
 
 ### Changed
-- Replace configuration file with stack output values for environment parameters
-
-## [1.1.2] - unknown
-
-### Changed
-- Disable generated system user credentials logging #34
-
-## [1.1.1] - 2017-06-07
-
-### Changed
 - Update aem-aws-stack-provisioner version to 1.1.1
+- Replace configuration file with stack output values for environment parameters
+- Disable generated system user credentials logging #34
 
 ## [1.1.0] - 2017-06-02
 
