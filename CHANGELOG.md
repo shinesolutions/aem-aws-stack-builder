@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add AEM 6.5 integration tests
 
 ### Changed
-- Upgrade AEM AWS Stack Provision to 4.1.0, AEM Stack Manager Cloud to 1.3.3, AEM Stack Manager Messenger to 2.3.1, AEM Test Suite to 0.9.12
+- Upgrade AEM AWS Stack Provision to 4.2.0, AEM Stack Manager Cloud to 1.3.3, AEM Stack Manager Messenger to 2.3.1, AEM Test Suite to 1.2.0
 
 ## [4.2.0] - 2019-05-03
 
