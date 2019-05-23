@@ -22,6 +22,7 @@ log_dir=/var/log/shinesolutions
 log_file=puppet-stack-init.log
 
 instance_id=$(curl --silent http://169.254.169.254/latest/meta-data/instance-id)
+aws_region=$(facter aws_region)
 
 PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH
 
@@ -78,8 +79,9 @@ translate_puppet_exit_code() {
 }
 
 echo "${label} Initialising AEM Stack Builder provisioning..."
+
 # Set ec2 instance tag that provisioning is InProgress
-aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
+AWS_DEFAULT_REGION="${aws_region}" aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 
 # List down version numbers of utility tools
 echo "${label} AWS CLI version: $(aws --version)"
