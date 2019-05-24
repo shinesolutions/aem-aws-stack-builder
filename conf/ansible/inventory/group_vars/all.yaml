@@ -22,3 +22,27 @@ cron:
   http_proxy:
   https_proxy:
   no_proxy:
+
+AWSELBAccountIDs:
+  us_east_1: "127311923021"
+  us_east_2: "033677994240"
+  us_west_1: "027434742980"
+  us_west_2: "797873946194"
+  ca_central_1: "985666609251"
+  eu_central_1: "054676820928"
+  eu_west_1: "156460612806"
+  eu_west_2: "652711504416"
+  eu_west_3: "009996457667"
+  eu_north_1: "897822967062"
+  ap_east_1: "754344448648"
+  ap_northeast_1: "582318560864"
+  ap_northeast_2: "600734575887"
+  ap_northeast_3: "383597477331"
+  ap_southeast_1: "114774131450"
+  ap_southeast_2: "783225319266"
+  ap_south_1: "718504428378"
+  sa_east_1: "507241528517"
+  us_gov_west_1: "048591011584"
+  us_gov_east_1: "190560391635"
+  cn_north_1: "638102146993"
+  cn_northwest_1: "037604701340"

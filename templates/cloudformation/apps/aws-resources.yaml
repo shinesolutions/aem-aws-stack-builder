@@ -12,8 +12,10 @@ Conditions:
       - Ref: CreatePrivateHostedZone
       - "true"
 
-
 Parameters:
+  AWSELBAccountID:
+    Type: String
+    Description: The AWS ELB Account ID to grant access to the log bucket.
   CreateS3Bucket:
     Type: String
     Description: Toggle creating the S3 bucket
@@ -55,16 +57,24 @@ Resources:
             Ref: VPCRegion
   AemEnvS3BucketPolicy:
     Type: AWS::S3::BucketPolicy
+    DependsOn: AemEnvS3Bucket
     Properties:
-      Bucket: 
-        Fn::Ref: AemEnvS3Bucket
-      PolicyDocument: 
-        -
-          Action:
-          - s3:PutObject
-          Effect: Allow
-          Resource: 
-            Fn::Join: ['', [ Fn::GetAtt AemEnvS3Bucket.arn , '/', Ref: AemEnvS3BucketName, '/*' ]]
-          Principal:
-            AWS:
-            - '783225319266'
+      Bucket:
+        Ref: AemEnvS3Bucket
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - "s3:PutObject"
+            Effect: "Allow"
+            Resource:
+              Fn::Join:
+                - ""
+                -
+                  - "arn:aws:s3:::"
+                  -
+                    Ref: "AemEnvS3BucketName"
+                  - "/*"
+            Principal:
+              AWS:
+                Ref: "AWSELBAccountID"

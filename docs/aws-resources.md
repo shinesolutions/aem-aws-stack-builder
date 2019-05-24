@@ -35,4 +35,21 @@ And to delete the resources within the CloudFormation stack:
 Alternatively, if you don't have the permission, or you have to integrate them into your pre-existing provisioning mechanism, you can follow the steps below as reference:
 
 - Create an S3 Data Bucket for storing AEM environment states, this bucket path needs to be set in `s3.data_bucket_name` property
+- Add the following policy to the bucket to allow AWS ELB's to write logs to the bucket:
+```
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::AWS-ELB-AccountID:root"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::BUCKETNAME/*"
+        }
+    ]
+}
+```
+More information about the AWS ELB Account ID can be found here: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
 - Create a [Route53 private hosted zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-creating.html), the hosted zone name needs to be set in `dns_records.route53_hosted_zone_name` property, and don't forget to include the trailing dot as part of the name
