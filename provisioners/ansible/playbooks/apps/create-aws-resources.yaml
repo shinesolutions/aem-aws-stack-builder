@@ -5,7 +5,7 @@
   gather_facts: false
   connection: local
 
-  tasks:    
+  tasks:
     - name: Create AWS Region file
       template:
         src: ../../../../templates/ansible/cloudformation.j2
