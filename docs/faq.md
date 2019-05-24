@@ -116,6 +116,15 @@ Old FS structure | New Author FS structure           | New Publish FS structure
 /...             | /author/crx-quickstart/logs       | /publish/crx-quickstart/logs
 .                | /author/crx-quickstart/...        | /publish/crx-quickstart/...
 
+This table shows the compatibility of the FS structure and each AEM OpenCloud component versions:
+
+Compatibility    | Packer-AEM | AEM-AWS-Stack-Builder | AEM-AWS-Stack-Provisioner
+:--------------- | :--------- | :-------------------- | :------------------------
+Old FS structure | <= 3.7.0   | <= 3.6.0              | <= 3.11.0
+New FS structure | >= 3.8.0   | >= 3.7.0              | >= 3.12.0
+
+To create a stack with the old FS structure you need AMIs created with Packer-AEM 3.7.0 or below and AEM-AWS-Stack-Builder 3.6.0 or below together with AEM-AWS-Stack-provisioner 3.11.0 or below.
+
 - **Q:** How can I migrate my non-AEM-OpenCloud snapshots to AEM-OpenCloud ?<br>
   **A:** If your snapshots are already containing the new or old FS structure you are lucky and just need to create a AEM Stack with enabled reconfiguration in the configuration profile.
 

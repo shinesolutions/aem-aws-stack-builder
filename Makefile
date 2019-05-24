@@ -1,6 +1,6 @@
-version ?= 4.3.0-pre.0
-aem_stack_manager_messenger_version = 2.2.1
-aem_test_suite_version = 0.9.11
+version ?= 4.4.0-pre.0
+aem_stack_manager_messenger_version = 2.3.1
+aem_test_suite_version = 1.2.0
 
 ci: clean deps lint package
 
@@ -33,6 +33,9 @@ package:
 	    -cvf \
 	    stage/aem-aws-stack-builder-$(version).tar ./
 	gzip stage/aem-aws-stack-builder-$(version).tar
+
+release:
+	rtk release
 
 ################################################################################
 # Code styling check and validation targets:
@@ -250,6 +253,12 @@ test-integration-aem64-rhel7: deps deps-test
 test-integration-aem64-amazon-linux2: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem64 amazon-linux2
 
+test-integration-aem65-rhel7: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem65 rhel7
+
+test-integration-aem65-amazon-linux2: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem65 amazon-linux2
+
 test-integration-local-aem62-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem62 rhel7
 
@@ -264,6 +273,12 @@ test-integration-local-aem64-rhel7: deps deps-test-local
 
 test-integration-local-aem64-amazon-linux2: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem64 amazon-linux2
+
+test-integration-local-aem65-rhel7: deps deps-test-local
+	./test/integration/test-examples-local.sh $(test_id) aem65 rhel7
+
+test-integration-local-aem65-amazon-linux2: deps deps-test-local
+	./test/integration/test-examples-local.sh $(test_id) aem65 amazon-linux2
 
 ########################################
 # Utility stacks
@@ -281,4 +296,4 @@ create-ssm-documents:
 delete-ssm-documents:
 	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
-.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config
+.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config release
