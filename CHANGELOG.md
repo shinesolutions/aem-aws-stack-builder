@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added ELB Logging to Stack Builder with bucket and policy creation.
+
 ## [4.2.0] - 2019-05-03
 
 ### Changed
