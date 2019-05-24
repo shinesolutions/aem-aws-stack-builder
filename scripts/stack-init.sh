@@ -78,8 +78,6 @@ translate_puppet_exit_code() {
 }
 
 echo "${label} Initialising AEM Stack Builder provisioning..."
-# Set ec2 instance tag that provisioning is InProgress
-aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 
 # List down version numbers of utility tools
 echo "${label} AWS CLI version: $(aws --version)"
@@ -88,6 +86,17 @@ echo "${label} Hiera version: $(hiera --version)"
 echo "${label} Puppet version: $(puppet --version)"
 echo "${label} Python version: $(python --version)"
 echo "${label} Ruby version: $(ruby --version)"
+
+# Inject infrastructure parameters as custom Facter facts
+echo "${label} Downloading custom Facter facts..."
+mkdir -p /opt/puppetlabs/facts/facts.d
+aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
+export FACTER_data_bucket_name="${data_bucket_name}"
+export FACTER_stack_prefix="${stack_prefix}"
+aws_region=$(facter aws_region)
+
+# Set ec2 instance tag that provisioning is InProgress
+AWS_DEFAULT_REGION="${aws_region}" aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
   echo "${label} Downloading Custom Stack Provisioner..."
@@ -115,13 +124,6 @@ if [ "$#" -eq 5 ]; then
   echo "${label} Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
   sed -e 's/^[[:space:]]*//' < "${extra_local_yaml_path}" >> "${local_yaml_path}"
 fi
-
-echo "${label} Downloading custom Facter facts..."
-mkdir -p /opt/puppetlabs/facts/facts.d
-aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
-
-export FACTER_data_bucket_name="${data_bucket_name}"
-export FACTER_stack_prefix="${stack_prefix}"
 
 set +o errexit
 
