@@ -23,7 +23,7 @@ cron:
   https_proxy:
   no_proxy:
 
-awselbaccountids:
+aws_elb_account_ids:
   us_east_1: "127311923021"
   us_east_2: "033677994240"
   us_west_1: "027434742980"
