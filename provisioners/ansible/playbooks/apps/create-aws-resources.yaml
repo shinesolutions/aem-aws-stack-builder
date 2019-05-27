@@ -16,7 +16,7 @@
     - name: AWS ELB Account ID
       include_vars:
         file: ../../../../stage/awsregion.yaml
-        name: AWSELBAccountID
+        name: awselbaccountids
       tags:
         - create
 
@@ -28,7 +28,7 @@
         disable_rollback: true
         template: "../../../../templates/cloudformation/apps/aws-resources.yaml"
         template_parameters:
-          AWSELBAccountID: "{{ AWSELBAccountID.id }}"
+          AWSELBAccountID: "{{ awselbaccountids.id }}"
           CreateS3Bucket: "{{ s3.create_bucket_flag }}"
           CreatePrivateHostedZone: "{{ dns_records.create_hosted_zone_flag }}"
           AemEnvS3BucketName: "{{ s3.data_bucket_name }}"
