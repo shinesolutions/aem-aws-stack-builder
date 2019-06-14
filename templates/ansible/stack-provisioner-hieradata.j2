@@ -69,6 +69,7 @@ chaos_monkey::chaos_monkey_enable_random_termination: {{ chaos_monkey.enable_ran
 chaos_monkey::publish_enable_random_termination: {{ publish.enable_random_termination }}
 chaos_monkey::publish_dispatcher_enable_random_termination: {{ publish_dispatcher.enable_random_termination }}
 chaos_monkey::author_dispatcher_enable_random_termination: {{ author_dispatcher.enable_random_termination }}
+chaos_monkey::include_stack: {{ chaos_monkey.include_stack }}
 
 simianarmy::simianarmy_properties::simianarmy_calendar_open_hour: '{{ chaos_monkey.termination_settings.calendar_open_hour }}'
 simianarmy::simianarmy_properties::simianarmy_calendar_close_hour: '{{ chaos_monkey.termination_settings.calendar_close_hour }}'
