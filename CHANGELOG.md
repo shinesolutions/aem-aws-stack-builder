@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
+- Upgrade AEM AWS Stack Provision to 4.3.0
 - Update stack-provisioner-hieradata.j2 to include state of chaos monkey instance creation #290
 
 ### Changed
