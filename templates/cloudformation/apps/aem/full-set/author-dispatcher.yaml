@@ -157,6 +157,7 @@ Resources:
           Ref: AuthorDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
+          Encrypted: true
           VolumeSize:
             Ref: AuthorDispatcherRootVolSizeParameter
           VolumeType: gp2
@@ -164,6 +165,7 @@ Resources:
           Ref: AuthorDispatcherImageDataDevice
         Ebs:
           DeleteOnTermination: true
+          Encrypted: true
           VolumeSize:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
