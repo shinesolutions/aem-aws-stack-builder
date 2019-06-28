@@ -41,6 +41,10 @@ Resources:
     Properties:
       BucketName:
         Ref: AemEnvS3BucketName
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
   PrivateHostedZone:
     Type: AWS::Route53::HostedZone
     Condition: CreatePrivateHostedZoneCondition
