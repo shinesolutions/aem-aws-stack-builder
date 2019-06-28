@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Add aws-resources S3 bucket encryption at rest
+- Add Stack Manager DynamoDB encryption at rest
+
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.4.0
 
