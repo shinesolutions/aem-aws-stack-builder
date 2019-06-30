@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add aws-resources S3 bucket encryption at rest
 - Add Stack Manager DynamoDB encryption at rest
 - Add EBS volumes encryption at rest
+- Add AEM Hello World Custom Stack Provisioner to integration tests
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.4.0

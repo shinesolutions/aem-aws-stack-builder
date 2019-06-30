@@ -1,6 +1,7 @@
 version ?= 4.5.0-pre.0
 aem_stack_manager_messenger_version = 2.3.1
 aem_test_suite_version = 1.2.0
+aem_helloworld_custom_stack_provisioner_version = 0.12.0
 
 ci: clean deps lint package
 
@@ -80,6 +81,9 @@ deps-test: stage
 	cd stage && git clone https://github.com/shinesolutions/aem-helloworld-config
 	cp -R stage/aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
 	cp -R stage/aem-helloworld-config/descriptors/* stage/descriptors/
+	# setup AEM HelloWorld Custom Stack Provisioner from GitHub
+	wget "https://github.com/shinesolutions/aem-helloworld-custom-stack-provisioner/releases/download/${aem_helloworld_custom_stack_provisioner_version}/aem-helloworld-custom-stack-provisioner-${aem_helloworld_custom_stack_provisioner_version}.tar.gz" \
+	  -O stage/aem-custom-stack-provisioner.tar.gz
 	# setup AEM Test Suite from GitHub
 	rm -rf stage/aem-test-suite*/
 	wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
@@ -103,6 +107,10 @@ deps-test-local: stage
 	rm -rf stage/aem-helloworld-config/ stage/user-config/* stage/descriptors/*
 	cp -R ../aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
 	cp -R ../aem-helloworld-config/descriptors/* stage/descriptors/
+	# setup AEM Hello World Custom Stack Provisioner from local clone
+	cd ../aem-helloworld-custom-stack-provisioner && make package
+	rm -rf stage/aem-custom-stack-provisioner.tar.gz
+	cp ../aem-helloworld-custom-stack-provisioner/stage/*.tar.gz stage/aem-custom-stack-provisioner.tar.gz
 	# setup AEM Test Suite from local clone
 	rm -rf stage/aem-test-suite/
 	mkdir -p stage/aem-test-suite/
