@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add AEM Hello World Custom Stack Provisioner to integration tests
 
 ### Changed
-- Upgrade AEM AWS Stack Provisioner to 4.4.0
+- Upgrade AEM AWS Stack Provisioner to 4.5.0
 
 ## 4.4.0 - 2019-06-15
 ### Changed
