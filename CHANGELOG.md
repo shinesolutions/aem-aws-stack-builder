@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.5.0
+- Change author_dispatcher, publish_dispatcher, chaos_monkey, and orchestrator default instance type to t2.small
 
 ## 4.4.0 - 2019-06-15
 ### Changed

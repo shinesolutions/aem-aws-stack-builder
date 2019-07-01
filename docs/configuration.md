@@ -123,7 +123,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
 | publish_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `publish-dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
-| publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish-dispatcher` component instances. | Optional | `t2.micro` |
+| publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish-dispatcher` component instances. | Optional | `t2.small` |
 | publish_dispatcher.root_vol_size | The root volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
 | publish_dispatcher.data_vol_size | The data volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
 | publish_dispatcher.asg_desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
@@ -151,7 +151,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | author.data_vol_size | The data volume size in Gb of `author` component instances. | Optional | `75` |
 | author_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `author-dispatcher` component. | Optional | `HTTPS:5432/system/health?tags=shallow` |
 | author_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `author_dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
-| author_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_dispatcher` component instances. | Optional | `t2.micro` |
+| author_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_dispatcher` component instances. | Optional | `t2.small` |
 | author_dispatcher.root_vol_size | The root volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
 | author_dispatcher.data_vol_size | The data volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
 | author_dispatcher.asg_desired_capacity | The desired number of `author_dispatcher` component instances. | Optional | `2` |
@@ -172,7 +172,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | orchestrator.data_vol_size | The data volume size in Gb of `orchestrator` component instances. | Optional | `20` |
 | orchestrator.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
 | chaos_monkey.instance_profile | ARN of the IAM instance profile to be used on `chaos_monkey` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
-| chaos_monkey.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `chaos_monkey` component instances. | Optional | `t2.micro` |
+| chaos_monkey.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `chaos_monkey` component instances. | Optional | `t2.small` |
 | chaos_monkey.root_vol_size | The root volume size in Gb of `chaos_monkey` component instances. | Optional | `20` |
 | chaos_monkey.include_stack | If true, `chaos-monkey` component will be included in the created AEM environment. If false, then the environment won't have `chaos-monkey` component. | Optional | `true` |
 | chaos_monkey.termination_settings.calendar_open_hour | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendaropenhour) specifying the starting hour of the day when Chaos Monkey starts operating. | Optional | `9` |
