@@ -42,6 +42,7 @@ Learn more about AEM AWS Stack Builder:
   * [Package Backup Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-package-backup.md)
   * [Content Health Check Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-content-health-check.md)
 * [Logs](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/logs.md)
+* [Communication Flow](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/communication-flow.md)
 * [Permission Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/permission-types.md)
 * [Snapshot Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/snapshot-types.md)
 * [Frequently Asked Questions](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/faq.md)
