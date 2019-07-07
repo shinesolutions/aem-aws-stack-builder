@@ -1,6 +1,6 @@
 ---
 
-- name: Delete Packer AEM AWS resources stack
+- name: Delete AEM AWS Stack Builder AWS resources stack
   hosts: all
   gather_facts: false
   connection: local
