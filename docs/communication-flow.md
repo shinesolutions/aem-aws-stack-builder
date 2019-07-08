@@ -6,9 +6,6 @@ The communication between components within AEM architecture is uses HTTPS by de
 <table>
 <tr>
 <td valign="top">
-<img width="600" alt="AEM Full-Set Communication Flow Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/communication-flow-full-set.png"/>
-</td>
-<td valign="top">
 <ol>
 <li>
 <strong>From Site Visitor to  Publish-Dispatcher ELB</strong>
@@ -54,6 +51,9 @@ The communication between components within AEM architecture is uses HTTPS by de
 <p>However, most users often have a layer (e.g. routing via a reverse proxy) sitting in front of the AEM architecture, which connects to AEM Author-Dispatcher ELB only via HTTPS.</p>
 </li>
 </ol>
+</td>
+<td valign="top">
+<img width="600" alt="AEM Full-Set Communication Flow Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/communication-flow-full-set.png"/>
 </td>
 </tr>
 </table>
