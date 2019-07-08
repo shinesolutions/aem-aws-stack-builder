@@ -32,7 +32,7 @@ The communication between components within AEM architecture is uses HTTPS by de
 </li>
 <li>
 <strong>From Author-Primary EC2 instance to Author-Standby EC2 instance</strong>
-<p>Author-Standby is configured with <pre>primary.host</pre> pointing to Author-Primary. Data synchronisation is run through port 8023, with <pre>secure</pre> option currently set to false.</p>
+<p>Author-Standby is configured with <code>primary.host</code> pointing to Author-Primary. Data synchronisation is run through port 8023, with <code>secure</code> option currently set to false.</p>
 </li>
 <li>
 <strong>From Author ELB to Author-Primary EC2 instance</strong>
