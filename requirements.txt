@@ -1,4 +1,4 @@
-ansible==2.7.10
+ansible==2.8.2
 awscli==1.16.115
 boto3==1.9.145
 jinja2==2.10.1
