@@ -20,7 +20,6 @@ echo "Running AEM AWS Stack Builder integration test with test_id: ${test_id}, a
 # Create integration test configuration
 echo "Creating integration test configuration file..."
 rm -f "${integration_test_config_file}"
-# echo -e "library:\n  aem_aws_stack_provisioner_version: ${test_id}\n  aem_stack_manager_version: ${test_id}" > "${integration_test_config_file}"
 echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix: ${test_id}-sm" > "${integration_test_config_file}"
 
 # Create AEM Stack Manager environment

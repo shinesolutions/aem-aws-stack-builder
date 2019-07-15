@@ -18,18 +18,12 @@ Parameters:
   AuthorDataVolSnapshotParameter:
     Description: The Author Data Volume Snapshot Id
     Type: String
+  AuthorDispatcherASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: List<String>
   AuthorDispatcherASGAvailabilityZoneListParameter:
     Description: The Author Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  AuthorDispatcherASGDesiredCapacityParameter:
-    Description: The Author Dispatcher Auto Scaling Group Desired Capacity
-    Type: String
-  AuthorDispatcherASGMaxSizeParameter:
-    Description: The Author Dispatcher Auto Scaling Group Maximum Size
-    Type: String
-  AuthorDispatcherASGMinSizeParameter:
-    Description: The Author Dispatcher Auto Scaling Group Minimum Size
-    Type: String
   AuthorDispatcherDNSRecordSetNameParameter:
     Description: AuthorDispatcher DNS Record Set Name
     Type: String
@@ -117,24 +111,21 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
+  PublishASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: List<String>
   PublishASGAvailabilityZoneListParameter:
     Description: The Publish Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  PublishASGDesiredCapacityParameter:
-    Description: The Publish Auto Scaling Group Desired Capacity
-    Type: String
-  PublishASGMaxSizeParameter:
-    Description: The Publish Auto Scaling Group Maximum Size
-    Type: String
-  PublishASGMinSizeParameter:
-    Description: The Publish Auto Scaling Group Minimum Size
-    Type: String
   PublishDataVolSizeParameter:
     Description: The Publish Instances Data EBS Volume Size
     Type: Number
   PublishDataVolSnapshotParameter:
     Description: The Publish Data Volume Snapshot Id
     Type: String
+  PublishDispatcherASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: List<String>
   PublishDispatcherASGAvailabilityZoneListParameter:
     Description: The Publish Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
@@ -142,15 +133,6 @@ Parameters:
     Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances
       are scaled up/down at
     Type: List<Number>
-  PublishDispatcherASGDesiredCapacityParameter:
-    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
-    Type: String
-  PublishDispatcherASGMaxSizeParameter:
-    Description: The Publish Dispatcher Auto Scaling Group Maximum Size
-    Type: String
-  PublishDispatcherASGMinSizeParameter:
-    Description: The Publish Dispatcher Auto Scaling Group Minimum Size
-    Type: String
   PublishDispatcherDNSRecordSetNameParameter:
     Description: PublishDispatcher DNS Record Set Name
     Type: String
@@ -206,12 +188,10 @@ Resources:
           Fn::Join:
             - ','
             - Ref: AuthorDispatcherASGAvailabilityZoneListParameter
-        AuthorDispatcherASGDesiredCapacityParameter:
-          Ref: AuthorDispatcherASGDesiredCapacityParameter
-        AuthorDispatcherASGMaxSizeParameter:
-          Ref: AuthorDispatcherASGMaxSizeParameter
-        AuthorDispatcherASGMinSizeParameter:
-          Ref: AuthorDispatcherASGMinSizeParameter
+        AuthorDispatcherASGConfigurationParameters:
+          Fn::Join:
+            - ','
+            - Ref: AuthorDispatcherASGConfigurationParameters
         AuthorDispatcherDataVolSizeParameter:
           Ref: AuthorDispatcherDataVolSizeParameter
         AuthorDispatcherImageParameter:
@@ -443,12 +423,10 @@ Resources:
           Fn::Join:
             - ','
             - Ref: PublishDispatcherASGCPUScalingParameters
-        PublishDispatcherASGDesiredCapacityParameter:
-          Ref: PublishDispatcherASGDesiredCapacityParameter
-        PublishDispatcherASGMaxSizeParameter:
-          Ref: PublishDispatcherASGMaxSizeParameter
-        PublishDispatcherASGMinSizeParameter:
-          Ref: PublishDispatcherASGMinSizeParameter
+        PublishDispatcherASGConfigurationParameters:
+          Fn::Join:
+            - ','
+            - Ref: PublishDispatcherASGConfigurationParameters
         PublishDispatcherDataVolSizeParameter:
           Ref: PublishDispatcherDataVolSizeParameter
         PublishDispatcherImageParameter:
@@ -493,12 +471,10 @@ Resources:
           Fn::Join:
             - ','
             - Ref: PublishASGAvailabilityZoneListParameter
-        PublishASGDesiredCapacityParameter:
-          Ref: PublishASGDesiredCapacityParameter
-        PublishASGMaxSizeParameter:
-          Ref: PublishASGMaxSizeParameter
-        PublishASGMinSizeParameter:
-          Ref: PublishASGMinSizeParameter
+        PublishASGConfigurationParameters:
+          Fn::Join:
+            - ','
+            - Ref: PublishASGConfigurationParameters
         PublishDataVolSizeParameter:
           Ref: PublishDataVolSizeParameter
         PublishDataVolSnapshotParameter:

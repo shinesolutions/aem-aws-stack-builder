@@ -30,7 +30,7 @@ Resources:
     Properties:
       ImageId:
         Ref: BastionImageId
-      InstanceType: t2.micro
+      InstanceType: t2.small
       KeyName:
         Ref: BastionKeyPairName
       NetworkInterfaces:

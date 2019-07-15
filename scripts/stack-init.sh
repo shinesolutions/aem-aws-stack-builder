@@ -21,6 +21,8 @@ tmp_dir=/tmp/shinesolutions/aem-aws-stack-provisioner
 log_dir=/var/log/shinesolutions
 log_file=puppet-stack-init.log
 
+instance_id=$(curl --silent http://169.254.169.254/latest/meta-data/instance-id)
+
 PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH
 
 # Download stack provisioner artifacts from S3.
@@ -67,6 +69,8 @@ translate_puppet_exit_code() {
   if [ "$exit_code" -eq 0 ] || [ "$exit_code" -eq 2 ]; then
     exit_code=0
   else
+    # If puppet failed update ComponentInitStatus to Failed
+    aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Failed
     exit "$exit_code"
   fi
 
@@ -82,6 +86,17 @@ echo "${label} Hiera version: $(hiera --version)"
 echo "${label} Puppet version: $(puppet --version)"
 echo "${label} Python version: $(python --version)"
 echo "${label} Ruby version: $(ruby --version)"
+
+# Inject infrastructure parameters as custom Facter facts
+echo "${label} Downloading custom Facter facts..."
+mkdir -p /opt/puppetlabs/facts/facts.d
+aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
+export FACTER_data_bucket_name="${data_bucket_name}"
+export FACTER_stack_prefix="${stack_prefix}"
+aws_region=$(facter aws_region)
+
+# Set ec2 instance tag that provisioning is InProgress
+AWS_DEFAULT_REGION="${aws_region}" aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz"; then
   echo "${label} Downloading Custom Stack Provisioner..."
@@ -109,13 +124,6 @@ if [ "$#" -eq 5 ]; then
   echo "${label} Adding extra configuration at ${extra_local_yaml_path} to local AEM Stack Provisioner configuration at ${local_yaml_path}..."
   sed -e 's/^[[:space:]]*//' < "${extra_local_yaml_path}" >> "${local_yaml_path}"
 fi
-
-echo "${label} Downloading custom Facter facts..."
-mkdir -p /opt/puppetlabs/facts/facts.d
-aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
-
-export FACTER_data_bucket_name="${data_bucket_name}"
-export FACTER_stack_prefix="${stack_prefix}"
 
 set +o errexit
 
@@ -182,4 +190,7 @@ echo "${label} Completed ${component} component initialisation"
 # we have to rely on the existence of the file below to indicate that it has been completed.
 # In the event of any error, this script would've exited before creating the file.
 # The existence of this file is used as a pre-condition before executing Stack Manager events.
+#
+# Additionally we are setting a ec2 tags so the orchestrator can check if provisioning was a success.
 touch "${aws_builder_dir}/stack-init-completed"
+aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Success

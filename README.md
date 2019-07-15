@@ -1,4 +1,5 @@
 [![Build Status](https://img.shields.io/travis/shinesolutions/aem-aws-stack-builder.svg)](http://travis-ci.org/shinesolutions/aem-aws-stack-builder)
+[![Known Vulnerabilities](https://snyk.io/test/github/shinesolutions/aem-aws-stack-builder/badge.svg)](https://snyk.io/test/github/shinesolutions/aem-aws-stack-builder)
 
 AEM AWS Stack Builder
 ---------------------
@@ -42,6 +43,7 @@ Learn more about AEM AWS Stack Builder:
   * [Package Backup Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-package-backup.md)
   * [Content Health Check Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-content-health-check.md)
 * [Logs](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/logs.md)
+* [Communication Flow](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/communication-flow.md)
 * [Permission Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/permission-types.md)
 * [Snapshot Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/snapshot-types.md)
 * [Frequently Asked Questions](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/faq.md)
@@ -94,6 +96,16 @@ Alternatively, if you don't have the permission to create VPC and/or network res
 
     make create-network-exports stack_prefix=<network_stack_prefix> config_path=<path/to/config/dir>
 
+### AEM Stack Manager
+
+<img width="600" alt="AEM Stack Manager Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-stack-manager.png"/>
+
+Ensure [configuration file for AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
+
+Create AEM Stack Manager stacks:
+
+    make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
+
 ### AEM Full-Set Architecture
 
 <img width="800" alt="AEM Full-Set Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png"/>
@@ -134,22 +146,20 @@ Create main stack which contains EC2 and Route53 resources:
 
     make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> prerequisites_stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>
 
-### AEM Stack Manager
-
-<img width="600" alt="AEM Stack Manager Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-stack-manager.png"/>
-
-Ensure [configuration file for AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
-
-Create AEM Stack Manager stacks:
-
-    make create-stack-manager stack_prefix=<stack_manager_stack_prefix> config_path=<path/to/config/dir>
-
 Testing
 -------
 
 ### Testing with remote dependencies
 
 You can run integration test for creating, testing, and deleting the AEM Stack Manager, AEM Consolidated, AEM Full-Set environments using the command `make test-integration test_id=<sometestid>`, which downloads the dependencies from the Internet.
+
+### Testing with local dependencies
+
+If you're working on the dependencies of AEM AWS Stack Builder and would like to test them as part of environment creation before pushing the changes upstream, you need to:
+
+- Clone the dependency repos [AEM AWS Stack Provisioner](https://github.com/shinesolutions/aem-aws-stack-provisioner), [Puppet AEM Resources](https://github.com/shinesolutions/puppet-aem-resources), [Puppet AEM Curator](https://github.com/shinesolutions/puppet-aem-curator), [Puppet AEM Orchestrator](https://github.com/shinesolutions/puppet-aem-orchestrator), [Puppet SimianArmy](https://github.com/shinesolutions/puppet-simianarmy), [AEM Hello World Custom Stack Provisioner](https://github.com/shinesolutions/aem-helloworld-custom-stack-provisioner), [AEM Hello World Config](https://github.com/shinesolutions/aem-helloworld-config) at the same directory level as AEM AWS Stack Builder
+- Make your code changes against those dependency repos
+- Run `make test-integration-local test_id=<sometestid>` for integration testing using local dependencies, which copies those local dependency repos to your local AEM AWS Stack Provisioner, packages it and versioned with your `test_id`, uploads to S3, and uses them as part of the test
 
 Presentations
 -------------

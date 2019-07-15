@@ -62,6 +62,7 @@
     - name: Generate stack Facter facts
       stack_facter_facts:
         stack_prefix: "{{ stack_prefix }}"
+        aws_region: "{{ aws.region }}"
         cron_env_path: "{{ cron.env_path }}"
         cron_http_proxy: "{{ cron.http_proxy }}"
         cron_https_proxy: "{{ cron.https_proxy }}"
@@ -247,7 +248,6 @@
         src_key: "library/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/aem-healthcheck-content-{{ library.aem_healthcheck_version }}.zip"
-      when: aem.enable_reconfiguration == True
       tags:
         - create
 

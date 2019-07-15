@@ -143,6 +143,7 @@ Resources:
           Ref: AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
+          Encrypted: true
           VolumeSize:
             Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
@@ -150,6 +151,7 @@ Resources:
           Ref: AuthorImageDataDevice
         Ebs:
           DeleteOnTermination: true
+          Encrypted: true
           SnapshotId:
             Fn::If:
             - UseAuthorDataVolSnapshotCondition
@@ -198,6 +200,7 @@ Resources:
           Ref: AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
+          Encrypted: true
           VolumeSize:
             Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
@@ -205,6 +208,7 @@ Resources:
           Ref: AuthorImageDataDevice
         Ebs:
           DeleteOnTermination: true
+          Encrypted: true
           SnapshotId:
             Fn::If:
             - UseAuthorDataVolSnapshotCondition

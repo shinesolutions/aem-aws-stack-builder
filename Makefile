@@ -1,6 +1,7 @@
-version ?= 3.7.0-pre.0
-aem_stack_manager_messenger_version = 2.2.1
-aem_test_suite_version = 0.9.10
+version ?= 4.6.0-pre.0
+aem_stack_manager_messenger_version = 2.3.1
+aem_test_suite_version = 1.2.0
+aem_helloworld_custom_stack_provisioner_version = 0.12.0
 
 ci: clean deps lint package
 
@@ -34,6 +35,9 @@ package:
 	    stage/aem-aws-stack-builder-$(version).tar ./
 	gzip stage/aem-aws-stack-builder-$(version).tar
 
+release:
+	rtk release
+
 ################################################################################
 # Code styling check and validation targets:
 # - lint Ansible inventory and playbook files
@@ -53,10 +57,10 @@ lint:
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
 	# TODO: re-enable template validation after sorting out CI credential
-	#  for template in $$(find cloudformation -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
-	#  	echo "Checking template $$template ...."; \
-	#  	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
-	#  done
+	# for template in $$(find templates/cloudformation/ -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
+	# 	echo "Checking template $$template ...."; \
+	# 	AWS_DEFAULT_REGION=ap-southeast-2 aws cloudformation validate-template --template-body "file://$$template"; \
+	# done
 
 ################################################################################
 # Dependencies resolution targets.
@@ -77,6 +81,9 @@ deps-test: stage
 	cd stage && git clone https://github.com/shinesolutions/aem-helloworld-config
 	cp -R stage/aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
 	cp -R stage/aem-helloworld-config/descriptors/* stage/descriptors/
+	# setup AEM HelloWorld Custom Stack Provisioner from GitHub
+	wget "https://github.com/shinesolutions/aem-helloworld-custom-stack-provisioner/releases/download/${aem_helloworld_custom_stack_provisioner_version}/aem-helloworld-custom-stack-provisioner-${aem_helloworld_custom_stack_provisioner_version}.tar.gz" \
+	  -O stage/aem-custom-stack-provisioner.tar.gz
 	# setup AEM Test Suite from GitHub
 	rm -rf stage/aem-test-suite*/
 	wget "https://github.com/shinesolutions/aem-test-suite/releases/download/${aem_test_suite_version}/aem-test-suite-${aem_test_suite_version}.tar.gz" --directory-prefix=stage
@@ -93,11 +100,17 @@ deps-test: stage
 # resolve test dependencies from local directories
 deps-test-local: stage
 	# setup AEM AWS Stack Provisioner from local clone
-	cd ../aem-aws-stack-provisioner && make deps-local package && aws s3 cp stage/aem-aws-stack-provisioner-*.tar.gz s3://aem-opencloud/library/
+	cd ../aem-aws-stack-provisioner && version=$(test_id) make deps-local package && aws s3 cp stage/aem-aws-stack-provisioner-$(test_id).tar.gz s3://aem-opencloud/library/
+	# setup AEM Stack Manager from local clone
+	cd ../aem-stack-manager-cloud && version=$(test_id) make deps package && aws s3 cp stage/aem-stack-manager-cloud-$(test_id).zip s3://aem-opencloud/library/
 	# setup AEM Hello World Config from local clone
 	rm -rf stage/aem-helloworld-config/ stage/user-config/* stage/descriptors/*
 	cp -R ../aem-helloworld-config/aem-aws-stack-builder/* stage/user-config/
 	cp -R ../aem-helloworld-config/descriptors/* stage/descriptors/
+	# setup AEM Hello World Custom Stack Provisioner from local clone
+	cd ../aem-helloworld-custom-stack-provisioner && make package
+	rm -rf stage/aem-custom-stack-provisioner.tar.gz
+	cp ../aem-helloworld-custom-stack-provisioner/stage/*.tar.gz stage/aem-custom-stack-provisioner.tar.gz
 	# setup AEM Test Suite from local clone
 	rm -rf stage/aem-test-suite/
 	mkdir -p stage/aem-test-suite/
@@ -248,20 +261,32 @@ test-integration-aem64-rhel7: deps deps-test
 test-integration-aem64-amazon-linux2: deps deps-test
 	./test/integration/test-examples.sh $(test_id) aem64 amazon-linux2
 
-test-integration-local-aem62-rhel7:
+test-integration-aem65-rhel7: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem65 rhel7
+
+test-integration-aem65-amazon-linux2: deps deps-test
+	./test/integration/test-examples.sh $(test_id) aem65 amazon-linux2
+
+test-integration-local-aem62-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem62 rhel7
 
-test-integration-local-aem62-amazon-linux2:
+test-integration-local-aem62-amazon-linux2: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem62 amazon-linux2
 
-test-integration-local-aem63-rhel7:
+test-integration-local-aem63-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem63 rhel7
 
-test-integration-local-aem64-rhel7:
+test-integration-local-aem64-rhel7: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem64 rhel7
 
-test-integration-local-aem64-amazon-linux2:
+test-integration-local-aem64-amazon-linux2: deps deps-test-local
 	./test/integration/test-examples-local.sh $(test_id) aem64 amazon-linux2
+
+test-integration-local-aem65-rhel7: deps deps-test-local
+	./test/integration/test-examples-local.sh $(test_id) aem65 rhel7
+
+test-integration-local-aem65-amazon-linux2: deps deps-test-local
+	./test/integration/test-examples-local.sh $(test_id) aem65 amazon-linux2
 
 ########################################
 # Utility stacks
@@ -279,4 +304,4 @@ create-ssm-documents:
 delete-ssm-documents:
 	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
-.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config
+.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config release
