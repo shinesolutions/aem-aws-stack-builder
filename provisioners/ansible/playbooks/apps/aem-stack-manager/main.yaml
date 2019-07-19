@@ -19,7 +19,7 @@
       command: >
               aws s3 sync ../../../../../templates/cloudformation/apps/aem-stack-manager
                   s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
-                  --include "*.yaml" --acl public-read
+                  --include "*.yaml"
       tags:
         - create
 

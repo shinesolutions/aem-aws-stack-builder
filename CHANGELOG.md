@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add offline-snapshot/live-snapshot issue to FAQ
 - Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
 - Add new parameter to configure ASG for Publish, Author-Dispatcher & Publish-Dispatcher
+- Removed setting ACLs on S3 objects with 'public-read' - #292
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 3.15.0
