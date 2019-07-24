@@ -155,6 +155,7 @@ class config:
             "RunAdhocPuppet": "run-adhoc-puppet",
             "ScheduleSnapshot": "schedule-snapshot",
             "InstallAEMProfile": "install-aem-profile",
+            "RunToughday2PerformanceTest": "run-toughday2-performance-test",
             "ReconfigureAEM": "reconfigure-aem",
             "RunAemUpgrade": "run-aem-upgrade",
             "TestReadinessConsolidated": "test-readiness-consolidated",
