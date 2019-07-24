@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Add new SSM commands to manage SAML configuration
+
 ## 4.6.0 - 2019-07-24
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.7.0
