@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 4.6.0 - 2019-07-24
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.7.0
 
@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add offline-snapshot/live-snapshot issue to FAQ
 - Added 'aws-create-resources' and 'aws-delete-resources' skeleton to makefile
 - Add new parameter to configure ASG for Publish, Author-Dispatcher & Publish-Dispatcher
-- Removed setting ACLs on S3 objects with 'public-read' - #292
+- Removed setting ACLs on S3 objects with 'public-read' - [#292]
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 3.15.0
