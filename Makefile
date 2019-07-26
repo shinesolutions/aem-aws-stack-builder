@@ -232,10 +232,10 @@ delete-aem-stack-manager-stack-data:
 	./scripts/delete-stack.sh apps/aem-stack-manager/stack-data "$(config_path)" "$(stack_prefix)"
 
 create-stack-manager: create-aem-stack-manager-stack-data
-	./scripts/create-stack.sh apps/apps/aem-stack-manager/main "$(config_path)" "$(stack_prefix)"
+	./scripts/create-stack.sh apps/aem-stack-manager/main "$(config_path)" "$(stack_prefix)"
 
 delete-stack-manager:
-	./scripts/delete-stack.sh apps/apps/aem-stack-manager/main "$(config_path)" "$(stack_prefix)"
+	./scripts/delete-stack.sh apps/aem-stack-manager/main "$(config_path)" "$(stack_prefix)"
 
 ################################################################################
 # CloudFront CDN targets.
