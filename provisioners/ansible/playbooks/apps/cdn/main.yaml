@@ -1,0 +1,58 @@
+---
+- name: CDN CloudFormation Stack
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../../../templates/cloudformation/apps/cdn
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml"
+      tags:
+        - create
+
+    - name: Create CDN Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ cdn.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../../../templates/cloudformation/apps/cdn/main.yaml"
+        template_parameters:
+          StackPrefixParameter: "{{ stack_prefix }}"
+          OriginDomainNameParameter: "{{ cdn.origin_domain_name }}"
+          RootObjectParameter: "{{ cdn.root_object }}"
+          Response404PagePathParameter: "{{ cdn.response_404_page_path }}"
+          LogBucketNameParameter: "{{ cdn.log_bucket_name }}"
+          LogBucketPrefixParameter: "{{ cdn.log_bucket_prefix }}"
+      tags:
+        - create
+
+    - name: Check if a Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ cdn.stack_name }}"
+             --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: true
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ cdn.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete CDN stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ cdn.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+        - delete

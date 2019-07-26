@@ -450,3 +450,13 @@ scheduled_jobs:
       weekday: 2-7
       hour: 1
       minute: 15
+
+cdn:
+  stack_name: cdn-stack
+  log_bucket_name: overwrite-me.s3.amazonaws.com
+  log_bucket_prefix: reverse-proxy
+  origin_domain_name: overwrite-me
+  root_object: /index.html
+  response_404_page_path: /404.html
+  certificate_arn: overwrite-me
+  certificate_key_arn: overwrite-me

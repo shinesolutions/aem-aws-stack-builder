@@ -1,0 +1,61 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  StackPrefixParameter:
+    Description: Stack Prefix for CDN stack
+    Type: String
+  OriginDomainNameParameter:
+    Description: Origin domain name
+    Type: String
+  RootObjectParameter:
+    Description: Distribution root object
+    Type: String
+  Response404PagePathParameter:
+    Description: Distribution 404 response page path
+    Type: String
+  LogBucketNameParameter:
+    Description: Bucket name where CDN log to be stored
+    Type: String
+  LogBucketPrefixParameter:
+    Description: Bucket prefix where CDN log to be stored
+    Type: String
+Resources:
+  CDNDistribution:
+    Type: 'AWS::CloudFront::Distribution'
+    Properties:
+      DistributionConfig:
+        Origins:
+        - DomainName:
+            Ref: OriginDomainNameParameter
+          Id: CDNOrigin
+          CustomOriginConfig:
+            HTTPPort: 80
+            HTTPSPort: 443
+            OriginProtocolPolicy: http-only
+        Enabled: 'true'
+        Comment: CloudFront distribution
+        DefaultRootObject:
+          Ref: RootObjectParameter
+        Logging:
+          IncludeCookies: 'true'
+          Bucket:
+            Ref: LogBucketNameParameter
+          Prefix:
+            Ref: LogBucketPrefixParameter
+        DefaultCacheBehavior:
+          TargetOriginId: CDNOrigin
+          SmoothStreaming: 'false'
+          ForwardedValues:
+            QueryString: 'false'
+            Cookies:
+              Forward: all
+          ViewerProtocolPolicy: allow-all
+        # CustomErrorResponses:
+        # - ErrorCode: '404'
+        #   ResponsePagePath:
+        #     Ref: Response404PagePathParameter
+        #   ResponseCode: '200'
+        #   ErrorCachingMinTTL: 30
+        PriceClass: PriceClass_200
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: 'true'
