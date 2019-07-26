@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade AEM Stack Manager Messenger to 2.4.0
 - Upgrade AEM Test Suite to 1.3.0
-- Upgrade AEM HelloWorld Custom Stack Provisioner to 0.13.0
+- Upgrade AEM HelloWorld Custom Stack Provisioner to 0.14.0
 
 ## 4.6.0 - 2019-07-24
 ### Changed
