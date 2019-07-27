@@ -451,6 +451,9 @@ scheduled_jobs:
       hour: 1
       minute: 15
 
+monitoring:
+  include_stack: true
+
 cdn:
   stack_name: cdn-stack
   log_bucket_name: overwrite-me.s3.amazonaws.com

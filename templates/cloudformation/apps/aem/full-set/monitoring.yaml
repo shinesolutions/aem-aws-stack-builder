@@ -1,0 +1,51 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  Create Monitoring resources for the AEM Stack
+Parameters:
+  MainStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Compute Resources Stack Prefix
+  AwsRegionParameter:
+    Type: String
+    Description: AWS region
+Resources:
+  applicationDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardBody: !Sub
+        - '{
+            "widgets": [
+                {
+                    "type": "metric",
+                    "x": 0,
+                    "y": 0,
+                    "width": 9,
+                    "height": 6,
+                    "properties": {
+                        "metrics": [
+                            [ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 900, "label": "Author Dispatcher" } ],
+                            [ "...", "${publishAutoScalingGroupName}", { "period": 900, "label": "Publish" } ],
+                            [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 900, "label": "Publish Dispatcher" } ],
+                            [ "...", "${orchestratorAutoScalingGroupName}", { "period": 900, "label": "Orchestrator" } ]
+                        ],
+                        "view": "timeSeries",
+                        "stacked": false,
+                        "region": "${awsRegion}",
+                        "title": "CPU Utilization - EC2"
+                    }
+                }
+            ]
+        }'
+        - {
+          authorDispatcherAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup'}]],
+          publishAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishAutoScalingGroup'}]],
+          publishDispatcherAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup'}]],
+          orchestratorAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-OrchestratorAutoScalingGroup'}]],
+          awsRegion: !Ref AwsRegionParameter
+        }
+      DashboardName: !Sub
+        - '${MainStackPrefixParameter}-monitoring-dashboard'
+        - {
+            MainStackPrefixParameter: !Ref MainStackPrefixParameter
+          }

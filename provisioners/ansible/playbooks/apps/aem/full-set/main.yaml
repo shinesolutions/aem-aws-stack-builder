@@ -70,6 +70,7 @@
           ChaosMonkeyInstanceTypeParameter: "{{ chaos_monkey.instance_type }}"
           ChaosMonkeyASGAvailabilityZoneListParameter: "{{ aws.availability_zone_list }}"
           ChaosMonkeyRootVolSizeParameter: "{{ chaos_monkey.root_vol_size }}"
+          MonitoringIncludeStack: "{{ monitoring.include_stack | lower }}"
           Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
           AuthorDNSRecordSetNameParameter: "{{ dns_records.author.record_set_name }}"
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
