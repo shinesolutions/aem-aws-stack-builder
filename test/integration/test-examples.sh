@@ -51,8 +51,8 @@ cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test
 # cd /stage/aem-test-suite/ && make test-acceptance-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
 # echo "Testing AEM Full-Set environment recovery with AEM Test Suite..."
 # cd /stage/aem-test-suite/ && make test-recovery-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
-# echo "Deleting AEM Full-Set environment..."
-# make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+echo "Deleting AEM Full-Set environment..."
+make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 
 # Delete AEM Stack Manager
 echo "Deleting AEM Stack Manager environment..."
