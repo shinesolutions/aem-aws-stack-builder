@@ -32,7 +32,7 @@ download_provisioner() {
   mkdir -p "${dest_dir}"
   pushd "${dest_dir}"
   aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/${s3_object_name}" .
-  translate_exit_code() "$?"
+  translate_exit_code "$?"
   # Don't add verbose flag while unarchiving the provisioner artifact in order
   # to avoid dumping the list of files within the artifact onto cloud-init
   # output which is then (by default) also configured to go to syslog, which
@@ -40,7 +40,7 @@ download_provisioner() {
   # then cause cloud-init to error and exit, causing the whole provisioning step
   # to fail.
   tar -xzf "${s3_object_name}"
-  translate_exit_code() "$?"
+  translate_exit_code "$?"
   rm "${s3_object_name}"
   chown -R root:root .
   popd
@@ -55,7 +55,7 @@ run_custom_stage() {
   if [ -x "${script}" ]; then
     echo "${label} Executing the ${stage} script of Custom Stack Provisioner..."
     "${script}" "${stack_prefix}" "${component}"
-    translate_exit_code() "$?"
+    translate_exit_code "$?"
   else
     echo "${label} ${stage} script of Custom Stack Provisioner is either not provided or not executable"
   fi
@@ -110,7 +110,7 @@ echo "${label} Ruby version: $(ruby --version)"
 echo "${label} Downloading custom Facter facts..."
 mkdir -p /opt/puppetlabs/facts/facts.d
 aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
-translate_exit_code() "$?"
+translate_exit_code "$?"
 export FACTER_data_bucket_name="${data_bucket_name}"
 export FACTER_stack_prefix="${stack_prefix}"
 aws_region=$(facter aws_region)
@@ -133,9 +133,9 @@ cd "${aws_provisioner_dir}"
 if [[ -d data ]]; then
   echo "${label} Downloading custom configuration..."
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/data/" data/
-  translate_exit_code() "$?"
+  translate_exit_code "$?"
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/conf/" conf/
-  translate_exit_code() "$?"
+  translate_exit_code "$?"
 fi
 
 # When extra_local.yaml file is provided, the configuration in that file will
@@ -163,11 +163,11 @@ set -o errexit
 
 echo "${label} Checking orchestration tags for ${component} component..."
 /opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
-translate_exit_code() "$?"
+translate_exit_code "$?"
 
 echo "${label} Setting AWS resources as Facter facts..."
 /opt/shinesolutions/aws-tools/set-facts.sh "${data_bucket_name}" "${stack_prefix}"
-translate_exit_code() "$?"
+translate_exit_code "$?"
 
 run_custom_stage pre-common
 
@@ -204,7 +204,7 @@ run_custom_stage post-common
 echo "${label} Testing ${component} component using InSpec..."
 cd "${aws_provisioner_dir}/test/inspec"
 HOME=/root inspec exec "${component}_spec.rb"
-translate_exit_code() "$?"
+translate_exit_code "$?"
 
 echo "${label} Cleaning up provisioner temp directory..."
 rm -rf "${tmp_dir:?}/*"
