@@ -50,6 +50,7 @@ Learn more about AEM AWS Stack Builder:
 * [Troubleshooting Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/troubleshooting-guide.md)
 * [Upgrade Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/upgrade-guide.md)
 * [Stacks Structure](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/stacks-structure.md)
+* [AWS Services](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-services.md)
 * [Presentations](https://github.com/shinesolutions/aem-aws-stack-builder/#presentations)
 
 AEM AWS Stack Builder is part of [AEM OpenCloud](https://aemopencloud.io) platform.
