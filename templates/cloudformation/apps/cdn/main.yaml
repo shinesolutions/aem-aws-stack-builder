@@ -25,13 +25,13 @@ Resources:
     Properties:
       DistributionConfig:
         Origins:
-        - DomainName:
-            Ref: OriginDomainNameParameter
-          Id: CDNOrigin
-          CustomOriginConfig:
-            HTTPPort: 80
-            HTTPSPort: 443
-            OriginProtocolPolicy: http-only
+          - DomainName:
+              Ref: OriginDomainNameParameter
+            Id: CDNOrigin
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only
         Enabled: 'true'
         Comment: CloudFront distribution
         DefaultRootObject:
