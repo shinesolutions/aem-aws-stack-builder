@@ -52,7 +52,7 @@ run_custom_stage() {
   script=${custom_provisioner_dir}/${stage}.sh
   if [ -x "${script}" ]; then
     echo "${label} Executing the ${stage} script of Custom Stack Provisioner..."
-    "${script}" "${stack_prefix}" "${component}" >> "${log_dir}/stack-init-${stage}.log"
+    "${script}" "${stack_prefix}" "${component}" >> "${log_dir}/custom-stack-init-${stage}.log"
   else
     echo "${label} ${stage} script of Custom Stack Provisioner is either not provided or not executable"
   fi
