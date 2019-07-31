@@ -10,7 +10,7 @@ The following AWS services are used by AEM environments created by AEM AWS Stack
 | IAM | IAM roles and policies are used to define the permissions allowed for each instance to execute. |
 | CloudFormation | CloudFormation Stacks are used to define the AWS resources of AEM Stack Manager, AEM Consolidated, and AEM Full-Set infrastructure. |
 | CloudWatch | CloudWatch Metrics are used to store various metrics of both AEM application and environments. Logs are used for storing all application logs running on the instances. Alarms are used for sending notification when AEM metrics reach certain threshold. Dashboards are used for visualising important metrics from the AEM environments. |
-| Simple Queue Service | SQS is used to queue Auto Scaling Group events, which is sent to an SNS topic, which AEM Orchestrator then handles accordingly for auto-recovery and auto-scaling features. |
+| Simple Queue Service | SQS is used to queue Auto Scaling Group events, which AEM Orchestrator then consumes accordingly for auto-recovery and auto-scaling features. |
 | Simple Notification Service | SNS Topics are used for sending event notification on AEM Stack Manager, AEM Consolidated, and AEM Full-Set environments. |
 | Certificate Manager | Certificate Manager is used for storing TLS certificate provisioned on Author-Dispatcher, Author, and Publish-Dispatcher ELBs. |
 | Systems Manager | Systems Manager Run Command is used for executing operational tasks on components instances. Parameter Store is used for storing secrets, such as AEM license, to be provisioned on AEM environments. Session Manager is used for managing the instances via AWS console. |
