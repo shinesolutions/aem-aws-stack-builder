@@ -1,12 +1,10 @@
 ---
-
 - name: AEM Apps Prerequisite Resources Creation and Deletion Tasks
   hosts: all
   gather_facts: no
   connection: local
 
   tasks:
-
     - name: Ensure data bucket exists
       s3_bucket:
         region: "{{ aws.region }}"
@@ -17,9 +15,9 @@
 
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../../../cloudformation/apps/aem/full-set
-                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
-                  --include "*.yaml" --acl public-read
+        aws s3 sync ../../../../../cloudformation/apps/aem/full-set
+            s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+            --include "*.yaml"
       tags:
         - create
 
@@ -45,8 +43,7 @@
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
       tags:
         - create
-      when:
-        permission_type == "b"
+      when: permission_type == "b"
 
     - name: Create AEM App Prerequisite Resources Stack with Permissions Type C
       cloudformation:
@@ -78,9 +75,7 @@
           PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
       tags:
         - create
-      when:
-        permission_type == "c"
-
+      when: permission_type == "c"
 
     - name: Check if a Stack Exists
       command: >
@@ -94,8 +89,7 @@
     - name: Report Stack Problem
       debug:
         msg: Stack "{{ stack_prefix }}-{{ prerequisites.stack_name }}" does not exist or some other errors occured
-      when:
-        "stack_query.rc != 0"
+      when: "stack_query.rc != 0"
       tags:
         - delete
 
@@ -104,14 +98,13 @@
         stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
-      when:
-        "stack_query.rc == 0"
+      when: "stack_query.rc == 0"
       tags:
-      - delete
+        - delete
 
     - name: Delete All Stack Data
       command: >
-              aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"
-               --recursive --region "{{ aws.region }}"
+        aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"
+         --recursive --region "{{ aws.region }}"
       tags:
-      - delete
+        - delete

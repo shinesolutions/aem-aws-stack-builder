@@ -5,20 +5,19 @@
   connection: local
 
   tasks:
-
     - name: Ensure data bucket exists
       s3_bucket:
         region: "{{ aws.region }}"
         name: "{{ s3.data_bucket_name }}"
         state: present
       tags:
-      - create
+        - create
 
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../../cloudformation/apps/aem-stack-manager
-                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
-                  --include "*.yaml" --acl public-read
+        aws s3 sync ../../../../cloudformation/apps/aem-stack-manager
+            s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+            --include "*.yaml"
       tags:
         - create
 
@@ -32,9 +31,9 @@
 
     - name: Upload SSM Documents CloudFormation Template to S3
       command: >
-              aws s3 sync ../../../../stage/
-                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
-                  --include "ssm-commands.yaml" --acl public-read
+        aws s3 sync ../../../../stage/
+            s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+            --include "ssm-commands.yaml"
       tags:
         - create
 
@@ -58,8 +57,7 @@
       register: main_stack_info
       tags:
         - create
-      when:
-        permission_type == "b"
+      when: permission_type == "b"
 
     - cloudformation_facts:
         stack_name: "{{ main_stack_info.stack_resources[2].physical_resource_id.split('/')[1] }}"
@@ -68,8 +66,7 @@
       register: stack_manager_stack_info
       tags:
         - create
-      when:
-        permission_type == "b"
+      when: permission_type == "b"
 
     - name: Create Stack Manager configuration
       stack_manager_config:
@@ -86,8 +83,7 @@
         state: present
       tags:
         - create
-      when:
-        permission_type == "b"
+      when: permission_type == "b"
 
     - name: Create AEM Stack Manager Main Resources Stack with permission type c
       cloudformation:
@@ -113,8 +109,7 @@
       register: main_stack_info
       tags:
         - create
-      when:
-        permission_type == "c"
+      when: permission_type == "c"
 
     - cloudformation_facts:
         stack_name: "{{ main_stack_info.stack_resources[2].physical_resource_id.split('/')[1] }}"
@@ -123,8 +118,7 @@
       register: stack_manager_stack_info
       tags:
         - create
-      when:
-        permission_type == "c"
+      when: permission_type == "c"
 
     - name: Create Stack Manager configuration
       stack_manager_config:
@@ -141,9 +135,8 @@
         state: present
       tags:
         - create
-      when:
-        permission_type == "c"
-        
+      when: permission_type == "c"
+
     - name: Check if a Stack Exists
       command: >
         aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
@@ -156,8 +149,7 @@
     - name: Report Stack Problem
       debug:
         msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
-      when:
-        "stack_query.rc != 0"
+      when: "stack_query.rc != 0"
       tags:
         - delete
 
@@ -166,14 +158,13 @@
         stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
-      when:
-        "stack_query.rc == 0"
+      when: "stack_query.rc == 0"
       tags:
-      - delete
+        - delete
 
     - name: Delete All Stack Data
       command: >
-              aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"/"{{ stack_manager.s3_prefix }}"
-               --recursive --region "{{ aws.region }}"
+        aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"/"{{ stack_manager.s3_prefix }}"
+         --recursive --region "{{ aws.region }}"
       tags:
-      - delete
+        - delete

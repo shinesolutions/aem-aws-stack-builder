@@ -7,9 +7,9 @@
   tasks:
     - name: Upload CloudFormation Templates to S3
       command: >
-              aws s3 sync ../../../../../cloudformation/apps/aem/full-set
-                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
-                  --include "*.yaml" --acl public-read
+        aws s3 sync ../../../../../cloudformation/apps/aem/full-set
+            s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+            --include "*.yaml"
       tags:
         - create
 
@@ -82,9 +82,8 @@
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
           ImageRootDevice: "{{ ami_root_device_name }}"
       tags:
-      - create
-      when:
-        permission_type == "b"
+        - create
+      when: permission_type == "b"
 
     - name: Create AEM App Main Resources Stack with permission type c
       cloudformation:
@@ -155,9 +154,8 @@
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
           ImageRootDevice: "{{ ami_root_device_name }}"
       tags:
-      - create
-      when:
-        permission_type == "c"
+        - create
+      when: permission_type == "c"
 
     - name: Check if a Stack Exists
       command: >
@@ -171,8 +169,7 @@
     - name: Report Stack Problem
       debug:
         msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
-      when:
-        "stack_query.rc != 0"
+      when: "stack_query.rc != 0"
       tags:
         - delete
 
@@ -181,16 +178,15 @@
         stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
         region: "{{ aws.region }}"
         state: absent
-      when:
-        "stack_query.rc == 0"
+      when: "stack_query.rc == 0"
       tags:
-      - delete
+        - delete
 
     - name: Delete default deployment descriptor
       s3:
-        bucket: '{{ s3.data_bucket_name }}'
-        region: '{{ aws.region }}'
-        object: '{{ stack_prefix }}/deploy-artifacts-descriptor.json'
+        bucket: "{{ s3.data_bucket_name }}"
+        region: "{{ aws.region }}"
+        object: "{{ stack_prefix }}/deploy-artifacts-descriptor.json"
         mode: delobj
       ignore_errors: True
       tags:
@@ -200,7 +196,6 @@
       delete_sdb_domain:
         domain_name: "SIMIAN_ARMY_{{ stack_prefix }}"
         region: "{{ aws.region }}"
-      when:
-        "stack_query.rc == 0"
+      when: "stack_query.rc == 0"
       tags:
-      - delete
+        - delete
