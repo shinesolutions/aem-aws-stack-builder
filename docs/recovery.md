@@ -17,8 +17,8 @@ When an instance of `orchestrator` or `chaos-monkey` component gets terminated (
 
 Learn more about the detailed recovery steps:
 
-* [orchestrator recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps#orchestrator-recovery-steps.md)
-* [chaos-monkey recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps#chaos-monkey-recovery-steps.md)
+* [orchestrator recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md#orchestrator-recovery-steps.md)
+* [chaos-monkey recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md#chaos-monkey-recovery-steps.md)
 
 ### AEM Orchestrator-assisted auto-recovery
 
@@ -28,19 +28,19 @@ When a `author-dispatcher`, `publish`, or `publish-dispatcher` component instanc
 
 Learn more about the detailed recovery steps:
 
-* [author-dispatcher recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps#author-dispatcher-recovery-steps.md)
-* [publish recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps#publish-recovery-steps.md)
-* [publish-dispatcher recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps#publish-dispatcher-recovery-steps.md)
+* [author-dispatcher recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md#author-dispatcher-recovery-steps.md)
+* [publish recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md#publish-recovery-steps.md)
+* [publish-dispatcher recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md#publish-dispatcher-recovery-steps.md)
 
 ### AEM Author promotion recovery
 
 The `author-primary` and `author-standby` components are currently not in any Auto Scaling Group.
 
-When `author-primary` component gets terminated, then `author-standby` component needs to be promoted to become an `author-primary` in order to allow content authoring to resume. However, at this point the environment is not at a complete state, so when either `author-primary` or `author-standby` component is missing, then blue/green deployment needs to be triggered.
+When `author-primary` component gets terminated, then `author-standby` component needs to be promoted to become an `author-primary` in order to allow content authoring to resume. However, at this point the environment is not at a complete state
 
 We have a backlog task to place the Author components in AutoScalingGroups in order to automate the recovery process, but until then, for now we have to rely on human-triggered recovery (in AEM OpenCloud Manager, it is implemented as an operational task to promote Author-Standby into Author-Primary).
 
 Learn more about the detailed recovery steps:
 
-* [author-primary recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps#author-primary-recovery-steps.md)
-* [author-standby recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps#author-standby-recovery-steps.md)
+* [author-primary recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md#author-primary-recovery-steps.md)
+* [author-standby recovery steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md#author-standby-recovery-steps.md)
