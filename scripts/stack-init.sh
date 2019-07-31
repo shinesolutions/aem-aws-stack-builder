@@ -66,7 +66,7 @@ run_custom_stage() {
 translate_exit_code() {
 
   exit_code="$1"
-  if [ "$exit_code" -eq 0 ] || [ "$exit_code" -eq 2 ]; then
+  if [ "$exit_code" -eq 0 ]; then
     exit_code=0
   else
     # If puppet failed update ComponentInitStatus to Failed
