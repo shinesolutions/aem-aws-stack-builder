@@ -26,6 +26,9 @@ options:
         description:
           - ARN of the SNS Topic for to query for the TaskStatus
         required: true
+    MinimumPublishInstances:
+        description:
+         - Integer of minimum instances configured in the ASG
     SSMServiceRoleArn:
         description:
           - ARN of the SSM Service Role
@@ -61,6 +64,7 @@ EXAMPLES = '''
     S3Bucket: "AEM-Bucket"
     S3Folder: "AEM63/StackManager"
     TaskStatusTopicArn: arn:aws:sns:region:account-id:TaskStatusTopicArn
+    MinimumPublishInstances: 2
     SSMServiceRoleArn: arn:aws:iam::account-id:role/role-name
     S3BucketSSMOutput: "AEM-Bucket"
     S3PrefixSSMOutput: "AEM63/StackManager/SSMOutput"
@@ -205,6 +209,7 @@ def main():
             S3Bucket=dict(required=True, type='str'),
             S3Folder=dict(required=True, type='str'),
             TaskStatusTopicArn=dict(required=True, type='str'),
+            MinimumPublishInstances=dict(required=True, type='str'),
             SSMServiceRoleArn=dict(required=True, type='str'),
             S3BucketSSMOutput=dict(required=True, type='str'),
             S3PrefixSSMOutput=dict(required=True, type='str'),
