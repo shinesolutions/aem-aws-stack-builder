@@ -84,6 +84,7 @@
         S3PrefixSSMOutput: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/SSMOutput"
         BackupTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
         DynamoDBTableName: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
+        MinimumPublishInstances: "{{ publish.asg_min_size }}"
         state: present
       tags:
         - create

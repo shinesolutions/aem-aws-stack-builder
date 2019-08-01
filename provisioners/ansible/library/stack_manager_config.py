@@ -120,6 +120,7 @@ class config:
         s3prefixssmoutput = self.module.params.get("S3PrefixSSMOutput")
         backuptopicarn = self.module.params.get("BackupTopicArn")
         dynamodbtablename = self.module.params.get("DynamoDBTableName")
+        minpublishinstances = self.module.params.get("MinimumPublishInstances")
         changed = False
 
         # Create dict for run_cmd
@@ -175,7 +176,7 @@ class config:
         # Create dict for offline snapshot
         offline_snapshot ={
                 "offline_snapshot": {
-                    "min-publish-instances": 2,\
+                    "min-publish-instances": minpublishinstances,\
                             "sns-topic-arn": backuptopicarn
                 }
         }
