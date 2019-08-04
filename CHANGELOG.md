@@ -1,5 +1,5 @@
 ### 2.2.5-pre
-*
+* Removed setting ACLs on S3 objects with 'public-read' - [#292]
 
 ### 2.2.4
 * Add ELB cipher suite policy 
