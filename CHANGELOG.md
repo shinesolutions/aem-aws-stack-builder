@@ -1,3 +1,5 @@
+### 2.2.7-pre
+
 ### 2.2.6
 * Removed setting ACLs on S3 objects with 'public-read' - [#292]
 
