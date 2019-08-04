@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Suppress error `aws s3api head-object` stdout & stderr #48
+- Fixed error with generating stack manager config #302
 
 ## 4.6.0 - 2019-07-24
 ### Changed

@@ -26,6 +26,9 @@ options:
         description:
           - ARN of the SNS Topic for to query for the TaskStatus
         required: true
+    MinimumPublishInstances:
+        description:
+         - Integer of minimum instances configured in the ASG
     SSMServiceRoleArn:
         description:
           - ARN of the SSM Service Role
@@ -61,6 +64,7 @@ EXAMPLES = '''
     S3Bucket: "AEM-Bucket"
     S3Folder: "AEM63/StackManager"
     TaskStatusTopicArn: arn:aws:sns:region:account-id:TaskStatusTopicArn
+    MinimumPublishInstances: 2
     SSMServiceRoleArn: arn:aws:iam::account-id:role/role-name
     S3BucketSSMOutput: "AEM-Bucket"
     S3PrefixSSMOutput: "AEM63/StackManager/SSMOutput"
@@ -120,6 +124,7 @@ class config:
         s3prefixssmoutput = self.module.params.get("S3PrefixSSMOutput")
         backuptopicarn = self.module.params.get("BackupTopicArn")
         dynamodbtablename = self.module.params.get("DynamoDBTableName")
+        minpublishinstances = self.module.params.get("MinimumPublishInstances")
         changed = False
 
         # Create dict for run_cmd
@@ -175,7 +180,7 @@ class config:
         # Create dict for offline snapshot
         offline_snapshot ={
                 "offline_snapshot": {
-                    "min-publish-instances": 2,\
+                    "min-publish-instances": minpublishinstances,\
                             "sns-topic-arn": backuptopicarn
                 }
         }
@@ -204,6 +209,7 @@ def main():
             S3Bucket=dict(required=True, type='str'),
             S3Folder=dict(required=True, type='str'),
             TaskStatusTopicArn=dict(required=True, type='str'),
+            MinimumPublishInstances=dict(required=True, type='str'),
             SSMServiceRoleArn=dict(required=True, type='str'),
             S3BucketSSMOutput=dict(required=True, type='str'),
             S3PrefixSSMOutput=dict(required=True, type='str'),
