@@ -63,7 +63,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "Memory Utilization - EC2 - Graph",
                 "period": 300,
                 "annotations": {
@@ -92,7 +92,7 @@ Resources:
                 ],
                 "view": "singleValue",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "Memory Utilization - EC2",
                 "period": 300
               }
@@ -111,7 +111,7 @@ Resources:
                 ],
                 "view": "singleValue",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB HealthyHostCount Metrics",
                 "period": 300
               }
@@ -130,7 +130,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB HealthyHostCount Metrics - Graph",
                 "period": 300
               }
@@ -149,7 +149,7 @@ Resources:
                 ],
                 "view": "singleValue",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB UnHealthyHostCount Metrics",
                 "period": 300
               }
@@ -168,7 +168,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB UnHealthyHostCount Metrics - Graph",
                 "period": 300
               }
@@ -187,7 +187,7 @@ Resources:
                 ],
                 "view": "singleValue",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB BackendConnectionErrors Metrics",
                 "period": 300
               }
@@ -206,7 +206,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB BackendConnectionErrors Metrics - Graph",
                 "period": 300
               }
@@ -225,7 +225,7 @@ Resources:
                 ],
                 "view": "singleValue",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB HTTPCode_Backend_4XX Metrics",
                 "period": 300
               }
@@ -244,7 +244,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB HTTPCode_Backend_4XX Metrics - Graph",
                 "period": 300
               }
@@ -263,7 +263,7 @@ Resources:
                 ],
                 "view": "singleValue",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB HTTPCode_Backend_5XX Metrics",
                 "period": 300
               }
@@ -282,7 +282,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB HTTPCode_Backend_5XX Metrics - Graph",
                 "period": 300
               }
@@ -301,7 +301,7 @@ Resources:
                 ],
                 "view": "singleValue",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB RequestCount Metrics",
                 "period": 300
               }
@@ -320,7 +320,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "ELB RequestCount Metrics - Graph",
                 "period": 300
               }
@@ -343,7 +343,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "DiskSpaceUtilization on Data Volume /mnt/ebs1"
               }
             },
@@ -365,7 +365,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "DiskSpaceUtilization on root volume"
               }
             },
@@ -378,7 +378,7 @@ Resources:
               "properties": {
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "title": "SQS AEM ASG Event queue - Available Messages",
                 "start": "-PT3H",
                 "end": "P0D",
@@ -399,7 +399,7 @@ Resources:
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "ap-southeast-2",
+                "region": "${awsRegion}",
                 "start": "-PT3H",
                 "end": "P0D",
                 "title": "GenericJMX.delay.seconds_since_last_success"
@@ -434,10 +434,14 @@ Resources:
 
 
 Outputs:
-  applicationCloudwatchDashboardURL:
+  ApplicationCloudwatchDashboardURL:
     Description: The URL of the Cloudwatch Dashboard
     Value: !Join
       - ''
-      - - 'https://ap-southeast-2.console.aws.amazon.com/cloudwatch/home?region=ap-southeast-2#dashboards:name='
+      - - 'https://'
+        - !Ref AwsRegionParameter
+        - '.console.aws.amazon.com/cloudwatch/home?region='
+        - !Ref AwsRegionParameter
+        - '#dashboards:name='
         - !Ref MainStackPrefixParameter
         - '-monitoring-dashboard'
