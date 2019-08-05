@@ -8,6 +8,9 @@ Description: Create the Compute resources for the AEM Author
 Outputs:
   AuthorLoadBalancer:
     Description: The Author Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancer
     Value:
       Ref: AuthorLoadBalancer
   AuthorLoadBalancerDNSName:
@@ -21,14 +24,23 @@ Outputs:
       - DNSName
   AuthorPrimaryInstance:
     Description: The Author Primary Instance
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorPrimaryInstance
     Value:
       Ref: AuthorPrimaryInstance
   AuthorStandbyInstance:
     Description: The Author Standby Instance
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorStandbyInstance
     Value:
       Ref: AuthorStandbyInstance
   AuthorSyncDelayAlarm:
     Description: The Author Sync Delay Alarm
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
     Value:
       Ref: AuthorSyncDelayAlarm
 Parameters:
