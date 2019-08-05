@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added additional exit code checks to stack init process #294
+- Add aem.snapshot_attach_timeout configuration property
 
 ### Changed
 - Redirecting custom stack provisioner pre & post hook output to own logfile #298

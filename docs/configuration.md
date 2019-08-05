@@ -228,6 +228,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.truststore.enable_creation | If set to true, AEM Global Truststore will be created for AEM Author | Optional | false |
 | aem.truststore.password | AEM Global Truststore password | Optional | false |
+| aem.snapshot_attach_timeout | The number of seconds to attach snapshot before timing out | Optional | 900 |
 
 ### AEM Full-Set specific configuration properties:
 
