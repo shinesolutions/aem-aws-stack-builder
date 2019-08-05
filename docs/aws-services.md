@@ -16,4 +16,5 @@ The following AWS services are used by AEM environments created by AEM AWS Stack
 | Systems Manager | Systems Manager Run Command is used for executing operational tasks on components instances. Parameter Store is used for storing secrets, such as AEM license, to be provisioned on AEM environments. Session Manager is used for managing the instances via AWS console. |
 | Secrets Manager | Secrets Manager is used for storing secrets which can't fit in Parameter Store, for example: a private key. |
 | CloudFront | CloudFront distributions are used for multi-region caching of AEM content served via AEM Publish-Dispatcher ELB. |
+| Lambda | Lambda is used for executing AEM Stack Manager events. |
 | SimpleDB | SimpleDB is used by Chaos Monkey. |
