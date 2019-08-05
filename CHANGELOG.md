@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade AEM Test Suite to 1.3.0
 - Upgrade AEM HelloWorld Custom Stack Provisioner to 0.14.0
 - Upgrade AEM Stack Manager Cloud to 1.3.5
+- Upgrade AEM AWS Stack Provisioner to 4.8.0
 
 ### Fixed
 - Suppress error `aws s3api head-object` stdout & stderr #48
