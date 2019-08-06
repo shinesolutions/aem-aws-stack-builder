@@ -5,14 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
+## 4.7.0 - 2019-08-06
 ### Added
-- Added additional exit code checks to stack init process #294
+- Added additional exit code checks to stack init process [#294]
 - Add aem.snapshot_attach_timeout configuration property
 
 ### Changed
-- Redirecting custom stack provisioner pre & post hook output to own logfile #298
+- Redirecting custom stack provisioner pre & post hook output to own logfile [#298]
 - Upgrade AEM Stack Manager Messenger to 2.5.0
 - Upgrade AEM Test Suite to 1.3.0
 - Upgrade AEM HelloWorld Custom Stack Provisioner to 0.14.0
@@ -20,8 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade AEM AWS Stack Provisioner to 4.8.0
 
 ### Fixed
-- Suppress error `aws s3api head-object` stdout & stderr #48
-- Fixed error with generating stack manager config #302
+- Suppress error `aws s3api head-object` stdout & stderr [#48]
+- Fixed error with generating stack manager config [#302]
 
 ## 4.6.0 - 2019-07-24
 ### Changed
