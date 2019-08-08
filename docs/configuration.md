@@ -142,9 +142,7 @@ These configurations are applicable to create Cloudfront resources on AWS. For a
 | cdn.log_bucket_name | Amazon S3 bucket to store the access logs in. | Mandatory | |
 | cdn.log_bucket_prefix |  optional string that you want CloudFront to prefix to the access log filenames for this distribution, for example, myprefix/. | Mandatory | |
 | cdn.log_include_cookies | Specifies whether you want CloudFront to include cookies in access logs, specify true for IncludeCookies. | Optional | `'false'` |
-| cdn.origins.domain_name | `Amazon S3 origins`: The DNS name of the Amazon S3 bucket from which you want CloudFront to get objects for this origin, for example, myawsbucket.s3.amazonaws.com. If you set up your bucket to be configured as a website endpoint, enter the Amazon S3 static website hosting endpoint for the bucket.
-
-`Custom Origins`: The DNS domain name for the HTTP server from which you want CloudFront to get objects for this origin, for example, www.example.com. | Mandatory | |
+| cdn.origins.domain_name | `Amazon S3 origins`: The DNS name of the Amazon S3 bucket from which you want CloudFront to get objects for this origin, for example, myawsbucket.s3.amazonaws.com. If you set up your bucket to be configured as a website endpoint, enter the Amazon S3 static website hosting endpoint for the bucket. `Custom Origins`: The DNS domain name for the HTTP server from which you want CloudFront to get objects for this origin, for example, www.example.com. | Mandatory | |
 | cdn.origins.custom_origin_config.origin_protocol_policy | The origin protocol policy to apply to your origin. | Optional | `https-only` |
 | cdn.origins.custom_origin_config.origin_ssl_protocols | A comma seperated list of the SSL/TLS protocols that you want CloudFront to use when communicating with your origin over HTTPS. | Optional | |
 | cdn.price_class | The price class that corresponds with the maximum price that you want to pay for CloudFront service. If you specify PriceClass_All, CloudFront responds to requests for your objects from all CloudFront edge locations. | Optional | `PriceClass_All` |
