@@ -1,61 +1,266 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-  StackPrefixParameter:
-    Description: Stack Prefix for CDN stack
+  AliasesParameter:
+    Description: >-
+      A complex type that contains information about CNAMEs (alternate domain names), if any, for this distribution.
+    Type: CommaDelimitedList
+    Default: ''
+  CustomErrorResponses404PagePathParameter:
+    Description: >-
+      Distribution 404 response page path
     Type: String
-  OriginDomainNameParameter:
-    Description: Origin domain name
+    Default: ''
+  DefaultCacheBehaviorAllowedMethodsParameter:
+    Description: >-
+      A complex type that controls which HTTP methods CloudFront processes and forwards to your Amazon S3 bucket or your custom origin.
+    Type: CommaDelimitedList
+  DefaultCacheBehaviorCachedMethodsParameter:
+    Description: >-
+      A complex type that controls whether CloudFront caches the response to requests using the specified HTTP methods.
+    Type: CommaDelimitedList
+  DefaultCacheBehaviorCompressParameter:
+    Description: >-
+      Whether you want CloudFront to automatically compress certain files for this cache behavior. If so, specify true; if not, specify false. For more information, see Serving Compressed Files in the Amazon CloudFront Developer Guide.
     Type: String
-  RootObjectParameter:
-    Description: Distribution root object
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+  DefaultCacheBehaviorDefaultTTLParameter:
+    Description: >-
+      The default amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated.
+    Type: Number
+  DefaultCacheBehaviorForwardedValuesCookiesForwardParameter:
+    Description: >-
+      Specifies which cookies to forward to the origin for this cache behavior: all, none, or the list of cookies specified in the WhitelistedNames complex type.
     Type: String
-  Response404PagePathParameter:
-    Description: Distribution 404 response page path
+    AllowedValues:
+      - all
+      - none
+      - whitelist
+    Default: 'all'
+  DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesParameter:
+    Description: >-
+      Required if you specify whitelist for the value of Forward:. A complex type that specifies how many different cookies you want CloudFront to forward to the origin for this cache behavior and, if you want to forward selected cookies, the names of those cookies.
+    Type: CommaDelimitedList
+    Default: ''
+  DefaultCacheBehaviorForwardedValuesHeadersParameter:
+    Description: >-
+      A complex type that specifies the Headers, if any, that you want CloudFront to forward to the origin for this cache behavior (whitelisted headers). For the headers that you specify, CloudFront also caches separate versions of a specified object that is based on the header values in viewer requests.
+    Type: CommaDelimitedList
+    Default: ''
+  DefaultCacheBehaviorForwardedValuesQueryStringParameter:
+    Description: >-
+      Indicates whether you want CloudFront to forward query strings to the origin that is associated with this cache behavior and cache based on the query string parameters. CloudFront behavior depends on the value of QueryString and on the values that you specify for QueryStringCacheKeys.
+    Type: String
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+  DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter:
+    Description: >-
+      A complex type that contains information about the query string parameters that you want CloudFront to use for caching for this cache behavior.
+    Type: CommaDelimitedList
+    Default: ''
+  DefaultCacheBehaviorMaxTTLParameter:
+    Description: >-
+      The maximum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated.
+    Type: Number
+  DefaultCacheBehaviorMinTTLParameter:
+    Description: >-
+      The minimum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated.
+    Type: Number
+  DefaultCacheBehaviorSmoothStreamingParameter:
+    Description: >-
+      Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. If so, specify true; if not, specify false. If you specify true for SmoothStreaming, you can still distribute other content using this cache behavior if the content matches the value of PathPattern.
+    Type: String
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+  DefaultCacheBehaviorViewerProtocolPolicyParameter:
+    Description: >-
+      The protocol that viewers can use to access the files in the origin specified by TargetOriginId when a request matches the path pattern in PathPattern.
+    Type: String
+    AllowedValues:
+      - allow-all
+      - https-only
+      - redirect-to-https
+    Default: 'allow-all'
+  DefaultRootObjectParameter:
+    Description: >-
+      Distribution root object
     Type: String
   LogBucketNameParameter:
-    Description: Bucket name where CDN log to be stored
+    Description: >-
+      The Amazon S3 bucket to store the access logs in, for example, myawslogbucket.s3.amazonaws.com.
     Type: String
   LogBucketPrefixParameter:
-    Description: Bucket prefix where CDN log to be stored
+    Description: >-
+      An optional string that you want CloudFront to prefix to the access log filenames for this distribution, for example, myprefix/. If you want to enable logging, but you don't want to specify a prefix, you still must include an empty Prefix element in the Logging element.
     Type: String
+  LogIncludeCookiesParameter:
+    Description: >-
+      Specifies whether you want CloudFront to include cookies in access logs, specify true for IncludeCookies. If you choose to include cookies in logs, CloudFront logs all cookies regardless of how you configure the cache behaviors for this distribution. If you don't want to include cookies when you create a distribution or if you want to disable include cookies for an existing distribution, specify false for IncludeCookies.
+    Type: String
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+  OriginDomainNameParameter:
+    Description: >-
+      Origin domain name
+    Type: String
+  OriginsCustomOriginConfigOriginProtocolPolicyParameter:
+    Description: >-
+      Origin domain name
+    Type: String
+    AllowedValues:
+      - http-only
+      - https-only
+      - match-viewer
+    Default: 'https-only'
+  OriginsCustomOriginConfigOriginSSLProtocolsParameter:
+    Description: >-
+      Origin domain name
+    Type: CommaDelimitedList
+    Default: ''
+  PriceClassParameter:
+    Description: >-
+      The price class that corresponds with the maximum price that you want to pay for CloudFront service. If you specify PriceClass_All, CloudFront responds to requests for your objects from all CloudFront edge locations.
+    Type: String
+    AllowedValues:
+      - PriceClass_100
+      - PriceClass_200
+      - PriceClass_All
+    Default: 'PriceClass_All'
+  StackPrefixParameter:
+    Description: >-
+      Stack Prefix for CDN stack
+    Type: String
+  ViewerCertificateAcmCertificateArnParameter:
+    Description: >-
+       you want viewers to use HTTPS to request your objects and you're using an alternate domain name, you must choose the type of certificate that you want to use.
+    Type: String
+  ViewerCertificateCloudFrontDefaultCertificateParameter:
+    Description: >-
+      If you're using the CloudFront domain name for your distribution, specify true.
+    Type: String
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'false'
+  ViewerCertificateIamCertificateIdParameter:
+    Description: >-
+      If you want viewers to use HTTPS to request your objects and you're using an alternate domain name, you must choose the type of certificate that you want to use.
+    Type: String
+  ViewerCertificateMinimumProtocolVersionParameter:
+    Description: >-
+      Specify the security policy that you want CloudFront to use for HTTPS connections.
+    Type: String
+  ViewerCertificateSslSupportMethodParameter:
+    Description: >-
+      If you specify a value for ACMCertificateArn or for IAMCertificateId, you must also specify how you want CloudFront to serve HTTPS requests: using a method that works for browsers and clients released after 2010 or one that works for all clients.
+    Type: String
+  WebACLIdParameter:
+    Type: String
+    Description:
+      The Id of the AWS WAF WebAcl to associate with the distribution.
+    Default: ''
+Conditions:
+  AliasesEnabled:
+    !Not [ !Or [ !Equals [ !Select [ 0, !Ref AliasesParameter ], '' ], !Equals [ !Select [ 0, !Ref AliasesParameter ], 'overwrite-me' ] ] ]
+  Custom404Enabled:
+    !Not [ !Or [ !Equals [ !Ref CustomErrorResponses404PagePathParameter, '' ], !Equals [ !Ref CustomErrorResponses404PagePathParameter, 'overwrite-me' ] ] ]
+  WafEnabled:
+    !Not [ !Or [ !Equals [ !Ref WebACLIdParameter, '' ], !Equals [ !Ref WebACLIdParameter, 'overwrite-me' ] ] ]
+  DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesEnabled:
+    !Equals [ !Ref DefaultCacheBehaviorForwardedValuesCookiesForwardParameter, 'whitelist' ]
+  DefaultCacheBehaviorForwardedValuesHeadersParameterEnabled:
+    !Not [ !Or [ !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter ], '' ], !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter ], 'overwrite-me' ] ] ]
+  DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysEnabled:
+    !Not [ !Or [ !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter ], '' ], !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter ], 'overwrite-me' ] ] ]
+  OriginsCustomOriginConfigOriginSSLProtocolsEnabled:
+    !Not [ !Or [ !Equals [ !Select [ 0, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter ], '' ], !Equals [ !Select [ 0, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter ], 'overwrite-me' ] ] ]
+  ViewerCertificateAcmCertificateArnEnabled:
+    !Not [ !Or [ !Equals [ !Ref ViewerCertificateAcmCertificateArnParameter, '' ], !Equals [ !Ref ViewerCertificateAcmCertificateArnParameter, 'overwrite-me' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'true' ] ] ]
+  ViewerCertificateCloudFrontDefaultCertificateEnabled:
+    !Not [ !Or [ !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, '' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'overwrite-me' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'false' ] ] ]
+  ViewerCertificateIamCertificateIdEnabled:
+    !Not [ !Or [ !Equals [ !Ref ViewerCertificateIamCertificateIdParameter, '' ], !Equals [ !Ref ViewerCertificateIamCertificateIdParameter, 'overwrite-me' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'true' ] ] ]
+  ViewerCertificateMinimumProtocolVersionEnabled:
+    !Not [ !Or [ !Equals [ !Ref ViewerCertificateMinimumProtocolVersionParameter, '' ], !Equals [ !Ref ViewerCertificateMinimumProtocolVersionParameter, 'overwrite-me' ] ] ]
+  ViewerCertificateSslSupportMethodEnabled:
+    !Not [ !Or [ !Equals [ !Ref ViewerCertificateSslSupportMethodParameter, '' ], !Equals [ !Ref ViewerCertificateSslSupportMethodParameter, 'overwrite-me' ] ] ]
 Resources:
   CDNDistribution:
     Type: 'AWS::CloudFront::Distribution'
     Properties:
       DistributionConfig:
-        Origins:
-          - DomainName:
-              Ref: OriginDomainNameParameter
-            Id: CDNOrigin
-            CustomOriginConfig:
-              HTTPPort: 80
-              HTTPSPort: 443
-              OriginProtocolPolicy: http-only
-        Enabled: 'true'
-        Comment: CloudFront distribution
+        Aliases: !If [ AliasesEnabled, !Ref AliasesParameter, !Ref 'AWS::NoValue' ]
+        Comment: !Sub ${StackPrefixParameter} - CloudFront distribution
+        CustomErrorResponses:
+        - !If
+          - Custom404Enabled
+          - ErrorCode: '404'
+            ResponsePagePath: !Ref CustomErrorResponses404PagePathParameter
+            ResponseCode: '200'
+            ErrorCachingMinTTL: 30
+          - !Ref AWS::NoValue
+        DefaultCacheBehavior:
+          AllowedMethods:
+            Ref: DefaultCacheBehaviorAllowedMethodsParameter
+          CachedMethods:
+            Ref: DefaultCacheBehaviorCachedMethodsParameter
+          Compress:
+            Ref: DefaultCacheBehaviorCompressParameter
+          DefaultTTL:
+            Ref: DefaultCacheBehaviorDefaultTTLParameter
+          ForwardedValues:
+            Cookies:
+              Forward:
+                Ref: DefaultCacheBehaviorForwardedValuesCookiesForwardParameter
+              WhitelistedNames: !If [ DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesEnabled, !Ref DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesParameter, !Ref 'AWS::NoValue' ]
+            Headers: !If [  DefaultCacheBehaviorForwardedValuesHeadersParameterEnabled, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter, !Ref 'AWS::NoValue' ]
+            QueryString:
+              Ref: DefaultCacheBehaviorForwardedValuesQueryStringParameter
+            QueryStringCacheKeys: !If [  DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysEnabled, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter, !Ref 'AWS::NoValue' ]
+          MaxTTL:
+            Ref: DefaultCacheBehaviorMaxTTLParameter
+          MinTTL:
+            Ref: DefaultCacheBehaviorMinTTLParameter
+          SmoothStreaming:
+            Ref: DefaultCacheBehaviorSmoothStreamingParameter
+          TargetOriginId: !Sub CDNOrigin-${OriginDomainNameParameter}
+          ViewerProtocolPolicy:
+            Ref: DefaultCacheBehaviorViewerProtocolPolicyParameter
         DefaultRootObject:
-          Ref: RootObjectParameter
+          Ref: DefaultRootObjectParameter
+        Enabled: 'true'
         Logging:
-          IncludeCookies: 'true'
           Bucket:
             Ref: LogBucketNameParameter
+          IncludeCookies:
+            Ref: LogIncludeCookiesParameter
           Prefix:
             Ref: LogBucketPrefixParameter
-        DefaultCacheBehavior:
-          TargetOriginId: CDNOrigin
-          SmoothStreaming: 'false'
-          ForwardedValues:
-            QueryString: 'false'
-            Cookies:
-              Forward: all
-          ViewerProtocolPolicy: allow-all
-        # CustomErrorResponses:
-        # - ErrorCode: '404'
-        #   ResponsePagePath:
-        #     Ref: Response404PagePathParameter
-        #   ResponseCode: '200'
-        #   ErrorCachingMinTTL: 30
-        PriceClass: PriceClass_200
+        Origins:
+        - DomainName:
+            Ref: OriginDomainNameParameter
+          Id: !Sub CDNOrigin-${OriginDomainNameParameter}
+          CustomOriginConfig:
+            HTTPPort: 80
+            HTTPSPort: 443
+            OriginProtocolPolicy:
+              Ref: OriginsCustomOriginConfigOriginProtocolPolicyParameter
+            OriginSSLProtocols: !If [  OriginsCustomOriginConfigOriginSSLProtocolsEnabled, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter, !Ref 'AWS::NoValue' ]
+        PriceClass:
+            Ref: PriceClassParameter
         ViewerCertificate:
-          CloudFrontDefaultCertificate: 'true'
+          AcmCertificateArn: !If [  ViewerCertificateAcmCertificateArnEnabled, !Ref ViewerCertificateAcmCertificateArnParameter, !Ref 'AWS::NoValue' ]
+          CloudFrontDefaultCertificate: !If [  ViewerCertificateCloudFrontDefaultCertificateEnabled, !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, !Ref 'AWS::NoValue' ]
+          IamCertificateId: !If [  ViewerCertificateIamCertificateIdEnabled, !Ref ViewerCertificateIamCertificateIdParameter, !Ref 'AWS::NoValue' ]
+          MinimumProtocolVersion: !If [  ViewerCertificateMinimumProtocolVersionEnabled, !Ref ViewerCertificateMinimumProtocolVersionParameter, !Ref 'AWS::NoValue' ]
+          SslSupportMethod: !If [  ViewerCertificateSslSupportMethodEnabled, !Ref ViewerCertificateSslSupportMethodParameter, !Ref 'AWS::NoValue' ]
+        WebACLId: !If [ WafEnabled, !Ref WebACLIdParameter, !Ref 'AWS::NoValue' ]
