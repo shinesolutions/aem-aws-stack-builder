@@ -87,6 +87,7 @@ common::proxy_protocol: '{{ proxy.protocol }}'
 common::proxy_host: '{{ proxy.host }}'
 common::proxy_port: '{{ proxy.port }}'
 common::proxy_user: '{{ proxy.user }}'
+common::proxy_enable: '{{ proxy.enable }}'
 common::proxy_password: '{{ proxy.password }}'
 common::proxy_noproxy:
 {{ proxy.noproxy | to_nice_yaml | indent(width=2, first=True) }}
