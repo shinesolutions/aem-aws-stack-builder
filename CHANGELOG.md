@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add CloudFront support #306
+- Add CloudFront CDN support #306
+- Add CloudWatch dashboard support for AEM Full-Set
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.9.0
 
 ## 4.7.0 - 2019-08-06
 ### Added
