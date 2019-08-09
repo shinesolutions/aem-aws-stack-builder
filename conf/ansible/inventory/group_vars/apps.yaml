@@ -457,10 +457,39 @@ monitoring:
 
 cdn:
   stack_name: cdn-stack
+  aliases:
+  custom_error_responses:
+    response_page_path: overwrite-me
+  default_root_object: index.html
+  default_cache_behavior:
+    allowed_methods: GET,HEAD
+    cached_methods: GET,HEAD
+    compress: 'false'
+    default_ttl: 30
+    forwarded_values:
+      cookies:
+        forward: all
+        whitelisted_names: overwrite-me
+      headers: overwrite-me
+      query_string: 'false'
+      query_string_cache_keys: overwrite-me
+    max_ttl: 60
+    min_ttl: 30
+    smooth_streaming: 'false'
+    viewer_protocol_policy: allow-all
   log_bucket_name: overwrite-me.s3.amazonaws.com
   log_bucket_prefix: reverse-proxy
-  origin_domain_name: overwrite-me
-  root_object: /index.html
-  response_404_page_path: /404.html
-  certificate_arn: overwrite-me
-  certificate_key_arn: overwrite-me
+  log_include_cookies: 'false'
+  origins:
+    domain_name: overwrite-me
+    custom_origin_config:
+      origin_protocol_policy: https-only
+      origin_ssl_protocols: overwrite-me
+  price_class: PriceClass_All
+  viewer_certificate:
+    acm_certificate_arn: overwrite-me
+    cloud_front_default_certificate: overwrite-me
+    iam_certificate_id: overwrite-me
+    minimum_protocol_version: TLSv1.1_2016
+    ssl_support_method: overwrite-me
+  web_acl_id_parameter: overwrite-me
