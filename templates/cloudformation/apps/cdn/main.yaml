@@ -73,7 +73,7 @@ Parameters:
     Type: Number
   DefaultCacheBehaviorSmoothStreamingParameter:
     Description: >-
-      Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. If so, specify true; if not, specify false. If you specify true for SmoothStreaming, you can still distribute other content using this cache behavior if the content matches the value of PathPattern.
+      Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior.
     Type: String
     AllowedValues:
       - 'true'
@@ -102,7 +102,7 @@ Parameters:
     Type: String
   LogIncludeCookiesParameter:
     Description: >-
-      Specifies whether you want CloudFront to include cookies in access logs, specify true for IncludeCookies. If you choose to include cookies in logs, CloudFront logs all cookies regardless of how you configure the cache behaviors for this distribution. If you don't want to include cookies when you create a distribution or if you want to disable include cookies for an existing distribution, specify false for IncludeCookies.
+      Specifies whether you want CloudFront to include cookies in access logs, specify true for IncludeCookies. If you choose to include cookies in logs, CloudFront logs all cookies regardless of how you configure the cache behaviors for this distribution.
     Type: String
     AllowedValues:
       - 'true'
@@ -170,44 +170,44 @@ Parameters:
     Default: ''
 Conditions:
   AliasesEnabled:
-    !Not [ !Or [ !Equals [ !Select [ 0, !Ref AliasesParameter ], '' ], !Equals [ !Select [ 0, !Ref AliasesParameter ], 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Select [0, !Ref AliasesParameter], ''], !Equals [!Select [0, !Ref AliasesParameter], 'overwrite-me']]]
   Custom404Enabled:
-    !Not [ !Or [ !Equals [ !Ref CustomErrorResponses404PagePathParameter, '' ], !Equals [ !Ref CustomErrorResponses404PagePathParameter, 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Ref CustomErrorResponses404PagePathParameter, ''], !Equals [!Ref CustomErrorResponses404PagePathParameter, 'overwrite-me']]]
   WafEnabled:
-    !Not [ !Or [ !Equals [ !Ref WebACLIdParameter, '' ], !Equals [ !Ref WebACLIdParameter, 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Ref WebACLIdParameter, ''], !Equals [!Ref WebACLIdParameter, 'overwrite-me']]]
   DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesEnabled:
-    !Equals [ !Ref DefaultCacheBehaviorForwardedValuesCookiesForwardParameter, 'whitelist' ]
+    !Equals [!Ref DefaultCacheBehaviorForwardedValuesCookiesForwardParameter, 'whitelist']
   DefaultCacheBehaviorForwardedValuesHeadersParameterEnabled:
-    !Not [ !Or [ !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter ], '' ], !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter ], 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Select [0, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter], ''], !Equals [!Select [0, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter], 'overwrite-me']]]
   DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysEnabled:
-    !Not [ !Or [ !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter ], '' ], !Equals [ !Select [ 0, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter ], 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Select [0, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter], ''], !Equals [!Select [0, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter], 'overwrite-me']]]
   OriginsCustomOriginConfigOriginSSLProtocolsEnabled:
-    !Not [ !Or [ !Equals [ !Select [ 0, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter ], '' ], !Equals [ !Select [ 0, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter ], 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Select [0, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter], ''], !Equals [!Select [0, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter], 'overwrite-me']]]
   ViewerCertificateAcmCertificateArnEnabled:
-    !Not [ !Or [ !Equals [ !Ref ViewerCertificateAcmCertificateArnParameter, '' ], !Equals [ !Ref ViewerCertificateAcmCertificateArnParameter, 'overwrite-me' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'true' ] ] ]
+    !Not [!Or [!Equals [!Ref ViewerCertificateAcmCertificateArnParameter, ''], !Equals [!Ref ViewerCertificateAcmCertificateArnParameter, 'overwrite-me'], !Equals [!Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'true']]]
   ViewerCertificateCloudFrontDefaultCertificateEnabled:
-    !Not [ !Or [ !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, '' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'overwrite-me' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'false' ] ] ]
+    !Not [!Or [!Equals [!Ref ViewerCertificateCloudFrontDefaultCertificateParameter, ''], !Equals [!Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'overwrite-me'], !Equals [!Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'false']]]
   ViewerCertificateIamCertificateIdEnabled:
-    !Not [ !Or [ !Equals [ !Ref ViewerCertificateIamCertificateIdParameter, '' ], !Equals [ !Ref ViewerCertificateIamCertificateIdParameter, 'overwrite-me' ], !Equals [ !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'true' ] ] ]
+    !Not [!Or [!Equals [!Ref ViewerCertificateIamCertificateIdParameter, ''], !Equals [!Ref ViewerCertificateIamCertificateIdParameter, 'overwrite-me'], !Equals [!Ref ViewerCertificateCloudFrontDefaultCertificateParameter, 'true']]]
   ViewerCertificateMinimumProtocolVersionEnabled:
-    !Not [ !Or [ !Equals [ !Ref ViewerCertificateMinimumProtocolVersionParameter, '' ], !Equals [ !Ref ViewerCertificateMinimumProtocolVersionParameter, 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Ref ViewerCertificateMinimumProtocolVersionParameter, ''], !Equals [!Ref ViewerCertificateMinimumProtocolVersionParameter, 'overwrite-me']]]
   ViewerCertificateSslSupportMethodEnabled:
-    !Not [ !Or [ !Equals [ !Ref ViewerCertificateSslSupportMethodParameter, '' ], !Equals [ !Ref ViewerCertificateSslSupportMethodParameter, 'overwrite-me' ] ] ]
+    !Not [!Or [!Equals [!Ref ViewerCertificateSslSupportMethodParameter, ''], !Equals [!Ref ViewerCertificateSslSupportMethodParameter, 'overwrite-me']]]
 Resources:
   CDNDistribution:
     Type: 'AWS::CloudFront::Distribution'
     Properties:
       DistributionConfig:
-        Aliases: !If [ AliasesEnabled, !Ref AliasesParameter, !Ref 'AWS::NoValue' ]
+        Aliases: !If [AliasesEnabled, !Ref AliasesParameter, !Ref 'AWS::NoValue']
         Comment: !Sub ${StackPrefixParameter} - CloudFront distribution
         CustomErrorResponses:
-        - !If
-          - Custom404Enabled
-          - ErrorCode: '404'
-            ResponsePagePath: !Ref CustomErrorResponses404PagePathParameter
-            ResponseCode: '200'
-            ErrorCachingMinTTL: 30
-          - !Ref AWS::NoValue
+          - !If
+            - Custom404Enabled
+            - ErrorCode: '404'
+              ResponsePagePath: !Ref CustomErrorResponses404PagePathParameter
+              ResponseCode: '200'
+              ErrorCachingMinTTL: 30
+            - !Ref AWS::NoValue
         DefaultCacheBehavior:
           AllowedMethods:
             Ref: DefaultCacheBehaviorAllowedMethodsParameter
@@ -221,11 +221,11 @@ Resources:
             Cookies:
               Forward:
                 Ref: DefaultCacheBehaviorForwardedValuesCookiesForwardParameter
-              WhitelistedNames: !If [ DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesEnabled, !Ref DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesParameter, !Ref 'AWS::NoValue' ]
-            Headers: !If [  DefaultCacheBehaviorForwardedValuesHeadersParameterEnabled, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter, !Ref 'AWS::NoValue' ]
+              WhitelistedNames: !If [DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesEnabled, !Ref DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesParameter, !Ref 'AWS::NoValue']
+            Headers: !If [DefaultCacheBehaviorForwardedValuesHeadersParameterEnabled, !Ref DefaultCacheBehaviorForwardedValuesHeadersParameter, !Ref 'AWS::NoValue']
             QueryString:
               Ref: DefaultCacheBehaviorForwardedValuesQueryStringParameter
-            QueryStringCacheKeys: !If [  DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysEnabled, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter, !Ref 'AWS::NoValue' ]
+            QueryStringCacheKeys: !If [DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysEnabled, !Ref DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter, !Ref 'AWS::NoValue']
           MaxTTL:
             Ref: DefaultCacheBehaviorMaxTTLParameter
           MinTTL:
@@ -246,21 +246,21 @@ Resources:
           Prefix:
             Ref: LogBucketPrefixParameter
         Origins:
-        - DomainName:
-            Ref: OriginDomainNameParameter
-          Id: !Sub CDNOrigin-${OriginDomainNameParameter}
-          CustomOriginConfig:
-            HTTPPort: 80
-            HTTPSPort: 443
-            OriginProtocolPolicy:
-              Ref: OriginsCustomOriginConfigOriginProtocolPolicyParameter
-            OriginSSLProtocols: !If [  OriginsCustomOriginConfigOriginSSLProtocolsEnabled, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter, !Ref 'AWS::NoValue' ]
+          - DomainName:
+              Ref: OriginDomainNameParameter
+            Id: !Sub CDNOrigin-${OriginDomainNameParameter}
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy:
+                Ref: OriginsCustomOriginConfigOriginProtocolPolicyParameter
+              OriginSSLProtocols: !If [OriginsCustomOriginConfigOriginSSLProtocolsEnabled, !Ref OriginsCustomOriginConfigOriginSSLProtocolsParameter, !Ref 'AWS::NoValue']
         PriceClass:
-            Ref: PriceClassParameter
+          Ref: PriceClassParameter
         ViewerCertificate:
-          AcmCertificateArn: !If [  ViewerCertificateAcmCertificateArnEnabled, !Ref ViewerCertificateAcmCertificateArnParameter, !Ref 'AWS::NoValue' ]
-          CloudFrontDefaultCertificate: !If [  ViewerCertificateCloudFrontDefaultCertificateEnabled, !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, !Ref 'AWS::NoValue' ]
-          IamCertificateId: !If [  ViewerCertificateIamCertificateIdEnabled, !Ref ViewerCertificateIamCertificateIdParameter, !Ref 'AWS::NoValue' ]
-          MinimumProtocolVersion: !If [  ViewerCertificateMinimumProtocolVersionEnabled, !Ref ViewerCertificateMinimumProtocolVersionParameter, !Ref 'AWS::NoValue' ]
-          SslSupportMethod: !If [  ViewerCertificateSslSupportMethodEnabled, !Ref ViewerCertificateSslSupportMethodParameter, !Ref 'AWS::NoValue' ]
-        WebACLId: !If [ WafEnabled, !Ref WebACLIdParameter, !Ref 'AWS::NoValue' ]
+          AcmCertificateArn: !If [ViewerCertificateAcmCertificateArnEnabled, !Ref ViewerCertificateAcmCertificateArnParameter, !Ref 'AWS::NoValue']
+          CloudFrontDefaultCertificate: !If [ViewerCertificateCloudFrontDefaultCertificateEnabled, !Ref ViewerCertificateCloudFrontDefaultCertificateParameter, !Ref 'AWS::NoValue']
+          IamCertificateId: !If [ViewerCertificateIamCertificateIdEnabled, !Ref ViewerCertificateIamCertificateIdParameter, !Ref 'AWS::NoValue']
+          MinimumProtocolVersion: !If [ViewerCertificateMinimumProtocolVersionEnabled, !Ref ViewerCertificateMinimumProtocolVersionParameter, !Ref 'AWS::NoValue']
+          SslSupportMethod: !If [ViewerCertificateSslSupportMethodEnabled, !Ref ViewerCertificateSslSupportMethodParameter, !Ref 'AWS::NoValue']
+        WebACLId: !If [WafEnabled, !Ref WebACLIdParameter, !Ref 'AWS::NoValue']
