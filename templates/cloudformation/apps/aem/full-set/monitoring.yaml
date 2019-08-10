@@ -412,8 +412,7 @@ Resources:
           publishAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishAutoScalingGroup'}]],
           publishDispatcherAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup'}]],
           orchestratorAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-OrchestratorAutoScalingGroup'}]],
-#          chaosMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup'}]],
-          chaosMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-OrchestratorAutoScalingGroup'}]],
+          chaosMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup'}]],
           authorPrimaryInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorPrimaryInstance'}]],
           authorStandbyInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorStandbyInstance'}]],
 
