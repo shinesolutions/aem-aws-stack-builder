@@ -514,6 +514,7 @@ Resources:
     - AuthorDispatcherStack
     - PublishDispatcherStack
     - OrchestratorStack
+    - ChaosMonkeyStack
     Properties:
       Parameters:
         MainStackPrefixParameter:
