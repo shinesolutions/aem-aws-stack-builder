@@ -9,6 +9,39 @@ Parameters:
   AwsRegionParameter:
     Type: String
     Description: AWS region
+  AuthorDispatcherImageRootDeviceParameter:
+    Type: String
+    Description: Author-Dispatcher root device
+  AuthorDispatcherImageDataDeviceParameter:
+    Type: String
+    Description: Author-Dispatcher data device
+  AuthorImageRootDeviceParameter:
+    Type: String
+    Description: Author image root device
+  AuthorImageDataDeviceParameter:
+    Type: String
+    Description: Author image data device
+  ChaosMonkeyImageRootDeviceParameter:
+    Type: String
+    Description: Chaos Monkey image root device
+  OrchestratorImageRootDeviceParameter:
+    Type: String
+    Description: Orchestrator image root device
+  OrchestratorImageDataDeviceParameter:
+    Type: String
+    Description: Orchestrator image data device
+  PublishDispatcherImageRootDeviceParameter:
+    Type: String
+    Description: Publish-Dispatcher image root device
+  PublishDispatcherImageDataDeviceParameter:
+    Type: String
+    Description: Publish-Dispatcher image data device
+  PublishImageRootDeviceParameter:
+    Type: String
+    Description: Publish image root device
+  PublishImageDataDeviceParameter:
+    Type: String
+    Description: Publish image data device
 Resources:
   applicationDashboard:
     Type: AWS::CloudWatch::Dashboard
@@ -333,13 +366,12 @@ Resources:
               "height": 6,
               "properties": {
                 "metrics": [
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "/dev/xvdb" ],
-                  [ "...", "${authorStandbyInstance}", "Filesystem", "/dev/xvdb" ],
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "/dev/xvdb" ],
-                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "/dev/xvdb" ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "/dev/xvdb" ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "/dev/xvdb" ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", "Filesystem", "/dev/xvdb" ]
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${authorImageDataDevice}" ],
+                  [ "...", "${authorStandbyInstance}", "Filesystem", "${authorImageDataDevice}" ],
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${authorDispatcherImageDataDevice}" ],
+                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${publishImageDataDevice}" ],
+                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${publishDispatcherImageDataDevice}" ],
+                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${orchestratorImageDataDevice}" ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -355,13 +387,13 @@ Resources:
               "height": 6,
               "properties": {
                 "metrics": [
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "/dev/xvda2" ],
-                  [ "...", "${authorStandbyInstance}", "Filesystem", "/dev/xvda2" ],
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "/dev/xvda2" ],
-                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "/dev/xvda2" ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "/dev/xvda2" ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "/dev/xvda2" ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", "Filesystem", "/dev/xvda2" ]
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${authorImageRootDevice}" ],
+                  [ "...", "${authorStandbyInstance}", "Filesystem", "${authorImageRootDevice}" ],
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${authorDispatcherImageRootDevice}" ],
+                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${publishImageRootDevice}" ],
+                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${publishDispatcherImageRootDevice}" ],
+                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${orchestratorImageRootDevice}" ],
+                  [ "...", "${chaosMonkeyAutoScalingGroupName}", "Filesystem", "${chaosMonkeyImageRootDevice}" ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -423,7 +455,18 @@ Resources:
           aemAsgEventQueueName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AEMASGEventQueueName'}]],
 
           stackPrefix: !Ref MainStackPrefixParameter,
-          awsRegion: !Ref AwsRegionParameter
+          awsRegion: !Ref AwsRegionParameter,
+          authorDispatcherImageRootDevice: !Ref AuthorDispatcherImageRootDeviceParameter,
+          authorDispatcherImageDataDevice: !Ref AuthorDispatcherImageDataDeviceParameter,
+          authorImageRootDevice: !Ref AuthorImageRootDeviceParameter,
+          authorImageDataDevice: !Ref AuthorImageDataDeviceParameter,
+          chaosMonkeyImageRootDevice: !Ref ChaosMonkeyImageRootDeviceParameter,
+          orchestratorImageRootDevice: !Ref OrchestratorImageRootDeviceParameter,
+          orchestratorImageDataDevice: !Ref OrchestratorImageDataDeviceParameter,
+          publishDispatcherImageRootDevice: !Ref PublishDispatcherImageRootDeviceParameter,
+          publishDispatcherImageDataDevice: !Ref PublishDispatcherImageDataDeviceParameter,
+          publishImageRootDevice: !Ref PublishImageRootDeviceParameter,
+          publishImageDataDevice: !Ref PublishImageDataDeviceParameter
         }
       DashboardName: !Sub
         - '${MainStackPrefixParameter}-monitoring-dashboard'
