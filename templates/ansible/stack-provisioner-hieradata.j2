@@ -82,7 +82,7 @@ simianarmy::chaos_properties::simianarmy_chaos_asg_max_terminations_per_day: '{{
 # AWS Region parameter
 common::aws_region: {{ aws.region }}
 
-common::proxy_enabled: {{ proxy.enabled }}
+common::proxy_enabled: '{{ proxy.enabled }}'
 common::proxy_protocol: '{{ proxy.protocol }}'
 common::proxy_host: '{{ proxy.host }}'
 common::proxy_port: '{{ proxy.port }}'
