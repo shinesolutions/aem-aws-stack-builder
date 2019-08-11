@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.9.0
 
+### Fixed
+- Fix invalid ServerSideEncryptionByDefault with null value when creating AWS resources S3 bucket
+
 ## 4.7.0 - 2019-08-06
 ### Added
 - Added additional exit code checks to stack init process [#294]
