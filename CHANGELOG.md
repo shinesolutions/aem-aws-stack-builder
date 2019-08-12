@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add variable for proxy_enabled for #314
+- Add variable for proxy_enabled for shinesolutions/puppet-aem-curator#134
 
 ## Unreleased
 ### Added
