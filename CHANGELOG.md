@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Add variable for proxy_enabled for #314
+
+## Unreleased
+### Added
 - Add CloudFront CDN support #306
 - Add CloudWatch dashboard support for AEM Full-Set
 
