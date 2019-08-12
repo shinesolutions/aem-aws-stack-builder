@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add CloudFront CDN support #306
 - Add CloudWatch dashboard support for AEM Full-Set
 - Add AWS resources integration testing
+- Add hiera parameter proxy_enabled for configuring collectd proxy settings shinesolutions/puppet-aem-curator#134
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.9.0
