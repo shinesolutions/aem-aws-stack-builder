@@ -22,6 +22,22 @@ integration_test_config_file=stage/user-config/zzz-test.yaml
 echo "Running AEM AWS Stack Builder integration test with test_id: ${test_id}, aem_version: ${aem_version}, os_type: ${os_type}"
 
 # Create integration test configuration
+# Note that the AWS resources testing is specifically for testing the AWS resources creation
+# they are not yet used by the AEM environments creation testing further below.
+echo "Creating integration test configuration file..."
+rm -f "${integration_test_config_file}"
+echo -e "aws:\n  resources:\n    s3_bucket: ${test_id}-res" > "${integration_test_config_file}"
+
+# Create AWS resources
+cp "${integration_test_config_file}" "stage/user-config/aws-resources-sandpit/"
+echo "Creating AWS resources..."
+make create-aws-resources "stack_prefix=${test_id}-res" config_path=stage/user-config/aws-resources-sandpit/
+
+# Delete AWS resources
+echo "Deleting AWS resources..."
+make delete-aws-resources "stack_prefix=${test_id}-res" config_path=stage/user-config/aws-resources-sandpit/
+
+# Create integration test configuration
 echo "Creating integration test configuration file..."
 rm -f "${integration_test_config_file}"
 echo -e "library:\n  aem_aws_stack_provisioner_version: ${test_id}\n  aem_stack_manager_version: ${test_id}" > "${integration_test_config_file}"
