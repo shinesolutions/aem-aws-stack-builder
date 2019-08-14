@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.10.0
+- Change config property aem.enable_post_start_sleep default value to true
+- Change config property aem.post_start_sleep_seconds default value to 180
 
 ### Fixed
 - Fix invalid ServerSideEncryptionByDefault with null value when creating AWS resources S3 bucket

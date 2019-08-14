@@ -19,7 +19,7 @@ aem:
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
-  enable_post_start_sleep: false
+  enable_post_start_sleep: true
   enable_upgrade_tools: false
   bak_files_cleanup_max_age_in_days: 30
   enable_saml: false
@@ -32,7 +32,7 @@ aem:
   revert_snapshot_type:
   snapshot_attach_timeout: 900
   client_timeout: 1200
-  post_start_sleep_seconds: 120
+  post_start_sleep_seconds: 180
   # Parameters for managing AEM Authorizable Keystore
   authorizable_keystore:
     enable_creation: false
