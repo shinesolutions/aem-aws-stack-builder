@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add hiera parameter proxy_enabled for configuring collectd proxy settings shinesolutions/puppet-aem-curator#134
 
 ### Changed
-- Upgrade AEM AWS Stack Provisioner to 4.9.0
+- Upgrade AEM AWS Stack Provisioner to 4.10.0
 
 ### Fixed
 - Fix invalid ServerSideEncryptionByDefault with null value when creating AWS resources S3 bucket
