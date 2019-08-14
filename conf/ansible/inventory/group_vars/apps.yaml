@@ -216,7 +216,7 @@ publish_dispatcher:
   asg_min_size: 2
   asg_desired_capacity: 2
   asg_max_size: 2
-  asg_health_check_grace_period: 1200
+  asg_health_check_grace_period: 2400
   asg_cooldown: 480
   asg_cpu_scaling_threshold: 49
   asg_cpu_high_period: 300
@@ -233,7 +233,7 @@ publish:
   asg_min_size: 2
   asg_desired_capacity: 2
   asg_max_size: 2
-  asg_health_check_grace_period: 900
+  asg_health_check_grace_period: 1800
   asg_cooldown: 480
 
 author:

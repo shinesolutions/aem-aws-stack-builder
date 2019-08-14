@@ -166,7 +166,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish_dispatcher.asg_desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_min_size | The minimum number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
-| publish_dispatcher.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `1200` |
+| publish_dispatcher.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `2400` |
 | publish_dispatcher.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
 | publish_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `publish-dispatcher` component. | Optional | `HTTPS:443/system/health?tags=shallow` |
 | publish_dispatcher.elb_scheme | The [scheme](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-ec2-elb-scheme) for the ELB sitting in front of `publish-dispatcher` component. | Optional | `internet-facing` |
@@ -179,7 +179,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish.asg_desired_capacity | The desired number of `publish` component instances. | Optional | `2` |
 | publish.asg_min_size | The minimum number of `publish` component instances. | Optional | `2` |
 | publish.asg_max_size | The maximum number of `publish` component instances. | Optional | `2` |
-| publish.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `900` |
+| publish.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `1800` |
 | publish.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
 | publish.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
 | author.instance_profile | ARN of the IAM instance profile to be used on `author` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
