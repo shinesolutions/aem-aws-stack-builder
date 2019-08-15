@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change config property aem.post_start_sleep_seconds default value to 180
 - Change config property publish_dispatcher.asg_health_check_grace_period default value to 2400
 - Change config property publish.asg_health_check_grace_period default value to 1800
+- Change config property aem.snapshot_attach_timeout default value to 1800
 
 ### Fixed
 - Fix invalid ServerSideEncryptionByDefault with null value when creating AWS resources S3 bucket

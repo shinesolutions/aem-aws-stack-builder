@@ -30,7 +30,7 @@ aem:
   login_ready_base_sleep_seconds: 5
   login_ready_max_sleep_seconds: 10
   revert_snapshot_type:
-  snapshot_attach_timeout: 900
+  snapshot_attach_timeout: 1800
   client_timeout: 1200
   post_start_sleep_seconds: 180
   # Parameters for managing AEM Authorizable Keystore
