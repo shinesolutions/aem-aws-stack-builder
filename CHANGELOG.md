@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add hiera parameter proxy_enabled for configuring collectd proxy settings shinesolutions/puppet-aem-curator#134
 
 ### Changed
-- Upgrade AEM AWS Stack Provisioner to 4.10.0
+- Upgrade AEM AWS Stack Provisioner to 4.11.0
 - Change config property aem.enable_post_start_sleep default value to true
 - Change config property aem.post_start_sleep_seconds default value to 180
 - Change config property publish_dispatcher.asg_health_check_grace_period default value to 2400
