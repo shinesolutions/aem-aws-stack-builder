@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 4.8.0 - 2019-08-16
 ### Added
-- Add CloudFront CDN support #306
+- Add CloudFront CDN support [#306]
 - Add CloudWatch dashboard support for AEM Full-Set
 - Add AWS resources integration testing
 - Add hiera parameter proxy_enabled for configuring collectd proxy settings shinesolutions/puppet-aem-curator#134
