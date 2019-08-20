@@ -1,0 +1,185 @@
+---
+schemaVersion: '2.0'
+description: >-
+  Enable SAML on target Stack.
+parameters:
+  aemId:
+    description: (Required) AEM ID of the instance to disable SAML on.
+    type: String
+    default: 'author'
+  path:
+    description: >-
+      (Required) Repository path for which this authentication handler should
+      be used by Sling. If this is empty, the authentication handler will be
+      disabled.
+    type: String
+    default: ''
+  serviceProviderEntityId:
+    description: >-
+      (Required) ID which uniquely identifies this service provider with the
+      identity provider. If this property is empty the authentication handler
+      is disabled.
+    type: String
+    default: ''
+  idpUrl:
+    description: >-
+      (Required) URL of the IDP where the SAML Authentication Request should
+      be sent to. If this property is empty the authentication handler is disabled.
+    type: String
+    default: ''
+  idpCertAlias:
+    description: >-
+      (Optional) The alias of the IdP's certificate in the global truststore.
+      If this property is empty the authentication handler is disabled.
+    type: String
+    default: ''
+  serial:
+    description: >-
+      (Optional) Certificate Serial Number as it is in the AEM Truststore.
+    type: String
+    default: ''
+  file:
+    description: >-
+      (Optional) S3 Path to the certificate on S3.
+    type: String
+    default: ''
+  addGroupMemberships:
+    description: >-
+      (Optional) Whether or not a user should be automatically added to CRX
+      groups after successful authentication.
+    type: String
+    default: ''
+  assertionConsumerServiceUrl:
+    description: >-
+      (Optional) The AssertionConsumerServiceURL attribute of an
+      Authn request specifies the location to which a <Response> message MUST
+      be sent to the requester.
+    type: String
+    default: ''
+  clockTolerance:
+    description: >-
+      (Optional)  Time tolerance in seconds to compensate clock skew between
+      IDP and SP when validating Assertions.
+    type: String
+    default: ''
+  createUser:
+    description: >-
+      (Optional) Whether or not to autocreate nonexisting users in the repository.
+    type: String
+    default: ''
+  defaultGroups:
+    description: >-
+      (Optional) A list of default CRX groups users are added to after successful
+      authentication.
+    type: String
+    default: ''
+  defaultRedirectUrl:
+    description: >-
+      (Optional) The default location to redirect to after successful authentication.
+    type: String
+    default: ''
+  digestMethod:
+    description: >-
+      (Optional) The digest algorithm to use when signing a SAML message.
+    type: String
+    default: ''
+  groupMembershipAttribute:
+    description: >-
+      (Optional) The name of the attribute containing a list of CRX groups this
+      user should be added to.
+    type: String
+    default: ''
+  handleLogout:
+    description: >-
+      (Optional) Whether or not logout (dropCredentials) requests will be processed
+      by this handler.
+    type: String
+    default: ''
+  idpHttpRedirect:
+    description: >-
+      (Optional) Use an HTTP Redirect to the IDP URL instead of sending an AuthnRequest-message
+      to request credentials. Use this for IDP initiated authentication.
+    type: String
+    default: ''
+  keyStorePassword:
+    description: >-
+      (Optional) The password of the key-store of the 'authentication-service'
+      system user.
+    type: String
+    default: ''
+  logoutUrl:
+    description: >-
+      (Optional) URL of the IDP where the SAML Logout Request should be sent
+      to. If this property is empty the authentication handler won't handle
+      logouts.
+    type: String
+    default: ''
+  nameIdFormat:
+    description: >-
+      (Optional) The value of the NameIDPolicy format parameter to send in the
+      AuthnRequest message.
+    type: String
+    default: ''
+  serviceRanking:
+    description: >-
+      (Optional) OSGi Framework Service Ranking value to indicate the order
+      in which to call this service. This is an int value where higher values
+      designate higher precedence. Default value is 0.
+    type: String
+    default: ''
+  signatureMethod:
+    description: >-
+      (Optional) The signature algorithm to use when signing a SAML message.
+    type: String
+    default: ''
+  spPrivateKeyAlias:
+    description: >-
+      (Optional) The alias of the SP's private key in the key-store of the 'authentication-service'
+      system user. If this property is empty the handler will not be able to
+      sign or decrypt messages.
+    type: String
+    default: ''
+  synchronizeAttributes:
+    description: >-
+      (Optional) A list of attribute mappings (in the format "attributename=path/relative/to/user/node")
+      which should be stored in the repository on user-synchronization.
+    type: String
+    default: ''
+  useEncryption:
+    description: >-
+      (Optional) Whether or not this authentication handler expects encrypted
+      SAML assertions. If this is enabled the SP's private key must be provided
+      in the key-store of the 'authentication-service' system user (see SP Private
+      Key Alias above).
+    type: String
+    default: ''
+  userIdAttribute:
+    description: >-
+      (Optional) The name of the attribute containing the user ID used to authenticate
+      and create the user in the CRX repository. Leave empty to use the Subject:NameId.
+    type: String
+    default: ''
+  userIntermediatePath:
+    description: >-
+      (Optional) When creating new users, this value will be used as the intermediate
+      path.
+    type: String
+    default: ''
+  executionTimeout:
+    description: >-
+      (Optional) The time in seconds for a command to be completed before it is
+      considered to have failed. Default is 3600 (1 hour). Maximum is 28800 (8
+      hours).
+    type: String
+    allowedPattern: ([1-9][0-9]{0,3})|(1[0-9]{1,4})|(2[0-7][0-9]{1,3})|(28[0-7][0-9]{1,2})|(28800)
+    default: '3600'
+mainSteps:
+  - action: aws:runShellScript
+    name: runShellScript
+    inputs:
+      runCommand:
+        - '. /etc/profile'
+        - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
+        - '/opt/shinesolutions/aem-tools/enable-saml.sh --aem_id={{ aemId }} --idp_cert_alias={{ idpCertAlias }} --serial={{ serial }} --file={{ file }} --service_provider_entity_id={{ serviceProviderEntityId }} --idp_url={{ idpUrl }} --add_group_memberships={{ addGroupMemberships }} --assertion_consumer_service_url={{ assertionConsumerServiceUrl }} --clock_tolerance={{ clockTolerance }} --create_user={{ createUser }} --default_groups={{ defaultGroups }} --default_redirect_url={{ defaultRedirectUrl }} --digest_method={{ digestMethod }} --group_membership_attribute={{ groupMembershipAttribute }} --handle_logout={{ handleLogout }} --idp_http_redirect={{ idpHttpRedirect }} --key_store_password={{ keyStorePassword }} --logout_url={{ logoutUrl }} --name_id_format={{ nameIdFormat }} --service_ranking={{ serviceRanking }} --signature_method={{ signatureMethod }} --sp_private_key_alias={{ spPrivateKeyAlias }} --synchronize_attributes={{ synchronizeAttributes }} --use_encryption={{ useEncryption }} --user_id_attribute={{ userIdAttribute }} --user_intermediate_path={{ userIntermediatePath }}'
+      timeoutSeconds: '{{ executionTimeout }}'
+      workingDirectory: /tmp

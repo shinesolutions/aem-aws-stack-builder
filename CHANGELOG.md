@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Add new SSM commands to manage SAML configuration
+
 ## 4.8.0 - 2019-08-16
 ### Added
 - Add CloudFront CDN support [#306]
