@@ -44,7 +44,7 @@ Resources:
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
-            SSEAlgorithm: AES256
+              SSEAlgorithm: AES256
   PrivateHostedZone:
     Type: AWS::Route53::HostedZone
     Condition: CreatePrivateHostedZoneCondition

@@ -49,6 +49,7 @@ publish_dispatcher::scheduled_jobs::minute::content_health_check: "{{ scheduled_
 
 publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
+publish::snapshot_attach_timeout: {{ aem.snapshot_attach_timeout }}
 
 author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 
@@ -124,6 +125,7 @@ aem_curator::action_promote_author_standby_to_primary::aem_version: '{{ aem.vers
 aem_curator::config_collectd::proxy_protocol: '{{ proxy.protocol }}'
 aem_curator::config_collectd::proxy_host: '{{ proxy.host }}'
 aem_curator::config_collectd::proxy_port: '{{ proxy.port }}'
+aem_curator::config_collectd::proxy_enabled: {{ proxy.enabled }}
 
 aem_curator::action_deploy_artifacts::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifacts::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}

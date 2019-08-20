@@ -3,6 +3,9 @@ Description: Create the Compute resources for the AEM Chaos Monkey
 Outputs:
   ChaosMonkeyAutoScalingGroup:
     Description: The Chaos Monkey Auto Scaling Group
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup
     Value:
       Ref: ChaosMonkeyAutoScalingGroup
   ChaosMonkeyLaunchConfiguration:

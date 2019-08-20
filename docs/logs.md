@@ -10,6 +10,8 @@ The tables below are handy when you need to troubleshoot directly on the EC2 ins
 | Log Path | Description | Components |
 |----------|-------------|------------|
 | /var/log/shinesolutions/puppet-stack-init.log | Puppet log of AEM provisioning steps executed during cloud-init. | All |
+| /var/log/shinesolutions/custom-stack-init-pre-common.log | Log of custom stack provisioning pre-common steps executed during cloud-init. | All, when [Custom Stack Provisioner](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/customisation-points.md#custom-stack-provisioner) is provided. |
+| /var/log/shinesolutions/custom-stack-init-post-common.log | Log of custom stack provisioning post-common steps executed during cloud-init. | All, when [Custom Stack Provisioner](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/customisation-points.md#custom-stack-provisioner) is provided. |
 | /var/log/shinesolutions/puppet-deploy-artifacts-init.log | Puppet log of Dispatcher Config artifacts deployment. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
 
 ### Application logs
@@ -37,7 +39,7 @@ The tables below are handy when you need to troubleshoot directly on the EC2 ins
 | Log Path | Description | Components |
 |----------|-------------|------------|
 | /var/log/httpd/access_log | Apache httpd access log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
-| /var/log/httpd/error_log | Apache httpd error log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
+| /var/log/httpd/default_error.log | Apache httpd error log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
 | /var/log/httpd/dispatcher.log | AEM Dispatcher log file. | author-dispatcher, publish-dispatcher, author-publish-dispatcher |
 
 #### AEM Orchestrator

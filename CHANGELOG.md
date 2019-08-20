@@ -11,6 +11,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add new SSM commands to manage SAML configuration
 
+## 4.8.0 - 2019-08-16
+### Added
+- Add CloudFront CDN support [#306]
+- Add CloudWatch dashboard support for AEM Full-Set
+- Add AWS resources integration testing
+- Add hiera parameter proxy_enabled for configuring collectd proxy settings shinesolutions/puppet-aem-curator#134
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.13.0
+- Upgrade AEM Stack Manager Messenger to 2.7.0
+- Upgrade AEM Test Suite to 1.4.0
+- Change config property aem.enable_post_start_sleep default value to true
+- Change config property aem.post_start_sleep_seconds default value to 180
+- Change config property publish_dispatcher.asg_health_check_grace_period default value to 2400
+- Change config property publish.asg_health_check_grace_period default value to 1800
+- Change config property aem.snapshot_attach_timeout default value to 1800
+
+### Fixed
+- Fix invalid ServerSideEncryptionByDefault with null value when creating AWS resources S3 bucket
+
+## 4.7.0 - 2019-08-06
+### Added
+- Added additional exit code checks to stack init process [#294]
+- Add aem.snapshot_attach_timeout configuration property
+
+### Changed
+- Redirecting custom stack provisioner pre & post hook output to own logfile [#298]
+- Upgrade AEM Stack Manager Messenger to 2.5.0
+- Upgrade AEM Test Suite to 1.3.0
+- Upgrade AEM HelloWorld Custom Stack Provisioner to 0.14.0
+- Upgrade AEM Stack Manager Cloud to 1.3.5
+- Upgrade AEM AWS Stack Provisioner to 4.8.0
+
+### Fixed
+- Suppress error `aws s3api head-object` stdout & stderr [#48]
+- Fixed error with generating stack manager config [#302]
+
 ## 4.6.0 - 2019-07-24
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.7.0

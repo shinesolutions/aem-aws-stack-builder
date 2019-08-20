@@ -4,6 +4,10 @@ Conditions:
     Fn::Equals:
       - Ref: ChaosMonkeyIncludeStack
       - 'true'
+  CreateMonitoringStackCondition:
+    Fn::Equals:
+      - Ref: MonitoringIncludeStack
+      - 'true'
 Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -57,6 +61,10 @@ Parameters:
   ChaosMonkeyIncludeStack:
     Default: 'true'
     Description: Creates the ChaosMonkey stack or not
+    Type: String
+  MonitoringIncludeStack:
+    Default: 'true'
+    Description: Creates the Monitoring stack or not
     Type: String
   ChaosMonkeyASGAvailabilityZoneListParameter:
     Description: The Chaos Monkey Availability Zone List
@@ -497,4 +505,66 @@ Resources:
           Ref: UsePublishDataVolSnapshotParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish.yaml
+    Type: AWS::CloudFormation::Stack
+  MonitoringStack:
+    Condition: CreateMonitoringStackCondition
+    DependsOn:
+    - AuthorStack
+    - PublishStack
+    - AuthorDispatcherStack
+    - PublishDispatcherStack
+    - OrchestratorStack
+    - ChaosMonkeyStack
+    Properties:
+      Parameters:
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        AwsRegionParameter:
+          Fn::Sub: ${AWS::Region}
+        AuthorDispatcherImageRootDeviceParameter:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        AuthorDispatcherImageDataDeviceParameter:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
+        AuthorImageRootDeviceParameter:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        AuthorImageDataDeviceParameter:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
+        ChaosMonkeyImageRootDeviceParameter:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        OrchestratorImageRootDeviceParameter:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        OrchestratorImageDataDeviceParameter:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
+        PublishDispatcherImageRootDeviceParameter:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        PublishDispatcherImageDataDeviceParameter:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
+        PublishImageRootDeviceParameter:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        PublishImageDataDeviceParameter:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/monitoring.yaml
     Type: AWS::CloudFormation::Stack

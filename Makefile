@@ -1,7 +1,7 @@
-version ?= 4.7.0-pre.0
-aem_stack_manager_messenger_version = 2.3.1
-aem_test_suite_version = 1.2.0
-aem_helloworld_custom_stack_provisioner_version = 0.12.0
+version ?= 4.9.0-pre.0
+aem_stack_manager_messenger_version = 2.7.0
+aem_test_suite_version = 1.4.0
+aem_helloworld_custom_stack_provisioner_version = 0.14.0
 
 ci: clean deps lint package
 
@@ -236,6 +236,16 @@ create-stack-manager: create-aem-stack-manager-stack-data
 
 delete-stack-manager:
 	./scripts/delete-stack.sh apps/aem-stack-manager/main "$(config_path)" "$(stack_prefix)"
+
+################################################################################
+# CloudFront CDN targets.
+################################################################################
+
+create-cdn:
+	./scripts/create-stack.sh apps/cdn/main "$(config_path)" "$(stack_prefix)"
+
+delete-cdn:
+	./scripts/delete-stack.sh apps/cdn/main "$(config_path)" "$(stack_prefix)"
 
 ################################################################################
 # Integration test targets.

@@ -116,6 +116,43 @@ These configurations are applicable to AWS resources used by the AEM environment
 | dns_records.author_publish_dispatcher.ttl | Time to live of the Author Publish Dispatcher DNS record. | Optional | `300` |
 | certificate_manager.ssl_certificate_arn | ARN of the SSL certificate in either IAM Server Certificates or AWS Certificate Manager | Mandatory | |
 
+### Cloudfront configuration properties
+
+These configurations are applicable to create Cloudfront resources on AWS. For a more detail description of all available parameters see [AWS Cloudfront Cloudformation configuration](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html).
+
+| Name | Description | Required? | Default |
+|------|-------------|-----------|---------|
+| cdn.stack_name | The stack name (to be appended to stack prefix) of the cloudfront stack where the cloudfront configuration will reside. | Mandatory | |
+| cdn.aliases | A comma seperated list that contains information about CNAMEs (alternate domain names), if any, for this distribution. e.g. `www.aem-opencloud.com,www.aem-opencloud.net` | Optional | |
+| cdn.custom_error_responses.response_page_path | The path to the custom error page that you want CloudFront to return to a viewer when your origin returns the HTTP status code specified by ErrorCode, e.g. /4xx-errors/403-forbidden.html. | Optional | |
+| cdn.default_root_object | The default object that you want CloudFront to request from your origin | Optional | index.html |
+| cdn.default_cache_behavior.allowed_methods | A comma seperated list that controls which HTTP methods CloudFront processes and forwards to your Amazon S3 bucket or your custom origin | Optional | GET,HEAD |
+| cdn.default_cache_behavior.cached_methods | | Optional | `GET,HEAD` |
+| cdn.default_cache_behavior.compress | Whether you want CloudFront to automatically compress certain files for this cache behavior. | Optional | `'false'` |
+| cdn.default_cache_behavior.default_ttl | The default amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated. | Optional | `30` |
+| cdn.default_cache_behavior.forwarded_values.cookies.forward | Specifies which cookies to forward to the origin for this cache behavior: all, none, or the list of cookies specified in `cdn.default_cache_behavior.forwarded_values.cookies.whitelisted_names` as comma seperated list. | Optional | all |
+| cdn.default_cache_behavior.forwarded_values.cookies.whitelisted_names | Mandatory if configuration parameter `cdn.default_cache_behavior.forwarded_values.cookies.forward` is set to `whitelist`. Requires a comma seperated list of how many different cookies you want CloudFront to forward to the origin for this cache behavior and, if you want to forward selected cookies, the names of those cookies.  | Conditional | |
+| cdn.default_cache_behavior.forwarded_values.headers | A comma seperated list of headers that you want CloudFront to forward to the origin for this cache behavior (whitelisted headers). | Optional | |
+| cdn.default_cache_behavior.forwarded_values.query_string | Indicates whether you want CloudFront to forward query strings to the origin that is associated with this cache behavior and cache based on the query string parameters. | Mandatory | `'false'` |
+| cdn.default_cache_behavior.forwarded_values .query_string_cache_keys| A comma seperated list that contains information about the query string parameters that you want CloudFront to use for caching for this cache behavior.  | Optional | |
+| cdn.default_cache_behavior.max_ttl | The maximum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated in `seconds`. | Optional | `60` |
+| cdn.default_cache_behavior.min_ttl | The minimum amount of time that you want objects to stay in CloudFront caches before CloudFront forwards another request to your origin to determine whether the object has been updated in `seconds`. | Optional | `30` |
+| cdn.default_cache_behavior.smooth_streaming | Indicates whether you want to distribute media files in the Microsoft Smooth Streaming format using the origin that is associated with this cache behavior. | Optional | `'false'` |
+| cdn.default_cache_behavior.viewer_protocol_policy | The protocol that viewers can use to access the files in the origin specified by TargetOriginId when a request matches the path pattern in PathPattern. | Optional | `allow-all` |
+| cdn.log_bucket_name | Amazon S3 bucket to store the access logs in. | Mandatory | |
+| cdn.log_bucket_prefix |  optional string that you want CloudFront to prefix to the access log filenames for this distribution, for example, myprefix/. | Mandatory | |
+| cdn.log_include_cookies | Specifies whether you want CloudFront to include cookies in access logs, specify true for IncludeCookies. | Optional | `'false'` |
+| cdn.origins.domain_name | `Amazon S3 origins`: The DNS name of the Amazon S3 bucket from which you want CloudFront to get objects for this origin, for example, myawsbucket.s3.amazonaws.com. If you set up your bucket to be configured as a website endpoint, enter the Amazon S3 static website hosting endpoint for the bucket. `Custom Origins`: The DNS domain name for the HTTP server from which you want CloudFront to get objects for this origin, for example, www.example.com. | Mandatory | |
+| cdn.origins.custom_origin_config.origin_protocol_policy | The origin protocol policy to apply to your origin. | Optional | `https-only` |
+| cdn.origins.custom_origin_config.origin_ssl_protocols | A comma seperated list of the SSL/TLS protocols that you want CloudFront to use when communicating with your origin over HTTPS. | Optional | |
+| cdn.price_class | The price class that corresponds with the maximum price that you want to pay for CloudFront service. If you specify PriceClass_All, CloudFront responds to requests for your objects from all CloudFront edge locations. | Optional | `PriceClass_All` |
+| cdn.viewer_certificate.acm_certificate_arn | Mandatory if `cdn.viewer_certificate.cloud_front_default_certificate` is set to `'false'` and `cdn.viewer_certificate.iam_certificate_id` hasn't been provided. If you want viewers to use HTTPS to request your objects and you're using an alternate domain name, you must choose the type of certificate that you want to use. | Conditional | |
+| cdn.viewer_certificate.cloud_front_default_certificate | If no Acm or Iam certificate define set this to `'true'`.  | Conditional | `'false'` |
+| cdn.viewer_certificate.iam_certificate_id | Mandatory if `cdn.viewer_certificate.cloud_front_default_certificate` is set to `'false'` and `cdn.viewer_certificate.acm_certificate_arn` hasn't been provided. If you want viewers to use HTTPS to request your objects and you're using an alternate domain name, you must choose the type of certificate that you want to use. | Conditional | |
+| cdn.viewer_certificate.minimum_protocol_version | Specify the security policy that you want CloudFront to use for HTTPS connections. If you specify `'true'` for `cdn.viewer_certificate.cloud_front_default_certificate`, CloudFront automatically sets the security policy to TLSv1 regardless of the value that you specify for `cdn.viewer_certificate.minimum_protocol_version`. | Optional | `TLSv1.1_2016`|
+| cdn.viewer_certificate.ssl_support_method | Mandatory if `cdn.viewer_certificate.acm_certificate_arn` or `cdn.viewer_certificate.iam_certificate_id` is defined. Don't specify a value for `cdn.viewer_certificate.ssl_support_method` if `cdn.viewer_certificate.cloud_front_default_certificate` set to `'true'`. | Conditional | |
+| cdn.web_acl_id_parameter | | Optional | |
+
 ### Component configuration properties
 
 These configurations are applicable to the components used within AEM Full-Set and Consolidated architectures.
@@ -129,7 +166,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish_dispatcher.asg_desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_min_size | The minimum number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
-| publish_dispatcher.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `1200` |
+| publish_dispatcher.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `2400` |
 | publish_dispatcher.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
 | publish_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `publish-dispatcher` component. | Optional | `HTTPS:443/system/health?tags=shallow` |
 | publish_dispatcher.elb_scheme | The [scheme](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-ec2-elb-scheme) for the ELB sitting in front of `publish-dispatcher` component. | Optional | `internet-facing` |
@@ -142,7 +179,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish.asg_desired_capacity | The desired number of `publish` component instances. | Optional | `2` |
 | publish.asg_min_size | The minimum number of `publish` component instances. | Optional | `2` |
 | publish.asg_max_size | The maximum number of `publish` component instances. | Optional | `2` |
-| publish.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `900` |
+| publish.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `1800` |
 | publish.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
 | publish.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
 | author.instance_profile | ARN of the IAM instance profile to be used on `author` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
@@ -211,7 +248,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.enable_default_passwords | If true, admin and other system users will be provisioned with default password, which is the same as their username. E.g. `admin` user will have password `admin`. If false, their passwords will be randomly generated, unique for each single AEM environment. Set to false by default for security reason. | Optional | `false` |
 | aem.enable_bak_files_cleanup | If true, .bak files older than `aem.bak_files_cleanup_max_age_in_days` will be deleted during repository compaction. | Optional | `false` |
 | aem.bak_files_cleanup_max_age_in_days | The number of maximum age in days for repository .bak files to be kept. Files older than this will be deleted during compaction. | Optional | `30` |
-| aem.enable_post_start_sleep | If true, the provisioning process will sleep for `aem.post_start_sleep_seconds` seconds after starting the AEM Service for the first time. | Optional | `false` |
+| aem.enable_post_start_sleep | If true, the provisioning process will sleep for `aem.post_start_sleep_seconds` seconds after starting the AEM Service for the first time. | Optional | `true` |
 | aem.enable_reconfiguration | If true, the initial repository attached to the volume will be reconfigured for the current AEM OpenCloud version. | Optional | `false` |
 | aem.enable_upgrade_tools | If true, the AEM upgrade tools will be installed on AEM Author & AEM Publish. | Optional | `false` |
 | aem.deployment_delay_in_seconds | The number of seconds delay after AEM package deployment upload/installation, before resuming to perform health checks | Optional | `60` |
@@ -221,13 +258,14 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.login_ready_base_sleep_seconds | The number of seconds to wait at least before retrying the login page ready check | Optional | 5 |
 | aem.login_ready_max_sleep_seconds | The number of seconds to wait maximum before retrying the login page ready check | Optional | 10 |
 | aem.client_timeout | The number of seconds before [AEM API client](https://github.com/shinesolutions/ruby_aem) HTTP request times out. | Optional | `1200` |
-| aem.post_start_sleep_seconds | Sleep for x Seconds after starting the AEM Service for the first time. | Optional | `120` |
+| aem.post_start_sleep_seconds | Sleep for x Seconds after starting the AEM Service for the first time. Set this number to a high value if your AEM application causes AEM start up to take longer, further causing AEM Password Reset to be delayed. | Optional | `180` |
 | aem.[author\|publish].jvm_mem_opts | AEM Author/Publish's memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xss4m -Xms4096m -Xmx8192m` |
 | aem.[author\|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
 | aem.author.jmxremote.port | AEM Author's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.truststore.enable_creation | If set to true, AEM Global Truststore will be created for AEM Author | Optional | false |
 | aem.truststore.password | AEM Global Truststore password | Optional | false |
+| aem.snapshot_attach_timeout | The number of seconds to attach snapshot before timing out | Optional | 1800 |
 
 ### AEM Full-Set specific configuration properties:
 

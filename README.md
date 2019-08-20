@@ -38,6 +38,9 @@ Learn more about AEM AWS Stack Builder:
 * [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
 * [AWS System Tags](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-system-tags.md)
 * [Customisation Points](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/customisation-points.md)
+* [Recovery](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery.md)
+  * [Recovery Steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md)
+  * [Recovery Scenarios](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-scenarios.md)
 * [Descriptors](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md)
   * [Deployment Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-deployment.md)
   * [Package Backup Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-package-backup.md)
@@ -50,6 +53,7 @@ Learn more about AEM AWS Stack Builder:
 * [Troubleshooting Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/troubleshooting-guide.md)
 * [Upgrade Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/upgrade-guide.md)
 * [Stacks Structure](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/stacks-structure.md)
+* [AWS Services](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-services.md)
 * [Presentations](https://github.com/shinesolutions/aem-aws-stack-builder/#presentations)
 
 AEM AWS Stack Builder is part of [AEM OpenCloud](https://aemopencloud.io) platform.
@@ -63,7 +67,7 @@ Installation
   * [Python](https://www.python.org/downloads/) version 2.7.x
   * [GNU Make](https://www.gnu.org/software/make/)<br/>
 
-  Alternatively, you can use [AEM Platform BuildEnv](https://github.com/shinesolutions/aem-platform-buildenv) Docker container to run Packer AEM build targets.
+  Alternatively, you can use [AEM Platform BuildEnv](https://github.com/shinesolutions/aem-platform-buildenv) Docker container to run AEM AWS Stack Builder build targets.
 - Resolve the [Python packages](https://pip.readthedocs.io/en/1.1/requirements.html) dependencies by running `make deps`
 
 Usage
