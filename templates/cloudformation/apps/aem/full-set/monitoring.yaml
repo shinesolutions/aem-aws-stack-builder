@@ -9,41 +9,16 @@ Parameters:
   AwsRegionParameter:
     Type: String
     Description: AWS region
-  AuthorDispatcherImageRootDeviceParameter:
+  RootDeviceParameter:
     Type: String
-    Description: Author-Dispatcher root device
-  AuthorDispatcherImageDataDeviceParameter:
+    Description: Root Volume Mount point to be monitored
+    Default: '/dev/sda1'
+  DataDeviceParameter:
     Type: String
-    Description: Author-Dispatcher data device
-  AuthorImageRootDeviceParameter:
-    Type: String
-    Description: Author image root device
-  AuthorImageDataDeviceParameter:
-    Type: String
-    Description: Author image data device
-  ChaosMonkeyImageRootDeviceParameter:
-    Type: String
-    Description: Chaos Monkey image root device
-  OrchestratorImageRootDeviceParameter:
-    Type: String
-    Description: Orchestrator image root device
-  OrchestratorImageDataDeviceParameter:
-    Type: String
-    Description: Orchestrator image data device
-  PublishDispatcherImageRootDeviceParameter:
-    Type: String
-    Description: Publish-Dispatcher image root device
-  PublishDispatcherImageDataDeviceParameter:
-    Type: String
-    Description: Publish-Dispatcher image data device
-  PublishImageRootDeviceParameter:
-    Type: String
-    Description: Publish image root device
-  PublishImageDataDeviceParameter:
-    Type: String
-    Description: Publish image data device
+    Description: Data Volume Mount point to be monitored
+    Default: '/dev/xvdb'
 Resources:
-  applicationDashboard:
+  ApplicationDashboard:
     Type: AWS::CloudWatch::Dashboard
     Properties:
       DashboardBody: !Sub
@@ -61,7 +36,7 @@ Resources:
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "ChaosMonkey", "stat": "Maximum" } ],
+                  [ "...", "${choasMonkeyAutoScalingGroupName}", { "period": 300, "label": "ChaosMonkey", "stat": "Maximum" } ],
                   [ "...", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "AuthorPrimary", "stat": "Maximum" } ],
                   [ "...", "${authorStandbyInstance}", { "period": 300, "label": "AuthorStandBy", "stat": "Maximum" } ]
                 ],
@@ -91,7 +66,7 @@ Resources:
                   [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
+                  [ "...", "${choasMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
                 ],
                 "view": "timeSeries",
@@ -120,7 +95,7 @@ Resources:
                   [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
+                  [ "...", "${choasMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
                 ],
                 "view": "singleValue",
@@ -366,17 +341,17 @@ Resources:
               "height": 6,
               "properties": {
                 "metrics": [
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${authorImageDataDevice}" ],
-                  [ "...", "${authorStandbyInstance}", "Filesystem", "${authorImageDataDevice}" ],
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${authorDispatcherImageDataDevice}" ],
-                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${publishImageDataDevice}" ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${publishDispatcherImageDataDevice}" ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${orchestratorImageDataDevice}" ]
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${dataVolName}" ],
+                  [ "...", "${authorStandbyInstance}", "Filesystem", "${dataVolName}" ],
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${dataVolName}" ],
+                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${dataVolName}" ],
+                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${dataVolName}" ],
+                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${dataVolName}" ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${awsRegion}",
-                "title": "DiskSpaceUtilization on Data Volume /mnt/ebs1"
+                "title": "DiskSpaceUtilization on Data Volume - ${dataVolName}"
               }
             },
             {
@@ -387,18 +362,18 @@ Resources:
               "height": 6,
               "properties": {
                 "metrics": [
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${authorImageRootDevice}" ],
-                  [ "...", "${authorStandbyInstance}", "Filesystem", "${authorImageRootDevice}" ],
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${authorDispatcherImageRootDevice}" ],
-                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${publishImageRootDevice}" ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${publishDispatcherImageRootDevice}" ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${orchestratorImageRootDevice}" ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", "Filesystem", "${chaosMonkeyImageRootDevice}" ]
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${rootVolName}" ],
+                  [ "...", "${authorStandbyInstance}", "Filesystem", "${rootVolName}" ],
+                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
+                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
+                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
+                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
+                  [ "...", "${choasMonkeyAutoScalingGroupName}", "Filesystem", "${rootVolName}" ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${awsRegion}",
-                "title": "DiskSpaceUtilization on root volume"
+                "title": "DiskSpaceUtilization on Root Volume - ${rootVolName}"
               }
             },
             {
@@ -444,7 +419,7 @@ Resources:
           publishAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishAutoScalingGroup'}]],
           publishDispatcherAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup'}]],
           orchestratorAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-OrchestratorAutoScalingGroup'}]],
-          chaosMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup'}]],
+          choasMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup'}]],
           authorPrimaryInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorPrimaryInstance'}]],
           authorStandbyInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorStandbyInstance'}]],
 
@@ -454,36 +429,25 @@ Resources:
 
           aemAsgEventQueueName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AEMASGEventQueueName'}]],
 
-          stackPrefix: !Ref MainStackPrefixParameter,
-          awsRegion: !Ref AwsRegionParameter,
-          authorDispatcherImageRootDevice: !Ref AuthorDispatcherImageRootDeviceParameter,
-          authorDispatcherImageDataDevice: !Ref AuthorDispatcherImageDataDeviceParameter,
-          authorImageRootDevice: !Ref AuthorImageRootDeviceParameter,
-          authorImageDataDevice: !Ref AuthorImageDataDeviceParameter,
-          chaosMonkeyImageRootDevice: !Ref ChaosMonkeyImageRootDeviceParameter,
-          orchestratorImageRootDevice: !Ref OrchestratorImageRootDeviceParameter,
-          orchestratorImageDataDevice: !Ref OrchestratorImageDataDeviceParameter,
-          publishDispatcherImageRootDevice: !Ref PublishDispatcherImageRootDeviceParameter,
-          publishDispatcherImageDataDevice: !Ref PublishDispatcherImageDataDeviceParameter,
-          publishImageRootDevice: !Ref PublishImageRootDeviceParameter,
-          publishImageDataDevice: !Ref PublishImageDataDeviceParameter
+          rootVolName: !Ref 'RootDeviceParameter',
+          dataVolName: !Ref 'DataDeviceParameter',
+          stackPrefix: !Ref 'MainStackPrefixParameter',
+          awsRegion: !Ref 'AwsRegionParameter'
         }
       DashboardName: !Sub
         - '${MainStackPrefixParameter}-monitoring-dashboard'
         - {
-            MainStackPrefixParameter: !Ref MainStackPrefixParameter
+            MainStackPrefixParameter: !Ref 'MainStackPrefixParameter'
           }
 
 
 Outputs:
+
   ApplicationCloudwatchDashboardURL:
     Description: The URL of the Cloudwatch Dashboard
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !Ref AwsRegionParameter
-        - '.console.aws.amazon.com/cloudwatch/home?region='
-        - !Ref AwsRegionParameter
-        - '#dashboards:name='
-        - !Ref MainStackPrefixParameter
-        - '-monitoring-dashboard'
+    Value: !Sub
+      - 'https://${awsRegion}.console.aws.amazon.com/cloudwatch/home?region=${awsRegion}#dashboards:name=${stackPrefix}-monitoring-dashboard'
+      - {
+          awsRegion: !Ref 'AwsRegionParameter',
+          stackPrefix: !Ref 'MainStackPrefixParameter'
+        }
