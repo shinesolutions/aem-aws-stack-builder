@@ -36,7 +36,7 @@ Resources:
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ],
-                  [ "...", "${choasMonkeyAutoScalingGroupName}", { "period": 300, "label": "ChaosMonkey", "stat": "Maximum" } ],
+                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "ChaosMonkey", "stat": "Maximum" } ],
                   [ "...", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "AuthorPrimary", "stat": "Maximum" } ],
                   [ "...", "${authorStandbyInstance}", { "period": 300, "label": "AuthorStandBy", "stat": "Maximum" } ]
                 ],
@@ -66,7 +66,7 @@ Resources:
                   [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${choasMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
+                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
                 ],
                 "view": "timeSeries",
@@ -95,7 +95,7 @@ Resources:
                   [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${choasMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
+                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
                 ],
                 "view": "singleValue",
@@ -368,7 +368,7 @@ Resources:
                   [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
                   [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
-                  [ "...", "${choasMonkeyAutoScalingGroupName}", "Filesystem", "${rootVolName}" ]
+                  [ "...", "${chaosMonkeyAutoScalingGroupName}", "Filesystem", "${rootVolName}" ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -419,7 +419,7 @@ Resources:
           publishAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishAutoScalingGroup'}]],
           publishDispatcherAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup'}]],
           orchestratorAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-OrchestratorAutoScalingGroup'}]],
-          choasMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup'}]],
+          chaosMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup'}]],
           authorPrimaryInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorPrimaryInstance'}]],
           authorStandbyInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorStandbyInstance'}]],
 
