@@ -66,7 +66,7 @@ Resources:
                   [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
+                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
                 ],
                 "view": "timeSeries",
@@ -95,7 +95,7 @@ Resources:
                   [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
                   [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
                   [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Choas Monkey", "stat": "Maximum" } ],
+                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
                   [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
                 ],
                 "view": "singleValue",
