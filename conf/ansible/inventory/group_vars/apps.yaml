@@ -453,7 +453,7 @@ scheduled_jobs:
       minute: 15
 
 monitoring:
-  include_stack: true
+  include_stack: false
 
 cdn:
   stack_name: cdn-stack

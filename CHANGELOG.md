@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add new SSM commands to manage SAML configuration
 
+### Changed
+- Change config property monitoring.include_stack default value to false
+
 ## 4.8.0 - 2019-08-16
 ### Added
 - Add CloudFront CDN support [#306]

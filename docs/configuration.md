@@ -219,6 +219,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | chaos_monkey.termination_settings.asg_probability | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendartimezone) specifying the timezone for the operating hours. | Optional | `1.0` |
 | chaos_monkey.termination_settings.asg_max_terminations_per_day | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Chaos-Settings#simianarmychaosasgprobability) specifying the probability of termination per day. Note that this number will be divided by the hours between `chaos_monkey.termination_settings.calendar_open_hour` and `chaos_monkey.termination_settings.calendar_close_hour` . | Optional | `1.0` |
 | chaos_monkey.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
+| monitoring.include_stack | If true, `monitoring` component will be included in the created AEM environment. If false, then the environment won't have `monitoring` component. | Optional | `false` |
 
 
 ### Library dependencies configuration properties:
