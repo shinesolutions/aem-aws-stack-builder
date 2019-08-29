@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added additional exit code checks to stack init process #294
 
+### Changed
+- Change config property aem.enable_post_start_sleep default value to true
+- Change config property aem.post_start_sleep_seconds default value to 180
+
 ### Fixed
 - Suppress error `aws s3api head-object` stdout & stderr #48
 - Fixed error with generating stack manager config #302
