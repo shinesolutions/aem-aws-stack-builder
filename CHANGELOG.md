@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change config property publish_dispatcher.asg_health_check_grace_period default value to 2400
 - Change config property publish.asg_health_check_grace_period default value to 1800
 - Upgrade AEM Stack Manager Cloud to 1.3.5
+- Upgrade aem-aws-stack-provisioner to 4.2.1
 
 ### Fixed
 - Suppress error `aws s3api head-object` stdout & stderr #48
