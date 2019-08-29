@@ -123,7 +123,7 @@ s3:
   create_bucket_flag: 'true'
 
 library:
-  aem_aws_stack_provisioner_version: 4.13.0
+  aem_aws_stack_provisioner_version: 4.14.0-pre.1
   aem_orchestrator_version: 2.0.1
   aem_password_reset_version: 1.1.0
   oak_run_version: 1.8.3
@@ -493,3 +493,8 @@ cdn:
     minimum_protocol_version: TLSv1.1_2016
     ssl_support_method: overwrite-me
   web_acl_id_parameter: overwrite-me
+
+  ssh_public_keys:
+    ec2-user:
+      public_key: overwrite-me
+      public_key_type: ssh-rsa
