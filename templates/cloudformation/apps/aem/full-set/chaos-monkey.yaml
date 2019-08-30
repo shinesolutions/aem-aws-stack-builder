@@ -114,6 +114,7 @@ Resources:
           Ref: ChaosMonkeyImageRootDevice
         Ebs:
           DeleteOnTermination: true
+          Encrypted: true
           VolumeSize:
             Ref: ChaosMonkeyRootVolSizeParameter
           VolumeType: gp2
