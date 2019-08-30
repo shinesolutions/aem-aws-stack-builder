@@ -25,6 +25,10 @@ These configurations are applicable to both network and AEM application infrastr
 | cron.http_proxy | Web proxy server for http URLs, e.g. `http://someproxy:3128`, leave empty if the cron job needs to directly connect to the Internet. | Optional | None |
 | cron.https_proxy | Web proxy server for https URLs, e.g. `http://someproxy:3128`, leave empty if the cron job needs to directly connect to the Internet. | Optional | None |
 | cron.no_proxy | A comma separated value of domain suffixes that you don't want to use with the web proxy, e.g. `localhost,127.0.0.1` | Optional | None |
+| ssh_public_keys | A dict of users SSH Public keys to deploy on the AEM OpenCloud instances | Optional | None |
+| ssh_public_keys.[user_ssh_id] | Dict key name as users ssh key identifier.  | Optional | None |
+| ssh_public_keys.[user_ssh_id].public_key | Public key of the user as String.  | Optional | None |
+| ssh_public_keys.[user_ssh_id].public_key_type | Type of the ssh key such as `ssh-rsa`.  | Optional | None |
 
 ### Network configuration properties
 

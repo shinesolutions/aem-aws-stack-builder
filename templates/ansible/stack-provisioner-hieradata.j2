@@ -207,3 +207,7 @@ common::ami::publish_device_alias: {{ ami_device[os_type].publish_data_attached_
 # Service start Post sleep configuration
 common::enable_post_start_sleep: {{ aem.enable_post_start_sleep }}
 common::post_start_sleep_seconds: {{ aem.post_start_sleep_seconds }}
+
+# ssh_public_keys Import
+common::ssh_public_keys:
+{{ ssh_public_keys | to_nice_yaml | indent(width=2, first=True) }}
