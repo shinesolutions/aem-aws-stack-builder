@@ -434,6 +434,8 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
+      SSESpecification:
+        SSEEnabled: true
       TableName:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerTable
       TimeToLiveSpecification:

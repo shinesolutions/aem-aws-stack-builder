@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ###Added
 - Add EBS volumes encryption at rest
+- Add Stack Manager DynamoDB encryption at rest
 
 ## 4.3.1 - 2019-08-29
 ### Added
