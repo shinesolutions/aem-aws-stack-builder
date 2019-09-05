@@ -493,3 +493,8 @@ cdn:
     minimum_protocol_version: TLSv1.1_2016
     ssl_support_method: overwrite-me
   web_acl_id_parameter: overwrite-me
+
+ssh_public_keys:
+  ec2-user:
+    public_key: overwrite-me
+    public_key_type: ssh-rsa
