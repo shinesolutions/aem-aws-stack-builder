@@ -301,6 +301,9 @@ stack_manager:
   stack_name: aem-stack-manager
   s3_prefix: stack-manager
   utilities_stack_name: utilities
+  cloudwatch_stream:
+    s3_bucket: overwrite-me
+    s3_prefix: overwrite-me
   purge:
     live_snapshots:
       schedule: '10 20 1/3 * ? *'

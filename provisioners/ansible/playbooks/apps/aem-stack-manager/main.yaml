@@ -56,6 +56,8 @@
           OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.purge.orchestration_snapshots.schedule }}"
           OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age_in_hours }}"
           AEMCWEventNotificationEmail: "{{ stack_manager.alarm_notification.contact_email }}"
+          CloudWatchS3StreamBucketNameParameter: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
+          CloudWatchS3StreamPrefixParameter: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
       register: main_stack_info
       tags:
         - create
@@ -85,6 +87,8 @@
         BackupTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
         DynamoDBTableName: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
         MinimumPublishInstances: "{{ publish.asg_min_size }}"
+        S3BucketCWStream: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
+        S3PrefixCWStream: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
         state: present
       tags:
         - create
