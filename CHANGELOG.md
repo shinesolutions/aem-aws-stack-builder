@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Ignore missing logfiles in default logrotation rules
+
 ## 4.12.0 - 2019-09-12
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.16.0
