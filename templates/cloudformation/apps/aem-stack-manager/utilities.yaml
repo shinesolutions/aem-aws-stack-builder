@@ -16,6 +16,18 @@ Outputs:
     Description: Arn for Prod Alias of Snapshot Purge Function
     Value:
       Ref: LambdaProdAlias
+  CloudWatchS3StreamDevAliasArn:
+    Description: Arn for Prod Alias of Cloudwatch S3 stream Function
+    Value:
+      Ref: CloudWatchS3StreamLambdaProdAlias
+  CloudWatchS3StreamFunctionName:
+    Description: Lambda Function Name for Cloudwatch S3 stream Function
+    Value:
+      Ref: CloudWatchS3StreamLambdaFunction
+  CloudWatchS3StreamProdAliasArn:
+    Description: Arn for Prod Alias of Cloudwatch S3 stream Function
+    Value:
+      Ref: CloudWatchS3StreamLambdaProdAlias
 Parameters:
   DataBucketNameParameter:
     Description: Bucket Name that Stores Files Used by the Function
@@ -45,6 +57,57 @@ Parameters:
     Description: Prefix within the Bucket to Locate Files
     Type: String
 Resources:
+  CloudWatchS3StreamInitialVersion:
+    DependsOn: CloudWatchS3StreamLambdaFunction
+    Properties:
+      Description: Initial Version to Start With
+      FunctionName:
+        Ref: CloudWatchS3StreamLambdaFunction
+    Type: AWS::Lambda::Version
+  CloudWatchS3StreamLambdaDevAlias:
+    DependsOn: CloudWatchS3StreamLambdaFunction
+    Properties:
+      Description: Lambda Alias for Development Use
+      FunctionName:
+        Ref: CloudWatchS3StreamLambdaFunction
+      FunctionVersion: $LATEST
+      Name: dev
+    Type: AWS::Lambda::Alias
+  CloudWatchS3StreamLambdaProdAlias:
+    DependsOn: CloudWatchS3StreamInitialVersion
+    Properties:
+      Description: Lambda Alias for Production Use
+      FunctionName:
+        Ref: CloudWatchS3StreamLambdaFunction
+      FunctionVersion:
+        Fn::GetAtt: CloudWatchS3StreamInitialVersion.Version
+      Name: prod
+    Type: AWS::Lambda::Alias
+  CloudWatchS3StreamLambdaFunction:
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: DataBucketNameParameter
+        S3Key:
+          Fn::Sub: ${S3DataStackManagerPrefix}/cloudwatch_logs_s3_stream.zip
+      Description: Cloudwatch log s3 stream
+      Environment:
+        Variables:
+          LOG_LEVEL: '20'
+          S3_BUCKET:
+            Ref: DataBucketNameParameter
+          S3_PREFIX:
+            Ref: S3DataStackManagerPrefix
+      FunctionName:
+        Fn::Sub: ${MainStackPrefixParameter}-CloudWatchS3Stream
+      Handler: cloudwatch_logs_s3_stream.handler
+      MemorySize: 128
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
+      Runtime: python3.7
+      Timeout: 300
+    Type: AWS::Lambda::Function
   AemSnapshotsPurgeAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
