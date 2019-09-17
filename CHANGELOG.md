@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add new Stack Manager function CloudwatchS3Stream
 
+### Changed
+- Upgrade AEM Stack Manager Cloud to 1.4.0
+
 ## 4.12.0 - 2019-09-12
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.16.0
