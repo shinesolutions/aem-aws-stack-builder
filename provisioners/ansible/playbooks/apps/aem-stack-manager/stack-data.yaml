@@ -51,6 +51,7 @@
         - aem_offline_snapshot
         - aem_task_query
         - purge_snapshots
+        - cloudwatch_logs_s3_stream
       tags:
         - create
 
@@ -65,6 +66,7 @@
         - aem_offline_snapshot
         - aem_task_query
         - purge_snapshots
+        - cloudwatch_logs_s3_stream
       tags:
         - create
 
@@ -87,6 +89,7 @@
         - aem_offline_snapshot
         - aem_task_query
         - purge_snapshots
+        - cloudwatch_logs_s3_stream
       tags:
         - delete
         - create
