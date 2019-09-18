@@ -202,7 +202,6 @@ create-consolidated:
 
 delete-consolidated: delete-consolidated-main delete-consolidated-prerequisites
 
-
 ################################################################################
 # AEM Full Set architecture targets.
 ################################################################################
