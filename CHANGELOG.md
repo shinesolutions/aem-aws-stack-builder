@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade AEM Stack Manager Cloud to 1.4.0
+- Ignore missing logfiles in default logrotation rules
 
 ## 4.12.0 - 2019-09-12
 ### Changed

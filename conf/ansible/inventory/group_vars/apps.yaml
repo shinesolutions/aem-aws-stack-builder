@@ -338,13 +338,16 @@ logrotation:
     amazon_ssm:
       path: /var/log/amazon/ssm/*.log
       olddir: /var/log/amazon/ssm/
+      missingok: true
       postrotate: '/bin/systemctl restart amazon-ssm-agent > /dev/null 2>/dev/null||true'
     opencloud_scheduled_jobs:
       path: "%{hiera('common::log_dir')}/cron*.log"
       olddir: "%{hiera('common::log_dir')}"
+      missingok: true
     opencloud_ssm_commands:
       path: "%{hiera('common::log_dir')}/ssm*.log"
       olddir: "%{hiera('common::log_dir')}"
+      missingok: true
   author_primary:
     config:
     rules:
