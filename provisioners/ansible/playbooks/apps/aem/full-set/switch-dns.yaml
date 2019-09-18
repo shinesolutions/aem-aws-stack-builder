@@ -5,7 +5,7 @@
   connection: local
 
   tasks:
-
+# Using Shell functions as Ansible function about Route53 Facts are not working properly in Sep-2019
     - name: Retrieve CloudFormation stack facts
       cloudformation_facts:
         stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
