@@ -1,0 +1,93 @@
+---
+- name: AEM DNS Record Update CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+    - name: Retrieve CloudFormation stack facts
+      cloudformation_facts:
+        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        all_facts: yes
+      register: stack_facts
+      tags:
+        - switch
+
+    - name: Retrieve PublishDispatcherStack stack facts
+      cloudformation_facts:
+        stack_name: "{{ stack_facts['ansible_facts']['cloudformation'][stack_prefix + '-' + main.stack_name]['stack_resources']['PublishDispatcherStack'].split('/')[1] }}"
+        all_facts: yes
+      register: PublishDispatcherStack
+      tags:
+        - switch
+
+    - name: check  {{ stack_prefix }}-{{ main.stack_name }} to find related Author_zone_ID
+      shell: >
+        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ author_zone }}'].[Id][0][0]"
+      ignore_errors: yes
+      register: author_zone_id
+      tags:
+        - switch
+    #
+    - name: check  {{ stack_prefix }}-{{ main.stack_name }} to find related Publish_zone_ID
+      shell: >
+        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ publish_zone }}' ].[Id][0][0]"
+      ignore_errors: yes
+      register: publish_zone_id
+      tags:
+        - switch
+    #
+    - name: check  {{ stack_prefix }}-{{ main.stack_name }} to see if Author_host is private
+      shell: >
+        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ author_zone }}' ].[Config][0][0].[PrivateZone][0]"
+      ignore_errors: yes
+      register: author_zone_private
+      tags:
+        - switch
+
+    - name: check  {{ stack_prefix }}-{{ main.stack_name }} to see if Publish_host is private
+      shell: >
+        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ publish_zone }}' ].[Config][0][0].[PrivateZone][0]"
+      ignore_errors: yes
+      register: publish_zone_private
+      tags:
+        - switch
+
+    - name: check  {{ stack_prefix }}-{{ main.stack_name }} and get information about DNS_type of author_dispatcher
+      shell: >
+        aws route53 list-resource-record-sets --hosted-zone-id {{ (author_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ author_record }}'].[Type][0][0]"
+      ignore_errors: yes
+      register: author_record_type
+      tags:
+        - switch
+
+    - name: check  {{ stack_prefix }}-{{ main.stack_name }} and get information about DNS_type of Publish_dispatcher
+      shell: >
+        aws route53 list-resource-record-sets --hosted-zone-id {{ (publish_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ publish_record }}'].[Type][0][0]"
+      ignore_errors: yes
+      register: publish_record_type
+      tags:
+        - switch
+
+    - name: Change Publish Dispatcher Hosted Zone Record set value
+      route53:
+        state: create
+        private_zone : "{{ 'yes' if ([publish_zone_private.stdout][0]) == 'true' else 'no' }}"
+        zone: "{{ publish_zone }}"
+        record: '{{ publish_record }}'
+        value: "{{ PublishDispatcherStack['ansible_facts']['cloudformation'][stack_facts['ansible_facts']['cloudformation'][stack_prefix + '-' + main.stack_name]['stack_resources']['PublishDispatcherStack'].split('/')[1]]['stack_outputs']['PublishDispatcherLoadBalancerDNSName'] }}"
+        overwrite: yes
+        type: "{{ dns_records.route53_record_type_switchdns }}"
+      tags: switch
+
+    - name: Change Author Dispatcher Hosted Zone Record set value
+      route53:
+        state: create
+        private_zone : "{{ 'yes' if ([author_zone_private.stdout][0]) == 'true' else 'no' }}"
+        zone: "{{ author_zone }}"
+        record: '{{ author_record }}'
+        value: "{{ dns_records.author_dispatcher.record_set_name }}.{{ dns_records.route53_hosted_zone_name }}"
+        overwrite: yes
+        type: "{{ dns_records.route53_record_type_switchdns }}"
+      tags: switch
