@@ -149,6 +149,16 @@ Create prerequisites stack which contains the instance profiles and security gro
 Create main stack which contains EC2 and Route53 resources:
 
     make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> prerequisites_stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>
+### Switch DNS
+
+The simplest way to change DNS information of AEM architecture from old value to new one for full-set configuration is using below method:
+
+    make switch-dns-full-set stack_prefix=<full_set_stack_prefix> config_path=<path/to/config/dir> publish_zone=<publish_hosted_zone_name> publish_record=<publish_DNS_record_set_name> author_zone=<author_hosted_zone_name>  author_record=<author_DNS_record_set_name>
+
+also you can use below command to make this modification for consolidated configuration.
+
+    make switch-dns-consolidated stack_prefix=<consolidated_stack_prefix> config_path=<path/to/config/dir> publish_zone=<publish_hosted_zone_name> publish_record=<publish_DNS_record_set_name> author_zone=<author_hosted_zone_name>  author_record=<author_DNS_record_set_name>
+
 
 Testing
 -------
