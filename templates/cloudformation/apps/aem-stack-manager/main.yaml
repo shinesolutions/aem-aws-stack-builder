@@ -25,6 +25,9 @@ Outputs:
     Value:
       Ref: UtilitiesStack
 Parameters:
+  AWSRegion:
+    Description: Name of the AWS region
+    Type: String
   AEMCWEventNotificationEmail:
     Description: The EMail adress for sending CW Alarm messages
     Type: String
@@ -119,6 +122,8 @@ Resources:
       - PrerequisitesStack
     Properties:
       Parameters:
+        AWSRegion:
+          Ref: AWSRegion
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         LiveSnapshotsPurgeMaxAge:

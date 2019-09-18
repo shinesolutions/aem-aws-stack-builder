@@ -29,6 +29,9 @@ Outputs:
     Value:
       Ref: CloudWatchS3StreamLambdaProdAlias
 Parameters:
+  AWSRegion:
+    Description: Name of the AWS region
+    Type: String
   DataBucketNameParameter:
     Description: Bucket Name that Stores Files Used by the Function
     Type: String
@@ -108,6 +111,14 @@ Resources:
       Runtime: python3.7
       Timeout: 300
     Type: AWS::Lambda::Function
+  CloudWatchS3StreamLambdaPermission:
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: CloudWatchS3StreamLambdaProdAlias
+      Principal:
+        Fn::Sub: logs.${AWSRegion}.amazonaws.com
+    Type: AWS::Lambda::Permission
   AemSnapshotsPurgeAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:

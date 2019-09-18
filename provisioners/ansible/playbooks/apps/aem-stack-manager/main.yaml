@@ -46,6 +46,7 @@
         disable_rollback: true
         template: "../../../../../templates/cloudformation/apps/aem-stack-manager/main.yaml"
         template_parameters:
+          AWSRegion: "{{ aws.region }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
@@ -103,6 +104,7 @@
         disable_rollback: true
         template: "../../../../../templates/cloudformation/apps/aem-stack-manager/main-c.yaml"
         template_parameters:
+          AWSRegion: "{{ aws.region }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           S3DataStackManagerPrefix: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
