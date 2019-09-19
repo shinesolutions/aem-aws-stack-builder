@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Refactor cf_security_groups module to add secgroups to any resource
+
 ## 4.13.0 - 2019-09-19
 ### Added
 - Add new Stack Manager function CloudwatchS3Stream

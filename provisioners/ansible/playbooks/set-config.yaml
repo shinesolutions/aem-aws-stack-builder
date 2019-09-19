@@ -19,7 +19,7 @@
     - name: Add extra AWS Security Groups to CloudFormation template files
       cf_security_groups:
         template_dir: '../../../templates/cloudformation/apps/aem/full-set/'
-        elb_resource: "{{ item.resource }}"
+        resource_name: "{{ item.resource }}"
         security_groups: "{{ security_groups[item.property]['extra_groups'] }}"
       with_items:
         - {resource: 'AuthorDispatcherLoadBalancer', property: 'author_dispatcher_elb'}
