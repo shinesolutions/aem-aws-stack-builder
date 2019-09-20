@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.16.0
 ### Added
-- Add function for switch DNS from old stack_prefix to new_prefix
+- Add function to switch DNS records pointing to AEM stack
 
 ## 4.11.0 - 2019-09-07
 ### Changed
