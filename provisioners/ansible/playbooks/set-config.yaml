@@ -25,4 +25,4 @@
       with_items:
         - {resource: 'AuthorDispatcherLoadBalancer', resource_property: 'SecurityGroups', config_property: 'author_dispatcher_elb'}
         - {resource: 'PublishDispatcherLoadBalancer', resource_property: 'SecurityGroups', config_property: 'publish_dispatcher_elb'}
-      when: security_groups is defined and security_groups[item.property] is defined and security_groups[item.property]['extra_groups'] is defined
+      when: security_groups is defined and security_groups[item.config_property] is defined and security_groups[item.config_property]['extra_groups'] is defined
