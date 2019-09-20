@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add support for adding extra secgroups to EC2 instances
+
 ### Changed
 - Refactor cf_security_groups module to add secgroups to any resource
 
