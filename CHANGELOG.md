@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for adding extra secgroups to EC2 instances
 
 ### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.17.0
 - Refactor cf_security_groups module to add secgroups to any resource
 
 ## 4.13.0 - 2019-09-19
