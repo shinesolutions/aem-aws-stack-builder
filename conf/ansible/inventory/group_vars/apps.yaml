@@ -104,6 +104,25 @@ security_groups:
 
   author_publish_dispatcher:
     inbound_cidr_ip: overwrite-me
+    extra_groups:
+
+  author:
+    extra_groups:
+
+  publish:
+    extra_groups:
+
+  author_dispatcher:
+    extra_groups:
+
+  publish_dispatcher:
+    extra_groups:
+
+  orchestrator:
+    extra_groups:
+
+  chaos_monkey:
+    extra_groups:
 
 messaging:
   asg_event_sqs_queue_name: aem-asg-event-queue

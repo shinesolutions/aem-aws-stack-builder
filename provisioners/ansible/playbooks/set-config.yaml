@@ -16,12 +16,13 @@
         - ../../../templates/cloudformation/apps/
         - ../../../templates/cloudformation/network/
 
-    - name: Add extra AWS Security Groups to CloudFormation template files
+    - name: Add extra AWS Security Groups to Full-Set CloudFormation template files
       cf_security_groups:
         template_dir: '../../../templates/cloudformation/apps/aem/full-set/'
         resource_name: "{{ item.resource }}"
-        security_groups: "{{ security_groups[item.property]['extra_groups'] }}"
+        resource_property_name: "{{ item.resource_property }}"
+        security_groups: "{{ security_groups[item.config_property]['extra_groups'] }}"
       with_items:
-        - {resource: 'AuthorDispatcherLoadBalancer', property: 'author_dispatcher_elb'}
-        - {resource: 'PublishDispatcherLoadBalancer', property: 'publish_dispatcher_elb'}
+        - {resource: 'AuthorDispatcherLoadBalancer', resource_property: 'SecurityGroups', config_property: 'author_dispatcher_elb'}
+        - {resource: 'PublishDispatcherLoadBalancer', resource_property: 'SecurityGroups', config_property: 'publish_dispatcher_elb'}
       when: security_groups is defined and security_groups[item.property] is defined and security_groups[item.property]['extra_groups'] is defined
