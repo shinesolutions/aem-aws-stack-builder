@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 4.13.0 - 2019-09-19
 ### Added
 - Add new Stack Manager function CloudwatchS3Stream
+- Add new parameters to control the AEM Stack cloudwatch log s3 stream
+- Add new scheduled job parameters for scheduling the cronjob `cloudwatch_s3_Stream`
 
 ### Changed
 - Upgrade AEM Stack Manager Cloud to 1.4.0
