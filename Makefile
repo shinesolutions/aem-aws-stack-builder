@@ -1,4 +1,4 @@
-version ?= 4.14.0
+version ?= 4.15.0-pre.0
 aem_stack_manager_messenger_version = 2.7.0
 aem_test_suite_version = 1.4.0
 aem_helloworld_custom_stack_provisioner_version = 0.14.0
