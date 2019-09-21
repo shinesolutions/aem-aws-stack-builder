@@ -27,9 +27,9 @@ def add_security_groups_to_resource(resource_name, resource_properties, security
             resource_properties_list = resource_properties.split(',')
             if (len(resource_properties_list) == 1):
               resource_security_groups = template['Resources'][resource_name]['Properties'][resource_properties]
-            else if (resource_properties_list[0] == 'NetworkInterfaces[0]']):
+            elif (resource_properties_list[0] == 'NetworkInterfaces[0]'):
               resource_security_groups = template['Resources'][resource_name]['Properties']['NetworkInterfaces'][0][resource_properties_list[1]]
-            else
+            else:
               raise Exception('Unsupported resource properties list ' + resource_properties_list)
             for secgrp in security_groups:
                 resource_security_groups.append(secgrp)
