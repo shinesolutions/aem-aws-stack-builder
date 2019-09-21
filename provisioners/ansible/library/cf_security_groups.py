@@ -23,7 +23,7 @@ def write_template(file_name, template):
 def add_security_groups_to_resource(resource_name, resource_property_name, security_groups, template):
 
     for resource in template['Resources']:
-        if resource_name in resource:
+        if resource_name == resource:
             resource_security_groups = template['Resources'][resource_name]['Properties'][resource_property_name]
             for secgrp in security_groups:
                 resource_security_groups.append(secgrp)

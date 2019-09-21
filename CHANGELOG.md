@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fix Consolidated config extra groups to check for exact resource name
+
 ## 4.15.0 - 2019-09-21
 ### Added
 - Add security group support for Consolidated AuthorPublishDispatcher instance
