@@ -124,8 +124,6 @@ Resources:
         Ref: AuthorPublishDispatcherInstanceTypeParameter
       KeyName:
         Ref: ComputeKeyPairNameParameter
-      SecurityGroupIds:
-      - Ref: InboundFromBastionHostSecurityGroupParameter
       NetworkInterfaces:
       - AssociatePublicIpAddress:
           Ref: AssociatePublicIpAddressParameter

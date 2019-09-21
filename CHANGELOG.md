@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Modify extra groups handling to allow sub property names
+
 ## 4.15.1 - 2019-09-21
 
 ### Fixed
