@@ -58,7 +58,6 @@
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Find Related Author Dispatcher Zone ID
       shell: >
         aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_author_dispatcher_hosted_zone.msg[0] }}'].[Id][0][0]"
-      ignore_errors: yes
       register: author_dispatcher_zone_id
       tags:
         - switch
@@ -66,7 +65,6 @@
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Find Related Publish Dispatcher Zone ID
       shell: >
         aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_publish_dispatcher_hosted_zone.msg[0] }}' ].[Id][0][0]"
-      ignore_errors: yes
       register: publish_dispatcher_zone_id
       tags:
         - switch
@@ -74,7 +72,6 @@
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Check Status Author Dispatcher Host Is It Private Or Public
       shell: >
         aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_author_dispatcher_hosted_zone.msg[0] }}' ].[Config][0][0].[PrivateZone][0]"
-      ignore_errors: yes
       register: author_dispatcher_zone_private
       tags:
         - switch
@@ -82,7 +79,6 @@
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Check Status Publish Dispatcher Host Is It Private Or Public
       shell: >
         aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_publish_dispatcher_hosted_zone.msg[0] }}' ].[Config][0][0].[PrivateZone][0]"
-      ignore_errors: yes
       register: publish_zone_private
       tags:
         - switch
@@ -90,7 +86,6 @@
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} And Get Information About DNS Type Of Author Dispatcher
       shell: >
         aws route53 list-resource-record-sets --hosted-zone-id {{ (author_dispatcher_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ sanitise_author_dispatcher_record_set.msg[0] }}'].[Type][0][0]"
-      ignore_errors: yes
       register: author_dispatcher_record_type
       tags:
         - switch
@@ -98,7 +93,6 @@
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} And Get Information About DNS Type Of Publish Dispatcher
       shell: >
         aws route53 list-resource-record-sets --hosted-zone-id {{ (publish_dispatcher_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ sanitise_publish_dispatcher_record_set.msg[0] }}'].[Type][0][0]"
-      ignore_errors: yes
       register: publish_dispatcher_record_type
       tags:
         - switch

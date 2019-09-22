@@ -194,7 +194,7 @@ delete-consolidated-main: delete-aem-stack-data
 	./scripts/delete-stack.sh apps/aem/consolidated/main "$(config_path)" "$(stack_prefix)"
 
 switch-dns-consolidated:
-	./scripts/switch-dns-consolidated.sh apps/aem/consolidated/switch-dns "$(config_path)" "$(stack_prefix)"  "$(publish_dispatcher_record)"  "$(author_dispatcher_record)"
+	./scripts/switch-dns-consolidated.sh apps/aem/consolidated/switch-dns "$(config_path)" "$(stack_prefix)"  "$(author_publish_dispatcher_record)" 
 
 create-consolidated:
 	make create-consolidated-prerequisites "config_path=$(config_path)" "stack_prefix=$(stack_prefix)"
