@@ -7,81 +7,43 @@
   tasks:
 # Sep-2019- Ansible functions related to collect FACTS  about the route53 are not working properly and it create new hosted when digging private zones ,  so we had to use AWS-CLI commands to collect route53 informaitons(record set type, hosted zone ID and Host type)
 
-    - name: create and validating author dispatcher record set name based on input data
+    - name: Create and validating Author Publish Dispatcher Record Set Name Based On Input Data
       debug:
         msg:
-          - "{{ (author_dispatcher_record if author_dispatcher_record[-1] == '.' else author_dispatcher_record+'.')+dns_records.route53_hosted_zone_name }}"
-      register: valid_ad_record_set
+          - "{{ (author_publish_dispatcher_record if author_publish_dispatcher_record[-1] == '.' else author_publish_dispatcher_record+'.')+dns_records.route53_hosted_zone_name }}"
+      register: sanitise_record_set
       tags:
         - switch
 
 
-    - name: create and validating publish dispatcher record set name based on input date
-      debug:
-        msg:
-          - "{{ (publish_dispatcher_record if publish_dispatcher_record[-1] == '.' else publish_dispatcher_record+'.')+dns_records.route53_hosted_zone_name }}"
-      register: valid_pd_record_set
-      tags:
-        - switch
-
-    - name: check  {{ stack_prefix }}-{{ main.stack_name }} to find related author dispatcher zone ID
+    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Find Related Author Publish Dispatcher Zone ID
       shell: >
         aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ dns_records.route53_hosted_zone_name }}'].[Id][0][0]"
-      ignore_errors: yes
-      register: consolidated_dispatcher_zone_id
+      register: author_publish_zone_id
       tags:
         - switch
 
-    - name: check  {{ stack_prefix }}-{{ main.stack_name }} to check status Author dispatcher host is it is private or public
+    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Check Status Author Publish Dispatcher Host Is It Private Or Public
       shell: >
         aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ dns_records.route53_hosted_zone_name }}' ].[Config][0][0].[PrivateZone][0]"
-      ignore_errors: yes
-      register: author_dispatcher_zone_private
+      register: author_publish_dispatcher_zone_private
       tags:
         - switch
 
-    - name: check  {{ stack_prefix }}-{{ main.stack_name }} to check status Publish dispatcher host is it is private or public
+    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} And Get Information About DNS Type Of Author Dispatcher
       shell: >
-        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ dns_records.route53_hosted_zone_name }}' ].[Config][0][0].[PrivateZone][0]"
-      ignore_errors: yes
-      register: publish_zone_private
+        aws route53 list-resource-record-sets --hosted-zone-id {{ (author_publish_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ sanitise_record_set.msg[0] }}'].[Type][0][0]"
+      register: author_publish_dispatcher_record_type
       tags:
         - switch
 
-    - name: check  {{ stack_prefix }}-{{ main.stack_name }} and get information about DNS_ type of Author dispatcher
-      shell: >
-        aws route53 list-resource-record-sets --hosted-zone-id {{ (consolidated_dispatcher_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ valid_ad_record_set.msg[0] }}'].[Type][0][0]"
-      ignore_errors: yes
-      register: author_dispatcher_record_type
-      tags:
-        - switch
-
-    - name: check  {{ stack_prefix }}-{{ main.stack_name }} and get information about DNS type of Publish dispatcher
-      shell: >
-        aws route53 list-resource-record-sets --hosted-zone-id {{ (consolidated_dispatcher_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ valid_pd_record_set.msg[0] }}'].[Type][0][0]"
-      ignore_errors: yes
-      register: publish_dispatcher_record_type
-      tags:
-        - switch
-
-    - name: Change Publish Dispatcher Hosted Zone Record set value
+    - name: Change Author Publish Dispatcher Hosted Zone Record Set Value
       route53:
         state: create
-        private_zone : "{{ 'yes' if ([publish_zone_private.stdout][0]) == 'true' else 'no' }}"
-        zone: "{{ dns_records.route53_hosted_zone_name  }}"
-        record: '{{ valid_pd_record_set.msg[0] }}'
-        value: "{{ stack_prefix }}-{{ dns_records.publish_dispatcher.record_set_name }}.{{ dns_records.route53_hosted_zone_name }}"
-        overwrite: yes
-        type: "{{ publish_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
-      tags: switch
-
-    - name: Change Author Dispatcher Hosted Zone Record set value
-      route53:
-        state: create
-        private_zone : "{{ 'yes' if ([author_dispatcher_zone_private.stdout][0]) == 'true' else 'no' }}"
+        private_zone : "{{ 'yes' if ([author_publish_dispatcher_zone_private.stdout][0]) == 'true' else 'no' }}"
         zone: "{{ dns_records.route53_hosted_zone_name }}"
-        record: '{{ valid_ad_record_set.msg[0] }}'
+        record: '{{ sanitise_record_set.msg[0] }}'
         value: "{{ stack_prefix }}-{{ dns_records.author_dispatcher.record_set_name }}.{{ dns_records.route53_hosted_zone_name }}"
         overwrite: yes
-        type: "{{ author_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
+        type: "{{ author_publish_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
       tags: switch

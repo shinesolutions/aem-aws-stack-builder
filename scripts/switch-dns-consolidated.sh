@@ -2,7 +2,7 @@
 set -o errexit
 
 if [[ "$#" -lt 3 ]] || [[ "$#" -gt 5 ]]; then
-  echo "Usage: ${0} <stack_type> <config_path> <stack_prefix> <publish_dispatcher_record> <author_dispatcher_record>"
+  echo "Usage: ${0} <stack_type> <config_path> <stack_prefix> <author_publish_dispatcher_record>"
   exit 1
 fi
 
@@ -11,8 +11,7 @@ action_verb=switching
 
 stack_type="${1}"
 stack_prefix="${3}"
-publish_dispatcher_record="${4}"
-author_dispatcher_record="${5}"
+author_publish_dispatcher_record="${5}"
 
 config_paths=()
 IFS=':' read -ra temp_config_paths <<< "${2}"
@@ -29,7 +28,7 @@ log_path=logs/$stack_prefix/$run_id-${tag}-$(echo "$stack_type" | sed 's/\//-/g'
 # Construct Ansible extra_vars flags. If `config_path` is set, all files
 # directly under the directory with extension `.yaml` or `.yml` will be added.
 # The search for config files _will not_ descend into subdirectories.
-extra_vars=(--extra-vars "stack_prefix=$stack_prefix  publish_dispatcher_record=$publish_dispatcher_record author_dispatcher_record=$author_dispatcher_record " )
+extra_vars=(--extra-vars "stack_prefix=$stack_prefix  author_publish_dispatcher_record=$author_publish_dispatcher_record " )
 if [[ ${#config_paths[@]} -gt 0 ]]; then
   OIFS="${IFS}"
   IFS=$'\n'
