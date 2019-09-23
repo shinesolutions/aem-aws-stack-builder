@@ -4,3 +4,4 @@ boto3==1.9.145
 jinja2==2.10.1
 ruamel.yaml==0.15.66
 yamllint==1.13.0
+boto==2.49.0
