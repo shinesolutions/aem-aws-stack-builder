@@ -5,6 +5,9 @@ aws:
   availability_zone_list: ap-southeast-2a, ap-southeast-2b
   resources:
     stack_name: stack-builder-aem-resources
+  cloudwatch:
+    enable_log_subscription: false
+    log_subscription_arn: overwrite-me
 
 proxy:
   enabled: false

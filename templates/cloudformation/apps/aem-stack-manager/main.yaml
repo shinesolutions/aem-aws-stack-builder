@@ -25,8 +25,17 @@ Outputs:
     Value:
       Ref: UtilitiesStack
 Parameters:
+  AWSRegion:
+    Description: Name of the AWS region
+    Type: String
   AEMCWEventNotificationEmail:
     Description: The EMail adress for sending CW Alarm messages
+    Type: String
+  CloudWatchS3StreamBucketNameParameter:
+    Description: Bucket name that stores Stack data file
+    Type: String
+  CloudWatchS3StreamPrefixParameter:
+    Description: Prefix within the Bucket to Locate Files
     Type: String
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
@@ -73,6 +82,10 @@ Resources:
           Ref: MainStackPrefixParameter
         S3DataStackManagerPrefix:
           Ref: S3DataStackManagerPrefix
+        CloudWatchS3StreamBucketNameParameter:
+          Ref: CloudWatchS3StreamBucketNameParameter
+        CloudWatchS3StreamPrefixParameter:
+          Ref: CloudWatchS3StreamPrefixParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles.yaml
     Type: AWS::CloudFormation::Stack
@@ -109,6 +122,8 @@ Resources:
       - PrerequisitesStack
     Properties:
       Parameters:
+        AWSRegion:
+          Ref: AWSRegion
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         LiveSnapshotsPurgeMaxAge:

@@ -16,12 +16,30 @@
         - ../../../templates/cloudformation/apps/
         - ../../../templates/cloudformation/network/
 
-    - name: Add extra AWS Security Groups to CloudFormation template files
+    - name: Add extra AWS Security Groups to Full-Set CloudFormation template files
       cf_security_groups:
         template_dir: '../../../templates/cloudformation/apps/aem/full-set/'
-        elb_resource: "{{ item.resource }}"
-        security_groups: "{{ security_groups[item.property]['extra_groups'] }}"
+        resource_name: "{{ item.resource }}"
+        resource_properties: "{{ item.resource_properties }}"
+        security_groups: "{{ security_groups[item.config_property]['extra_groups'] }}"
       with_items:
-        - {resource: 'AuthorDispatcherLoadBalancer', property: 'author_dispatcher_elb'}
-        - {resource: 'PublishDispatcherLoadBalancer', property: 'publish_dispatcher_elb'}
-      when: security_groups is defined and security_groups[item.property] is defined and security_groups[item.property]['extra_groups'] is defined
+        - {resource: 'AuthorDispatcherLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'author_dispatcher_elb'}
+        - {resource: 'AuthorDispatcherLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'author_dispatcher'}
+        - {resource: 'AuthorPrimaryInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_primary'}
+        - {resource: 'AuthorStandbyInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_standby'}
+        - {resource: 'ChaosMonkeyLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'chaos_monkey'}
+        - {resource: 'OrchestratorLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'orchestrator'}
+        - {resource: 'PublishDispatcherLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'publish_dispatcher_elb'}
+        - {resource: 'PublishLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'publish'}
+        - {resource: 'PublishDispatcherLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'publish_dispatcher'}
+      when: security_groups is defined and security_groups[item.config_property] is defined and security_groups[item.config_property]['extra_groups'] is defined
+
+    - name: Add extra AWS Security Groups to Consolidated CloudFormation template files
+      cf_security_groups:
+        template_dir: '../../../templates/cloudformation/apps/aem/consolidated/'
+        resource_name: "{{ item.resource }}"
+        resource_properties: "{{ item.resource_properties }}"
+        security_groups: "{{ security_groups[item.config_property]['extra_groups'] }}"
+      with_items:
+        - {resource: 'AuthorPublishDispatcherInstance', resource_properties: 'NetworkInterfaces[0],GroupSet', config_property: 'author_publish_dispatcher'}
+      when: security_groups is defined and security_groups[item.config_property] is defined and security_groups[item.config_property]['extra_groups'] is defined
