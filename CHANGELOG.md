@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fixed syntax issue for Monitoring Cloudformation Stack template
+
 ## 4.16.0 - 2019-09-21
 ### Changed
 - Modify extra groups handling to allow sub property names

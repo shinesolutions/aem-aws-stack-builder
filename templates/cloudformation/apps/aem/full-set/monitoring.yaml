@@ -21,7 +21,8 @@ Resources:
   ApplicationDashboard:
     Type: AWS::CloudWatch::Dashboard
     Properties:
-      DashboardBody: !Sub
+      DashboardBody:
+        Fn::Sub:
         - '{
           "widgets": [
             {
@@ -414,40 +415,59 @@ Resources:
             }
           ]
         }'
-        - {
-          authorDispatcherAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup'}]],
-          publishAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishAutoScalingGroup'}]],
-          publishDispatcherAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup'}]],
-          orchestratorAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-OrchestratorAutoScalingGroup'}]],
-          chaosMonkeyAutoScalingGroupName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup'}]],
-          authorPrimaryInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorPrimaryInstance'}]],
-          authorStandbyInstance: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorStandbyInstance'}]],
-
-          authorELB: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorLoadBalancer'}]],
-          authorDispatcherELB: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer'}]],
-          publishDispatcherELB: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-PublishDispatcherLoadBalancer'}]],
-
-          aemAsgEventQueueName: !Join ['', [ "Fn::ImportValue": {"Fn::Sub":'${MainStackPrefixParameter}-AEMASGEventQueueName'}]],
-
-          rootVolName: !Ref 'RootDeviceParameter',
-          dataVolName: !Ref 'DataDeviceParameter',
-          stackPrefix: !Ref 'MainStackPrefixParameter',
-          awsRegion: !Ref 'AwsRegionParameter'
-        }
-      DashboardName: !Sub
-        - '${MainStackPrefixParameter}-monitoring-dashboard'
-        - {
-            MainStackPrefixParameter: !Ref 'MainStackPrefixParameter'
-          }
-
-
+        - authorDispatcherAutoScalingGroupName:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup"
+          publishAutoScalingGroupName:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-PublishAutoScalingGroup"
+          publishDispatcherAutoScalingGroupName:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup"
+          orchestratorAutoScalingGroupName:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-OrchestratorAutoScalingGroup"
+          chaosMonkeyAutoScalingGroupName:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup"
+          authorPrimaryInstance:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-AuthorPrimaryInstance"
+          authorStandbyInstance:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-AuthorStandbyInstance"
+          authorELB:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-AuthorLoadBalancer"
+          authorDispatcherELB:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer"
+          publishDispatcherELB:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherLoadBalancer"
+          aemAsgEventQueueName:
+            Fn::ImportValue:
+              Fn::Sub: "${MainStackPrefixParameter}-AEMASGEventQueueName"
+          rootVolName:
+            Ref: 'RootDeviceParameter'
+          dataVolName:
+            Ref: 'DataDeviceParameter'
+          stackPrefix:
+            Ref: 'MainStackPrefixParameter'
+          awsRegion:
+            Ref: 'AwsRegionParameter'
+      DashboardName:
+        Fn::Sub:
+        - "${MainStackPrefixParameter}-monitoring-dashboard"
+        - MainStackPrefixParameter:
+            Ref: 'MainStackPrefixParameter'
 Outputs:
-
   ApplicationCloudwatchDashboardURL:
     Description: The URL of the Cloudwatch Dashboard
-    Value: !Sub
-      - 'https://${awsRegion}.console.aws.amazon.com/cloudwatch/home?region=${awsRegion}#dashboards:name=${stackPrefix}-monitoring-dashboard'
-      - {
-          awsRegion: !Ref 'AwsRegionParameter',
-          stackPrefix: !Ref 'MainStackPrefixParameter'
-        }
+    Value:
+      Fn::Sub:
+      - "https://${awsRegion}.console.aws.amazon.com/cloudwatch/home?region=${awsRegion}#dashboards:name=${stackPrefix}-monitoring-dashboard"
+      - awsRegion:
+          Ref: 'AwsRegionParameter'
+        stackPrefix:
+          Ref: 'MainStackPrefixParameter'
