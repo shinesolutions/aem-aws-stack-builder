@@ -149,6 +149,15 @@ Create prerequisites stack which contains the instance profiles and security gro
 Create main stack which contains EC2 and Route53 resources:
 
     make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> prerequisites_stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>
+    
+### Switch DNS
+
+You can point a DNS record to an AEM Full-Set or AEM Consolidated architecture:
+
+    make switch-dns-full-set stack_prefix=<full_set_stack_prefix> config_path=<path/to/config/dir> publish_dispatcher_zone=<publish_dispatcher_zone_name> publish_dispatcher_record=<publish_dispatcher_record_name> author_dispatcher_zone=<author_dispatcher_zone_name>  author_dispatcher_record=<author_dispatcher_record_name>
+
+    make switch-dns-consolidated stack_prefix=<consolidated_stack_prefix> config_path=<path/to/config/dir> author_publish_dispatcher_hosted_zone=<author_publish_dispatcher_hosted_zone> author_publish_dispatcher_record_set=<author_publish_dispatcher_record_set>
+
 
 Testing
 -------

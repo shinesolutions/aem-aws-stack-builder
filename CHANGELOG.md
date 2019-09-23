@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add function for switching DNS by setting DNS record of a given zone to point to an AEM stack
+
 ### Fixed
 - Fixed syntax issue for Monitoring Cloudformation Stack template by replacing shorthands with functions
 
@@ -41,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ignore missing logfiles in default logrotation rules
 
 ## 4.12.0 - 2019-09-12
+
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.16.0
 
