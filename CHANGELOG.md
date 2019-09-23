@@ -5,8 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
+## 4.17.0 - 2019-09-23
 ### Added
 - Add function for switching DNS by setting DNS record of a given zone to point to an AEM stack
 
@@ -45,7 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ignore missing logfiles in default logrotation rules
 
 ## 4.12.0 - 2019-09-12
-
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.16.0
 
