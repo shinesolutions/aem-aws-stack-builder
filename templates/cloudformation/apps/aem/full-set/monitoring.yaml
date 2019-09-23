@@ -6,6 +6,9 @@ Parameters:
   MainStackPrefixParameter:
     Type: String
     Description: The AEM Stack Compute Resources Stack Prefix
+  PrerequisitesStackPrefixParameter:
+    Type: String
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
   AwsRegionParameter:
     Type: String
     Description: AWS region
@@ -447,7 +450,7 @@ Resources:
               Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherLoadBalancer"
           aemAsgEventQueueName:
             Fn::ImportValue:
-              Fn::Sub: "${MainStackPrefixParameter}-AEMASGEventQueueName"
+              Fn::Sub: "${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName"
           rootVolName:
             Ref: 'RootDeviceParameter'
           dataVolName:

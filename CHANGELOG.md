@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed syntax issue for Monitoring Cloudformation Stack template by replacing shorthands with functions
+- Fix monitoring stack's aemAsgEventQueueName param to use output from prerequisites stack prefix
 
 ## 4.16.0 - 2019-09-21
 ### Changed
