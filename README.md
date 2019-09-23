@@ -157,7 +157,7 @@ The good way to change DNS information of AEM architecture from old value to new
 
 also you can use below command to make this modification for consolidated configuration.
 
-    make switch-dns-consolidated stack_prefix=<consolidated_stack_prefix> config_path=<path/to/config/dir> author_publish_dispatcher_record>=<author_publish_dispatcher_record_name>
+    make switch-dns-consolidated stack_prefix=<consolidated_stack_prefix> config_path=<path/to/config/dir> author_publish_dispatcher_hosted_zone=<author_publish_dispatcher_hosted_zone> author_publish_dispatcher_record_set=<author_publish_dispatcher_record_set>
 
 
 Testing
