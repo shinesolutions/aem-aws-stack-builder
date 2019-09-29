@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add Certificate manager & Secrets manager support for certificate handling when reconfiguration runs
+
+### Changed
+- Replaced reconfiguration parameter `certs_base` with `certificate_arn` & `certificate_key_arn`
+
 ### Removed
 - Removed reconfiguration parameter `create_system_users`, as it doesn't had any functionality
 

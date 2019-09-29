@@ -143,7 +143,8 @@ aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deploymen
 common::aem_healthcheck_version: {{ library.aem_healthcheck_version }}
 common::enable_aem_reconfiguration: {{ aem.enable_reconfiguration }}
 common::enable_truststore_removal: {{ reconfiguration.enable_truststore_removal }}
-common::cert_base_url: {{ reconfiguration.certs_base }}
+common::certificate_arn: {{ reconfiguration.certificate_arn }}
+common::certificate_key_arn: {{ reconfiguration.certificate_key_arn }}
 common::aem_ssl_keystore_password: {{ reconfiguration.ssl_keystore_password }}
 common::aem_system_users:
 {{ system_users | to_nice_yaml | indent(width=2, first=True) }}
