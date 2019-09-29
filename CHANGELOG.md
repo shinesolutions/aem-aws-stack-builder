@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Removed
+- Removed reconfiguration parameter `create_system_users`, as it doesn't had any functionality
+
 ## 4.17.0 - 2019-09-23
 ### Added
 - Add function for switching DNS by setting DNS record of a given zone to point to an AEM stack

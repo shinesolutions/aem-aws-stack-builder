@@ -302,7 +302,6 @@ These configurations are applicable only when you run repository reconfiguration
 
 | Name | Description | Required? | Default |
 |------|-------------|-----------|---------|
-| reconfiguration.enable_create_system_users | If set to true, any existing system users on the repository to be reconfigured will be deleted and then recreated with AEM OpenCloud system users. This is only needed when the source repository to be reconfigured contains non-AEM OpenCloud system users. | Optional | `false` |
 | reconfiguration.enable_truststore_migration | If set to true, The existing AEM Global Truststore gets downloaded, remove the Truststore from AEM, create new empty one, upload downloaded Truststore. This option needs to be set true when reconfiguring an upgraded AEM Repository and the Truststore needs to be readable on the upgraded AEM instance. The parameter `aem.truststore.password` needs to be set with the same password of the existing AEM Global Truststore | Optional | `false` |
 | reconfiguration.enable_truststore_removal | If set to true, The existing AEM Global Truststore gets removed during reconfiguration. Only needed for upgraded AEM instance during migration. | Optional | `false` |
 | reconfiguration.certs_base | Source URL path of TLS certificate, it could be s3://..., http://..., https://..., or file://.... In [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md) case, it could be an S3 Bucket path, e.g. s3://somebucket/certs/  | Mandatory | |
