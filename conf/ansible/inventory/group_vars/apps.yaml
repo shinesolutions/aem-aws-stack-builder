@@ -479,7 +479,7 @@ scheduled_jobs:
       weekday: 2-7
       hour: 1
       minute: 15
-    cloudwatch_s3_Stream:
+    cloudwatch_s3_stream:
       # enable/disable controlled by parameter aws.cloudwatch.enable_log_subscription
       weekday: '*'
       hour: '*'
