@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed EBS volumes encryption at rest
 
 ## 4.3.2 - 2019-08-30
-###Added
+### Added
 - Add EBS volumes encryption at rest
 - Add Stack Manager DynamoDB encryption at rest
 - Upgrade aem-aws-stack-provisioner to 4.2.2
