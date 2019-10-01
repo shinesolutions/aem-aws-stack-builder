@@ -81,7 +81,6 @@ Resources:
             - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           VolumeSize:
             Ref: AuthorPublishDispatcherRootVolSizeParameter
           VolumeType: gp2
@@ -91,7 +90,6 @@ Resources:
             - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           SnapshotId:
             Fn::If:
             - UseAuthorDataVolSnapshotCondition
@@ -106,7 +104,6 @@ Resources:
             - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           SnapshotId:
             Fn::If:
             - UsePublishDataVolSnapshotCondition

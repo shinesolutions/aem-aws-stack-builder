@@ -147,7 +147,6 @@ Resources:
           Ref: PublishImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           VolumeSize:
             Ref: PublishRootVolSizeParameter
           VolumeType: gp2
@@ -155,7 +154,6 @@ Resources:
           Ref: PublishImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           SnapshotId:
             Fn::If:
             - UsePublishDataVolSnapshotCondition

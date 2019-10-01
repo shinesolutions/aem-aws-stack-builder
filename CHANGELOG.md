@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Revert commit f5d87d0531d9cafa8283f315396542c8580215ab
 - Removed Stack Manager DynamoDB encryption at rest
+- Revert commit 7da5a4b72f703ee0d3e23e7efafddc8777713bea
+- Removed EBS volumes encryption at rest
 
 ## 4.3.2 - 2019-08-30
 ###Added

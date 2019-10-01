@@ -132,7 +132,6 @@ Resources:
           Ref: OrchestratorImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           VolumeSize:
             Ref: OrchestratorRootVolSizeParameter
           VolumeType: gp2
@@ -140,7 +139,6 @@ Resources:
           Ref: OrchestratorImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           VolumeSize:
             Ref: OrchestratorDataVolSizeParameter
           VolumeType: gp2

@@ -269,7 +269,6 @@ Resources:
           Ref: PublishDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           VolumeSize:
             Ref: PublishDispatcherRootVolSizeParameter
           VolumeType: gp2
@@ -277,7 +276,6 @@ Resources:
           Ref: PublishDispatcherImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
           VolumeSize:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
