@@ -20,11 +20,17 @@ def write_template(file_name, template):
         f.write(text)
 
 
-def add_security_groups_to_resource(resource_name, resource_property_name, security_groups, template):
+def add_security_groups_to_resource(resource_name, resource_properties, security_groups, template):
 
     for resource in template['Resources']:
-        if resource_name in resource:
-            resource_security_groups = template['Resources'][resource_name]['Properties'][resource_property_name]
+        if resource_name == resource:
+            resource_properties_list = resource_properties.split(',')
+            if (len(resource_properties_list) == 1):
+              resource_security_groups = template['Resources'][resource_name]['Properties'][resource_properties]
+            elif (resource_properties_list[0] == 'NetworkInterfaces[0]'):
+              resource_security_groups = template['Resources'][resource_name]['Properties']['NetworkInterfaces'][0][resource_properties_list[1]]
+            else:
+              raise Exception('Unsupported resource properties list ' + resource_properties_list)
             for secgrp in security_groups:
                 resource_security_groups.append(secgrp)
 
@@ -37,20 +43,20 @@ def main():
       argument_spec = dict(
         template_dir = dict(required=True, type='str'),
         resource_name = dict(required=True, type='str'),
-        resource_property_name = dict(required=True, type='str'),
+        resource_properties = dict(required=True, type='str'),
         security_groups = dict(required=True, type='list')
       )
     )
 
     template_dir = module.params['template_dir']
     resource_name = module.params['resource_name']
-    resource_property_name = module.params['resource_property_name']
+    resource_properties = module.params['resource_properties']
     security_groups = module.params['security_groups']
 
     template_files = glob.glob(template_dir + "*.yaml")
     for template_file in template_files:
         template = read_template(template_file)
-        template = add_security_groups_to_resource(resource_name, resource_property_name, security_groups, template)
+        template = add_security_groups_to_resource(resource_name, resource_properties, security_groups, template)
         write_template(template_file, template)
 
     module.exit_json(changed = True, message = ", ".join(template_files))

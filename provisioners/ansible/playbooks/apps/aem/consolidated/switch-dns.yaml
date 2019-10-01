@@ -1,0 +1,56 @@
+---
+- name: AEM DNS Record Update CloudFormation Stack
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  tasks:
+# Sep-2019- Ansible functions related to collect FACTS  about the route53 are not working properly and it create new hosted when digging private zones ,  so we had to use AWS-CLI commands to collect route53 informaitons(record set type, hosted zone ID and Host type)
+
+    - name: Create And Validating Author Dispatcher Hosted Zone Name Based On Input Data
+      debug:
+        msg:
+          - "{{ (author_publish_dispatcher_hosted_zone if author_publish_dispatcher_hosted_zone[-1] == '.' else author_publish_dispatcher_hosted_zone+'.') }}"
+      register: sanitise_author_dispatcher_hosted_zone
+      tags:
+        - switch
+
+    - name: Create And Validating Author Dispatcher Record Set Name Based On Input Data
+      debug:
+        msg:
+          - "{{ (author_publish_dispatcher_record_set if author_publish_dispatcher_record_set[-1] == '.' else author_publish_dispatcher_record_set+'.')+(author_publish_dispatcher_hosted_zone if author_publish_dispatcher_hosted_zone[-1] == '.' else author_publish_dispatcher_hosted_zone+'.') }}"
+      register: sanitise_author_publish_dispatcher_record_set
+      tags:
+        - switch
+
+    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Find Related Author Publish Dispatcher Zone ID
+      shell: >
+        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_author_dispatcher_hosted_zone.msg[0] }}'].[Id][0][0]"
+      register: author_publish_zone_id
+      tags:
+        - switch
+
+    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Check Status Author Publish Dispatcher Host Is It Private Or Public
+      shell: >
+        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_author_dispatcher_hosted_zone.msg[0] }}' ].[Config][0][0].[PrivateZone][0]"
+      register: author_publish_dispatcher_zone_private
+      tags:
+        - switch
+
+    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} And Get Information About DNS Type Of Author Dispatcher
+      shell: >
+        aws route53 list-resource-record-sets --hosted-zone-id {{ (author_publish_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ sanitise_author_publish_dispatcher_record_set.msg[0] }}'].[Type][0][0]"
+      register: author_publish_dispatcher_record_type
+      tags:
+        - switch
+
+    - name: Change Author Publish Dispatcher Hosted Zone Record Set Value
+      route53:
+        state: create
+        private_zone : "{{ 'yes' if ([author_publish_dispatcher_zone_private.stdout][0]) == 'true' else 'no' }}"
+        zone: "{{ sanitise_author_dispatcher_hosted_zone.msg[0] }}"
+        record: '{{ sanitise_author_publish_dispatcher_record_set.msg[0] }}'
+        value: "{{ stack_prefix }}-{{ dns_records.author_dispatcher.record_set_name }}.{{ sanitise_author_dispatcher_hosted_zone.msg[0] }}"
+        overwrite: yes
+        type: "{{ author_publish_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
+      tags: switch

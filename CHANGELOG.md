@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 4.18.0 - 2019-10-01
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.18.0
+
+### Fixed
+- Change new scheduled job parameters for scheduling the cronjob from `cloudwatch_s3_Stream` to `cloudwatch_s3_stream`
+
+## 4.17.0 - 2019-09-23
+### Added
+- Add function for switching DNS by setting DNS record of a given zone to point to an AEM stack
+
+### Fixed
+- Fixed syntax issue for Monitoring Cloudformation Stack template by replacing shorthands with functions
+- Fix monitoring stack's aemAsgEventQueueName param to use output from prerequisites stack prefix
+
+## 4.16.0 - 2019-09-21
+### Changed
+- Modify extra groups handling to allow sub property names
+
+## 4.15.1 - 2019-09-21
+### Fixed
+- Fix Consolidated config extra groups to check for exact resource name
+
+## 4.15.0 - 2019-09-21
+### Added
+- Add security group support for Consolidated AuthorPublishDispatcher instance
+
+## 4.14.0 - 2019-09-21
 ### Added
 - Add support for adding extra secgroups to EC2 instances
 

@@ -519,6 +519,8 @@ Resources:
       Parameters:
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
         AwsRegionParameter:
           Fn::Sub: ${AWS::Region}
         RootDeviceParameter:
