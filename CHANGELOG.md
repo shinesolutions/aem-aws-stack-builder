@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add integration testing for switch-dns functionality
+
+### Changed
+- Rename switch-dns parameters for consistency with AOC Manager parameter names
+
 ## 4.18.0 - 2019-10-01
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.18.0

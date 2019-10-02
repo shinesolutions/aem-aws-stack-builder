@@ -1,0 +1,14 @@
+{
+ 	"Comment": "CREATE test record set for integration testing switch-dns functionality",
+ 	"Changes": [{
+ 		"Action": "UPSERT",
+ 		"ResourceRecordSet": {
+ 			"Name": "record_set_name",
+ 			"Type": "CNAME",
+ 			"TTL": 300,
+ 			"ResourceRecords": [{
+ 				"Value": "3.3.3.3"
+ 			}]
+ 		}
+  }]
+ }
