@@ -43,7 +43,8 @@ echo "Creating AEM Stack Manager environment..."
 make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-config/aem-stack-manager-sandpit/
 
 # Provision test DNS records, needed for switch-dns testing against AEM Consolidated and AEM Full-Set environments
-./fixtures/provision-test-dns-batch.sh "${test_id}"
+./test/integration/fixtures/provision-test-dns-batch.sh "${test_id}"
+
 # Create, test, and delete AEM Consolidated environment
 cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 echo "Creating AEM Consolidated environment..."
