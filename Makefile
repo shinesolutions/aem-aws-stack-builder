@@ -219,7 +219,7 @@ delete-full-set-main: delete-aem-stack-data
 	./scripts/delete-stack.sh apps/aem/full-set/main "$(config_path)" "$(stack_prefix)"
 
 switch-dns-full-set:
-	./scripts/switch-dns-full-set.sh apps/aem/full-set/switch-dns "$(config_path)" "$(stack_prefix)"  "$(publish_dispatcher_hosted_zone)" "$(publish_dispatcher_record)" "$(author_dispatcher_hosted_zone)" "$(author_dispatcher_record)"
+	./scripts/switch-dns-full-set.sh apps/aem/full-set/switch-dns "$(config_path)" "$(stack_prefix)"  "$(publish_dispatcher_hosted_zone)" "$(publish_dispatcher_record_set)" "$(author_dispatcher_hosted_zone)" "$(author_dispatcher_record_set)"
 
 create-full-set:
 	make create-full-set-prerequisites "config_path=$(config_path)" "stack_prefix=$(stack_prefix)"
