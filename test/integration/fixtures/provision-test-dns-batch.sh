@@ -26,8 +26,8 @@ ensure_dns_exist()
   record_set_suffix=$4
   hosted_zone_id=$(aws route53 list-hosted-zones-by-name --output text --query "HostedZones[?Name == '${hosted_zone}'].[Id][0][0]" | sed 's/\/hostedzone\///g')
   echo "Using ${component} hosted zone id: ${hosted_zone_id}"
-  cat fixtures/switch-dns.json.template | sed "s/record_set_name/${test_id}-${record_set_suffix}.${hosted_zone}/g" > "../../stage/switch-dns-${record_set_suffix}.json"
-  aws route53 change-resource-record-sets --hosted-zone-id "${hosted_zone_id}" --change-batch "file://../../stage/switch-dns-${record_set_suffix}.json"
+  cat ./switch-dns.json.template | sed "s/record_set_name/${test_id}-${record_set_suffix}.${hosted_zone}/g" > "../../../stage/switch-dns-${record_set_suffix}.json"
+  aws route53 change-resource-record-sets --hosted-zone-id "${hosted_zone_id}" --change-batch "file://../../../stage/switch-dns-${record_set_suffix}.json"
 }
 
 ensure_dns_exist "${test_id}" "Author-Publish-Dispatcher" "${author_publish_dispatcher_hosted_zone}" "apd-con"
