@@ -7,9 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
-- Add integration testing for switch-dns functionality
-
 ### Changed
 - Rename switch-dns parameters for consistency with AOC Manager parameter names
 
