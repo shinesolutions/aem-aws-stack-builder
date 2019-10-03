@@ -53,7 +53,7 @@ make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-c
 echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" && cd ../../
 echo "Testing DNS switching to point to AEM Consolidated environment..."
-make switch-dns-consolidated config_path=stage/user-config/aws-resources-sandpit/ "stack_prefix=${test_id}-con" author_publish_dispatcher_hosted_zone=aemopencloud.cms "author_publish_dispatcher_record_set=${test_id}-apd-con"
+make switch-dns-consolidated "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/" "stack_prefix=${test_id}-con" author_publish_dispatcher_hosted_zone=aemopencloud.cms "author_publish_dispatcher_record_set=${test_id}-apd-con"
 echo "Deleting AEM Consolidated environment..."
 make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 
@@ -65,7 +65,7 @@ make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config
 echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-fs" && cd ../../
 echo "Testing DNS switching to point to AEM Full-Set environment..."
-make switch-dns-full-set config_path=stage/user-config/aws-resources-sandpit/ "stack_prefix=${test_id}-con" publish_dispatcher_hosted_zone=aemopencloud.space "publish_dispatcher_record_set=${test_id}-pd-fs" author_dispatcher_hosted_zone=aemopencloud.cms "author_dispatcher_record_set=${test_id}-ad-fs"
+make switch-dns-full-set "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/" "stack_prefix=${test_id}-fs" publish_dispatcher_hosted_zone=aemopencloud.space "publish_dispatcher_record_set=${test_id}-pd-fs" author_dispatcher_hosted_zone=aemopencloud.cms "author_dispatcher_record_set=${test_id}-ad-fs"
 # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
 #       will re-enable when InSpec already upgrades aws-sdk sub dependency to version 3.x
 # echo "Testing AEM Full-Set environment readiness with AEM Test Suite..."
