@@ -63,6 +63,8 @@ make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-co
 
 # Create, test, and delete AEM Consolidated environment
 cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+echo "Configuring AEM Consolidated environment..."
+make config "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 echo "Creating AEM Consolidated environment..."
 cp -R stage/descriptors/consolidated/* stage/
 make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
@@ -73,6 +75,8 @@ make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-c
 
 # Create, test, and delete AEM Full-Set environment
 cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+echo "Configuring AEM Full-Set environment..."
+make config "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 echo "Creating AEM Full-Set environment..."
 cp -R stage/descriptors/full-set/* stage/
 make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
