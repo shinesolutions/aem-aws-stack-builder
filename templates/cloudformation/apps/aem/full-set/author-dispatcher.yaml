@@ -41,16 +41,16 @@ Parameters:
   AuthorDispatcherDataVolSizeParameter:
     Description: Author Dispatcher Instances Data EBS Volume Size
     Type: Number
+  AuthorDispatcherImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Author Dispatcher Image Id
+    Type: String
   AuthorDispatcherImageParameter:
     Description: The Author Dispatcher Image Id
     Type: AWS::EC2::Image::Id
   AuthorDispatcherImageRootDevice:
     Default: /dev/sda1
     Description: The root device name for the Author Dispatcher Image Id
-    Type: String
-  AuthorDispatcherImageDataDevice:
-    Default: /dev/sdb
-    Description: The data device name for the Author Dispatcher Image Id
     Type: String
   AuthorDispatcherInstanceTypeParameter:
     Description: The Author Dispatcher Instance Type
@@ -83,22 +83,46 @@ Parameters:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
 Resources:
+  AuthorDispatcherAtLeastOneUnHealthyAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      AlarmDescription: At least one Author Dispatcher is Unhealthy
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAtLeastOneUnHealthyAlarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: AuthorDispatcherLoadBalancer
+      EvaluationPeriods: 10
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+    Type: AWS::CloudWatch::Alarm
   AuthorDispatcherAutoScalingGroup:
     Properties:
       AvailabilityZones:
         Ref: AuthorDispatcherASGAvailabilityZoneListParameter
       Cooldown:
         Fn::Select:
-          - 4
-          - Ref: AuthorDispatcherASGConfigurationParameters
+        - 4
+        - Ref: AuthorDispatcherASGConfigurationParameters
       DesiredCapacity:
         Fn::Select:
-          - 2
-          - Ref: AuthorDispatcherASGConfigurationParameters
+        - 2
+        - Ref: AuthorDispatcherASGConfigurationParameters
       HealthCheckGracePeriod:
         Fn::Select:
-          - 3
-          - Ref: AuthorDispatcherASGConfigurationParameters
+        - 3
+        - Ref: AuthorDispatcherASGConfigurationParameters
       HealthCheckType: ELB
       LaunchConfigurationName:
         Ref: AuthorDispatcherLaunchConfiguration
@@ -106,8 +130,8 @@ Resources:
       - Ref: AuthorDispatcherLoadBalancer
       MaxSize:
         Fn::Select:
-          - 0
-          - Ref: AuthorDispatcherASGConfigurationParameters
+        - 0
+        - Ref: AuthorDispatcherASGConfigurationParameters
       MetricsCollection:
       - Granularity: 1Minute
         Metrics:
@@ -121,8 +145,8 @@ Resources:
         - GroupTotalInstances
       MinSize:
         Fn::Select:
-          - 1
-          - Ref: AuthorDispatcherASGConfigurationParameters
+        - 1
+        - Ref: AuthorDispatcherASGConfigurationParameters
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH
@@ -143,6 +167,15 @@ Resources:
       - Key: Component
         PropagateAtLaunch: true
         Value: author-dispatcher
+      - Key: Project
+        PropagateAtLaunch: true
+        Value: Open Source AEM Platform
+      - Key: Owner
+        PropagateAtLaunch: true
+        Value: Shine Solutions AEM Team
+      - Key: Cost Centre
+        PropagateAtLaunch: true
+        Value: 12345
       VPCZoneIdentifier:
         Fn::Split:
         - ','
@@ -183,6 +216,9 @@ Resources:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
+      - sg-000e3aa94140844a2
+      - sg-0a9b551e72f6a27f9
+      - sg-0d0ccdcee40859e4f
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
@@ -212,16 +248,17 @@ Resources:
       - InstancePort: '443'
         InstanceProtocol: HTTPS
         LoadBalancerPort: '443'
+        PolicyNames:
+        - Ref: ELBCipherSuiteParameter
         Protocol: HTTPS
         SSLCertificateId:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
-        PolicyNames:
-        - Ref: ELBCipherSuiteParameter
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherELBSecurityGroup
+      - sg-a2ac6cc5
       Subnets:
         Fn::Split:
         - ','
@@ -233,31 +270,13 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
+      - Key: Project
+        Value: Open Source AEM Platform
+      - Key: Owner
+        Value: Shine Solutions AEM Team
+      - Key: Cost Centre
+        Value: 12345
     Type: AWS::ElasticLoadBalancing::LoadBalancer
-  AuthorDispatcherAtLeastOneUnHealthyAlarm:
-    Properties:
-      ActionsEnabled: true
-      AlarmActions:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      AlarmDescription: At least one Author Dispatcher is Unhealthy
-      AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAtLeastOneUnHealthyAlarm
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Dimensions:
-      - Name: LoadBalancerName
-        Value:
-          Ref: AuthorDispatcherLoadBalancer
-      EvaluationPeriods: 10
-      MetricName: UnHealthyHostCount
-      Namespace: AWS/ELB
-      OKActions:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      Period: 60
-      Statistic: Average
-      Threshold: 1
-    Type: AWS::CloudWatch::Alarm
   AuthorDispatcherMoreThanOneUnHealthyAlarm:
     Properties:
       ActionsEnabled: true

@@ -1,5 +1,3 @@
----
-
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create Instance Profiles for AEM Stack Manager
 Outputs:
@@ -32,6 +30,18 @@ Outputs:
     Value:
       Ref: AEMStackManagerSSMServiceRoleNameParameter
 Parameters:
+  AEMStackManagerLambdaServiceRoleArnParameter:
+    Description: Stack Manager Lambda Service Role Arn
+    Type: String
+  AEMStackManagerLambdaServiceRoleNameParameter:
+    Description: Stack Manager Lambda Service Role Name
+    Type: String
+  AEMStackManagerSSMServiceRoleArnParameter:
+    Description: Stack Manager SSM Service Role Arn
+    Type: String
+  AEMStackManagerSSMServiceRoleNameParameter:
+    Description: Stack Manager SSM Service Role Name
+    Type: String
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
     Type: String
@@ -41,25 +51,13 @@ Parameters:
   S3DataStackManagerPrefix:
     Description: Prefix within the Bucket to Locate Files
     Type: String
-  AEMStackManagerSSMServiceRoleNameParameter:
-    Description: Stack Manager SSM Service Role Name
-    Type: String
-  AEMStackManagerSSMServiceRoleArnParameter:
-    Description: Stack Manager SSM Service Role Arn
-    Type: String
-  AEMStackManagerLambdaServiceRoleNameParameter:
-    Description: Stack Manager Lambda Service Role Name
-    Type: String
-  AEMStackManagerLambdaServiceRoleArnParameter:
-    Description: Stack Manager Lambda Service Role Arn
-    Type: String
 Resources:
   DummyParameter:
     Properties:
+      Description: Dummy Parameter to allow this stack to build.
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-DummyParameter
-      Description: Dummy Parameter to allow this stack to build.
       Type: String
       Value:
         Fn::Sub: ${MainStackPrefixParameter}-DummyParameter
-    Type: "AWS::SSM::Parameter"
+    Type: AWS::SSM::Parameter

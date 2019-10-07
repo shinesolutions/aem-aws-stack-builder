@@ -1,59 +1,53 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: AWS resources stack for AEM Stack Builder/Manager
-
+AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
-  CreateS3BucketCondition:
-    Fn::Equals:
-      - Ref: CreateS3Bucket
-      - "true"
   CreatePrivateHostedZoneCondition:
     Fn::Equals:
-      - Ref: CreatePrivateHostedZone
-      - "true"
-
-
+    - Ref: CreatePrivateHostedZone
+    - 'true'
+  CreateS3BucketCondition:
+    Fn::Equals:
+    - Ref: CreateS3Bucket
+    - 'true'
+Description: AWS resources stack for AEM Stack Builder/Manager
 Parameters:
-  CreateS3Bucket:
-    Type: String
-    Description: Toggle creating the S3 bucket
-  CreatePrivateHostedZone:
-    Type: String
-    Description: Toggle creating a Private HostedZone in Route53
   AemEnvS3BucketName:
-    Type: String
     Description: Name of the S3 Bucket for storing AEM environment states
+    Type: String
+  CreatePrivateHostedZone:
+    Description: Toggle creating a Private HostedZone in Route53
+    Type: String
+  CreateS3Bucket:
+    Description: Toggle creating the S3 bucket
+    Type: String
   PrivateHostedZoneName:
+    Description: Name of the Private HostedZone domain, fully qualified domain with
+      trailing dot (.)
     Type: String
-    Description: Name of the Private HostedZone domain, fully qualified domain with trailing dot (.)
   VPCId:
-    Type: String
     Description: VPCId to associate with the Private HostedZone
-  VPCRegion:
     Type: String
+  VPCRegion:
     Description: VPC region to associate with the Private HostedZone
-
-
+    Type: String
 Resources:
   AemEnvS3Bucket:
-    Type: AWS::S3::Bucket
     Condition: CreateS3BucketCondition
     Properties:
-      BucketName:
-        Ref: AemEnvS3BucketName
       BucketEncryption:
         ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
+      BucketName:
+        Ref: AemEnvS3BucketName
+    Type: AWS::S3::Bucket
   PrivateHostedZone:
-    Type: AWS::Route53::HostedZone
     Condition: CreatePrivateHostedZoneCondition
     Properties:
       Name:
         Ref: PrivateHostedZoneName
       VPCs:
-        -
-          VPCId:
-            Ref: VPCId
-          VPCRegion:
-            Ref: VPCRegion
+      - VPCId:
+          Ref: VPCId
+        VPCRegion:
+          Ref: VPCRegion
+    Type: AWS::Route53::HostedZone

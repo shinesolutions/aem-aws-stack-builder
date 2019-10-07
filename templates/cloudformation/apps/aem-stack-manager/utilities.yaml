@@ -1,21 +1,7 @@
----
-
 AWSTemplateFormatVersion: '2010-09-09'
 Description: AWS Lambda Functions for utility tasks with Default Schedule Using AWS
   Events
 Outputs:
-  PurgeSnapshotDevAliasArn:
-    Description: Arn for Prod Alias of Snapshot Purge Function
-    Value:
-      Ref: LambdaProdAlias
-  PurgeSnapshotFunctionName:
-    Description: Lambda Function Name for Snapshot Purge Function
-    Value:
-      Ref: SnapshotsPurgeLambdaFunction
-  PurgeSnapshotProdAliasArn:
-    Description: Arn for Prod Alias of Snapshot Purge Function
-    Value:
-      Ref: LambdaProdAlias
   CloudWatchS3StreamDevAliasArn:
     Description: Arn for Prod Alias of Cloudwatch S3 stream Function
     Value:
@@ -28,6 +14,18 @@ Outputs:
     Description: Arn for Prod Alias of Cloudwatch S3 stream Function
     Value:
       Ref: CloudWatchS3StreamLambdaProdAlias
+  PurgeSnapshotDevAliasArn:
+    Description: Arn for Prod Alias of Snapshot Purge Function
+    Value:
+      Ref: LambdaProdAlias
+  PurgeSnapshotFunctionName:
+    Description: Lambda Function Name for Snapshot Purge Function
+    Value:
+      Ref: SnapshotsPurgeLambdaFunction
+  PurgeSnapshotProdAliasArn:
+    Description: Arn for Prod Alias of Snapshot Purge Function
+    Value:
+      Ref: LambdaProdAlias
 Parameters:
   AWSRegion:
     Description: Name of the AWS region
@@ -60,6 +58,27 @@ Parameters:
     Description: Prefix within the Bucket to Locate Files
     Type: String
 Resources:
+  AemSnapshotsPurgeAlarm:
+    Properties:
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      AlarmDescription: Notifies if AemSnapshotsPurge execution fails
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-AemSnapshotsPurge-FAILS
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: FunctionName
+        Value:
+          Fn::Sub: ${MainStackPrefixParameter}-AemSnapshotsPurge
+      EvaluationPeriods: 1
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Period: 300
+      Statistic: Sum
+      Threshold: 1.0
+      TreatMissingData: notBreaching
+    Type: AWS::CloudWatch::Alarm
   CloudWatchS3StreamInitialVersion:
     DependsOn: CloudWatchS3StreamLambdaFunction
     Properties:
@@ -75,16 +94,6 @@ Resources:
         Ref: CloudWatchS3StreamLambdaFunction
       FunctionVersion: $LATEST
       Name: dev
-    Type: AWS::Lambda::Alias
-  CloudWatchS3StreamLambdaProdAlias:
-    DependsOn: CloudWatchS3StreamInitialVersion
-    Properties:
-      Description: Lambda Alias for Production Use
-      FunctionName:
-        Ref: CloudWatchS3StreamLambdaFunction
-      FunctionVersion:
-        Fn::GetAtt: CloudWatchS3StreamInitialVersion.Version
-      Name: prod
     Type: AWS::Lambda::Alias
   CloudWatchS3StreamLambdaFunction:
     Properties:
@@ -119,27 +128,16 @@ Resources:
       Principal:
         Fn::Sub: logs.${AWSRegion}.amazonaws.com
     Type: AWS::Lambda::Permission
-  AemSnapshotsPurgeAlarm:
-    Type: AWS::CloudWatch::Alarm
+  CloudWatchS3StreamLambdaProdAlias:
+    DependsOn: CloudWatchS3StreamInitialVersion
     Properties:
-      AlarmName:
-        Fn::Sub: "${MainStackPrefixParameter}-AemSnapshotsPurge-FAILS"
-      AlarmDescription: "Notifies if AemSnapshotsPurge execution fails"
-      AlarmActions:
-        - Fn::ImportValue:
-            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
-      ComparisonOperator: "GreaterThanOrEqualToThreshold"
-      EvaluationPeriods: 1
-      MetricName: "Errors"
-      Namespace: "AWS/Lambda"
-      Period: 300
-      Statistic: "Sum"
-      Threshold: 1.0
-      TreatMissingData: "notBreaching"
-      Dimensions:
-        - Name: FunctionName
-          Value:
-            Fn::Sub: "${MainStackPrefixParameter}-AemSnapshotsPurge"
+      Description: Lambda Alias for Production Use
+      FunctionName:
+        Ref: CloudWatchS3StreamLambdaFunction
+      FunctionVersion:
+        Fn::GetAtt: CloudWatchS3StreamInitialVersion.Version
+      Name: prod
+    Type: AWS::Lambda::Alias
   InitialVersion:
     Properties:
       Description: Initial Version to Start With
@@ -178,14 +176,14 @@ Resources:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-LiveSnapshotsPurge
       ScheduleExpression:
-        Fn::Sub: 'cron(${LiveSnapshotsPurgeSchedule})'
+        Fn::Sub: cron(${LiveSnapshotsPurgeSchedule})
       State: ENABLED
       Targets:
-        - Arn:
-            Ref: LambdaProdAlias
-          Id: LiveSnapshotsPurgeRule
-          Input:
-            Fn::Sub: '{"SnapshotType": "live", "Age": "${LiveSnapshotsPurgeMaxAge}h"}'
+      - Arn:
+          Ref: LambdaProdAlias
+        Id: LiveSnapshotsPurgeRule
+        Input:
+          Fn::Sub: '{"SnapshotType": "live", "Age": "${LiveSnapshotsPurgeMaxAge}h"}'
     Type: AWS::Events::Rule
   OfflineSnapshotLambdaPermission:
     Properties:
@@ -202,14 +200,14 @@ Resources:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-OfflineSnapshotsPurge
       ScheduleExpression:
-        Fn::Sub: 'cron(${OfflineSnapshotsPurgeSchedule})'
+        Fn::Sub: cron(${OfflineSnapshotsPurgeSchedule})
       State: ENABLED
       Targets:
-        - Arn:
-            Ref: LambdaProdAlias
-          Id: OfflineSnapshotsPurgeRule
-          Input:
-            Fn::Sub: '{"SnapshotType": "offline", "Age": "${OfflineSnapshotsPurgeMaxAge}h"}'
+      - Arn:
+          Ref: LambdaProdAlias
+        Id: OfflineSnapshotsPurgeRule
+        Input:
+          Fn::Sub: '{"SnapshotType": "offline", "Age": "${OfflineSnapshotsPurgeMaxAge}h"}'
     Type: AWS::Events::Rule
   OrchestrationSnapshotLambdaPermission:
     Properties:
@@ -226,14 +224,14 @@ Resources:
       Name:
         Fn::Sub: ${MainStackPrefixParameter}-OrchestrationSnapshotsPurge
       ScheduleExpression:
-        Fn::Sub: 'cron(${OrchestrationSnapshotsPurgeSchedule})'
+        Fn::Sub: cron(${OrchestrationSnapshotsPurgeSchedule})
       State: ENABLED
       Targets:
-        - Arn:
-            Ref: LambdaProdAlias
-          Id: OrchestrationSnapshotsPurgeRule
-          Input:
-            Fn::Sub: '{"SnapshotType": "orchestration", "Age": "${OrchestrationSnapshotsPurgeMaxAge}h"}'
+      - Arn:
+          Ref: LambdaProdAlias
+        Id: OrchestrationSnapshotsPurgeRule
+        Input:
+          Fn::Sub: '{"SnapshotType": "orchestration", "Age": "${OrchestrationSnapshotsPurgeMaxAge}h"}'
     Type: AWS::Events::Rule
   SnapshotsPurgeLambdaFunction:
     Properties:

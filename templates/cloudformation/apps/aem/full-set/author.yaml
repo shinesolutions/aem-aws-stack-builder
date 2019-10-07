@@ -53,16 +53,16 @@ Parameters:
   AuthorDataVolSnapshotParameter:
     Description: The Author Data Volume Snapshot Id
     Type: String
+  AuthorImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Author Image Id
+    Type: String
   AuthorImageParameter:
     Description: The Author Image Id
     Type: AWS::EC2::Image::Id
   AuthorImageRootDevice:
     Default: /dev/sda1
     Description: The root device name for the Author Image Id
-    Type: String
-  AuthorImageDataDevice:
-    Default: /dev/sdb
-    Description: The data device name for the Author Image Id
     Type: String
   AuthorInstanceTypeParameter:
     Description: The Author Instance Type
@@ -124,12 +124,12 @@ Resources:
       - InstancePort: '5432'
         InstanceProtocol: HTTPS
         LoadBalancerPort: '443'
+        PolicyNames:
+        - Ref: ELBCipherSuiteParameter
         Protocol: HTTPS
         SSLCertificateId:
           Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
-        PolicyNames:
-        - Ref: ELBCipherSuiteParameter
       Scheme: internal
       SecurityGroups:
       - Fn::ImportValue:
@@ -147,6 +147,12 @@ Resources:
           Ref: MainStackPrefixParameter
       - Key: Project
         Value: Open Source AEM Platform
+      - Key: Project
+        Value: Open Source AEM Platform
+      - Key: Owner
+        Value: Shine Solutions AEM Team
+      - Key: Cost Centre
+        Value: 12345
     Type: AWS::ElasticLoadBalancing::LoadBalancer
   AuthorPrimaryInstance:
     Properties:
@@ -185,6 +191,9 @@ Resources:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
+      - sg-000e3aa94140844a2
+      - sg-0a9b551e72f6a27f9
+      - sg-0d0ccdcee40859e4f
       SubnetId:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-AuthorPrimarySubnet
@@ -196,6 +205,12 @@ Resources:
         Value: AEM Author - Primary
       - Key: Component
         Value: author-primary
+      - Key: Project
+        Value: Open Source AEM Platform
+      - Key: Owner
+        Value: Shine Solutions AEM Team
+      - Key: Cost Centre
+        Value: 12345
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
@@ -242,6 +257,9 @@ Resources:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
+      - sg-000e3aa94140844a2
+      - sg-0a9b551e72f6a27f9
+      - sg-0d0ccdcee40859e4f
       SubnetId:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-AuthorStandbySubnet
@@ -258,6 +276,12 @@ Resources:
           Fn::GetAtt:
           - AuthorPrimaryInstance
           - PrivateIp
+      - Key: Project
+        Value: Open Source AEM Platform
+      - Key: Owner
+        Value: Shine Solutions AEM Team
+      - Key: Cost Centre
+        Value: 12345
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
@@ -273,7 +297,8 @@ Resources:
       AlarmActions:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-      AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
+      AlarmDescription: Monitors the sync delay between the Author Standby and the
+        Author Primary
       AlarmName:
         Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold

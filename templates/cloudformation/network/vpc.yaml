@@ -1,12 +1,10 @@
----
-
 AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   UseExistingDHCPOption:
     Fn::Not:
-      - Fn::Equals:
-          - Ref: Ec2VpcDhcpOptionSetParameter
-          - ''
+    - Fn::Equals:
+      - Ref: Ec2VpcDhcpOptionSetParameter
+      - ''
 Description: Create a VPC for the AEM Stack
 Outputs:
   VPCId:
@@ -50,7 +48,13 @@ Resources:
       EnableDnsSupport: true
       InstanceTenancy: default
       Tags:
-        - Key: Name
-          Value:
-            Ref: Ec2VpcTagNameParameter
+      - Key: Name
+        Value:
+          Ref: Ec2VpcTagNameParameter
+      - Key: Project
+        Value: Open Source AEM Platform
+      - Key: Owner
+        Value: Shine Solutions AEM Team
+      - Key: Cost Centre
+        Value: 12345
     Type: AWS::EC2::VPC

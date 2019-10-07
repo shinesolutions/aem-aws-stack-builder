@@ -2,8 +2,8 @@ AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   CreateChaosMonkeyStackCondition:
     Fn::Equals:
-      - Ref: ChaosMonkeyIncludeStack
-      - 'true'
+    - Ref: ChaosMonkeyIncludeStack
+    - 'true'
 Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -54,16 +54,16 @@ Parameters:
   AuthorRootVolSizeParameter:
     Description: Author Instances Root EBS Volume Size
     Type: Number
-  ChaosMonkeyIncludeStack:
-    Default: 'true'
-    Description: Creates the ChaosMonkey stack or not
-    Type: String
   ChaosMonkeyASGAvailabilityZoneListParameter:
     Description: The Chaos Monkey Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
   ChaosMonkeyImageParameter:
     Description: The Chaos Monkey Image Id
     Type: AWS::EC2::Image::Id
+  ChaosMonkeyIncludeStack:
+    Default: 'true'
+    Description: Creates the ChaosMonkey stack or not
+    Type: String
   ChaosMonkeyInstanceTypeParameter:
     Default: ''
     Description: The Chaos Monkey Instance Type
@@ -81,7 +81,7 @@ Parameters:
     Description: ELB Cipher Suite Policy
     Type: String
   ImageDevices:
-    Default: "/dev/sda1, /dev/sdb"
+    Default: /dev/sda1, /dev/sdb
     Description: The device names for the Image Id
     Type: List<String>
   InboundFromBastionHostSecurityGroupParameter:
@@ -111,21 +111,18 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
-  PublishASGConfigurationParameters:
-    Description: The ASG configuration parameters
-    Type: List<String>
   PublishASGAvailabilityZoneListParameter:
     Description: The Publish Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
+  PublishASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: List<String>
   PublishDataVolSizeParameter:
     Description: The Publish Instances Data EBS Volume Size
     Type: Number
   PublishDataVolSnapshotParameter:
     Description: The Publish Data Volume Snapshot Id
     Type: String
-  PublishDispatcherASGConfigurationParameters:
-    Description: The ASG configuration parameters
-    Type: List<String>
   PublishDispatcherASGAvailabilityZoneListParameter:
     Description: The Publish Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
@@ -133,6 +130,9 @@ Parameters:
     Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances
       are scaled up/down at
     Type: List<Number>
+  PublishDispatcherASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: List<String>
   PublishDispatcherDNSRecordSetNameParameter:
     Description: PublishDispatcher DNS Record Set Name
     Type: String
@@ -186,24 +186,24 @@ Resources:
           Ref: AemAwsStackProvisionerVersionParameter
         AuthorDispatcherASGAvailabilityZoneListParameter:
           Fn::Join:
-            - ','
-            - Ref: AuthorDispatcherASGAvailabilityZoneListParameter
+          - ','
+          - Ref: AuthorDispatcherASGAvailabilityZoneListParameter
         AuthorDispatcherASGConfigurationParameters:
           Fn::Join:
-            - ','
-            - Ref: AuthorDispatcherASGConfigurationParameters
+          - ','
+          - Ref: AuthorDispatcherASGConfigurationParameters
         AuthorDispatcherDataVolSizeParameter:
           Ref: AuthorDispatcherDataVolSizeParameter
+        AuthorDispatcherImageDataDevice:
+          Fn::Select:
+          - 1
+          - Ref: ImageDevices
         AuthorDispatcherImageParameter:
           Ref: AuthorDispatcherImageParameter
         AuthorDispatcherImageRootDevice:
           Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        AuthorDispatcherImageDataDevice:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
+          - 0
+          - Ref: ImageDevices
         AuthorDispatcherInstanceTypeParameter:
           Ref: AuthorDispatcherInstanceTypeParameter
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
@@ -236,16 +236,16 @@ Resources:
           Ref: AuthorDataVolSizeParameter
         AuthorDataVolSnapshotParameter:
           Ref: AuthorDataVolSnapshotParameter
+        AuthorImageDataDevice:
+          Fn::Select:
+          - 1
+          - Ref: ImageDevices
         AuthorImageParameter:
           Ref: AuthorImageParameter
         AuthorImageRootDevice:
           Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        AuthorImageDataDevice:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
+          - 0
+          - Ref: ImageDevices
         AuthorInstanceTypeParameter:
           Ref: AuthorInstanceTypeParameter
         AuthorLoadBalancerHealthCheckTargetParameter:
@@ -285,14 +285,14 @@ Resources:
           Ref: AemAwsStackProvisionerVersionParameter
         ChaosMonkeyASGAvailabilityZoneListParameter:
           Fn::Join:
-            - ','
-            - Ref: ChaosMonkeyASGAvailabilityZoneListParameter
+          - ','
+          - Ref: ChaosMonkeyASGAvailabilityZoneListParameter
         ChaosMonkeyImageParameter:
           Ref: ChaosMonkeyImageParameter
         ChaosMonkeyImageRootDevice:
           Fn::Select:
-            - 0
-            - Ref: ImageDevices
+          - 0
+          - Ref: ImageDevices
         ChaosMonkeyInstanceTypeParameter:
           Ref: ChaosMonkeyInstanceTypeParameter
         ChaosMonkeyRootVolSizeParameter:
@@ -339,20 +339,20 @@ Resources:
           Ref: NetworkStackPrefixParameter
         OrchestratorASGAvailabilityZoneListParameter:
           Fn::Join:
-            - ','
-            - Ref: OrchestratorASGAvailabilityZoneListParameter
+          - ','
+          - Ref: OrchestratorASGAvailabilityZoneListParameter
         OrchestratorDataVolSizeParameter:
           Ref: OrchestratorDataVolSizeParameter
+        OrchestratorImageDataDevice:
+          Fn::Select:
+          - 1
+          - Ref: ImageDevices
         OrchestratorImageParameter:
           Ref: OrchestratorImageParameter
         OrchestratorImageRootDevice:
           Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        OrchestratorImageDataDevice:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
+          - 0
+          - Ref: ImageDevices
         OrchestratorInstanceTypeParameter:
           Ref: OrchestratorInstanceTypeParameter
         OrchestratorRootVolSizeParameter:
@@ -362,15 +362,11 @@ Resources:
         PublishDispatcherStackArn:
           Ref: PublishDispatcherStack
         PublishDispatcherStackName:
-          # As of May '18, CloudFormation doesn't provide a way to retrieve the Stack Name with Fn::GetAtt or Ref functions
-          # Resorting to parsing the ARN to obtain it
-          # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html
-          #      https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html
           Fn::Select:
-            - 1
-            - Fn::Split:
-              - /
-              - Ref: PublishDispatcherStack
+          - 1
+          - Fn::Split:
+            - /
+            - Ref: PublishDispatcherStack
         PublishStackArn:
           Ref: PublishStack
       TemplateURL:
@@ -397,28 +393,28 @@ Resources:
           Ref: PrerequisitesStackPrefixParameter
         PublishDispatcherASGAvailabilityZoneListParameter:
           Fn::Join:
-            - ','
-            - Ref: PublishDispatcherASGAvailabilityZoneListParameter
+          - ','
+          - Ref: PublishDispatcherASGAvailabilityZoneListParameter
         PublishDispatcherASGCPUScalingParameters:
           Fn::Join:
-            - ','
-            - Ref: PublishDispatcherASGCPUScalingParameters
+          - ','
+          - Ref: PublishDispatcherASGCPUScalingParameters
         PublishDispatcherASGConfigurationParameters:
           Fn::Join:
-            - ','
-            - Ref: PublishDispatcherASGConfigurationParameters
+          - ','
+          - Ref: PublishDispatcherASGConfigurationParameters
         PublishDispatcherDataVolSizeParameter:
           Ref: PublishDispatcherDataVolSizeParameter
+        PublishDispatcherImageDataDevice:
+          Fn::Select:
+          - 1
+          - Ref: ImageDevices
         PublishDispatcherImageParameter:
           Ref: PublishDispatcherImageParameter
         PublishDispatcherImageRootDevice:
           Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        PublishDispatcherImageDataDevice:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
+          - 0
+          - Ref: ImageDevices
         PublishDispatcherInstanceTypeParameter:
           Ref: PublishDispatcherInstanceTypeParameter
         PublishDispatcherLoadBalancerHealthCheckTargetParameter:
@@ -449,26 +445,26 @@ Resources:
           Ref: PrerequisitesStackPrefixParameter
         PublishASGAvailabilityZoneListParameter:
           Fn::Join:
-            - ','
-            - Ref: PublishASGAvailabilityZoneListParameter
+          - ','
+          - Ref: PublishASGAvailabilityZoneListParameter
         PublishASGConfigurationParameters:
           Fn::Join:
-            - ','
-            - Ref: PublishASGConfigurationParameters
+          - ','
+          - Ref: PublishASGConfigurationParameters
         PublishDataVolSizeParameter:
           Ref: PublishDataVolSizeParameter
         PublishDataVolSnapshotParameter:
           Ref: PublishDataVolSnapshotParameter
+        PublishImageDataDevice:
+          Fn::Select:
+          - 1
+          - Ref: ImageDevices
         PublishImageParameter:
           Ref: PublishImageParameter
         PublishImageRootDevice:
           Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        PublishImageDataDevice:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
+          - 0
+          - Ref: ImageDevices
         PublishInstanceTypeParameter:
           Ref: PublishInstanceTypeParameter
         PublishRootVolSizeParameter:

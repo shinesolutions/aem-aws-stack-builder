@@ -1,562 +1,507 @@
----
 AWSTemplateFormatVersion: '2010-09-09'
-
-Description: >-
-  Create the SSM Documents needed to orchestrate AEM in an AWS environment.
-
-Parameters:
-
-  DeployArtifactIncludeFileParameter:
-    Type: String
-    Default: AEM-DeployArtifact.yaml
-    Description: >-
-      The name of the file containing the DeployArtifact SSM command.
-
-  DeployArtifactsIncludeFileParameter:
-    Type: String
-    Default: AEM-DeployArtifacts.yaml
-    Description: >-
-      The name of the file containing the DeployArtifacts SSM command.
-
-  ExportPackageIncludeFileParameter:
-    Type: String
-    Default: AEM-ExportPackage.yaml
-    Description: >-
-      The name of the file containing the ExportPackage SSM command.
-
-  ExportPackagesIncludeFileParameter:
-    Type: String
-    Default: AEM-ExportPackages.yaml
-    Description: >-
-      The name of the file containing the ExportPackages SSM command.
-
-  ImportPackageIncludeFileParameter:
-    Type: String
-    Default: AEM-ImportPackage.yaml
-    Description: >-
-      The name of the file containing the ImportPackage SSM command.
-
-  InstallAEMProfileIncludeFileParameter:
-    Type: String
-    Default: AEM-InstallAEMProfile.yaml
-    Description: >-
-      The name of the file containing the InstallAEMProfile SSM command.
-
-  PromoteAuthorIncludeFileParameter:
-    Type: String
-    Default: AEM-PromoteAuthor.yaml
-    Description: >-
-      The name of the file containing the PromoteAuthor SSM command.
-
-  ManageServiceIncludeFileParameter:
-    Type: String
-    Default: AEM-ManageService.yaml
-    Description: >-
-      The name of the file containing the ManageService SSM command.
-
-  OfflineCompactionSnapshotConsolidatedIncludeFileParameter:
-    Type: String
-    Default: AEM-OfflineCompactionSnapshotConsolidated.yaml
-    Description: >-
-      The name of the file containing the OfflineCompactionSnapshotConsolidated SSM command.
-
-  OfflineSnapshotConsolidatedIncludeFileParameter:
-    Type: String
-    Default: AEM-OfflineSnapshotConsolidated.yaml
-    Description: >-
-      The name of the file containing the OfflineSnapshotConsolidated SSM command.
-
-  OfflineCompactionSnapshotFullsetIncludeFileParameter:
-    Type: String
-    Default: AEM-OfflineCompactionSnapshotFullset.yaml
-    Description: >-
-      The name of the file containing the OfflineCompactionSnapshotFullset SSM command.
-
-  OfflineSnapshotFullsetIncludeFileParameter:
-    Type: String
-    Default: AEM-OfflineSnapshotFullset.yaml
-    Description: >-
-      The name of the file containing the OfflineSnapshotFullset SSM command.
-
-  WaitUntilReadyIncludeFileParameter:
-    Type: String
-    Default: AEM-WaitUntilReady.yaml
-    Description: >-
-      The name of the file containing the WaitUntilReady SSM command.
-
-  EnableCrxdeIncludeFileParameter:
-    Type: String
-    Default: AEM-EnableCrxde.yaml
-    Description: >-
-      The name of the file containing the EnableCrxde SSM command.
-
-  DisableCrxdeIncludeFileParameter:
-    Type: String
-    Default: AEM-DisableCrxde.yaml
-    Description: >-
-      The name of the file containing the DisableCrxde SSM command.
-
-  ListPackagesIncludeFileParameter:
-    Type: String
-    Default: AEM-ListPackages.yaml
-    Description: >-
-      The name of the file containing the ListPackages SSM command.
-
-  RunAdhocPuppetIncludeFileParameter:
-    Type: String
-    Default: AEM-RunAdhocPuppet.yaml
-    Description: >-
-      The name of the file containing the RunAdhocPuppet SSM command.
-
-  LiveSnapshotIncludeFileParameter:
-    Type: String
-    Default: AEM-LiveSnapshot.yaml
-    Description: >-
-      The name of the file containing the LiveSnapshot SSM command
-
-  FlushDispatcherCacheIncludeFileParameter:
-    Type: String
-    Default: AEM-FlushDispatcherCache.yaml
-    Description: >-
-      The name of the file containing the FlushDispatcherCache SSM command
-
-  ReconfigureAEMIncludeFileParameter:
-    Type: String
-    Default: AEM-ReconfigureAEM.yaml
-    Description: >-
-      The name of the file containing the ReconfigureAEM SSM command.
-
-  ScheduleSnapshotIncludeFileParameter:
-    Type: String
-    Default: AEM-ScheduleSnapshot.yaml
-    Description: >-
-      The name of the file containing the ScheduleSnapshot SSM command.
-
-  TestReadinessFullsetIncludeFileParameter:
-    Type: String
-    Default: AEM-TestReadinessFullset.yaml
-    Description: >-
-      The name of the file containing the TestReadinessFullset SSM command.
-
-  TestReadinessConsolidatedIncludeFileParameter:
-    Type: String
-    Default: AEM-TestReadinessConsolidated.yaml
-    Description: >-
-      The name of the file containing the TestReadinessConsolidated SSM command.
-
-  RunAemUpgradeIncludeFileParameter:
-    Type: String
-    Default: AEM-RunAemUpgrade.yaml
-    Description: >-
-      The name of the file containing the RunAemUpgrade SSM command.
-
-  UpgradeRepositoryMigrationIncludeFileParameter:
-    Type: String
-    Default: AEM-UpgradeRepositoryMigration.yaml
-    Description: >-
-      The name of the file containing the UpgradeRepositoryMigration SSM command.
-
-  UpgradeUnpackJarIncludeFileParameter:
-    Type: String
-    Default: AEM-UpgradeUnpackJar.yaml
-    Description: >-
-      The name of the file containing the UpgradeUnpackJar SSM command.
-
-  EnableSamlIncludeFileParameter:
-    Type: String
-    Default: AEM-EnableSaml.yaml
-    Description: >-
-      The name of the file containing the EnableSaml SSM command.
-
-  DisableSamlIncludeFileParameter:
-    Type: String
-    Default: AEM-DisableSaml.yaml
-    Description: >-
-      The name of the file containing the DisableSaml SSM command.
-
-Resources:
-  DeployArtifact:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${DeployArtifactIncludeFileParameter}'
-
-  DeployArtifacts:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${DeployArtifactsIncludeFileParameter}'
-
-  ExportPackage:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ExportPackageIncludeFileParameter}'
-
-  ExportPackages:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ExportPackagesIncludeFileParameter}'
-
-  ImportPackage:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ImportPackageIncludeFileParameter}'
-
-  InstallAEMProfile:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${InstallAEMProfileIncludeFileParameter}'
-
-  ReconfigureAEM:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ReconfigureAEMIncludeFileParameter}'
-
-  PromoteAuthor:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${PromoteAuthorIncludeFileParameter}'
-
-  ManageService:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ManageServiceIncludeFileParameter}'
-
-  OfflineCompactionSnapshotConsolidated:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotConsolidatedIncludeFileParameter}'
-
-  OfflineSnapshotConsolidated:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotConsolidatedIncludeFileParameter}'
-
-  OfflineCompactionSnapshotFullset:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotFullsetIncludeFileParameter}'
-
-  OfflineSnapshotFullset:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotFullsetIncludeFileParameter}'
-
-  WaitUntilReady:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${WaitUntilReadyIncludeFileParameter}'
-
-  EnableCrxde:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${EnableCrxdeIncludeFileParameter}'
-
-  DisableCrxde:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${DisableCrxdeIncludeFileParameter}'
-
-  ListPackages:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${ListPackagesIncludeFileParameter}'
-
-  RunAdhocPuppet:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${RunAdhocPuppetIncludeFileParameter}'
-
-  LiveSnapshot:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${LiveSnapshotIncludeFileParameter}'
-
-  FlushDispatcherCache:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${FlushDispatcherCacheIncludeFileParameter}'
-
-  ScheduleSnapshot:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ScheduleSnapshotIncludeFileParameter}'
-
-  TestReadinessFullset:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${TestReadinessFullsetIncludeFileParameter}'
-
-  TestReadinessConsolidated:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${TestReadinessConsolidatedIncludeFileParameter}'
-
-  RunAemUpgrade:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${RunAemUpgradeIncludeFileParameter}'
-
-  UpgradeRepositoryMigration:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${UpgradeRepositoryMigrationIncludeFileParameter}'
-
-  UpgradeUnpackJar:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${UpgradeUnpackJarIncludeFileParameter}'
-
-  EnableSaml:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${EnableSamlIncludeFileParameter}'
-
-  DisableSaml:
-    Type: AWS::SSM::Document
-    Properties:
-      DocumentType: Command
-      Content:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${DisableSamlIncludeFileParameter}'
-
+Description: Create the SSM Documents needed to orchestrate AEM in an AWS environment.
 Outputs:
   DeployArtifact:
     Description: Document name for Deploy Artifact
-    Value: !Ref DeployArtifact
-
+    Value:
+      Ref: DeployArtifact
   DeployArtifacts:
     Description: Document name for Deploy Artifacts
-    Value: !Ref DeployArtifacts
-
-  ExportPackage:
-    Description: Document name for Export Package
-    Value: !Ref ExportPackage
-
-  ExportPackages:
-    Description: Document name for Export Package
-    Value: !Ref ExportPackages
-
-  ImportPackage:
-    Description: Document name for Import Package
-    Value: !Ref ImportPackage
-
-  InstallAEMProfile:
-    Description: Document name for Install AEM Profile
-    Value: !Ref InstallAEMProfile
-
-  ReconfigureAEM:
-    Description: Document name for Reconfigure AEM
-    Value: !Ref ReconfigureAEM
-
-  PromoteAuthor:
-    Description: Documention name for Promote Author
-    Value: !Ref PromoteAuthor
-
-  ManageService:
-    Description: Document name for Manage Service
-    Value: !Ref ManageService
-
-  OfflineCompactionSnapshotConsolidated:
-    Description: Document name for Offline Compaction Snapshot Consolidated
-    Value: !Ref OfflineCompactionSnapshotConsolidated
-
-  OfflineSnapshotConsolidated:
-    Description: Document name for Offline Snapshot Consolidated
-    Value: !Ref OfflineSnapshotConsolidated
-
-  OfflineCompactionSnapshotFullset:
-    Description: Document name for Offline Compaction Snapshot Fullset
-    Value: !Ref OfflineCompactionSnapshotFullset
-
-  OfflineSnapshotFullset:
-    Description: Document name for Offline Snapshot Fullset
-    Value: !Ref OfflineSnapshotFullset
-
-  WaitUntilReady:
-    Description: Document name for Wait Until Ready
-    Value: !Ref WaitUntilReady
-
-  EnableCrxde:
-    Description: Document name for Enable Crxde
-    Value: !Ref EnableCrxde
-
+    Value:
+      Ref: DeployArtifacts
   DisableCrxde:
     Description: Document name for Disable Crxde
-    Value: !Ref DisableCrxde
-
-  ListPackages:
-    Description: Document name for List Packages
-    Value: !Ref ListPackages
-
-  RunAdhocPuppet:
-    Description: Document name for Run Adhoc Puppet
-    Value: !Ref RunAdhocPuppet
-
-  LiveSnapshot:
-    Description: Document name for Live Snapshot
-    Value: !Ref LiveSnapshot
-
-  FlushDispatcherCache:
-    Description: Document name for FlushDispatcherCache
-    Value: !Ref FlushDispatcherCache
-
-  RunAemUpgrade:
-    Description: Documention name for AEM Upgrade.
-    Value: !Ref RunAemUpgrade
-
-  ScheduleSnapshot:
-    Description: Documention name for Test Readiness Fullset
-    Value: !Ref ScheduleSnapshot
-
-  TestReadinessFullset:
-    Description: Documention name for Test Readiness Fullset
-    Value: !Ref TestReadinessFullset
-
-  TestReadinessConsolidated:
-    Description: Documention name for Test Readiness Consolidated
-    Value: !Ref TestReadinessConsolidated
-
-  UpgradeRepositoryMigration:
-    Description: Documention name for AEM Upgrade preperation repository migration
-    Value: !Ref UpgradeRepositoryMigration
-
-  UpgradeUnpackJar:
-    Description: Documention name for AEM Upgrade preperation unpack AEM Jar
-    Value: !Ref UpgradeUnpackJar
-
-  EnableSaml:
-    Description: Document name for Enable Saml
-    Value: !Ref EnableSaml
-
+    Value:
+      Ref: DisableCrxde
   DisableSaml:
     Description: Document name for Disable Saml
-    Value: !Ref DisableSaml
+    Value:
+      Ref: DisableSaml
+  EnableCrxde:
+    Description: Document name for Enable Crxde
+    Value:
+      Ref: EnableCrxde
+  EnableSaml:
+    Description: Document name for Enable Saml
+    Value:
+      Ref: EnableSaml
+  ExportPackage:
+    Description: Document name for Export Package
+    Value:
+      Ref: ExportPackage
+  ExportPackages:
+    Description: Document name for Export Package
+    Value:
+      Ref: ExportPackages
+  FlushDispatcherCache:
+    Description: Document name for FlushDispatcherCache
+    Value:
+      Ref: FlushDispatcherCache
+  ImportPackage:
+    Description: Document name for Import Package
+    Value:
+      Ref: ImportPackage
+  InstallAEMProfile:
+    Description: Document name for Install AEM Profile
+    Value:
+      Ref: InstallAEMProfile
+  ListPackages:
+    Description: Document name for List Packages
+    Value:
+      Ref: ListPackages
+  LiveSnapshot:
+    Description: Document name for Live Snapshot
+    Value:
+      Ref: LiveSnapshot
+  ManageService:
+    Description: Document name for Manage Service
+    Value:
+      Ref: ManageService
+  OfflineCompactionSnapshotConsolidated:
+    Description: Document name for Offline Compaction Snapshot Consolidated
+    Value:
+      Ref: OfflineCompactionSnapshotConsolidated
+  OfflineCompactionSnapshotFullset:
+    Description: Document name for Offline Compaction Snapshot Fullset
+    Value:
+      Ref: OfflineCompactionSnapshotFullset
+  OfflineSnapshotConsolidated:
+    Description: Document name for Offline Snapshot Consolidated
+    Value:
+      Ref: OfflineSnapshotConsolidated
+  OfflineSnapshotFullset:
+    Description: Document name for Offline Snapshot Fullset
+    Value:
+      Ref: OfflineSnapshotFullset
+  PromoteAuthor:
+    Description: Documention name for Promote Author
+    Value:
+      Ref: PromoteAuthor
+  ReconfigureAEM:
+    Description: Document name for Reconfigure AEM
+    Value:
+      Ref: ReconfigureAEM
+  RunAdhocPuppet:
+    Description: Document name for Run Adhoc Puppet
+    Value:
+      Ref: RunAdhocPuppet
+  RunAemUpgrade:
+    Description: Documention name for AEM Upgrade.
+    Value:
+      Ref: RunAemUpgrade
+  ScheduleSnapshot:
+    Description: Documention name for Test Readiness Fullset
+    Value:
+      Ref: ScheduleSnapshot
+  TestReadinessConsolidated:
+    Description: Documention name for Test Readiness Consolidated
+    Value:
+      Ref: TestReadinessConsolidated
+  TestReadinessFullset:
+    Description: Documention name for Test Readiness Fullset
+    Value:
+      Ref: TestReadinessFullset
+  UpgradeRepositoryMigration:
+    Description: Documention name for AEM Upgrade preperation repository migration
+    Value:
+      Ref: UpgradeRepositoryMigration
+  UpgradeUnpackJar:
+    Description: Documention name for AEM Upgrade preperation unpack AEM Jar
+    Value:
+      Ref: UpgradeUnpackJar
+  WaitUntilReady:
+    Description: Document name for Wait Until Ready
+    Value:
+      Ref: WaitUntilReady
+Parameters:
+  DeployArtifactIncludeFileParameter:
+    Default: AEM-DeployArtifact.yaml
+    Description: The name of the file containing the DeployArtifact SSM command.
+    Type: String
+  DeployArtifactsIncludeFileParameter:
+    Default: AEM-DeployArtifacts.yaml
+    Description: The name of the file containing the DeployArtifacts SSM command.
+    Type: String
+  DisableCrxdeIncludeFileParameter:
+    Default: AEM-DisableCrxde.yaml
+    Description: The name of the file containing the DisableCrxde SSM command.
+    Type: String
+  DisableSamlIncludeFileParameter:
+    Default: AEM-DisableSaml.yaml
+    Description: The name of the file containing the DisableSaml SSM command.
+    Type: String
+  EnableCrxdeIncludeFileParameter:
+    Default: AEM-EnableCrxde.yaml
+    Description: The name of the file containing the EnableCrxde SSM command.
+    Type: String
+  EnableSamlIncludeFileParameter:
+    Default: AEM-EnableSaml.yaml
+    Description: The name of the file containing the EnableSaml SSM command.
+    Type: String
+  ExportPackageIncludeFileParameter:
+    Default: AEM-ExportPackage.yaml
+    Description: The name of the file containing the ExportPackage SSM command.
+    Type: String
+  ExportPackagesIncludeFileParameter:
+    Default: AEM-ExportPackages.yaml
+    Description: The name of the file containing the ExportPackages SSM command.
+    Type: String
+  FlushDispatcherCacheIncludeFileParameter:
+    Default: AEM-FlushDispatcherCache.yaml
+    Description: The name of the file containing the FlushDispatcherCache SSM command
+    Type: String
+  ImportPackageIncludeFileParameter:
+    Default: AEM-ImportPackage.yaml
+    Description: The name of the file containing the ImportPackage SSM command.
+    Type: String
+  InstallAEMProfileIncludeFileParameter:
+    Default: AEM-InstallAEMProfile.yaml
+    Description: The name of the file containing the InstallAEMProfile SSM command.
+    Type: String
+  ListPackagesIncludeFileParameter:
+    Default: AEM-ListPackages.yaml
+    Description: The name of the file containing the ListPackages SSM command.
+    Type: String
+  LiveSnapshotIncludeFileParameter:
+    Default: AEM-LiveSnapshot.yaml
+    Description: The name of the file containing the LiveSnapshot SSM command
+    Type: String
+  ManageServiceIncludeFileParameter:
+    Default: AEM-ManageService.yaml
+    Description: The name of the file containing the ManageService SSM command.
+    Type: String
+  OfflineCompactionSnapshotConsolidatedIncludeFileParameter:
+    Default: AEM-OfflineCompactionSnapshotConsolidated.yaml
+    Description: The name of the file containing the OfflineCompactionSnapshotConsolidated
+      SSM command.
+    Type: String
+  OfflineCompactionSnapshotFullsetIncludeFileParameter:
+    Default: AEM-OfflineCompactionSnapshotFullset.yaml
+    Description: The name of the file containing the OfflineCompactionSnapshotFullset
+      SSM command.
+    Type: String
+  OfflineSnapshotConsolidatedIncludeFileParameter:
+    Default: AEM-OfflineSnapshotConsolidated.yaml
+    Description: The name of the file containing the OfflineSnapshotConsolidated SSM
+      command.
+    Type: String
+  OfflineSnapshotFullsetIncludeFileParameter:
+    Default: AEM-OfflineSnapshotFullset.yaml
+    Description: The name of the file containing the OfflineSnapshotFullset SSM command.
+    Type: String
+  PromoteAuthorIncludeFileParameter:
+    Default: AEM-PromoteAuthor.yaml
+    Description: The name of the file containing the PromoteAuthor SSM command.
+    Type: String
+  ReconfigureAEMIncludeFileParameter:
+    Default: AEM-ReconfigureAEM.yaml
+    Description: The name of the file containing the ReconfigureAEM SSM command.
+    Type: String
+  RunAdhocPuppetIncludeFileParameter:
+    Default: AEM-RunAdhocPuppet.yaml
+    Description: The name of the file containing the RunAdhocPuppet SSM command.
+    Type: String
+  RunAemUpgradeIncludeFileParameter:
+    Default: AEM-RunAemUpgrade.yaml
+    Description: The name of the file containing the RunAemUpgrade SSM command.
+    Type: String
+  ScheduleSnapshotIncludeFileParameter:
+    Default: AEM-ScheduleSnapshot.yaml
+    Description: The name of the file containing the ScheduleSnapshot SSM command.
+    Type: String
+  TestReadinessConsolidatedIncludeFileParameter:
+    Default: AEM-TestReadinessConsolidated.yaml
+    Description: The name of the file containing the TestReadinessConsolidated SSM
+      command.
+    Type: String
+  TestReadinessFullsetIncludeFileParameter:
+    Default: AEM-TestReadinessFullset.yaml
+    Description: The name of the file containing the TestReadinessFullset SSM command.
+    Type: String
+  UpgradeRepositoryMigrationIncludeFileParameter:
+    Default: AEM-UpgradeRepositoryMigration.yaml
+    Description: The name of the file containing the UpgradeRepositoryMigration SSM
+      command.
+    Type: String
+  UpgradeUnpackJarIncludeFileParameter:
+    Default: AEM-UpgradeUnpackJar.yaml
+    Description: The name of the file containing the UpgradeUnpackJar SSM command.
+    Type: String
+  WaitUntilReadyIncludeFileParameter:
+    Default: AEM-WaitUntilReady.yaml
+    Description: The name of the file containing the WaitUntilReady SSM command.
+    Type: String
+Resources:
+  DeployArtifact:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${DeployArtifactIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  DeployArtifacts:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${DeployArtifactsIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  DisableCrxde:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Fn::Sub: ${S3BucketAndPrefixParameter}/${DisableCrxdeIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  DisableSaml:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${DisableSamlIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  EnableCrxde:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Fn::Sub: ${S3BucketAndPrefixParameter}/${EnableCrxdeIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  EnableSaml:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${EnableSamlIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  ExportPackage:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${ExportPackageIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  ExportPackages:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${ExportPackagesIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  FlushDispatcherCache:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Fn::Sub: ${S3BucketAndPrefixParameter}/${FlushDispatcherCacheIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  ImportPackage:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${ImportPackageIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  InstallAEMProfile:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${InstallAEMProfileIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  ListPackages:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Fn::Sub: ${S3BucketAndPrefixParameter}/${ListPackagesIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  LiveSnapshot:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Fn::Sub: ${S3BucketAndPrefixParameter}/${LiveSnapshotIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  ManageService:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${ManageServiceIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  OfflineCompactionSnapshotConsolidated:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotConsolidatedIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  OfflineCompactionSnapshotFullset:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotFullsetIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  OfflineSnapshotConsolidated:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${OfflineSnapshotConsolidatedIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  OfflineSnapshotFullset:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${OfflineSnapshotFullsetIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  PromoteAuthor:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${PromoteAuthorIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  ReconfigureAEM:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${ReconfigureAEMIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  RunAdhocPuppet:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Fn::Sub: ${S3BucketAndPrefixParameter}/${RunAdhocPuppetIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  RunAemUpgrade:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${RunAemUpgradeIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  ScheduleSnapshot:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${ScheduleSnapshotIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  TestReadinessConsolidated:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${TestReadinessConsolidatedIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  TestReadinessFullset:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${TestReadinessFullsetIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  UpgradeRepositoryMigration:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${UpgradeRepositoryMigrationIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  UpgradeUnpackJar:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location:
+              Fn::Sub: ${S3BucketAndPrefixParameter}/${UpgradeUnpackJarIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document
+  WaitUntilReady:
+    Properties:
+      Content:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Fn::Sub: ${S3BucketAndPrefixParameter}/${WaitUntilReadyIncludeFileParameter}
+      DocumentType: Command
+    Type: AWS::SSM::Document

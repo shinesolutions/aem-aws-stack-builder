@@ -51,16 +51,16 @@ Parameters:
   PublishDataVolSnapshotParameter:
     Description: The Publish Data Volume Snapshot Id
     Type: String
+  PublishImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Publish Image Id
+    Type: String
   PublishImageParameter:
     Description: The Publish Image Id
     Type: AWS::EC2::Image::Id
   PublishImageRootDevice:
     Default: /dev/sda1
     Description: The root device name for the Publish Image Id
-    Type: String
-  PublishImageDataDevice:
-    Default: /dev/sdb
-    Description: The data device name for the Publish Image Id
     Type: String
   PublishInstanceTypeParameter:
     Description: The Publish Instance Type
@@ -81,23 +81,23 @@ Resources:
         Ref: PublishASGAvailabilityZoneListParameter
       Cooldown:
         Fn::Select:
-          - 4
-          - Ref: PublishASGConfigurationParameters
+        - 4
+        - Ref: PublishASGConfigurationParameters
       DesiredCapacity:
         Fn::Select:
-          - 2
-          - Ref: PublishASGConfigurationParameters
+        - 2
+        - Ref: PublishASGConfigurationParameters
       HealthCheckGracePeriod:
         Fn::Select:
-          - 3
-          - Ref: PublishASGConfigurationParameters
+        - 3
+        - Ref: PublishASGConfigurationParameters
       HealthCheckType: EC2
       LaunchConfigurationName:
         Ref: PublishLaunchConfiguration
       MaxSize:
         Fn::Select:
-          - 0
-          - Ref: PublishASGConfigurationParameters
+        - 0
+        - Ref: PublishASGConfigurationParameters
       MetricsCollection:
       - Granularity: 1Minute
         Metrics:
@@ -111,8 +111,8 @@ Resources:
         - GroupTotalInstances
       MinSize:
         Fn::Select:
-          - 1
-          - Ref: PublishASGConfigurationParameters
+        - 1
+        - Ref: PublishASGConfigurationParameters
       NotificationConfigurations:
       - NotificationTypes:
         - autoscaling:EC2_INSTANCE_LAUNCH
@@ -133,6 +133,15 @@ Resources:
       - Key: Component
         PropagateAtLaunch: true
         Value: publish
+      - Key: Project
+        PropagateAtLaunch: true
+        Value: Open Source AEM Platform
+      - Key: Owner
+        PropagateAtLaunch: true
+        Value: Shine Solutions AEM Team
+      - Key: Cost Centre
+        PropagateAtLaunch: true
+        Value: 12345
       VPCZoneIdentifier:
         Fn::Split:
         - ','
@@ -178,6 +187,9 @@ Resources:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishSecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
+      - sg-000e3aa94140844a2
+      - sg-0a9b551e72f6a27f9
+      - sg-0d0ccdcee40859e4f
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
