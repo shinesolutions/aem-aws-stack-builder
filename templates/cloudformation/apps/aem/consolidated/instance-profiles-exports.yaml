@@ -9,19 +9,19 @@ Outputs:
     Value:
       Ref: AuthorPublishDispatcherInstanceProfileParameter
 Parameters:
-  AuthorPublishDispatcherInstanceProfileParameter:
-    Description: The Author Publish Dispatcher Instance Profile ARN
-    Type: String
   PrerequisitesStackPrefixParameter:
     Description: The AEM Prerequisite Resources Stack Prefix
+    Type: String
+  AuthorPublishDispatcherInstanceProfileParameter:
+    Description: The Author Publish Dispatcher Instance Profile ARN
     Type: String
 Resources:
   DummyParameter:
     Properties:
-      Description: Dummy resource required for a CF stack
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
+      Description: Dummy resource required for a CF stack
       Type: String
       Value:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
-    Type: AWS::SSM::Parameter
+    Type: "AWS::SSM::Parameter"

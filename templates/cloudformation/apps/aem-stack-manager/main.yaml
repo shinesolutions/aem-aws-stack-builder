@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Overarching CF Template to Create AEM Stack Manager Resources Stacks
 Outputs:
@@ -23,11 +25,11 @@ Outputs:
     Value:
       Ref: UtilitiesStack
 Parameters:
-  AEMCWEventNotificationEmail:
-    Description: The EMail adress for sending CW Alarm messages
-    Type: String
   AWSRegion:
     Description: Name of the AWS region
+    Type: String
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
     Type: String
   CloudWatchS3StreamBucketNameParameter:
     Description: Bucket name that stores Stack data file
@@ -66,19 +68,24 @@ Parameters:
     Description: Prefix within the Bucket to Locate Files
     Type: String
 Resources:
+  SSMCommandsStack:
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/ssm-commands.yaml
+    Type: AWS::CloudFormation::Stack
   InstanceProfilesStack:
     Properties:
       Parameters:
-        CloudWatchS3StreamBucketNameParameter:
-          Ref: CloudWatchS3StreamBucketNameParameter
-        CloudWatchS3StreamPrefixParameter:
-          Ref: CloudWatchS3StreamPrefixParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         S3DataStackManagerPrefix:
           Ref: S3DataStackManagerPrefix
+        CloudWatchS3StreamBucketNameParameter:
+          Ref: CloudWatchS3StreamBucketNameParameter
+        CloudWatchS3StreamPrefixParameter:
+          Ref: CloudWatchS3StreamPrefixParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles.yaml
     Type: AWS::CloudFormation::Stack
@@ -92,15 +99,10 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/prerequisites.yaml
     Type: AWS::CloudFormation::Stack
-  SSMCommandsStack:
-    Properties:
-      TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/ssm-commands.yaml
-    Type: AWS::CloudFormation::Stack
   StackManagerStack:
     DependsOn:
-    - InstanceProfilesStack
-    - PrerequisitesStack
+      - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         DataBucketNameParameter:
@@ -116,8 +118,8 @@ Resources:
     Type: AWS::CloudFormation::Stack
   UtilitiesStack:
     DependsOn:
-    - InstanceProfilesStack
-    - PrerequisitesStack
+      - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         AWSRegion:

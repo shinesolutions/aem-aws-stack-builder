@@ -1,11 +1,13 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
+Description: Overarching CF Template to Create SNS Topic
 Conditions:
   UseEventNotificationEmailCondition:
     Fn::Not:
-    - Fn::Equals:
-      - Ref: AEMCWEventNotificationEmail
-      - overwrite-me
-Description: Overarching CF Template to Create SNS Topic
+      - Fn::Equals:
+          - Ref: AEMCWEventNotificationEmail
+          - overwrite-me
 Outputs:
   AlarmNotificationTopicArn:
     Description: Arn for Alarm Notification Topic
@@ -27,10 +29,10 @@ Resources:
       DisplayName:
         Fn::Sub: ${MainStackPrefixParameter}-Utilities-alarm-notification-topic
       Subscription:
-      - Fn::If:
-        - UseEventNotificationEmailCondition
-        - Endpoint:
-            Ref: AEMCWEventNotificationEmail
-          Protocol: email
-        - Ref: AWS::NoValue
+        - Fn::If:
+            - UseEventNotificationEmailCondition
+            - Endpoint:
+                Ref: AEMCWEventNotificationEmail
+              Protocol: email
+            - Ref: AWS::NoValue
     Type: AWS::SNS::Topic

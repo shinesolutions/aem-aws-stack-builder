@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Overarching CF Template to Create AEM Stack Manager Resources Stacks
 Outputs:
@@ -25,18 +27,6 @@ Outputs:
 Parameters:
   AEMCWEventNotificationEmail:
     Description: The EMail adress for sending CW Alarm messages
-    Type: String
-  AEMStackManagerLambdaServiceRoleArnParameter:
-    Description: Stack Manager Lambda Service Role Arn
-    Type: String
-  AEMStackManagerLambdaServiceRoleNameParameter:
-    Description: Stack Manager Lambda Service Role Name
-    Type: String
-  AEMStackManagerSSMServiceRoleArnParameter:
-    Description: Stack Manager SSM Service Role Arn
-    Type: String
-  AEMStackManagerSSMServiceRoleNameParameter:
-    Description: Stack Manager SSM Service Role Name
     Type: String
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
@@ -68,24 +58,41 @@ Parameters:
   S3DataStackManagerPrefix:
     Description: Prefix within the Bucket to Locate Files
     Type: String
+  AEMStackManagerSSMServiceRoleNameParameter:
+    Description: Stack Manager SSM Service Role Name
+    Type: String
+  AEMStackManagerSSMServiceRoleArnParameter:
+    Description: Stack Manager SSM Service Role Arn
+    Type: String
+  AEMStackManagerLambdaServiceRoleNameParameter:
+    Description: Stack Manager Lambda Service Role Name
+    Type: String
+  AEMStackManagerLambdaServiceRoleArnParameter:
+    Description: Stack Manager Lambda Service Role Arn
+    Type: String
 Resources:
+  SSMCommandsStack:
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/ssm-commands.yaml
+    Type: AWS::CloudFormation::Stack
   InstanceProfilesStack:
     Properties:
       Parameters:
-        AEMStackManagerLambdaServiceRoleArnParameter:
-          Ref: AEMStackManagerLambdaServiceRoleArnParameter
-        AEMStackManagerLambdaServiceRoleNameParameter:
-          Ref: AEMStackManagerLambdaServiceRoleNameParameter
-        AEMStackManagerSSMServiceRoleArnParameter:
-          Ref: AEMStackManagerSSMServiceRoleArnParameter
-        AEMStackManagerSSMServiceRoleNameParameter:
-          Ref: AEMStackManagerSSMServiceRoleNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         S3DataStackManagerPrefix:
           Ref: S3DataStackManagerPrefix
+        AEMStackManagerLambdaServiceRoleNameParameter:
+          Ref: AEMStackManagerLambdaServiceRoleNameParameter
+        AEMStackManagerLambdaServiceRoleArnParameter:
+          Ref: AEMStackManagerLambdaServiceRoleArnParameter
+        AEMStackManagerSSMServiceRoleNameParameter:
+          Ref: AEMStackManagerSSMServiceRoleNameParameter
+        AEMStackManagerSSMServiceRoleArnParameter:
+          Ref: AEMStackManagerSSMServiceRoleArnParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles-exports.yaml
     Type: AWS::CloudFormation::Stack
@@ -99,15 +106,10 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/prerequisites.yaml
     Type: AWS::CloudFormation::Stack
-  SSMCommandsStack:
-    Properties:
-      TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/ssm-commands.yaml
-    Type: AWS::CloudFormation::Stack
   StackManagerStack:
     DependsOn:
-    - InstanceProfilesStack
-    - PrerequisitesStack
+      - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         DataBucketNameParameter:
@@ -123,8 +125,8 @@ Resources:
     Type: AWS::CloudFormation::Stack
   UtilitiesStack:
     DependsOn:
-    - InstanceProfilesStack
-    - PrerequisitesStack
+      - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         DataBucketNameParameter:

@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create a Bastion Host inside AEM VPC
 Parameters:
@@ -13,15 +15,15 @@ Parameters:
   BastionSubnet:
     Description: Subnet Ids the Bastion Host Will be Launched into
     Type: AWS::EC2::Subnet::Id
+  StackPrefix:
+    Default: ''
+    Description: Used to Namespace the Exported Resources
+    Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
     Type: String
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
-    Type: String
-  StackPrefix:
-    Default: ''
-    Description: Used to Namespace the Exported Resources
     Type: String
 Resources:
   Bastion:
@@ -32,44 +34,32 @@ Resources:
       KeyName:
         Ref: BastionKeyPairName
       NetworkInterfaces:
-      - AssociatePublicIpAddress: true
-        DeviceIndex: '0'
-        GroupSet:
-          Ref: BastionSecurityGroups
-        SubnetId:
-          Ref: BastionSubnet
+        - AssociatePublicIpAddress: true
+          DeviceIndex: '0'
+          GroupSet:
+            Ref: BastionSecurityGroups
+          SubnetId:
+            Ref: BastionSubnet
       Tags:
-      - Key: Name
-        Value: AEM OpenCloud Bastion
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value: AEM OpenCloud Bastion
     Type: AWS::EC2::Instance
   BastionHostSecurityGroup:
     Properties:
       GroupDescription: Bastion Host Security Group
       Tags:
-      - Key: Name
-        Value: Bastion Host Security Group
-      - Key: StackPrefix
-        Value:
-          Ref: PrerequisitesStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value: Bastion Host Security Group
+        - Key: StackPrefix
+          Value:
+            Ref: PrerequisitesStackPrefixParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
   BastionHostSecurityGroupEgress0:
     Properties:
-      CidrIp: 0.0.0.0/0
+      CidrIp: '0.0.0.0/0'
       FromPort: '80'
       GroupId:
         Ref: BastionHostSecurityGroup
@@ -78,7 +68,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
   BastionHostSecurityGroupEgress1:
     Properties:
-      CidrIp: 0.0.0.0/0
+      CidrIp: '0.0.0.0/0'
       FromPort: '5432'
       GroupId:
         Ref: BastionHostSecurityGroup
@@ -87,7 +77,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
   BastionHostSecurityGroupEgress2:
     Properties:
-      CidrIp: 0.0.0.0/0
+      CidrIp: '0.0.0.0/0'
       FromPort: '22'
       GroupId:
         Ref: BastionHostSecurityGroup
@@ -96,7 +86,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
   BastionHostSecurityGroupEgress3:
     Properties:
-      CidrIp: 0.0.0.0/0
+      CidrIp: '0.0.0.0/0'
       FromPort: '4502'
       GroupId:
         Ref: BastionHostSecurityGroup
@@ -105,7 +95,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
   BastionHostSecurityGroupEgress4:
     Properties:
-      CidrIpv6: ::/0
+      CidrIpv6: '::/0'
       FromPort: '80'
       GroupId:
         Ref: BastionHostSecurityGroup
@@ -114,7 +104,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
   BastionHostSecurityGroupEgress5:
     Properties:
-      CidrIpv6: ::/0
+      CidrIpv6: '::/0'
       FromPort: '5432'
       GroupId:
         Ref: BastionHostSecurityGroup
@@ -123,7 +113,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
   BastionHostSecurityGroupEgress6:
     Properties:
-      CidrIpv6: ::/0
+      CidrIpv6: '::/0'
       FromPort: '22'
       GroupId:
         Ref: BastionHostSecurityGroup
@@ -132,7 +122,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupEgress
   BastionHostSecurityGroupEgress7:
     Properties:
-      CidrIpv6: ::/0
+      CidrIpv6: '::/0'
       FromPort: '4502'
       GroupId:
         Ref: BastionHostSecurityGroup

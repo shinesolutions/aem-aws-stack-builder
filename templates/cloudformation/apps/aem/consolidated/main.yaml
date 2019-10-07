@@ -13,11 +13,11 @@ Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
     Type: String
-  AssociatePublicIpAddressParameter:
-    Description: Add Public IP Address to instance
-    Type: String
   AuthorDataVolSnapshotParameter:
     Description: The Author Data Volume Snapshot Id
+    Type: String
+  AssociatePublicIpAddressParameter:
+    Description: Add Public IP Address to instance
     Type: String
   AuthorPublishDispatcherDNSRecordSetNameParameter:
     Description: Author Publish Dispatcher DNS Record Set Name
@@ -28,6 +28,10 @@ Parameters:
   AuthorPublishDispatcherImageParameter:
     Description: AMI Id used for the Host
     Type: AWS::EC2::Image::Id
+  ImageDevices:
+    Default: "/dev/sda1, /dev/sdb  /dev/sdc"
+    Description: The device names for the Image Id
+    Type: List<String>
   AuthorPublishDispatcherInstanceTypeParameter:
     Description: The Author Publish Dispatcher Instance Type
     Type: String
@@ -43,10 +47,6 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
-  ImageDevices:
-    Default: /dev/sda1, /dev/sdb  /dev/sdc
-    Description: The device names for the Image Id
-    Type: List<String>
   InboundFromBastionHostSecurityGroupParameter:
     Description: Inbound from Bastion Host Security Group Id
     Type: String
@@ -83,8 +83,8 @@ Resources:
       BlockDeviceMappings:
       - DeviceName:
           Fn::Select:
-          - 0
-          - Ref: ImageDevices
+            - 0
+            - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
           Encrypted: true
@@ -93,8 +93,8 @@ Resources:
           VolumeType: gp2
       - DeviceName:
           Fn::Select:
-          - 1
-          - Ref: ImageDevices
+            - 1
+            - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
           Encrypted: true
@@ -108,8 +108,8 @@ Resources:
           VolumeType: gp2
       - DeviceName:
           Fn::Select:
-          - 2
-          - Ref: ImageDevices
+            - 2
+            - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
           Encrypted: true
@@ -149,12 +149,6 @@ Resources:
         Value: AEM Author Publish Dispatcher
       - Key: Component
         Value: author-publish-dispatcher
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\

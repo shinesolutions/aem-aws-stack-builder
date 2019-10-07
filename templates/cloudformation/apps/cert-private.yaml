@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: 2010-09-09
 Description: Create a wildcard certificate for an AEM application stack. To be used
   with ELBs. This certificate must be provisioned in the same region as the ELBs.
@@ -33,20 +35,20 @@ Resources:
       DomainName:
         Fn::Join: '[''.'', []]'
       DomainValidationOptions:
-      - DomainName:
-          Fn::Join: '[''.'', []]'
-        ValidationDomain:
-          Ref: ApexDomainParameter
-      - DomainName:
-          Fn::Join: '[''.'', []]'
-        ValidationDomain:
-          Ref: ApexDomainParameter
-      - DomainName:
-          Fn::Join: '[''.'', []]'
-        ValidationDomain:
-          Ref: ApexDomainParameter
+        - DomainName:
+            Fn::Join: '[''.'', []]'
+          ValidationDomain:
+            Ref: ApexDomainParameter
+        - DomainName:
+            Fn::Join: '[''.'', []]'
+          ValidationDomain:
+            Ref: ApexDomainParameter
+        - DomainName:
+            Fn::Join: '[''.'', []]'
+          ValidationDomain:
+            Ref: ApexDomainParameter
       SubjectAlternativeNames:
-      - Fn::Join: '[''.'', []]'
-      - Fn::Join: '[''.'', []]'
-      - Fn::Join: '[''.'', []]'
+        - Fn::Join: '[''.'', []]'
+        - Fn::Join: '[''.'', []]'
+        - Fn::Join: '[''.'', []]'
     Type: AWS::CertificateManager::Certificate

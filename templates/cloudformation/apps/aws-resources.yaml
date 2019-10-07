@@ -1,53 +1,59 @@
-AWSTemplateFormatVersion: '2010-09-09'
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AWS resources stack for AEM Stack Builder/Manager
+
 Conditions:
-  CreatePrivateHostedZoneCondition:
-    Fn::Equals:
-    - Ref: CreatePrivateHostedZone
-    - 'true'
   CreateS3BucketCondition:
     Fn::Equals:
-    - Ref: CreateS3Bucket
-    - 'true'
-Description: AWS resources stack for AEM Stack Builder/Manager
+      - Ref: CreateS3Bucket
+      - "true"
+  CreatePrivateHostedZoneCondition:
+    Fn::Equals:
+      - Ref: CreatePrivateHostedZone
+      - "true"
+
+
 Parameters:
-  AemEnvS3BucketName:
-    Description: Name of the S3 Bucket for storing AEM environment states
-    Type: String
-  CreatePrivateHostedZone:
-    Description: Toggle creating a Private HostedZone in Route53
-    Type: String
   CreateS3Bucket:
+    Type: String
     Description: Toggle creating the S3 bucket
+  CreatePrivateHostedZone:
     Type: String
+    Description: Toggle creating a Private HostedZone in Route53
+  AemEnvS3BucketName:
+    Type: String
+    Description: Name of the S3 Bucket for storing AEM environment states
   PrivateHostedZoneName:
-    Description: Name of the Private HostedZone domain, fully qualified domain with
-      trailing dot (.)
     Type: String
+    Description: Name of the Private HostedZone domain, fully qualified domain with trailing dot (.)
   VPCId:
+    Type: String
     Description: VPCId to associate with the Private HostedZone
-    Type: String
   VPCRegion:
-    Description: VPC region to associate with the Private HostedZone
     Type: String
+    Description: VPC region to associate with the Private HostedZone
+
+
 Resources:
   AemEnvS3Bucket:
+    Type: AWS::S3::Bucket
     Condition: CreateS3BucketCondition
     Properties:
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-        - ServerSideEncryptionByDefault:
-            SSEAlgorithm: AES256
       BucketName:
         Ref: AemEnvS3BucketName
-    Type: AWS::S3::Bucket
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
   PrivateHostedZone:
+    Type: AWS::Route53::HostedZone
     Condition: CreatePrivateHostedZoneCondition
     Properties:
       Name:
         Ref: PrivateHostedZoneName
       VPCs:
-      - VPCId:
-          Ref: VPCId
-        VPCRegion:
-          Ref: VPCRegion
-    Type: AWS::Route53::HostedZone
+        -
+          VPCId:
+            Ref: VPCId
+          VPCRegion:
+            Ref: VPCRegion

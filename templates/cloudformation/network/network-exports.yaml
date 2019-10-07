@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Export Network Resources to Make It Available for Other Stacks
 Outputs:
@@ -15,20 +17,6 @@ Outputs:
         Fn::Sub: ${StackPrefix}-AuthorDispatcherSubnetList
     Value:
       Ref: AuthorDispatcherSubnetList
-  AuthorELBSubnetList:
-    Description: Comma-separated Author ELB Subnet List
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorELBSubnetList
-    Value:
-      Ref: AuthorELBSubnetList
-  AuthorPrimarySubnet:
-    Description: The Author Primary Subnet
-    Export:
-      Name:
-        Fn::Sub: ${StackPrefix}-AuthorPrimarySubnet
-    Value:
-      Ref: AuthorPrimarySubnet
   AuthorPublishDispatcherSubnet:
     Description: The Author Publish Dispatcher Subnet
     Export:
@@ -36,6 +24,13 @@ Outputs:
         Fn::Sub: ${StackPrefix}-AuthorPublishDispatcherSubnet
     Value:
       Ref: AuthorPublishDispatcherSubnet
+  AuthorPrimarySubnet:
+    Description: The Author Primary Subnet
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorPrimarySubnet
+    Value:
+      Ref: AuthorPrimarySubnet
   AuthorStandbySubnet:
     Description: The Author Standby Subnet
     Export:
@@ -43,6 +38,13 @@ Outputs:
         Fn::Sub: ${StackPrefix}-AuthorStandbySubnet
     Value:
       Ref: AuthorStandbySubnet
+  AuthorELBSubnetList:
+    Description: Comma-separated Author ELB Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-AuthorELBSubnetList
+    Value:
+      Ref: AuthorELBSubnetList
   ChaosMonkeySubnetList:
     Description: Comma-separated ChaosMonkey Subnet List
     Export:
@@ -113,17 +115,17 @@ Parameters:
   AuthorDispatcherSubnetList:
     Description: Comma-separated Author Dispatcher Subnet List
     Type: String
-  AuthorELBSubnetList:
-    Description: Comma-separated Author ELB Subnet List
+  AuthorPublishDispatcherSubnet:
+    Description: The Author Publish Dispatcher Subnet
     Type: String
   AuthorPrimarySubnet:
     Description: The Author Primary Subnet
     Type: String
-  AuthorPublishDispatcherSubnet:
-    Description: The Author Publish Dispatcher Subnet
-    Type: String
   AuthorStandbySubnet:
     Description: The Author Standby Subnet
+    Type: String
+  AuthorELBSubnetList:
+    Description: Comma-separated Author ELB Subnet List
     Type: String
   PrivateRouteTable:
     Default: ''

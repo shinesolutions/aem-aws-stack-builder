@@ -1,10 +1,11 @@
+---
 AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   UseS3EndPoint:
     Fn::Not:
-    - Fn::Equals:
-      - Ref: S3BucketParameter
-      - ''
+      - Fn::Equals:
+          - Ref: S3BucketParameter
+          - ''
 Description: Create Subnets, Internet Gateway, and Route Tables for AEM Stack
 Outputs:
   AuthorDispatcherSubnetA:
@@ -389,15 +390,9 @@ Resources:
         Ref: AuthorDispatcherSubnetACidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorDispatcherSubnetATagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: AuthorDispatcherSubnetATagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -417,15 +412,9 @@ Resources:
         Ref: AuthorDispatcherSubnetBCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorDispatcherSubnetBTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: AuthorDispatcherSubnetBTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -445,15 +434,9 @@ Resources:
         Ref: AuthorDispatcherSubnetCCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorDispatcherSubnetCTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: AuthorDispatcherSubnetCTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -473,15 +456,9 @@ Resources:
         Ref: AuthorSubnetACidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorSubnetATagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: AuthorSubnetATagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -501,15 +478,9 @@ Resources:
         Ref: AuthorSubnetBCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorSubnetBTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: AuthorSubnetBTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -529,15 +500,9 @@ Resources:
         Ref: AuthorSubnetCCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: AuthorSubnetCTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: AuthorSubnetCTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -552,15 +517,9 @@ Resources:
   Ec2InternetGateway:
     Properties:
       Tags:
-      - Key: Name
-        Value:
-          Ref: Ec2InternetGatewayTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: Ec2InternetGatewayTagNameParameter
     Type: AWS::EC2::InternetGateway
   Ec2VPCGatewayAttachment:
     Properties:
@@ -573,15 +532,9 @@ Resources:
   PrivateRouteTable:
     Properties:
       Tags:
-      - Key: Name
-        Value:
-          Ref: PrivateRouteTableTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PrivateRouteTableTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -598,15 +551,9 @@ Resources:
   PublicRouteTable:
     Properties:
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublicRouteTableTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublicRouteTableTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -619,15 +566,9 @@ Resources:
         Ref: PublishDispatcherELBSubnetACidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishDispatcherELBSubnetATagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherELBSubnetATagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -647,15 +588,9 @@ Resources:
         Ref: PublishDispatcherELBSubnetBCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishDispatcherELBSubnetBTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherELBSubnetBTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -675,15 +610,9 @@ Resources:
         Ref: PublishDispatcherELBSubnetCCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishDispatcherELBSubnetCTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherELBSubnetCTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -703,15 +632,9 @@ Resources:
         Ref: PublishDispatcherSubnetACidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishDispatcherSubnetATagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherSubnetATagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -731,15 +654,9 @@ Resources:
         Ref: PublishDispatcherSubnetBCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishDispatcherSubnetBTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherSubnetBTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -759,15 +676,9 @@ Resources:
         Ref: PublishDispatcherSubnetCCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishDispatcherSubnetCTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishDispatcherSubnetCTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -787,15 +698,9 @@ Resources:
         Ref: PublishSubnetACidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishSubnetATagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishSubnetATagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -815,15 +720,9 @@ Resources:
         Ref: PublishSubnetBCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishSubnetBTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishSubnetBTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -843,15 +742,9 @@ Resources:
         Ref: PublishSubnetCCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: PublishSubnetCTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: PublishSubnetCTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -868,16 +761,16 @@ Resources:
     Properties:
       PolicyDocument:
         Statement:
-        - Action:
-          - s3:*
-          Effect: Allow
-          Principal: '*'
-          Resource:
-            Fn::Sub: arn:aws:s3:::${S3BucketParameter}/*
+          - Action:
+              - s3:*
+            Effect: Allow
+            Principal: '*'
+            Resource:
+              Fn::Sub: arn:aws:s3:::${S3BucketParameter}/*
         Version: '2012-10-17'
       RouteTableIds:
-      - Ref: PublicRouteTable
-      - Ref: PrivateRouteTable
+        - Ref: PublicRouteTable
+        - Ref: PrivateRouteTable
       ServiceName:
         Fn::Sub: com.amazonaws.${AWS::Region}.s3
       VpcId:
@@ -892,15 +785,9 @@ Resources:
         Ref: ToolSubnetACidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: ToolSubnetATagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: ToolSubnetATagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -920,15 +807,9 @@ Resources:
         Ref: ToolSubnetBCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: ToolSubnetBTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: ToolSubnetBTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
@@ -948,15 +829,9 @@ Resources:
         Ref: ToolSubnetCCidrBlockParameter
       MapPublicIpOnLaunch: false
       Tags:
-      - Key: Name
-        Value:
-          Ref: ToolSubnetCTagNameParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
+        - Key: Name
+          Value:
+            Ref: ToolSubnetCTagNameParameter
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId

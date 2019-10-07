@@ -1,3 +1,5 @@
+---
+
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create AWS Lambda Implementation of AEM Stack Mananger Resources
 Outputs:
@@ -56,68 +58,68 @@ Parameters:
     Type: String
 Resources:
   AemOfflineBackupAlarm:
-    Properties:
-      AlarmActions:
-      - Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
-      AlarmDescription: Notifies if AemOfflineBackup execution fails
-      AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AemOfflineBackup-FAILS
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Dimensions:
-      - Name: FunctionName
-        Value:
-          Fn::Sub: ${MainStackPrefixParameter}-AemOfflineBackup
-      EvaluationPeriods: 1
-      MetricName: Errors
-      Namespace: AWS/Lambda
-      Period: 300
-      Statistic: Sum
-      Threshold: 1.0
-      TreatMissingData: notBreaching
     Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemOfflineBackup-FAILS"
+      AlarmDescription: "Notifies if AemOfflineBackup execution fails"
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemOfflineBackup"
   AemStackManagerAlarm:
-    Properties:
-      AlarmActions:
-      - Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
-      AlarmDescription: Notifies if AemStackManager execution fails
-      AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AemStackManager-FAILS
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Dimensions:
-      - Name: FunctionName
-        Value:
-          Fn::Sub: ${MainStackPrefixParameter}-AemStackManager
-      EvaluationPeriods: 1
-      MetricName: Errors
-      Namespace: AWS/Lambda
-      Period: 300
-      Statistic: Sum
-      Threshold: 1.0
-      TreatMissingData: notBreaching
     Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemStackManager-FAILS"
+      AlarmDescription: "Notifies if AemStackManager execution fails"
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemStackManager"
   AemTaskQueryAlarm:
-    Properties:
-      AlarmActions:
-      - Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
-      AlarmDescription: Notifies if AemTaskQuery execution fails
-      AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AemTaskQuery-FAILS
-      ComparisonOperator: GreaterThanOrEqualToThreshold
-      Dimensions:
-      - Name: FunctionName
-        Value:
-          Fn::Sub: ${MainStackPrefixParameter}-AemTaskQuery
-      EvaluationPeriods: 1
-      MetricName: Errors
-      Namespace: AWS/Lambda
-      Period: 300
-      Statistic: Sum
-      Threshold: 1.0
-      TreatMissingData: notBreaching
     Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName:
+        Fn::Sub: "${MainStackPrefixParameter}-AemTaskQuery-FAILS"
+      AlarmDescription: "Notifies if AemTaskQuery execution fails"
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-AlarmNotificationTopicArn
+      ComparisonOperator: "GreaterThanOrEqualToThreshold"
+      EvaluationPeriods: 1
+      MetricName: "Errors"
+      Namespace: "AWS/Lambda"
+      Period: 300
+      Statistic: "Sum"
+      Threshold: 1.0
+      TreatMissingData: "notBreaching"
+      Dimensions:
+        - Name: FunctionName
+          Value:
+            Fn::Sub: "${MainStackPrefixParameter}-AemTaskQuery"
   BackupInitialVersion:
     DependsOn: OfflineBackupLambda
     Properties:
@@ -136,8 +138,8 @@ Resources:
     Type: AWS::Lambda::Alias
   BackupLambdaPermission:
     DependsOn:
-    - BackupLambdaProdAlias
-    - OfflineBackupTopic
+      - BackupLambdaProdAlias
+      - OfflineBackupTopic
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -148,8 +150,8 @@ Resources:
     Type: AWS::Lambda::Permission
   BackupLambdaProdAlias:
     DependsOn:
-    - OfflineBackupLambda
-    - BackupInitialVersion
+      - OfflineBackupLambda
+      - BackupInitialVersion
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName:
@@ -160,8 +162,8 @@ Resources:
     Type: AWS::Lambda::Alias
   BackupSNSSubscription:
     DependsOn:
-    - BackupLambdaProdAlias
-    - OfflineBackupTopic
+      - BackupLambdaProdAlias
+      - OfflineBackupTopic
     Properties:
       Endpoint:
         Ref: BackupLambdaProdAlias
@@ -222,8 +224,8 @@ Resources:
     Type: AWS::Lambda::Function
   ManagerTopicPermission:
     DependsOn:
-    - StackManagerTopic
-    - LambdaProdAlias
+      - StackManagerTopic
+      - LambdaProdAlias
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -234,8 +236,8 @@ Resources:
     Type: AWS::Lambda::Permission
   ManagerTopicSubscription:
     DependsOn:
-    - StackManagerTopic
-    - LambdaProdAlias
+      - StackManagerTopic
+      - LambdaProdAlias
     Properties:
       Endpoint:
         Ref: LambdaProdAlias
@@ -325,32 +327,44 @@ Resources:
         Fn::GetAtt: QueryInitialVersion.Version
       Name: prod
     Type: AWS::Lambda::Alias
+  StatusTopicPermission:
+    DependsOn:
+      - LambdaProdAlias
+      - TaskStatusTopic
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Ref: LambdaProdAlias
+      Principal: sns.amazonaws.com
+      SourceArn:
+        Ref: TaskStatusTopic
+    Type: AWS::Lambda::Permission
   StackManagerTable:
     Properties:
       AttributeDefinitions:
-      - AttributeName: command_id
-        AttributeType: S
-      - AttributeName: externalId
-        AttributeType: S
-      - AttributeName: timestamp
-        AttributeType: S
-      GlobalSecondaryIndexes:
-      - IndexName: ExternalQuery
-        KeySchema:
+        - AttributeName: command_id
+          AttributeType: S
         - AttributeName: externalId
-          KeyType: HASH
+          AttributeType: S
         - AttributeName: timestamp
-          KeyType: RANGE
-        Projection:
-          NonKeyAttributes:
-          - state
-          ProjectionType: INCLUDE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          AttributeType: S
+      GlobalSecondaryIndexes:
+        - IndexName: ExternalQuery
+          KeySchema:
+            - AttributeName: externalId
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            NonKeyAttributes:
+              - state
+            ProjectionType: INCLUDE
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
       KeySchema:
-      - AttributeName: command_id
-        KeyType: HASH
+        - AttributeName: command_id
+          KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
@@ -369,22 +383,10 @@ Resources:
       TopicName:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManager
     Type: AWS::SNS::Topic
-  StatusTopicPermission:
-    DependsOn:
-    - LambdaProdAlias
-    - TaskStatusTopic
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-        Ref: LambdaProdAlias
-      Principal: sns.amazonaws.com
-      SourceArn:
-        Ref: TaskStatusTopic
-    Type: AWS::Lambda::Permission
   StatusTopicSubscription:
     DependsOn:
-    - LambdaProdAlias
-    - TaskStatusTopic
+      - LambdaProdAlias
+      - TaskStatusTopic
     Properties:
       Endpoint:
         Ref: LambdaProdAlias

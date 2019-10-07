@@ -103,15 +103,6 @@ Resources:
         Value:
           Fn::ImportValue:
             Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup
-      - Key: Project
-        PropagateAtLaunch: true
-        Value: Open Source AEM Platform
-      - Key: Owner
-        PropagateAtLaunch: true
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        PropagateAtLaunch: true
-        Value: 12345
       VPCZoneIdentifier:
         Fn::Split:
         - ','
@@ -144,9 +135,6 @@ Resources:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeySecurityGroup
       - Ref: InboundFromBastionHostSecurityGroupParameter
-      - sg-000e3aa94140844a2
-      - sg-0a9b551e72f6a27f9
-      - sg-0d0ccdcee40859e4f
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\

@@ -43,32 +43,14 @@ Parameters:
   AEMCWEventNotificationEmail:
     Description: The EMail adress for sending CW Alarm messages
     Type: String
-  AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
-    Description: AEM Stack Manager Lambda Role Arn
-    Type: String
-  AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
-    Description: AEM Stack Manager Lambda Role Name
-    Type: String
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
-    Type: String
-  AuthorDispatcherInstanceProfileParameter:
-    Description: AEM Author Dispatcher Profile name
-    Type: String
-  AuthorInstanceProfileParameter:
-    Description: AEM Author Profile name
-    Type: String
-  ChaosMonkeyInstanceProfileParameter:
-    Description: AEM Chaos Monkey Profile name
     Type: String
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
-    Type: String
-  OrchestratorInstanceProfileParameter:
-    Description: AEM Orchestrator Profile name
     Type: String
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
@@ -79,22 +61,42 @@ Parameters:
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
-  PublishDispatcherInstanceProfileParameter:
-    Description: AEM Publish Dispatcher Profile name
-    Type: String
-  PublishInstanceProfileParameter:
-    Description: AEM Publish Profile name
-    Type: String
   SSLCertificateARNParameter:
     Description: SSL Certificate ARN
     Type: String
   SecureShellInboundCidrIpParameter:
     Description: AEM Stack Secure Shell Inbound Cidr Ip
     Type: String
+  AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
+    Description: AEM Stack Manager Lambda Role Arn 
+    Type: String
+  AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
+    Description: AEM Stack Manager Lambda Role Name
+    Type: String
+  AuthorDispatcherInstanceProfileParameter:
+    Description: AEM Author Dispatcher Profile name
+    Type: String
+  AuthorInstanceProfileParameter:
+    Description: AEM Author Profile name
+    Type: String
+  ChaosMonkeyInstanceProfileParameter:
+    Description: AEM Chaos Monkey Profile name
+    Type: String
+  OrchestratorInstanceProfileParameter:
+    Description: AEM Orchestrator Profile name
+    Type: String
+  PublishDispatcherInstanceProfileParameter:
+    Description: AEM Publish Dispatcher Profile name
+    Type: String
+  PublishInstanceProfileParameter:
+    Description: AEM Publish Profile name
+    Type: String
 Resources:
   InstanceProfilesStack:
     Properties:
       Parameters:
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
         AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
           Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
         AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
@@ -107,8 +109,6 @@ Resources:
           Ref: ChaosMonkeyInstanceProfileParameter
         OrchestratorInstanceProfileParameter:
           Ref: OrchestratorInstanceProfileParameter
-        PrerequisitesStackPrefixParameter:
-          Ref: PrerequisitesStackPrefixParameter
         PublishDispatcherInstanceProfileParameter:
           Ref: PublishDispatcherInstanceProfileParameter
         PublishInstanceProfileParameter:

@@ -31,12 +31,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: PrerequisitesStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
-      - Key: Owner
-        Value: Shine Solutions AEM Team
-      - Key: Cost Centre
-        Value: 12345
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId

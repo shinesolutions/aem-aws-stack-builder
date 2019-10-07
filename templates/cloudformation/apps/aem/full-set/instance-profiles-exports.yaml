@@ -58,6 +58,9 @@ Outputs:
     Value:
       Ref: PublishInstanceProfileParameter
 Parameters:
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
   AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
     Description: The Stack Manager Lambda Service Role ARN
     Type: String
@@ -76,9 +79,6 @@ Parameters:
   OrchestratorInstanceProfileParameter:
     Description: The Orchestrator Instance Profile
     Type: String
-  PrerequisitesStackPrefixParameter:
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
-    Type: String
   PublishDispatcherInstanceProfileParameter:
     Description: The Publish Dispatcher Instance Profile
     Type: String
@@ -88,10 +88,10 @@ Parameters:
 Resources:
   DummyParameter:
     Properties:
-      Description: Dummy Parameter to allow stack to work.
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
+      Description: Dummy Parameter to allow stack to work.
       Type: String
       Value:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-DummyParameter
-    Type: AWS::SSM::Parameter
+    Type: "AWS::SSM::Parameter"
