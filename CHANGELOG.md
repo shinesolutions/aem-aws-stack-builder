@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Rename switch-dns parameters for consistency with AOC Manager parameter names
+- Upgrade AEM Stack Manager Cloud to 1.5.0
+- Upgrade AEM AWS Stack Provisioner to 4.19.0
 
 ## 4.18.0 - 2019-10-01
 ### Changed
