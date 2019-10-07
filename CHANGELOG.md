@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add new permissions for AEM Stack Manager to allow updating ASG scaling processes [#295]
+
 ### Changed
 - Rename switch-dns parameters for consistency with AOC Manager parameter names
 
