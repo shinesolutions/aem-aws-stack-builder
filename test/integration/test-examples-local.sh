@@ -85,8 +85,10 @@ git stash
 
 # Create, test, and delete AEM Full-Set environment
 cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}/"
-echo "Configuring AEM Full-Set environment..."
-make config "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+# TODO: temporarily disable config here due to inability to restore from original while building on CodeBuild
+#       This will have to be revisited after templates staging has been implemented
+# echo "Configuring AEM Full-Set environment..."
+# make config "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 echo "Creating AEM Full-Set environment..."
 cp -R stage/descriptors/full-set/* stage/
 make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
