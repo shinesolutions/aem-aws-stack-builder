@@ -140,8 +140,6 @@ aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployme
 aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 
 # AEM Reconfiguration Parameters
-aem_curator::config_author_primary::aem_reconfiguration_start_opts: {{ reconfiguration.author.start_opts }}
-aem_curator::config_publish::::aem_reconfiguration_start_opts: {{ reconfiguration.publish.start_opts }}
 {% if reconfiguration.author.run_modes is defined %}
 aem_curator::config_author_primary::aem_reconfiguration_run_modes:
 {% for run_mode in reconfiguration.author.run_modes %}

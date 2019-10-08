@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add Certificate manager & Secrets manager support for certificate handling when reconfiguration runs
-- Add new configuration parameters for reconfiguration `start_opts` & `run_modes`
+- Add new configuration parameter `run_modes` for reconfiguration
 
 ### Changed
 - Replaced reconfiguration parameter `certs_base` with `certificate_arn` & `certificate_key_arn`

@@ -160,10 +160,8 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
     certificate_key_arn: s3://aem-opencloud/artifacts/ssl/aem.key
     ssl_keystore_password: changeit
     author:
-      start_opts: "-nofork"
       run_modes: []
     publish:
-      start_opts: "-nofork"
       run_modes: []
 
   system_users:
