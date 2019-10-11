@@ -79,9 +79,6 @@ cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${
 # make switch-dns-consolidated config_path=stage/user-config/aws-resources-sandpit/ "stack_prefix=${test_id}-con" author_publish_dispatcher_hosted_zone=aemopencloud.cms "author_publish_dispatcher_record_set=${test_id}-apd-con"
 echo "Deleting AEM Consolidated environment..."
 make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
-echo "clear changes which been done to repository"
-# TODO: temporarily added solution and this part will be replaced to staging
-git stash
 
 # Create, test, and delete AEM Full-Set environment
 cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}/"
@@ -108,8 +105,6 @@ cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test
 # cd /stage/aem-test-suite/ && make test-recovery-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
 echo "Deleting AEM Full-Set environment..."
 make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
-# TODO: temporarily added solution and this part will be replaced to staging
-git stash
 
 # Delete AEM Stack Manager
 echo "Deleting AEM Stack Manager environment..."
