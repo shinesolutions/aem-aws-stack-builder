@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add Region to DNS Switch to fix issue related to CloudFormation FACTS 
+- Add region to DNS switch to fix issue related to CloudFormation facts 
 
 ## 4.19.0 - 2019-10-08
 ### Added
