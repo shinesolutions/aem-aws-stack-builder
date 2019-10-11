@@ -383,7 +383,7 @@ logrotation:
     config:
     rules:
       httpd:
-        path: /var/log/httpd/*.log
+        path: /var/log/httpd/*log
         rotate: 5
         size: 200M
         dateext: true
@@ -398,7 +398,7 @@ logrotation:
     config:
     rules:
       httpd:
-        path: /var/log/httpd/*.log
+        path: /var/log/httpd/*log
         rotate: 5
         size: 200M
         dateext: false
