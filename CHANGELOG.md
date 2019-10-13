@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename switch-dns parameters for consistency with AOC Manager parameter names
 - Upgrade AEM Stack Manager Cloud to 1.5.0
 - Upgrade AEM AWS Stack Provisioner to 4.19.0
+- Update default path for httpd logfile logrotation to handle log files named with .log and _log suffixes
 
 ## 4.18.0 - 2019-10-01
 ### Changed
