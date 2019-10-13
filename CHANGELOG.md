@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 4.20.0 - 2019-10-13
+### Added
+- Add region to DNS switch to fix issue related to CloudFormation facts
+
 ## 4.19.0 - 2019-10-08
 ### Added
 - Add new permissions for AEM Stack Manager to allow updating ASG scaling processes [#295]
@@ -15,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename switch-dns parameters for consistency with AOC Manager parameter names
 - Upgrade AEM Stack Manager Cloud to 1.5.0
 - Upgrade AEM AWS Stack Provisioner to 4.19.0
+- Update default path for httpd logfile logrotation to handle log files named with .log and _log suffixes
 
 ## 4.18.0 - 2019-10-01
 ### Changed
