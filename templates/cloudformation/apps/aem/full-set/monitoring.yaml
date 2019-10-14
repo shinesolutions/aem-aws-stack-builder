@@ -136,7 +136,7 @@ Resources:
                         "view": "timeSeries",
                         "stacked": false,
                         "region": "${awsRegion}",
-                        "title": "All - ELB UnHealthy Host Count Metric",
+                        "title": "All - ELB UnHealthy Host",
                         "period": 300
                     }
                 },
@@ -162,7 +162,7 @@ Resources:
                         "view": "timeSeries",
                         "stacked": false,
                         "region": "${awsRegion}",
-                        "title": "Author Dispatcher - ELB HTTP Code XX Metrics",
+                        "title": "Author Dispatcher - HTTP Backend",
                         "period": 300
                     }
                 },
@@ -281,7 +281,7 @@ Resources:
                         "view": "timeSeries",
                         "stacked": false,
                         "region": "${awsRegion}",
-                        "title": "Publish Dispatcher - ELB HTTP Code XX Metrics",
+                        "title": "Publish Dispatcher - HTTP Backend",
                         "period": 300
                     }
                 },
@@ -321,12 +321,12 @@ Resources:
                         "view": "timeSeries",
                         "stacked": false,
                         "region": "${awsRegion}",
-                        "title": "Author - ELB HTTP Code XX Metrics",
+                        "title": "Author - HTTP Backend",
                         "period": 300
                     }
-                }
-            ]
-        }'
+                    }
+                    ]
+                }'
         - authorDispatcherAutoScalingGroupName:
             Fn::ImportValue:
               Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherAutoScalingGroup"
