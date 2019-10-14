@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Restructure monitoring stack's CloudWatch Dashboard panels
+
 ## 4.20.0 - 2019-10-13
 ### Added
 - Add region to DNS switch to fix issue related to CloudFormation facts
