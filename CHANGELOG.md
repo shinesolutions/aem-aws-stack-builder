@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Added ELB Metrics to CloudWatch Dashboard panel
+
 ## 4.21.0 - 2019-10-14
 ### Changed
 - Restructure monitoring stack's CloudWatch Dashboard panels
