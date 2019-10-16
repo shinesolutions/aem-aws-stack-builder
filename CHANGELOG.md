@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced reconfiguration parameter `certs_base` with `certificate_arn` & `certificate_key_arn`
 - Update FAQ topic to `reconfiguration`
+- Upgrade AEM AWS Stack Provisioner to 4.20.0
 
 ### Removed
 - Removed reconfiguration parameter `create_system_users`, as it doesn't had any functionality
