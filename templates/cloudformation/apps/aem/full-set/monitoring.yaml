@@ -54,7 +54,7 @@ Resources:
                         {
                             "color": "#ff7f0e",
                             "label": "Warning",
-                            "value": 75
+                            "value": 45
                         },
                         {
                             "color": "#d62728",
@@ -215,20 +215,20 @@ Resources:
             "width": 12,
             "height": 6,
             "properties": {
+                "metrics": [
+                    [ "AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${aemAsgEventQueueName}", { "period": 60 } ]
+                ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${awsRegion}",
                 "title": "All - ASG Event Queue Messages",
-                "metrics": [
-                    [ "AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${aemAsgEventQueueName}" ]
-                ],
                 "period": 300,
                 "annotations": {
                     "horizontal": [
                         {
                             "color": "#ff7f0e",
                             "label": "Warning",
-                            "value": 60
+                            "value": 10
                         }
                     ]
                 }
@@ -260,7 +260,8 @@ Resources:
                 },
                 "yAxis": {
                     "left": {
-                        "label": "Seconds"
+                        "label": "Seconds",
+                        "showUnits": false
                     }
                 }
             }
