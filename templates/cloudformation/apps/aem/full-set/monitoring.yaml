@@ -273,13 +273,13 @@ Resources:
             "height": 3,
             "properties": {
                 "metrics": [
-                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}", { "label": "Publish Dispatcher - HTTPCode_Backend_2XX" } ],
-                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_3XX" } ],
-                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_4XX" } ],
-                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_5XX" } ],
-                    [ ".", "RequestCount", ".", "${publishDispatcherELB}", { "stat": "Sum", "label": "Publish Dispatcher - RequestCount" } ],
-                    [ ".", "Latency", ".", "${publishDispatcherELB}", { "label": "Publish Dispatcher - Latency" } ],
-                    [ ".", "BackendConnectionErrors", ".", "${publishDispatcherELB}", { "stat": "Sum", "label": "Publish Dispatcher - BackendConnectionErrors" } ]
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}", { "label": "Publish Dispatcher - HTTPCode_Backend_2XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_3XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_3XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - RequestCount", "period": 86400 } ],
+                    [ ".", "Latency", ".", ".", { "label": "Publish Dispatcher - Latency", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - BackendConnectionErrors", "period": 86400 } ]
                 ],
                 "view": "singleValue",
                 "title": "Publish Dispatcher - Counts",
@@ -316,13 +316,13 @@ Resources:
             "height": 3,
             "properties": {
                 "metrics": [
-                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - HTTPCode_Backend_2XX" } ],
-                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - HTTPCode_Backend_3XX" } ],
-                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - HTTPCode_Backend_4XX" } ],
-                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - HTTPCode_Backend_5XX" } ],
-                    [ "AWS/ELB", "RequestCount", "LoadBalancerName", "${authorDispatcherELB}", { "stat": "Sum", "label": "Author Dispatcher - RequestCount" } ],
-                    [ "AWS/ELB", "Latency", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - Latency" } ],
-                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorDispatcherELB}", { "stat": "Sum", "label": "Author Dispatcher - BackendConnectionErrors" } ]
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - HTTPCode_Backend_2XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_3XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_3XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - RequestCount", "period": 86400 } ],
+                    [ ".", "Latency", ".", ".", { "label": "Author Dispatcher - Latency", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - BackendConnectionErrors", "period": 86400 } ]
                 ],
                 "view": "singleValue",
                 "title": "Author Dispatcher - Counts",
