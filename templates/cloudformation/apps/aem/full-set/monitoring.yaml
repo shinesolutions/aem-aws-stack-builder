@@ -27,396 +27,332 @@ Resources:
       DashboardBody:
         Fn::Sub:
         - '{
-          "widgets": [
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 0,
-              "width": 24,
-              "height": 6,
-              "properties": {
+    "widgets": [
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 6,
+            "width": 24,
+            "height": 6,
+            "properties": {
                 "metrics": [
-                  [ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "ChaosMonkey", "stat": "Maximum" } ],
-                  [ "...", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "AuthorPrimary", "stat": "Maximum" } ],
-                  [ "...", "${authorStandbyInstance}", { "period": 300, "label": "AuthorStandBy", "stat": "Maximum" } ]
+                    [ "AWS/EC2", "CPUUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
+                    [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
+                    [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
+                    [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ],
+                    [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "ChaosMonkey", "stat": "Maximum" } ],
+                    [ "...", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "AuthorPrimary", "stat": "Maximum" } ],
+                    [ "...", "${authorStandbyInstance}", { "period": 300, "label": "AuthorStandBy", "stat": "Maximum" } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${awsRegion}",
-                "title": "CPU Utilization - EC2",
+                "title": "All - CPU Utilization",
                 "period": 300,
                 "annotations": {
-                  "horizontal": [
-                    { "color": "#ff7f0e", "label": "Warning", "value": 75 },
-                    { "color": "#d62728", "label": "Critical", "value": 90 }
-                  ]
+                    "horizontal": [
+                        {
+                            "color": "#ff7f0e",
+                            "label": "Warning",
+                            "value": 45
+                        },
+                        {
+                            "color": "#d62728",
+                            "label": "Critical",
+                            "value": 90
+                        }
+                    ]
                 }
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 6,
-              "width": 12,
-              "height": 9,
-              "properties": {
-                "metrics": [
-                  [ "System/Linux", "MemoryUtilization", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${authorStandbyInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                  [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "Memory Utilization - EC2 - Graph",
-                "period": 300,
-                "annotations": {
-                  "horizontal": [
-                    { "color": "#ff7f0e", "label": "Warning", "value": 75 },
-                    { "color": "#d62728", "label": "Critical", "value": 90 }
-                  ]
-                }
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 6,
-              "width": 12,
-              "height": 9,
-              "properties": {
-                "metrics": [
-                  [ "System/Linux", "MemoryUtilization", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${authorStandbyInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                  [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
-                ],
-                "view": "singleValue",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "Memory Utilization - EC2",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 15,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "singleValue",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB HealthyHostCount Metrics",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 15,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB HealthyHostCount Metrics - Graph",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 18,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "singleValue",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB UnHealthyHostCount Metrics",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 18,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB UnHealthyHostCount Metrics - Graph",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 21,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "singleValue",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB BackendConnectionErrors Metrics",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 21,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB BackendConnectionErrors Metrics - Graph",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 24,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "singleValue",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB HTTPCode_Backend_4XX Metrics",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 24,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB HTTPCode_Backend_4XX Metrics - Graph",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 27,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "singleValue",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB HTTPCode_Backend_5XX Metrics",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 27,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB HTTPCode_Backend_5XX Metrics - Graph",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 30,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "RequestCount", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "RequestCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "RequestCount", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "singleValue",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB RequestCount Metrics",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 30,
-              "width": 12,
-              "height": 3,
-              "properties": {
-                "metrics": [
-                  [ "AWS/ELB", "RequestCount", "LoadBalancerName", "${authorELB}" ],
-                  [ "AWS/ELB", "RequestCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                  [ "AWS/ELB", "RequestCount", "LoadBalancerName", "${publishDispatcherELB}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "ELB RequestCount Metrics - Graph",
-                "period": 300
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 33,
-              "width": 12,
-              "height": 6,
-              "properties": {
-                "metrics": [
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${dataVolName}" ],
-                  [ "...", "${authorStandbyInstance}", "Filesystem", "${dataVolName}" ],
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${dataVolName}" ],
-                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${dataVolName}" ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${dataVolName}" ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${dataVolName}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "DiskSpaceUtilization on Data Volume - ${dataVolName}"
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 33,
-              "width": 12,
-              "height": 6,
-              "properties": {
-                "metrics": [
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${rootVolName}" ],
-                  [ "...", "${authorStandbyInstance}", "Filesystem", "${rootVolName}" ],
-                  [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
-                  [ "...", "${publishAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
-                  [ "...", "${publishDispatcherAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
-                  [ "...", "${orchestratorAutoScalingGroupName}", "Filesystem", "${rootVolName}" ],
-                  [ "...", "${chaosMonkeyAutoScalingGroupName}", "Filesystem", "${rootVolName}" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "DiskSpaceUtilization on Root Volume - ${rootVolName}"
-              }
-            },
-            {
-              "type": "metric",
-              "x": 0,
-              "y": 39,
-              "width": 12,
-              "height": 6,
-              "properties": {
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "title": "SQS AEM ASG Event queue - Available Messages",
-                "start": "-PT3H",
-                "end": "P0D",
-                "metrics": [
-                  [ "AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${aemAsgEventQueueName}" ]
-                ]
-              }
-            },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 39,
-              "width": 12,
-              "height": 6,
-              "properties": {
-                "metrics": [
-                  [ "collectd", "GenericJMX.delay.seconds_since_last_success", "FixedDimension", "${stackPrefix}-author-standby", "Host", "${authorStandbyInstance}", "PluginInstance", "standby-status", { "period": 60, "stat": "Maximum" } ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "${awsRegion}",
-                "start": "-PT3H",
-                "end": "P0D",
-                "title": "GenericJMX.delay.seconds_since_last_success"
-              }
             }
-          ]
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 12,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "System/Linux", "MemoryUtilization", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
+                    [ "...", "${authorStandbyInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
+                    [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
+                    [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
+                    [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
+                    [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
+                    [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "All - Memory Utilization",
+                "period": 300,
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "color": "#ff7f0e",
+                            "label": "Warning",
+                            "value": 75
+                        },
+                        {
+                            "color": "#d62728",
+                            "label": "Critical",
+                            "value": 90
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 30,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
+                    [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "All - ELB Healthy Host",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 30,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
+                    [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "All - ELB UnHealthy Host",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 36,
+            "width": 24,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${authorDispatcherELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorDispatcherELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorDispatcherELB}" ],
+                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorDispatcherELB}" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "Author Dispatcher - HTTP Backend",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 18,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${dataVolName}" ],
+                    [ "...", "${authorStandbyInstance}", ".", "." ],
+                    [ "...", "AutoScalingGroupName", "${publishAutoScalingGroupName}", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "All - Disk Space Utilization on Data Volume ${dataVolName}",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 18,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${rootVolName}" ],
+                    [ "...", "${authorStandbyInstance}", ".", "." ],
+                    [ "...", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", ".", "." ],
+                    [ "...", "${publishAutoScalingGroupName}", ".", "." ],
+                    [ "...", "${publishDispatcherAutoScalingGroupName}", ".", "." ],
+                    [ "...", "${orchestratorAutoScalingGroupName}", ".", "." ],
+                    [ "...", "${chaosMonkeyAutoScalingGroupName}", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "All - Disk Space Utilization on Root Volume ${rootVolName}",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 24,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${aemAsgEventQueueName}", { "period": 60 } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "All - ASG Event Queue Messages",
+                "period": 300,
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "color": "#ff7f0e",
+                            "label": "Warning",
+                            "value": 10
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 24,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "collectd", "GenericJMX.delay.seconds_since_last_success", "FixedDimension", "${stackPrefix}-author-standby", "Host", "${authorStandbyInstance}", "PluginInstance", "standby-status", { "period": 60, "stat": "Maximum" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "Author - Sync Delay",
+                "period": 300,
+                "annotations": {
+                    "horizontal": [
+                        {
+                            "color": "#ff7f0e",
+                            "label": "Warning",
+                            "value": 60
+                        }
+                    ]
+                },
+                "yAxis": {
+                    "left": {
+                        "label": "Seconds",
+                        "showUnits": false
+                    }
+                }
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}", { "label": "Publish Dispatcher - HTTPCode_Backend_2XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_3XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_3XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - RequestCount", "period": 86400 } ],
+                    [ ".", "Latency", ".", ".", { "label": "Publish Dispatcher - Latency", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - BackendConnectionErrors", "period": 86400 } ]
+                ],
+                "view": "singleValue",
+                "title": "Publish Dispatcher - Counts",
+                "region": "ap-southeast-2",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 33,
+            "width": 24,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${publishDispatcherELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${publishDispatcherELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${publishDispatcherELB}" ],
+                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${publishDispatcherELB}" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "Publish Dispatcher - HTTP Backend",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 3,
+            "width": 24,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - HTTPCode_Backend_2XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_3XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_3XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - RequestCount", "period": 86400 } ],
+                    [ ".", "Latency", ".", ".", { "label": "Author Dispatcher - Latency", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - BackendConnectionErrors", "period": 86400 } ]
+                ],
+                "view": "singleValue",
+                "title": "Author Dispatcher - Counts",
+                "region": "ap-southeast-2",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 39,
+            "width": 24,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorELB}" ],
+                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorELB}" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${awsRegion}",
+                "title": "Author - HTTP Backend",
+                "period": 300
+            }
+            }
+            ]
         }'
         - authorDispatcherAutoScalingGroupName:
             Fn::ImportValue:

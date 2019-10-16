@@ -10,6 +10,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add new component parameter to control EBS volume encryption
 
+## 4.22.0 - 2019-10-16
+### Added
+- Added ELB Metrics to CloudWatch Dashboard panel
+
+## 4.21.0 - 2019-10-14
+### Changed
+- Restructure monitoring stack's CloudWatch Dashboard panels
+
+## 4.20.0 - 2019-10-13
+### Added
+- Add region to DNS switch to fix issue related to CloudFormation facts
+
+## 4.19.0 - 2019-10-08
+### Added
+- Add new permissions for AEM Stack Manager to allow updating ASG scaling processes [#295]
+
+### Changed
+- Rename switch-dns parameters for consistency with AOC Manager parameter names
+- Upgrade AEM Stack Manager Cloud to 1.5.0
+- Upgrade AEM AWS Stack Provisioner to 4.19.0
+- Update default path for httpd logfile logrotation to handle log files named with .log and _log suffixes
+
+## 4.18.0 - 2019-10-01
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.18.0
+
+### Fixed
+- Change new scheduled job parameters for scheduling the cronjob from `cloudwatch_s3_Stream` to `cloudwatch_s3_stream`
+
 ## 4.17.0 - 2019-09-23
 ### Added
 - Add function for switching DNS by setting DNS record of a given zone to point to an AEM stack

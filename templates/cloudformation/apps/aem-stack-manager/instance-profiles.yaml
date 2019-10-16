@@ -75,6 +75,8 @@ Resources:
                   - autoscaling:UpdateAutoScalingGroup
                   - autoscaling:EnterStandby
                   - autoscaling:ExitStandby
+                  - autoscaling:SuspendProcesses
+                  - autoscaling:ResumeProcesses
                 Effect: Allow
                 Resource: '*'
               - Action:
