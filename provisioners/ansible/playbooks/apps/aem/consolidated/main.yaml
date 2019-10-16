@@ -17,10 +17,9 @@
           AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"
           AssociatePublicIpAddressParameter: "{{ author_publish_dispatcher.associate_public_ip_address }}"
           AuthorPublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_publish_dispatcher.record_set_name }}"
-          AuthorPublishDispatcherDataVolSizeParameter: "{{ author_publish_dispatcher.data_vol_size }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
-          AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"
+          AuthorPublishDispatcherVolParameter: "{{ author_publish_dispatcher.root_vol_size }}, {{ author_publish_dispatcher.data_vol_size }}, {{ snapshots.author.use_data_vol_snapshot | lower }}, {{ snapshots.publish.use_data_vol_snapshot | lower }}, {{ author_publish_dispatcher.enable_vol_encryption }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           DNSRecordSetTTL: "{{ dns_records.author_publish_dispatcher.ttl }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
@@ -30,8 +29,6 @@
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
           Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
-          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot | lower }}"
-          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot | lower }}"
           ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}"
       tags:
       - create
@@ -50,10 +47,9 @@
           AuthorDataVolSnapshotParameter: "{{ snapshots.author.data_vol_snapshot_id }}"
           AssociatePublicIpAddressParameter: "{{ author_publish_dispatcher.associate_public_ip_address }}"
           AuthorPublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_publish_dispatcher.record_set_name }}"
-          AuthorPublishDispatcherDataVolSizeParameter: "{{ author_publish_dispatcher.data_vol_size }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
-          AuthorPublishDispatcherRootVolSizeParameter: "{{ author_publish_dispatcher.root_vol_size }}"
+          AuthorPublishDispatcherVolParameter: "{{ author_publish_dispatcher.root_vol_size }}, {{ author_publish_dispatcher.data_vol_size }}, {{ snapshots.author.use_data_vol_snapshot | lower }}, {{ snapshots.publish.use_data_vol_snapshot | lower }}, {{ author_publish_dispatcher.enable_vol_encryption }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
@@ -61,8 +57,6 @@
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
-          UseAuthorDataVolSnapshotParameter: "{{ snapshots.author.use_data_vol_snapshot | lower }}"
-          UsePublishDataVolSnapshotParameter: "{{ snapshots.publish.use_data_vol_snapshot | lower }}"
           ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}"
       tags:
       - create

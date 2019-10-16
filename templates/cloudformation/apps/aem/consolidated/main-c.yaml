@@ -2,11 +2,15 @@ AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   UseAuthorDataVolSnapshotCondition:
     Fn::Equals:
-    - Ref: UseAuthorDataVolSnapshotParameter
+    - Fn::Select:
+        - 2
+        - Ref: AuthorPublishDispatcherVolParameter
     - true
   UsePublishDataVolSnapshotCondition:
     Fn::Equals:
-    - Ref: UsePublishDataVolSnapshotParameter
+    - Fn::Select:
+        - 3
+        - Ref: AuthorPublishDispatcherVolParameter
     - true
 Description: Create AEM Consolidated Main Resources Stacks
 Parameters:
@@ -22,9 +26,6 @@ Parameters:
   AuthorPublishDispatcherDNSRecordSetNameParameter:
     Description: Author Publish Dispatcher DNS Record Set Name
     Type: String
-  AuthorPublishDispatcherDataVolSizeParameter:
-    Description: Author Publish Dispatcher Instances Data EBS Volume Size
-    Type: Number
   AuthorPublishDispatcherImageParameter:
     Description: AMI Id used for the Host
     Type: AWS::EC2::Image::Id
@@ -35,9 +36,9 @@ Parameters:
   AuthorPublishDispatcherInstanceTypeParameter:
     Description: The Author Publish Dispatcher Instance Type
     Type: String
-  AuthorPublishDispatcherRootVolSizeParameter:
-    Description: Author Publish Dispatcher Instances Root EBS Volume Size
-    Type: Number
+  AuthorPublishDispatcherVolParameter:
+    Description: Author Publish Dispatcher Instances EBS volume parameters
+    Type: List<String>
   ComputeKeyPairNameParameter:
     Description: The Compute Resources Key Pair Name
     Type: AWS::EC2::KeyPair::KeyName
@@ -59,18 +60,6 @@ Parameters:
   PublishDataVolSnapshotParameter:
     Description: The Publish Data Volume Snapshot Id
     Type: String
-  UseAuthorDataVolSnapshotParameter:
-    AllowedValues:
-    - true
-    - false
-    Description: Whether to use the Author Snapshot Data Volume.
-    Type: String
-  UsePublishDataVolSnapshotParameter:
-    AllowedValues:
-    - true
-    - false
-    Description: Wheather to use the Publish Snapshot Data Volume.
-    Type: String
 Resources:
   AuthorPublishDispatcherInstance:
     Properties:
@@ -81,9 +70,14 @@ Resources:
             - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Fn::Select:
+              - 4
+              - Ref: AuthorPublishDispatcherVolParameter
           VolumeSize:
-            Ref: AuthorPublishDispatcherRootVolSizeParameter
+            Fn::Select:
+              - 0
+              - Ref: AuthorPublishDispatcherVolParameter
           VolumeType: gp2
       - DeviceName:
           Fn::Select:
@@ -91,14 +85,19 @@ Resources:
             - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Fn::Select:
+              - 4
+              - Ref: AuthorPublishDispatcherVolParameter
           SnapshotId:
             Fn::If:
             - UseAuthorDataVolSnapshotCondition
             - Ref: AuthorDataVolSnapshotParameter
             - Ref: AWS::NoValue
           VolumeSize:
-            Ref: AuthorPublishDispatcherDataVolSizeParameter
+            Fn::Select:
+              - 1
+              - Ref: AuthorPublishDispatcherVolParameter
           VolumeType: gp2
       - DeviceName:
           Fn::Select:
@@ -106,14 +105,19 @@ Resources:
             - Ref: ImageDevices
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Fn::Select:
+              - 4
+              - Ref: AuthorPublishDispatcherVolParameter
           SnapshotId:
             Fn::If:
             - UsePublishDataVolSnapshotCondition
             - Ref: PublishDataVolSnapshotParameter
             - Ref: AWS::NoValue
           VolumeSize:
-            Ref: AuthorPublishDispatcherDataVolSizeParameter
+            Fn::Select:
+              - 1
+              - Ref: AuthorPublishDispatcherVolParameter
           VolumeType: gp2
       IamInstanceProfile:
         Fn::ImportValue:

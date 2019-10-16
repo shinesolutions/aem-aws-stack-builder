@@ -16,12 +16,6 @@ Parameters:
   AuthorDNSRecordSetNameParameter:
     Description: Author DNS Record Set Name
     Type: String
-  AuthorDataVolSizeParameter:
-    Description: Author Instances Data EBS Volume Size
-    Type: Number
-  AuthorDataVolSnapshotParameter:
-    Description: The Author Data Volume Snapshot Id
-    Type: String
   AuthorDispatcherASGConfigurationParameters:
     Description: The ASG configuration parameters
     Type: List<String>
@@ -31,9 +25,6 @@ Parameters:
   AuthorDispatcherDNSRecordSetNameParameter:
     Description: AuthorDispatcher DNS Record Set Name
     Type: String
-  AuthorDispatcherDataVolSizeParameter:
-    Description: Author Dispatcher Instances Data EBS Volume Size
-    Type: Number
   AuthorDispatcherImageParameter:
     Description: The Author Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -43,9 +34,9 @@ Parameters:
   AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
     Description: AEM Author Dispatcher ELB Health Check Target
     Type: String
-  AuthorDispatcherRootVolSizeParameter:
-    Description: Author Dispatcher Instances Root EBS Volume Size
-    Type: Number
+  AuthorDispatcherVolParameter:
+    Description: Comma seperated list of Author Dispatcher Instances Volume parameters
+    Type: List<String>
   AuthorImageParameter:
     Description: The Author Image Id
     Type: AWS::EC2::Image::Id
@@ -55,9 +46,9 @@ Parameters:
   AuthorLoadBalancerHealthCheckTargetParameter:
     Description: AEM Author ELB Health Check Target
     Type: String
-  AuthorRootVolSizeParameter:
-    Description: Author Instances Root EBS Volume Size
-    Type: Number
+  AuthorVolParameter:
+    Description: Comma seperated list of Author Instances Volume parameters
+    Type: List<String>
   ChaosMonkeyIncludeStack:
     Default: 'true'
     Description: Creates the ChaosMonkey stack or not
@@ -76,9 +67,9 @@ Parameters:
     Default: ''
     Description: The Chaos Monkey Instance Type
     Type: String
-  ChaosMonkeyRootVolSizeParameter:
-    Description: Chaos Monkey Instances Root EBS Volum Size
-    Type: Number
+  ChaosMonkeyVolParameter:
+    Description: Comma seperated list of Chaos Monkey Instances Volume parameters
+    Type: List<String>
   ComputeKeyPairNameParameter:
     Description: The Compute Resources Key Pair Name
     Type: AWS::EC2::KeyPair::KeyName
@@ -104,18 +95,15 @@ Parameters:
   OrchestratorASGAvailabilityZoneListParameter:
     Description: The Orchestrator Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  OrchestratorDataVolSizeParameter:
-    Description: Orchestrator Instances Data EBS Volume Size
-    Type: Number
   OrchestratorImageParameter:
     Description: The Orchestrator Image Id
     Type: AWS::EC2::Image::Id
   OrchestratorInstanceTypeParameter:
     Description: The Orchestrator Instance Type
     Type: String
-  OrchestratorRootVolSizeParameter:
-    Description: Orchestrator Instances Root EBS Volume Size
-    Type: Number
+  OrchestratorVolParameter:
+    Description: Comma seperated list of Orchestrator Instances Volume parameters
+    Type: List<String>
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
@@ -125,12 +113,6 @@ Parameters:
   PublishASGAvailabilityZoneListParameter:
     Description: The Publish Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
-  PublishDataVolSizeParameter:
-    Description: The Publish Instances Data EBS Volume Size
-    Type: Number
-  PublishDataVolSnapshotParameter:
-    Description: The Publish Data Volume Snapshot Id
-    Type: String
   PublishDispatcherASGConfigurationParameters:
     Description: The ASG configuration parameters
     Type: List<String>
@@ -144,9 +126,6 @@ Parameters:
   PublishDispatcherDNSRecordSetNameParameter:
     Description: PublishDispatcher DNS Record Set Name
     Type: String
-  PublishDispatcherDataVolSizeParameter:
-    Description: PublishDispatcher Instances Root EBS Volume Size
-    Type: Number
   PublishDispatcherImageParameter:
     Description: The Publish Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -159,32 +138,20 @@ Parameters:
   PublishDispatcherLoadBalancerSchemeParameter:
     Description: AEM Publish Dispatcher ELB Scheme
     Type: String
-  PublishDispatcherRootVolSizeParameter:
-    Description: PublishDispatcher Instances Root EBS Volume Size
-    Type: Number
+  PublishDispatcherVolParameter:
+    Description: Comma seperated list of PublishDispatcher Instances Volume parameters
+    Type: List<String>
   PublishImageParameter:
     Description: The Publish Image Id
     Type: AWS::EC2::Image::Id
   PublishInstanceTypeParameter:
     Description: The Publish Instance Type
     Type: String
-  PublishRootVolSizeParameter:
-    Description: Publish Instances Root EBS Volume Size
-    Type: Number
+  PublishVolParameter:
+    Description: Comma seperated list of Publish Instances Volume parameters
+    Type: List<String>
   Route53HostedZoneNameParameter:
     Description: Route53 Hosted Zone Name the Record Set will be Created in
-    Type: String
-  UseAuthorDataVolSnapshotParameter:
-    AllowedValues:
-    - true
-    - false
-    Description: Wheather to use the Author Snapshot Data Volume.
-    Type: String
-  UsePublishDataVolSnapshotParameter:
-    AllowedValues:
-    - true
-    - false
-    Description: Wheather to use the Publish Snapshot Data Volume.
     Type: String
 Resources:
   AuthorDispatcherStack:
@@ -200,8 +167,6 @@ Resources:
           Fn::Join:
             - ','
             - Ref: AuthorDispatcherASGConfigurationParameters
-        AuthorDispatcherDataVolSizeParameter:
-          Ref: AuthorDispatcherDataVolSizeParameter
         AuthorDispatcherImageParameter:
           Ref: AuthorDispatcherImageParameter
         AuthorDispatcherImageRootDevice:
@@ -217,7 +182,17 @@ Resources:
         AuthorDispatcherLoadBalancerHealthCheckTargetParameter:
           Ref: AuthorDispatcherLoadBalancerHealthCheckTargetParameter
         AuthorDispatcherRootVolSizeParameter:
-          Ref: AuthorDispatcherRootVolSizeParameter
+          Fn::Select:
+            - 0
+            - Ref: AuthorDispatcherVolParameter
+        AuthorDispatcherDataVolSizeParameter:
+          Fn::Select:
+            - 1
+            - Ref: AuthorDispatcherVolParameter
+        AuthorDispatcherEnableVolEncryptionParameter:
+          Fn::Select:
+            - 2
+            - Ref: AuthorDispatcherVolParameter
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -240,10 +215,6 @@ Resources:
       Parameters:
         AemAwsStackProvisionerVersionParameter:
           Ref: AemAwsStackProvisionerVersionParameter
-        AuthorDataVolSizeParameter:
-          Ref: AuthorDataVolSizeParameter
-        AuthorDataVolSnapshotParameter:
-          Ref: AuthorDataVolSnapshotParameter
         AuthorImageParameter:
           Ref: AuthorImageParameter
         AuthorImageRootDevice:
@@ -259,7 +230,25 @@ Resources:
         AuthorLoadBalancerHealthCheckTargetParameter:
           Ref: AuthorLoadBalancerHealthCheckTargetParameter
         AuthorRootVolSizeParameter:
-          Ref: AuthorRootVolSizeParameter
+          Fn::Select:
+            - 0
+            - Ref: AuthorVolParameter
+        AuthorDataVolSizeParameter:
+          Fn::Select:
+            - 1
+            - Ref: AuthorVolParameter
+        AuthorDataVolSnapshotParameter:
+          Fn::Select:
+            - 2
+            - Ref: AuthorVolParameter
+        UseAuthorDataVolSnapshotParameter:
+          Fn::Select:
+            - 3
+            - Ref: AuthorVolParameter
+        AuthorEnableVolEncryptionParameter:
+          Fn::Select:
+            - 4
+            - Ref: AuthorVolParameter
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -274,8 +263,6 @@ Resources:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
-        UseAuthorDataVolSnapshotParameter:
-          Ref: UseAuthorDataVolSnapshotParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/author.yaml
     Type: AWS::CloudFormation::Stack
@@ -304,7 +291,13 @@ Resources:
         ChaosMonkeyInstanceTypeParameter:
           Ref: ChaosMonkeyInstanceTypeParameter
         ChaosMonkeyRootVolSizeParameter:
-          Ref: ChaosMonkeyRootVolSizeParameter
+          Fn::Select:
+            - 0
+            - Ref: ChaosMonkeyVolParameter
+        ChaosMonkeyEnableVolEncryptionParameter:
+          Fn::Select:
+            - 1
+            - Ref: ChaosMonkeyVolParameter
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -369,8 +362,6 @@ Resources:
           Fn::Join:
             - ','
             - Ref: OrchestratorASGAvailabilityZoneListParameter
-        OrchestratorDataVolSizeParameter:
-          Ref: OrchestratorDataVolSizeParameter
         OrchestratorImageParameter:
           Ref: OrchestratorImageParameter
         OrchestratorImageRootDevice:
@@ -384,7 +375,17 @@ Resources:
         OrchestratorInstanceTypeParameter:
           Ref: OrchestratorInstanceTypeParameter
         OrchestratorRootVolSizeParameter:
-          Ref: OrchestratorRootVolSizeParameter
+          Fn::Select:
+            - 0
+            - Ref: OrchestratorVolParameter
+        OrchestratorDataVolSizeParameter:
+          Fn::Select:
+            - 1
+            - Ref: OrchestratorVolParameter
+        OrchestratorEnableVolEncryptionParameter:
+          Fn::Select:
+            - 2
+            - Ref: OrchestratorVolParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
         PublishDispatcherStackArn:
@@ -435,8 +436,18 @@ Resources:
           Fn::Join:
             - ','
             - Ref: PublishDispatcherASGConfigurationParameters
+        PublishDispatcherRootVolSizeParameter:
+          Fn::Select:
+            - 0
+            - Ref: PublishDispatcherVolParameter
         PublishDispatcherDataVolSizeParameter:
-          Ref: PublishDispatcherDataVolSizeParameter
+          Fn::Select:
+            - 1
+            - Ref: PublishDispatcherVolParameter
+        PublishDispatcherEnableVolEncryptionParameter:
+          Fn::Select:
+            - 2
+            - Ref: PublishDispatcherVolParameter
         PublishDispatcherImageParameter:
           Ref: PublishDispatcherImageParameter
         PublishDispatcherImageRootDevice:
@@ -453,8 +464,6 @@ Resources:
           Ref: PublishDispatcherLoadBalancerHealthCheckTargetParameter
         PublishDispatcherLoadBalancerSchemeParameter:
           Ref: PublishDispatcherLoadBalancerSchemeParameter
-        PublishDispatcherRootVolSizeParameter:
-          Ref: PublishDispatcherRootVolSizeParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish-dispatcher.yaml
     Type: AWS::CloudFormation::Stack
@@ -483,10 +492,26 @@ Resources:
           Fn::Join:
             - ','
             - Ref: PublishASGConfigurationParameters
+        PublishRootVolSizeParameter:
+          Fn::Select:
+            - 0
+            - Ref: PublishVolParameter
         PublishDataVolSizeParameter:
-          Ref: PublishDataVolSizeParameter
+          Fn::Select:
+            - 1
+            - Ref: PublishVolParameter
         PublishDataVolSnapshotParameter:
-          Ref: PublishDataVolSnapshotParameter
+          Fn::Select:
+            - 2
+            - Ref: PublishVolParameter
+        UsePublishDataVolSnapshotParameter:
+          Fn::Select:
+            - 3
+            - Ref: PublishVolParameter
+        PublishEnableVolEncryptionParameter:
+          Fn::Select:
+            - 4
+            - Ref: PublishVolParameter
         PublishImageParameter:
           Ref: PublishImageParameter
         PublishImageRootDevice:
@@ -499,10 +524,6 @@ Resources:
             - Ref: ImageDevices
         PublishInstanceTypeParameter:
           Ref: PublishInstanceTypeParameter
-        PublishRootVolSizeParameter:
-          Ref: PublishRootVolSizeParameter
-        UsePublishDataVolSnapshotParameter:
-          Ref: UsePublishDataVolSnapshotParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish.yaml
     Type: AWS::CloudFormation::Stack

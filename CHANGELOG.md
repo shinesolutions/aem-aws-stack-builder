@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add new component parameter to control EBS volume encryption
+
 ## 4.22.0 - 2019-10-16
 ### Added
 - Added ELB Metrics to CloudWatch Dashboard panel
