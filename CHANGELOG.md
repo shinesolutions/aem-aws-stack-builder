@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Add Certificate manager & Secrets manager support for certificate handling when reconfiguration runs
+- Add new configuration parameter `run_modes` for reconfiguration
+
+### Changed
+- Replaced reconfiguration parameter `certs_base` with `certificate_arn` & `certificate_key_arn`
+- Update FAQ topic to `reconfiguration`
+
+### Removed
+- Removed reconfiguration parameter `create_system_users`, as it doesn't had any functionality
 - Add new component parameter to control EBS volume encryption
 
 ## 4.22.0 - 2019-10-16
