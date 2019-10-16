@@ -14,7 +14,7 @@ These configurations are applicable to both network and AEM application infrastr
 | os_type | Operating System type, can be `rhel7`, `amazon-linux2`, or `centos7` | Optional | `rhel7` |
 | aws.region | [AWS region name](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html) | Optional | `ap-southeast-2` |
 | aws.availability_zone_list | Comma separated list of [AWS availability zones](https://howto.lintel.in/list-of-aws-regions-and-availability-zones/) within the region defined in `aws.region` . | Optional | `ap-southeast-2a, ap-southeast-2b` |
-| aws.cloudwatch.enable_log_subscription | This flag controls if you want to enable the cronjob to subscribe all Stacks Cloudwatch logs to the AEM Stack Manager Lambda function to stream the Cloudwatch Logs to S3. This flag enabled the cronjob `cloudwatch_s3_Stream` on the component orchestrator.| Optional | `false` |
+| aws.cloudwatch.enable_log_subscription | This flag controls if you want to enable the cronjob to subscribe all Stacks Cloudwatch logs to the AEM Stack Manager Lambda function to stream the Cloudwatch Logs to S3. This flag enabled the cronjob `cloudwatch_s3_stream` on the component orchestrator.| Optional | `false` |
 | aws.cloudwatch.log_subscription_arn | The ARN of the AEM Stack Manager Lambda `cloudwatch logs s3 stream` function. | Optional | `` |
 | proxy.enabled | If true, then web proxy will be used during provisioning steps. Note: this web proxy setting is not used for cron jobs | Optional | `false` |
 | proxy.protocol | Web proxy server protocol used during provisioning steps | Optional | None |
@@ -170,6 +170,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish-dispatcher` component instances. | Optional | `t2.small` |
 | publish_dispatcher.root_vol_size | The root volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
 | publish_dispatcher.data_vol_size | The data volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
+| publish_dispatcher.enable_vol_encryption | Enable/disable EBS volume encryption. | Optional | `true` |
 | publish_dispatcher.asg_desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_min_size | The minimum number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
@@ -183,6 +184,7 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish` component instances. | Optional | `m3.large` |
 | publish.root_vol_size | The root volume size in Gb of `publish` component instances. | Optional | `20` |
 | publish.data_vol_size | The data volume size in Gb of `publish` component instances. | Optional | `75` |
+| publish.enable_vol_encryption | Enable/disable EBS volume encryption. | Optional | `true` |
 | publish.asg_desired_capacity | The desired number of `publish` component instances. | Optional | `2` |
 | publish.asg_min_size | The minimum number of `publish` component instances. | Optional | `2` |
 | publish.asg_max_size | The maximum number of `publish` component instances. | Optional | `2` |
@@ -193,11 +195,13 @@ These configurations are applicable to the components used within AEM Full-Set a
 | author.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author` component instances. | Optional | `m3.large` |
 | author.root_vol_size | The root volume size in Gb of `author` component instances. | Optional | `20` |
 | author.data_vol_size | The data volume size in Gb of `author` component instances. | Optional | `75` |
+| author.enable_vol_encryption | Enable/disable EBS volume encryption. | Optional | `true` |
 | author_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `author-dispatcher` component. | Optional | `HTTPS:5432/system/health?tags=shallow` |
 | author_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `author_dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
 | author_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_dispatcher` component instances. | Optional | `t2.small` |
 | author_dispatcher.root_vol_size | The root volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
 | author_dispatcher.data_vol_size | The data volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
+| author_dispatcher.enable_vol_encryption | Enable/disable EBS volume encryption. | Optional | `true` |
 | author_dispatcher.asg_desired_capacity | The desired number of `author_dispatcher` component instances. | Optional | `2` |
 | author_dispatcher.asg_min_size | The minimum number of `author_dispatcher` component instances. | Optional | `2` |
 | author_dispatcher.asg_max_size | The maximum number of `author_dispatcher` component instances. | Optional | `2` |
@@ -209,15 +213,18 @@ These configurations are applicable to the components used within AEM Full-Set a
 | author_publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_publish_dispatcher` component instances. | Optional | `m4.xlarge` |
 | author_publish_dispatcher.root_vol_size | The root volume size in Gb of `author_publish_dispatcher` component instances. | Optional | `20` |
 | author_publish_dispatcher.data_vol_size | The data volume size in Gb of `author_publish_dispatcher` component instances. | Optional | `20` |
+| author_publish_dispatcher.enable_vol_encryption | Enable/disable EBS volume encryption. | Optional | `true` |
 | author_publish_dispatcher.associate_public_ip_address | If true, then a public IP address will be associated to the `author-publish-dispatcher` instance. | Optional | `true` |
 | orchestrator.instance_profile | ARN of the IAM instance profile to be used on `orchestrator` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
 | orchestrator.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `orchestrator` component instances. | Optional | `t2.small` |
 | orchestrator.root_vol_size | The root volume size in Gb of `orchestrator` component instances. | Optional | `20` |
 | orchestrator.data_vol_size | The data volume size in Gb of `orchestrator` component instances. | Optional | `20` |
+| orchestrator.enable_vol_encryption | Enable/disable EBS volume encryption. | Optional | `true` |
 | orchestrator.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
 | chaos_monkey.instance_profile | ARN of the IAM instance profile to be used on `chaos_monkey` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
 | chaos_monkey.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `chaos_monkey` component instances. | Optional | `t2.small` |
 | chaos_monkey.root_vol_size | The root volume size in Gb of `chaos_monkey` component instances. | Optional | `20` |
+| chaos_monkey.enable_vol_encryption | Enable/disable EBS volume encryption. | Optional | `true` |
 | chaos_monkey.include_stack | If true, `chaos-monkey` component will be included in the created AEM environment. If false, then the environment won't have `chaos-monkey` component. | Optional | `true` |
 | chaos_monkey.termination_settings.calendar_open_hour | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendaropenhour) specifying the starting hour of the day when Chaos Monkey starts operating. | Optional | `9` |
 | chaos_monkey.termination_settings.calendar_close_hour | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendarclosehour) specifying the ending hour of the day when Chaos Monkey starts operating. | Optional | `15` |
@@ -440,6 +447,6 @@ The scheduled jobs configurations are applicable to AEM Full-Set and Consolidate
 | scheduled_jobs.aem_orchestrator.offline_snapshot.weekday | The day of the week when the offline snapshot job is scheduled to run. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `2-7` |
 | scheduled_jobs.aem_orchestrator.offline_snapshot.hour | The hour of the day when the offline snapshot job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `1` |
 | scheduled_jobs.aem_orchestrator.offline_snapshot.minute | The minute of the hour when the offline snapshot job is scheduled to run. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `15` |
-| scheduled_jobs.aem_orchestrator.cloudwatch_s3_Stream.weekday | The day of the week when the script to subscribe the Stacks Cloudwatch logs to the provided log subscription arn `aws.cloudwatch.log_subscription_arn` runs. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `*` |
-| scheduled_jobs.aem_orchestrator.cloudwatch_s3_Stream.hour | The hour of the day when the script to subscribe the Stacks Cloudwatch logs to the provided log subscription arn `aws.cloudwatch.log_subscription_arn` runs. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `*` |
-| scheduled_jobs.aem_orchestrator.cloudwatch_s3_Stream.minute | The minute of the hour when the script to subscribe the Stacks Cloudwatch logs to the provided log subscription arn `aws.cloudwatch.log_subscription_arn` runs. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `15` |
+| scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.weekday | The day of the week when the script to subscribe the Stacks Cloudwatch logs to the provided log subscription arn `aws.cloudwatch.log_subscription_arn` runs. This uses [Puppet cron type weekday](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-weekday) | Optional | `*` |
+| scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.hour | The hour of the day when the script to subscribe the Stacks Cloudwatch logs to the provided log subscription arn `aws.cloudwatch.log_subscription_arn` runs. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-hour) | Optional | `*` |
+| scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.minute | The minute of the hour when the script to subscribe the Stacks Cloudwatch logs to the provided log subscription arn `aws.cloudwatch.log_subscription_arn` runs. This uses [Puppet cron type hour](https://puppet.com/docs/puppet/5.3/types/cron.html#cron-attribute-minute) | Optional | `15` |

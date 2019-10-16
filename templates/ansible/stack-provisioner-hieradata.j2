@@ -41,9 +41,9 @@ aem_orchestrator::scheduled_jobs::enable::offline_snapshot: {{ scheduled_jobs.ae
 aem_orchestrator::scheduled_jobs::weekday::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.weekday }}"
 aem_orchestrator::scheduled_jobs::hour::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.hour }}"
 aem_orchestrator::scheduled_jobs::minute::offline_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_snapshot.minute }}"
-aem_orchestrator::scheduled_jobs::weekday::cloudwatch_s3_Stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_Stream.weekday }}"
-aem_orchestrator::scheduled_jobs::hour::cloudwatch_s3_Stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_Stream.hour }}"
-aem_orchestrator::scheduled_jobs::minute::cloudwatch_s3_Stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_Stream.minute }}"
+aem_orchestrator::scheduled_jobs::weekday::cloudwatch_s3_stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.weekday }}"
+aem_orchestrator::scheduled_jobs::hour::cloudwatch_s3_stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.hour }}"
+aem_orchestrator::scheduled_jobs::minute::cloudwatch_s3_stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.minute }}"
 
 publish_dispatcher::scheduled_jobs::enable::content_health_check: {{ scheduled_jobs.publish_dispatcher.content_health_check.enable }}
 publish_dispatcher::scheduled_jobs::weekday::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.weekday }}"
@@ -228,5 +228,5 @@ common::ssh_public_keys:
 {{ ssh_public_keys | to_nice_yaml | indent(width=2, first=True) }}
 
 # Enable Cloudwatch S3 stream to Lambda
-orchestrator::enable_cloudwatch_s3_Stream: {{ aws.cloudwatch.enable_log_subscription }}
+orchestrator::enable_cloudwatch_s3_stream: {{ aws.cloudwatch.enable_log_subscription }}
 action_scheduled_jobs::cloudwatch_log_subscription_arn: {{ aws.cloudwatch.log_subscription_arn }}
