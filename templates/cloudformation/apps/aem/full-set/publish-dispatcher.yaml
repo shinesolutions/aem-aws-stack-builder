@@ -66,6 +66,12 @@ Parameters:
   PublishDispatcherDataVolSizeParameter:
     Description: PublishDispatcher Instances Root EBS Volume Size
     Type: Number
+  PublishDispatcherEnableVolEncryptionParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wether to enable or disable EBS volume encryption.
+    Type: String
   PublishDispatcherImageParameter:
     Description: The Publish Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -269,7 +275,8 @@ Resources:
           Ref: PublishDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: PublishDispatcherEnableVolEncryptionParameter
           VolumeSize:
             Ref: PublishDispatcherRootVolSizeParameter
           VolumeType: gp2
@@ -277,7 +284,8 @@ Resources:
           Ref: PublishDispatcherImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: PublishDispatcherEnableVolEncryptionParameter
           VolumeSize:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2

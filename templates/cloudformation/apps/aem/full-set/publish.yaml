@@ -51,6 +51,12 @@ Parameters:
   PublishDataVolSnapshotParameter:
     Description: The Publish Data Volume Snapshot Id
     Type: String
+  PublishEnableVolEncryptionParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wether to enable or disable EBS volume encryption.
+    Type: String
   PublishImageParameter:
     Description: The Publish Image Id
     Type: AWS::EC2::Image::Id
@@ -147,7 +153,8 @@ Resources:
           Ref: PublishImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: PublishEnableVolEncryptionParameter
           VolumeSize:
             Ref: PublishRootVolSizeParameter
           VolumeType: gp2
@@ -155,7 +162,8 @@ Resources:
           Ref: PublishImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: PublishEnableVolEncryptionParameter
           SnapshotId:
             Fn::If:
             - UsePublishDataVolSnapshotCondition

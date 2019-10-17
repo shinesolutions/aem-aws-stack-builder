@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fixed parameter passing for controlling EBS volume encryption #339
+
 ## 4.23.0 - 2019-10-16
 ### Added
 - Add Certificate manager & Secrets manager support for certificate handling when reconfiguration runs

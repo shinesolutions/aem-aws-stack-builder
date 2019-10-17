@@ -100,6 +100,12 @@ Parameters:
     - false
     Description: Whether to use the Author Snapshot Data Volume.
     Type: String
+  AuthorEnableVolEncryptionParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wether to enable or disable EBS volume encryption.
+    Type: String
 Resources:
   AuthorLoadBalancer:
     Properties:
@@ -155,7 +161,8 @@ Resources:
           Ref: AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: AuthorEnableVolEncryptionParameter
           VolumeSize:
             Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
@@ -163,7 +170,8 @@ Resources:
           Ref: AuthorImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: AuthorEnableVolEncryptionParameter
           SnapshotId:
             Fn::If:
             - UseAuthorDataVolSnapshotCondition
@@ -212,7 +220,8 @@ Resources:
           Ref: AuthorImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: AuthorEnableVolEncryptionParameter
           VolumeSize:
             Ref: AuthorRootVolSizeParameter
           VolumeType: gp2
@@ -220,7 +229,8 @@ Resources:
           Ref: AuthorImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: AuthorEnableVolEncryptionParameter
           SnapshotId:
             Fn::If:
             - UseAuthorDataVolSnapshotCondition
