@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.20.1
+
 ### Fixed
 - Pass configuration `aem.enable_bak_files_cleanup` as boolean #341
 
