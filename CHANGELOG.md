@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Pass configuration `aem.enable_bak_files_cleanup` as boolean #341
+
 ## 4.23.1 - 2019-10-17
 
 ### Fixed
