@@ -41,6 +41,12 @@ Parameters:
   AuthorDispatcherDataVolSizeParameter:
     Description: Author Dispatcher Instances Data EBS Volume Size
     Type: Number
+  AuthorDispatcherEnableVolEncryptionParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wether to enable or disable EBS volume encryption.
+    Type: String
   AuthorDispatcherImageParameter:
     Description: The Author Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -157,7 +163,8 @@ Resources:
           Ref: AuthorDispatcherImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: AuthorDispatcherEnableVolEncryptionParameter
           VolumeSize:
             Ref: AuthorDispatcherRootVolSizeParameter
           VolumeType: gp2
@@ -165,7 +172,8 @@ Resources:
           Ref: AuthorDispatcherImageDataDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: AuthorDispatcherEnableVolEncryptionParameter
           VolumeSize:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
