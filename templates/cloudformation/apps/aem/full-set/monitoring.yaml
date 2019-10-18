@@ -143,21 +143,16 @@ Resources:
         {
             "type": "metric",
             "x": 0,
-            "y": 36,
+            "y": 39,
             "width": 24,
             "height": 3,
             "properties": {
                 "metrics": [
-                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorELB}" ],
                     [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorDispatcherELB}" ]
+                    [ ".", "HTTPCode_Backend_3XX", ".", "." ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", "." ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", "." ],
+                    [ ".", "BackendConnectionErrors", ".", "." ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -174,14 +169,14 @@ Resources:
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${dataVolName}" ],
+                    [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "/mnt/ebs1" ],
                     [ "...", "${authorStandbyInstance}", ".", "." ],
                     [ "...", "AutoScalingGroupName", "${publishAutoScalingGroupName}", ".", "." ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${awsRegion}",
-                "title": "All - Disk Space Utilization on Data Volume ${dataVolName}",
+                "title": "All - Disk Space Utilization on Data Volume ",
                 "period": 300
             }
         },
@@ -193,7 +188,7 @@ Resources:
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "${rootVolName}" ],
+                    [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "/" ],
                     [ "...", "${authorStandbyInstance}", ".", "." ],
                     [ "...", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", ".", "." ],
                     [ "...", "${publishAutoScalingGroupName}", ".", "." ],
@@ -204,7 +199,7 @@ Resources:
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${awsRegion}",
-                "title": "All - Disk Space Utilization on Root Volume ${rootVolName}",
+                "title": "All - Disk Space Utilization on Root Volume ",
                 "period": 300
             }
         },
@@ -334,16 +329,16 @@ Resources:
         {
             "type": "metric",
             "x": 0,
-            "y": 39,
+            "y": 36,
             "width": 24,
             "height": 3,
             "properties": {
                 "metrics": [
                     [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${authorELB}" ],
-                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${authorELB}" ]
+                    [ ".", "HTTPCode_Backend_3XX", ".", "." ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", "." ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", "." ],
+                    [ ".", "BackendConnectionErrors", ".", "." ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
