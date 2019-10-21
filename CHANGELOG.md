@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expose `monitoring.include_stack` user configuration to be consumable by lower level Puppet modules
 
 ### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.19.1
+
+### Changed
 - Refactor CloudWatch Dashboard disk usage panels to use mount point value as per feature supported in shinesolutions-aws-scripts-mon
 
 ## 4.22.0 - 2019-10-16
