@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+- Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
+
 ## 4.22.1 - 2019-10-21
 ### Added
 - Expose `monitoring.include_stack` user configuration to be consumable by lower level Puppet modules
