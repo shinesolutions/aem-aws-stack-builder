@@ -318,7 +318,8 @@ These configurations are applicable only when you run repository reconfiguration
 | reconfiguration.publish.run_modes | A list of runmodes you want to set in `start-env` | Optional | `[]` |
 | reconfiguration.ssl_keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
 | system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user username. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
-| system_users.[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user path in the repository. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
+| system_users.admin.path | AEM admin user path in the repository. | mandatory | |
+| system_users.[deployer|exporter|importer|orchestrator|replicator].path | AEM system user path in the repository. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
 
 ### AEM SAML configuration properties:
 

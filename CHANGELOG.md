@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add new FAQ to explain why the admin user password change can fail
+
+### Changed
+- configuration parameter `system_users.admin.path` is now a *mandatory* parameter
+
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 

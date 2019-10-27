@@ -176,7 +176,7 @@ reconfiguration:
 system_users:
   admin:
     name: admin
-    path: /home/users/d
+    path: overwrite-me
   authentication-service:
     name: authentication-service
     path: /home/users/system
