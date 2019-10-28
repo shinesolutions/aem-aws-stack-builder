@@ -7,8 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+Changed data collection method for CloudWatch Dashboard (MemoryUtilization, Latency, ... )
+
+### Added
+added JVM monitoring to CloudWatch Dashboard
+
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
+- Fix Author Naming (Primary and Standby)
 
 ## 4.23.2 - 2019-10-17
 
