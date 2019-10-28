@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 
+### Changed
+- Change data collection method for CloudWatch Dashboard (MemoryUtilization, Latency, ErrorCodes)
+
+### Added
+- add JVM monitoring to CloudWatch Dashboard
+
 ## 4.22.1 - 2019-10-21
 ### Added
 - Expose `monitoring.include_stack` user configuration to be consumable by lower level Puppet modules
