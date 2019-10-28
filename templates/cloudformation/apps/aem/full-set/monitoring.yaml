@@ -73,13 +73,13 @@ Resources:
             "height": 6,
             "properties": {
                 "metrics": [
-                    [ "System/Linux", "MemoryUtilization", "InstanceId", "${authorPrimaryInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                    [ "...", "${authorStandbyInstance}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                    [ "System/Linux", "MemoryUtilization", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 300, "label": "Author Dispatcher", "stat": "Maximum" } ],
-                    [ "...", "${publishAutoScalingGroupName}", { "period": 300, "label": "Publish", "stat": "Maximum" } ],
-                    [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 300, "label": "Publish Dispatcher", "stat": "Maximum" } ],
-                    [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 300, "label": "Chaos Monkey", "stat": "Maximum" } ],
-                    [ "...", "${orchestratorAutoScalingGroupName}", { "period": 300, "label": "Orchestrator", "stat": "Maximum" } ]
+                    [ "System/Linux", "MemoryUtilization", "InstanceId", "${authorPrimaryInstance}", { "period": 60, "label": "Author Primary", "stat": "Maximum" } ],
+                    [ "...", "${authorStandbyInstance}", { "period": 60, "label": "Author Standby", "stat": "Maximum" } ],
+                    [ "...", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", { "period": 60, "label": "Author Dispatcher", "stat": "Maximum" } ],
+                    [ "...", "${publishAutoScalingGroupName}", { "period": 60, "label": "Publish", "stat": "Maximum" } ],
+                    [ "...", "${publishDispatcherAutoScalingGroupName}", { "period": 60, "label": "Publish Dispatcher", "stat": "Maximum" } ],
+                    [ "...", "${chaosMonkeyAutoScalingGroupName}", { "period": 60, "label": "Chaos Monkey", "stat": "Maximum" } ],
+                    [ "...", "${orchestratorAutoScalingGroupName}", { "period": 60, "label": "Orchestrator", "stat": "Maximum" } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -148,11 +148,11 @@ Resources:
             "height": 3,
             "properties": {
                 "metrics": [
-                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}" ],
-                    [ ".", "HTTPCode_Backend_3XX", ".", "." ],
-                    [ ".", "HTTPCode_Backend_4XX", ".", "." ],
-                    [ ".", "HTTPCode_Backend_5XX", ".", "." ],
-                    [ ".", "BackendConnectionErrors", ".", "." ]
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_3XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "period": 60 } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -274,7 +274,7 @@ Resources:
                     [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
                     [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
                     [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - RequestCount", "period": 86400 } ],
-                    [ ".", "Latency", ".", ".", { "label": "Publish Dispatcher - Latency", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "Latency", ".", ".", { "label": "Publish Dispatcher - Latency", "stat": "Average", "period": 3600 } ],
                     [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - BackendConnectionErrors", "period": 86400 } ]
                 ],
                 "view": "singleValue",
@@ -291,11 +291,11 @@ Resources:
             "height": 3,
             "properties": {
                 "metrics": [
-                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_3XX", "LoadBalancerName", "${publishDispatcherELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_4XX", "LoadBalancerName", "${publishDispatcherELB}" ],
-                    [ "AWS/ELB", "HTTPCode_Backend_5XX", "LoadBalancerName", "${publishDispatcherELB}" ],
-                    [ "AWS/ELB", "BackendConnectionErrors", "LoadBalancerName", "${publishDispatcherELB}" ]
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_3XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "period": 60 } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -317,7 +317,7 @@ Resources:
                     [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
                     [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
                     [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - RequestCount", "period": 86400 } ],
-                    [ ".", "Latency", ".", ".", { "label": "Author Dispatcher - Latency", "stat": "Sum", "period": 86400 } ],
+                    [ ".", "Latency", ".", ".", { "label": "Author Dispatcher - Latency", "stat": "Average", "period": 3600 } ],
                     [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - BackendConnectionErrors", "period": 86400 } ]
                 ],
                 "view": "singleValue",
@@ -334,19 +334,19 @@ Resources:
             "height": 3,
             "properties": {
                 "metrics": [
-                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorELB}" ],
-                    [ ".", "HTTPCode_Backend_3XX", ".", "." ],
-                    [ ".", "HTTPCode_Backend_4XX", ".", "." ],
-                    [ ".", "HTTPCode_Backend_5XX", ".", "." ],
-                    [ ".", "BackendConnectionErrors", ".", "." ]
+                    [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorELB}", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_3XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_4XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "HTTPCode_Backend_5XX", ".", ".", { "stat": "Sum", "period": 60 } ],
+                    [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "period": 60 } ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
                 "region": "${awsRegion}",
                 "title": "Author - HTTP Backend",
                 "period": 300
-            }
-            }
+              }
+              }
             ]
         }'
         - authorDispatcherAutoScalingGroupName:
