@@ -174,32 +174,60 @@ reconfiguration:
 
 
 system_users:
-  admin:
-    name: admin
-    path: /home/users/d
-  authentication-service:
-    name: authentication-service
-    path: /home/users/system
-    authorizable_keystore:
-      password:
-      certificate_chain:
-      private_key:
-      private_key_alias:
-  deployer:
-    name: deployer
-    path: /home/users/q
-  exporter:
-    name: exporter
-    path: /home/users/e
-  importer:
-    name: importer
-    path: /home/users/i
-  orchestrator:
-    name: orchestrator
-    path: /home/users/o
-  replicator:
-    name: replicator
-    path: /home/users/r
+  author:
+    admin:
+      name: admin
+      path: overwrite-me
+    authentication-service:
+      name: authentication-service
+      path: /home/users/system
+      authorizable_keystore:
+        password:
+        certificate_chain:
+        private_key:
+        private_key_alias:
+    deployer:
+      name: deployer
+      path: /home/users/q
+    exporter:
+      name: exporter
+      path: /home/users/e
+    importer:
+      name: importer
+      path: /home/users/i
+    orchestrator:
+      name: orchestrator
+      path: /home/users/o
+    replicator:
+      name: replicator
+      path: /home/users/r
+  publish:
+    admin:
+      name: admin
+      path: overwrite-me
+    authentication-service:
+      name: authentication-service
+      path: /home/users/system
+      authorizable_keystore:
+        password:
+        certificate_chain:
+        private_key:
+        private_key_alias:
+    deployer:
+      name: deployer
+      path: /home/users/q
+    exporter:
+      name: exporter
+      path: /home/users/e
+    importer:
+      name: importer
+      path: /home/users/i
+    orchestrator:
+      name: orchestrator
+      path: /home/users/o
+    replicator:
+      name: replicator
+      path: /home/users/r
 
 # Parameters needed for SAML configuration
 saml:
