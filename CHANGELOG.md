@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add JVM memory metrics to CloudWatch Dashboard
+
 ### Changed
+- Change CloudWatch Dashboard MemoryUtilization to use 1 minute interval
+- Change CloudWatch Dashboard Latency to use average
+- Change CloudWatch Dashboard ErrorCodes to use sum
 - Upgrade AEM AWS Stack Provisioner to 4.19.2
 
 ### Fixed
