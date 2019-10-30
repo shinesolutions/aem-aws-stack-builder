@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change CloudWatch Dashboard MemoryUtilization to use 1 minute interval
 - Change CloudWatch Dashboard Latency to use average
 - Change CloudWatch Dashboard ErrorCodes to use sum
+- Upgrade AEM AWS Stack Provisioner to 4.19.2
 
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
