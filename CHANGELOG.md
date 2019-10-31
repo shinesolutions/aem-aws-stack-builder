@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - configuration parameter `system_users.[author|publish].admin.path` (previously known as `system_users.admin.path`) is now a *mandatory* parameter
+- Update FAQ for reconfiguration with new system_users parameters #352
 
 ### Removed
 - Removed configuration parameters `system_users.[admin|deployer|exporter|importer|orchestrator|replicator]` #352

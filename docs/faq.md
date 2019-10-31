@@ -165,24 +165,45 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
       run_modes: []
 
   system_users:
-    admin:
-      name: admin
-      path: /home/users/d
-    deployer:
-      name: deployer
-      path: /home/users/q
-    exporter:
-      name: exporter
-      path: /home/users/e
-    importer:
-      name: importer
-      path: /home/users/i
-    orchestrator:
-      name: orchestrator
-      path: /home/users/o
-    replicator:
-      name: replicator
-      path: /home/users/r
+    author:
+      admin:
+        name: admin
+        path: overwrite-me
+      deployer:
+        name: deployer
+        path: /home/users/q
+      exporter:
+        name: exporter
+        path: /home/users/e
+      importer:
+        name: importer
+        path: /home/users/i
+      orchestrator:
+        name: orchestrator
+        path: /home/users/o
+      replicator:
+        name: replicator
+        path: /home/users/r
+    publish:
+      admin:
+        name: admin
+        path: overwrite-me
+      deployer:
+        name: deployer
+        path: /home/users/q
+      exporter:
+        name: exporter
+        path: /home/users/e
+      importer:
+        name: importer
+        path: /home/users/i
+      orchestrator:
+        name: orchestrator
+        path: /home/users/o
+      replicator:
+        name: replicator
+        path: /home/users/r
+
   ```
 
   This configuration profile will...
