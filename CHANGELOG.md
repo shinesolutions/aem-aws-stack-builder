@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Change AEM Stack Manager DynamoDB Billing mode from `PROVISIONED` to `PAY_PER_REQUEST` #356
+- Increase AEM Stack Manager Lambda timeout from 15 seconds to 60 seconds #356
+
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 
