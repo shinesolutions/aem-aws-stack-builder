@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+-  Extend timeout for snapshot purge lambda function from 5 mins to 15 mins
+
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 
