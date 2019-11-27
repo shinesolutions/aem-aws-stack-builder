@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 
+### Removed
+- Removed deletion of the deployment descriptor file for main stack deletion #358
+
 ## 4.23.2 - 2019-10-17
 
 ### Changed
