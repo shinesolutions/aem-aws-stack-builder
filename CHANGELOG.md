@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add overwrite option for aws_s3 ansible module in stack-data #359
 
 ### Fixed
+- Fix upload descriptor file logic #359
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 
 ## 4.23.2 - 2019-10-17
