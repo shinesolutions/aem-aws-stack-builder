@@ -55,6 +55,7 @@
         src: ../../../../../stage/system-users-credentials.json
         mode: put
         encrypt: true
+        overwrite: always
       when: "stack_query.rc != 0"
       tags:
         - create
@@ -86,6 +87,7 @@
         src: ../../../../../stage/stack-facts.txt
         mode: put
         encrypt: true
+        overwrite: always
       tags:
         - create
 
@@ -95,6 +97,7 @@
         object: "{{ stack_prefix }}/stack-init.sh"
         src: ../../../../../scripts/stack-init.sh
         mode: put
+        overwrite: always
       tags:
         - create
 
@@ -122,6 +125,7 @@
         src: ../../../../../stage/deploy-artifacts-descriptor.json
         mode: put
       when: deploy_artifacts_descriptor_stat_result.stat.exists == True
+        overwrite: always
       tags:
         - create
 
@@ -149,6 +153,7 @@
         src: ../../../../../stage/export-backups-descriptor.json
         mode: put
       when: export_backups_descriptor_stat_result.stat.exists == True
+        overwrite: always
       tags:
         - create
 
@@ -176,6 +181,7 @@
         src: ../../../../../stage/content-healthcheck-descriptor.json
         mode: put
       when: content_health_check_descriptor_stat_result.stat.exists == True
+        overwrite: always
       tags:
         - create
 
@@ -194,6 +200,7 @@
         src: ../../../../../stage/stack-provisioner-hieradata.yaml
         mode: put
         encrypt: true
+        overwrite: always
       tags:
         - create
 
@@ -264,6 +271,7 @@
         object: "{{ stack_prefix }}/aem-custom-stack-provisioner.tar.gz"
         src: ../../../../../stage/aem-custom-stack-provisioner.tar.gz
         mode: put
+        overwrite: always
       when: custom_provisioner_stat_result.stat.exists == True
       tags:
         - create
