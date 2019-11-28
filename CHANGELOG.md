@@ -26,6 +26,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Removed deletion of the deployment descriptor file for main stack deletion #358
 
+### Added
+- Added to FAQ to explain why the admin user password change can fail
+- Added to FAQ to explain why the system user configuration parameters changed #352
+- Add new configuration parameters `system_users.[author|publish].[admin|deployer|exporter|importer|orchestrator|replicator].[name|path]` #352
+- Add new hiera parameter `author::aem_system_users` & `publish::aem_system_users` #352
+
+### Changed
+- configuration parameter `system_users.[author|publish].admin.path` (previously known as `system_users.admin.path`) is now a *mandatory* parameter
+- Update FAQ for reconfiguration with new system_users parameters #352
+
+### Removed
+- Removed configuration parameters `system_users.[admin|deployer|exporter|importer|orchestrator|replicator]` #352
+- Removed hiera parameter `common::aem_system_users` #352
+
+
 ## 4.23.2 - 2019-10-17
 
 ### Changed

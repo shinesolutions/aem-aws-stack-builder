@@ -165,24 +165,45 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
       run_modes: []
 
   system_users:
-    admin:
-      name: admin
-      path: /home/users/d
-    deployer:
-      name: deployer
-      path: /home/users/q
-    exporter:
-      name: exporter
-      path: /home/users/e
-    importer:
-      name: importer
-      path: /home/users/i
-    orchestrator:
-      name: orchestrator
-      path: /home/users/o
-    replicator:
-      name: replicator
-      path: /home/users/r
+    author:
+      admin:
+        name: admin
+        path: overwrite-me
+      deployer:
+        name: deployer
+        path: /home/users/q
+      exporter:
+        name: exporter
+        path: /home/users/e
+      importer:
+        name: importer
+        path: /home/users/i
+      orchestrator:
+        name: orchestrator
+        path: /home/users/o
+      replicator:
+        name: replicator
+        path: /home/users/r
+    publish:
+      admin:
+        name: admin
+        path: overwrite-me
+      deployer:
+        name: deployer
+        path: /home/users/q
+      exporter:
+        name: exporter
+        path: /home/users/e
+      importer:
+        name: importer
+        path: /home/users/i
+      orchestrator:
+        name: orchestrator
+        path: /home/users/o
+      replicator:
+        name: replicator
+        path: /home/users/r
+
   ```
 
   This configuration profile will...
@@ -223,3 +244,12 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
     * Migrate AEM Global Truststore (Only if migration enabled and removing disabled)
 
     This process makes sure that all configuration done with AEM OpenCloud are getting reseted and the new AEM Stack will have all it's own environment specific parameters.
+
+- **Q:** Why does the configuration parameters `system_users` are now configurable per component ? <br>
+  **A:** The configuration parameter `system_users` changed as the user path of the AEM System Users can be different on each component. E.g. the admin user is controlled by AEM [Link](https://helpx.adobe.com/experience-manager/6-3/sites/administering/using/security.html#UsersandGroupsinAEM), therefore the user path of the admin user is different on each AEM environment.
+
+
+- **Q:** Why does provisioning fail while changing the admin user password in AEM ? <br>
+  **A:** The provisioning process ```"[author|publish]: Set admin password for current stack"``` ([Link](https://github.com/shinesolutions/puppet-aem-curator/blob/master/manifests/config_aem_system_users.pp#L48)) can fail, when the user path of the `admin` user is not correct in the configuration profile([Author](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/conf/ansible/inventory/group_vars/apps.yaml#L180)|[Publish](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/conf/ansible/inventory/group_vars/apps.yaml#L207)).
+
+  To check the path you need to configure you can either look in the repository at `/home/users` or search for the `admin` user in [useradmin](http://localhost:4502/useradmin).

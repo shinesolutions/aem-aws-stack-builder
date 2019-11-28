@@ -158,8 +158,12 @@ common::enable_truststore_removal: {{ reconfiguration.enable_truststore_removal 
 common::certificate_arn: {{ reconfiguration.certificate_arn }}
 common::certificate_key_arn: {{ reconfiguration.certificate_key_arn }}
 common::aem_ssl_keystore_password: {{ reconfiguration.ssl_keystore_password }}
-common::aem_system_users:
-{{ system_users | to_nice_yaml | indent(width=2, first=True) }}
+
+# define AEM System Users
+author::aem_system_users:
+{{ system_users.author | to_nice_yaml | indent(width=2, first=True) }}
+publish::aem_system_users:
+{{ system_users.publish | to_nice_yaml | indent(width=2, first=True) }}
 
 # Logrotation configuration. For configuration parameters see https://github.com/voxpupuli/puppet-logrotate
 common::logrotation::config:

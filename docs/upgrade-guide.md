@@ -6,6 +6,9 @@ This upgrade guide covers the changes required when you already use AEM AWS Stac
 
 * rhel7 default data volumes are now `/dev/xvdb` and `/dev/xvdc`, if you used to rely on the previous defaults of `/dev/sdb` and `/dev/sdc`, then you have to explicitly define those configurations
 
+### To 4.24.0
+- Rename `system_users.[admin|deployer|exporter|importer|orchestrator|replicator][.name|path]` configuration property to `system_users.[author|publish].[admin|deployer|exporter|importer|orchestrator|replicator].[name|path]`
+
 ### To 3.7.0
 
 **Update configuration properties for configuring Publish-Dispatcher AutoScalingGroup:**
