@@ -7,15 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
-Changed data collection method for CloudWatch Dashboard (MemoryUtilization, Latency, ... )
-
 ### Added
-added JVM monitoring to CloudWatch Dashboard
+- Add new SSM command to run ToughDay 2 performance tests
+- Added JVM monitoring to CloudWatch Dashboard
+
+### Changed
+-  Extend timeout for snapshot purge lambda function from 5 mins to 15 mins
+-  Changed data collection method for CloudWatch Dashboard (MemoryUtilization, Latency, ... )
 
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
-- Fix Author Naming (Primary and Standby)
+- Fixed documentation about the export-backups-descriptor
+- Fix CloudWatch Dashboard for Consolidated DNS switch incorrectly generate Author-Dispatcher target
+- Fix CloudWatch Dashboard Author Naming (Primary and Standby)
 
 ## 4.23.2 - 2019-10-17
 

@@ -43,13 +43,13 @@ Have a look at [Package Backup Descriptor Definition](https://github.com/shineso
 
 Also check out the following examples:
 
-* [Package Backup descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/consolidated/export-backup-descriptor.json)
-* [Package Backup descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/full-set/export-backup-descriptor.json)
+* [Package Backup descriptor for AEM Consolidated architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/consolidated/export-backups-descriptor.json)
+* [Package Backup descriptor for AEM Full-Set architecture](https://github.com/shinesolutions/aem-helloworld-config/blob/master/descriptors/full-set/export-backups-descriptor.json)
 
 #### Usage:
 
 1. Create the Package Backup Descriptor following the above guide and examples
-2. Place the descriptor at `stage/export-backup-descriptor.json`
+2. Place the descriptor at `stage/export-backups-descriptor.json`
 3. Use [Stack Manager Messenger](https://github.com/shinesolutions/aem-stack-manager-messenger) with `export-packages-full-set` or `export-packages-consolidated` target to export backup AEM packages on demand
 4. For scheduled export backup, you can set the [configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md#aem-full-set-specific-configuration-properties) properties `scheduled_jobs.author_primary.export.*` and `scheduled_jobs.publish.export.*` to enable/disable it and to set the schedule when the export backup should run.
 
