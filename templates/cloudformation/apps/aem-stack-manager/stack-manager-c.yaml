@@ -220,7 +220,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
-      Timeout: 15
+      Timeout: 60
     Type: AWS::Lambda::Function
   ManagerTopicPermission:
     DependsOn:
@@ -268,7 +268,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
-      Timeout: 15
+      Timeout: 60
     Type: AWS::Lambda::Function
   OfflineBackupTopic:
     Properties:
@@ -315,7 +315,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
       Runtime: python2.7
-      Timeout: 15
+      Timeout: 60
     Type: AWS::Lambda::Function
   QueryLambdaProdAlias:
     DependsOn: QueryInitialVersion
@@ -359,15 +359,10 @@ Resources:
             NonKeyAttributes:
               - state
             ProjectionType: INCLUDE
-          ProvisionedThroughput:
-            ReadCapacityUnits: 1
-            WriteCapacityUnits: 1
       KeySchema:
         - AttributeName: command_id
           KeyType: HASH
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+      BillingMode: PAY_PER_REQUEST
       SSESpecification:
         SSEEnabled: true
       TableName:

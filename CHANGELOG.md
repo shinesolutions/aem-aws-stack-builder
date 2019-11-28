@@ -12,8 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added JVM monitoring to CloudWatch Dashboard
 
 ### Changed
--  Extend timeout for snapshot purge lambda function from 5 mins to 15 mins
--  Changed data collection method for CloudWatch Dashboard (MemoryUtilization, Latency, ... )
+- Extend timeout for snapshot purge lambda function from 5 mins to 15 mins
+- Changed data collection method for CloudWatch Dashboard (MemoryUtilization, Latency, ... )
+- Change AEM Stack Manager DynamoDB Billing mode from `PROVISIONED` to `PAY_PER_REQUEST` #356
+- Increase AEM Stack Manager Lambda timeout from 15 seconds to 60 seconds #356
 
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
