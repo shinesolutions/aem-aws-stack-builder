@@ -8,8 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Add overwrite option for aws_s3 ansible module in stack-data #359
-
-### Added
 - Add new SSM command to run ToughDay 2 performance tests
 - Added JVM monitoring to CloudWatch Dashboard
 - Added to FAQ to explain why the admin user password change can fail
@@ -24,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increase AEM Stack Manager Lambda timeout from 15 seconds to 60 seconds #356
 - configuration parameter `system_users.[author|publish].admin.path` (previously known as `system_users.admin.path`) is now a *mandatory* parameter
 - Update FAQ for reconfiguration with new system_users parameters #352
-- Upgrade AEM AWS Stack Provisioner to 4.21.0
+- Upgrade AEM AWS Stack Provisioner to 4.22.0
 
 ### Fixed
 - Fix upload descriptor file logic #359
