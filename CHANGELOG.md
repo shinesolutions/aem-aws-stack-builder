@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix CloudWatch Dashboard for Consolidated DNS switch incorrectly generate Author-Dispatcher target
 - Fix CloudWatch Dashboard Author Naming (Primary and Standby)
 
+### Removed
+- Removed deletion of the deployment descriptor file for main stack deletion #358
+
 ## 4.23.2 - 2019-10-17
 
 ### Changed

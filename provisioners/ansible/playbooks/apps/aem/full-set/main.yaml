@@ -157,16 +157,6 @@
       tags:
       - delete
 
-    - name: Delete default deployment descriptor
-      aws_s3:
-        bucket: '{{ s3.data_bucket_name }}'
-        region: '{{ aws.region }}'
-        object: '{{ stack_prefix }}/deploy-artifacts-descriptor.json'
-        mode: delobj
-      ignore_errors: True
-      tags:
-        - delete
-
     - name: Delete Simian Army SimpleDB domain
       delete_sdb_domain:
         domain_name: "SIMIAN_ARMY_{{ stack_prefix }}"
