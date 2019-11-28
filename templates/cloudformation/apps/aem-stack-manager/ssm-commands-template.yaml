@@ -150,6 +150,12 @@ Parameters:
     Description: >-
       The name of the file containing the RunAemUpgrade SSM command.
 
+  RunToughday2PerformanceTestIncludeFileParameter:
+    Type: String
+    Default: AEM-RunToughday2PerformanceTest.yaml
+    Description: >-
+      The name of the file containing the RunToughday2PerformanceTest SSM command.
+
   UpgradeRepositoryMigrationIncludeFileParameter:
     Type: String
     Default: AEM-UpgradeRepositoryMigration.yaml
@@ -408,6 +414,16 @@ Resources:
           Parameters:
             Location: !Sub '${S3BucketAndPrefixParameter}/${RunAemUpgradeIncludeFileParameter}'
 
+  RunToughday2PerformanceTest:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${RunToughday2PerformanceTestIncludeFileParameter}'
+
   UpgradeRepositoryMigration:
     Type: AWS::SSM::Document
     Properties:
@@ -532,6 +548,10 @@ Outputs:
   RunAemUpgrade:
     Description: Documention name for AEM Upgrade.
     Value: !Ref RunAemUpgrade
+
+  RunToughday2PerformanceTest:
+    Description: Documention name for run Toughday2 performance test.
+    Value: !Ref RunToughday2PerformanceTest
 
   ScheduleSnapshot:
     Description: Documention name for Test Readiness Fullset
