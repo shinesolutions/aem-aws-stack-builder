@@ -45,28 +45,29 @@ make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-co
 # Provision test DNS records, needed for switch-dns testing against AEM Consolidated and AEM Full-Set environments
 ./test/integration/fixtures/provision-test-dns-batch.sh "${test_id}"
 
-# Create, test, and delete AEM Consolidated environment
-cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
-echo "Configuring AEM Consolidated environment..."
-make config "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
-echo "Creating AEM Consolidated environment..."
-cp -R stage/descriptors/consolidated/* stage/
-make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
-echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
-cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" && cd ../../
-# TODO: temporarily disable switch-dns testing to allow CodeBuild to pass
-#       will re-enable when Ansible already upgrades boto sub dependency to boto3 for Route53 functionalities
-# echo "Testing DNS switching to point to AEM Consolidated environment..."
-# make switch-dns-consolidated config_path=stage/user-config/aws-resources-sandpit/ "stack_prefix=${test_id}-con" author_publish_dispatcher_hosted_zone=aemopencloud.cms "author_publish_dispatcher_record_set=${test_id}-apd-con"
-echo "Deleting AEM Consolidated environment..."
-make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+# TODO: Disable Consolidated to allow focus on Full-Set testing with `make config` enabled
+#       This is related to the problem with Consolidated `make config` modifying templates which then messes up Full-Set `make config`
+#       Need to solve template staging in order to allow both `make config` to operate independently, as it would be easier to blow up stage directory
+# # Create, test, and delete AEM Consolidated environment
+# cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+# echo "Configuring AEM Consolidated environment..."
+# make config "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+# echo "Creating AEM Consolidated environment..."
+# cp -R stage/descriptors/consolidated/* stage/
+# make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+# echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
+# cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" && cd ../../
+# # TODO: temporarily disable switch-dns testing to allow CodeBuild to pass
+# #       will re-enable when Ansible already upgrades boto sub dependency to boto3 for Route53 functionalities
+# # echo "Testing DNS switching to point to AEM Consolidated environment..."
+# # make switch-dns-consolidated config_path=stage/user-config/aws-resources-sandpit/ "stack_prefix=${test_id}-con" author_publish_dispatcher_hosted_zone=aemopencloud.cms "author_publish_dispatcher_record_set=${test_id}-apd-con"
+# echo "Deleting AEM Consolidated environment..."
+# make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
 
 # Create, test, and delete AEM Full-Set environment
 cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}/"
-# TODO: temporarily disable config here due to inability to restore from original while building on CodeBuild
-#       This will have to be revisited after templates staging has been implemented
-# echo "Configuring AEM Full-Set environment..."
-# make config "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+echo "Configuring AEM Full-Set environment..."
+make config "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
 echo "Creating AEM Full-Set environment..."
 cp -R stage/descriptors/full-set/* stage/
 make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
