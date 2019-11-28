@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add new SSM command to run ToughDay 2 performance tests
+
 ### Fixed
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 
