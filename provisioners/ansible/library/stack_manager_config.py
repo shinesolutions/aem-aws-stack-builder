@@ -26,6 +26,9 @@ options:
         description:
           - ARN of the SNS Topic for to query for the TaskStatus
         required: true
+    MinimumPublishInstances:
+        description:
+         - Integer of minimum instances configured in the ASG
     SSMServiceRoleArn:
         description:
           - ARN of the SSM Service Role
@@ -38,6 +41,12 @@ options:
         description:
           - S3 folder to store the command output
         required: true
+    S3BucketCWStream:
+        description:
+          - S3 Bucket to store the Cloudwatch logfiles to
+    S3PrefixCWStream:
+        description:
+          - S3 prefix to store the Cloudwatch logfiles to
     BackupTopicArn:
         description:
           - SNS Topic ARN of the Offline Snapshot
@@ -61,11 +70,14 @@ EXAMPLES = '''
     S3Bucket: "AEM-Bucket"
     S3Folder: "AEM63/StackManager"
     TaskStatusTopicArn: arn:aws:sns:region:account-id:TaskStatusTopicArn
+    MinimumPublishInstances: 2
     SSMServiceRoleArn: arn:aws:iam::account-id:role/role-name
     S3BucketSSMOutput: "AEM-Bucket"
     S3PrefixSSMOutput: "AEM63/StackManager/SSMOutput"
     BackupTopicArn: "arn:aws:sns:region:account-id:BackupTopicArn"
     DynamoDBTableName: "AEM63-Full-Set-Stack-Manager-Table"
+    S3BucketCWStream: "CW-S3-Bucket"
+    S3PrefixCWStream: "CW-S3-Prefix"
     state: present
   register: result
 '''
@@ -118,8 +130,11 @@ class config:
         ssmservicerolearn = self.module.params.get("SSMServiceRoleArn")
         s3bucketssmoutput = self.module.params.get("S3BucketSSMOutput")
         s3prefixssmoutput = self.module.params.get("S3PrefixSSMOutput")
+        s3bucketcwstream = self.module.params.get("S3BucketCWStream")
+        s3prefixcwstream = self.module.params.get("S3PrefixCWStream")
         backuptopicarn = self.module.params.get("BackupTopicArn")
         dynamodbtablename = self.module.params.get("DynamoDBTableName")
+        minpublishinstances = self.module.params.get("MinimumPublishInstances")
         changed = False
 
         # Create dict for run_cmd
@@ -138,7 +153,9 @@ class config:
             "DeployArtifact": "deploy-artifact",
             "DeployArtifacts": "deploy-artifacts",
             "DisableCrxde": "disable-crxde",
+            "DisableSaml": "disable-saml",
             "EnableCrxde": "enable-crxde",
+            "EnableSaml": "enable-saml",
             "ExportPackage": "export-package",
             "ExportPackages": "export-packages",
             "FlushDispatcherCache": "flush-dispatcher-cache",
@@ -174,17 +191,29 @@ class config:
         messenger_dict['document_mapping'] = messenger_config_list
 
         # Create dict for offline snapshot
-        offline_snapshot ={
+        offline_snapshot = {
                 "offline_snapshot": {
-                    "min-publish-instances": 2,\
+                    "min-publish-instances": minpublishinstances,\
                             "sns-topic-arn": backuptopicarn
                 }
         }
+
+        # Create dict for Cloudwatch S3 Stream
+
+        if s3bucketcwstream is not None:
+            cw_stream_s3 = {
+                    "cw_stream_s3": {
+                        "s3-bucket-cw-stream": s3bucketcwstream,\
+                        "s3-prefix-cw-stream": s3prefixcwstream
+                    }
+            }
 
         try:
             # Create config dict
             ec2_run_command.update(messenger_dict)
             ec2_run_command.update(offline_snapshot)
+            if cw_stream_s3:
+                ec2_run_command.update(cw_stream_s3)
             # Create temp configuration
             with tempfile.NamedTemporaryFile() as tmp_file:
                 with open(tmp_file.name, 'w') as file:
@@ -205,9 +234,12 @@ def main():
             S3Bucket=dict(required=True, type='str'),
             S3Folder=dict(required=True, type='str'),
             TaskStatusTopicArn=dict(required=True, type='str'),
+            MinimumPublishInstances=dict(required=True, type='str'),
             SSMServiceRoleArn=dict(required=True, type='str'),
             S3BucketSSMOutput=dict(required=True, type='str'),
             S3PrefixSSMOutput=dict(required=True, type='str'),
+            S3BucketCWStream=dict(required=False, default=None, type='str'),
+            S3PrefixCWStream=dict(required=False, default=None, type='str'),
             BackupTopicArn=dict(required=True, type='str'),
             DynamoDBTableName=dict(required=True, type='str'),
             state=dict(default='present', choices=['present', 'absent'], type='str'),

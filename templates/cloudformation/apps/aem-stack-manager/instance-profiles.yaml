@@ -41,6 +41,12 @@ Parameters:
   S3DataStackManagerPrefix:
     Description: Prefix within the Bucket to Locate Files
     Type: String
+  CloudWatchS3StreamBucketNameParameter:
+    Description: Bucket name that stores Stack data file
+    Type: String
+  CloudWatchS3StreamPrefixParameter:
+    Description: Prefix within the Bucket to Locate Files
+    Type: String
 Resources:
   AEMStackManagerLambdaServiceRole:
     DependsOn: StackmanagerSSMServiceRole
@@ -69,6 +75,8 @@ Resources:
                   - autoscaling:UpdateAutoScalingGroup
                   - autoscaling:EnterStandby
                   - autoscaling:ExitStandby
+                  - autoscaling:SuspendProcesses
+                  - autoscaling:ResumeProcesses
                 Effect: Allow
                 Resource: '*'
               - Action:
@@ -76,6 +84,11 @@ Resources:
                 Effect: Allow
                 Resource:
                   Fn::Sub: arn:aws:s3:::${DataBucketNameParameter}/${S3DataStackManagerPrefix}/*
+              - Action:
+                  - s3:*
+                Effect: Allow
+                Resource:
+                  Fn::Sub: arn:aws:s3:::${CloudWatchS3StreamBucketNameParameter}/${CloudWatchS3StreamPrefixParameter}/*
               - Action:
                   - ssm:SendCommand
                   - ssm:CancelCommand

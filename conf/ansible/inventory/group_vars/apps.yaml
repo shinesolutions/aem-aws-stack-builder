@@ -19,7 +19,7 @@ aem:
   enable_content_healthcheck_terminate_instance: false
   enable_reconfiguration: false
   enable_bak_files_cleanup: false
-  enable_post_start_sleep: false
+  enable_post_start_sleep: true
   enable_upgrade_tools: false
   bak_files_cleanup_max_age_in_days: 30
   enable_saml: false
@@ -30,8 +30,9 @@ aem:
   login_ready_base_sleep_seconds: 5
   login_ready_max_sleep_seconds: 10
   revert_snapshot_type:
+  snapshot_attach_timeout: 1800
   client_timeout: 1200
-  post_start_sleep_seconds: 120
+  post_start_sleep_seconds: 180
   # Parameters for managing AEM Authorizable Keystore
   authorizable_keystore:
     enable_creation: false
@@ -103,6 +104,28 @@ security_groups:
 
   author_publish_dispatcher:
     inbound_cidr_ip: overwrite-me
+    extra_groups:
+
+  author_primary:
+    extra_groups:
+
+  author_standby:
+    extra_groups:
+
+  publish:
+    extra_groups:
+
+  author_dispatcher:
+    extra_groups:
+
+  publish_dispatcher:
+    extra_groups:
+
+  orchestrator:
+    extra_groups:
+
+  chaos_monkey:
+    extra_groups:
 
 messaging:
   asg_event_sqs_queue_name: aem-asg-event-queue
@@ -122,11 +145,11 @@ s3:
   create_bucket_flag: 'true'
 
 library:
-  aem_aws_stack_provisioner_version: 4.7.0
+  aem_aws_stack_provisioner_version: 4.20.1
   aem_orchestrator_version: 2.0.1
   aem_password_reset_version: 1.1.0
   oak_run_version: 1.8.3
-  aem_stack_manager_version: 1.3.3
+  aem_stack_manager_version: 1.5.0
   simian_army_version: 2.5.3
   aem_healthcheck_version: 1.3.3
 
@@ -139,11 +162,16 @@ snapshots:
     data_vol_snapshot_id: overwrite-me
 
 reconfiguration:
-  enable_create_system_users: false
   enable_truststore_removal: false
   enable_truststore_migration: false
-  certs_base: s3://overwrite/me
+  certificate_arn: overwrite-me
+  certificate_key_arn: overwrite-me
   ssl_keystore_password: changeit
+  author:
+    run_modes: []
+  publish:
+    run_modes: []
+
 
 system_users:
   admin:
@@ -208,6 +236,7 @@ publish_dispatcher:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
+  enable_vol_encryption: true
   enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
   elb_scheme: internet-facing
@@ -215,7 +244,7 @@ publish_dispatcher:
   asg_min_size: 2
   asg_desired_capacity: 2
   asg_max_size: 2
-  asg_health_check_grace_period: 1200
+  asg_health_check_grace_period: 2400
   asg_cooldown: 480
   asg_cpu_scaling_threshold: 49
   asg_cpu_high_period: 300
@@ -228,11 +257,12 @@ publish:
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 75
+  enable_vol_encryption: true
   enable_random_termination: true
   asg_min_size: 2
   asg_desired_capacity: 2
   asg_max_size: 2
-  asg_health_check_grace_period: 900
+  asg_health_check_grace_period: 1800
   asg_cooldown: 480
 
 author:
@@ -240,6 +270,7 @@ author:
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 75
+  enable_vol_encryption: true
   elb_health_check: HTTPS:5432/system/health?tags=shallow
 
 author_dispatcher:
@@ -247,6 +278,7 @@ author_dispatcher:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
+  enable_vol_encryption: true
   enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
   asg_min_size: 2
@@ -260,6 +292,7 @@ author_publish_dispatcher:
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 20
+  enable_vol_encryption: true
   associate_public_ip_address: true
 
 orchestrator:
@@ -267,6 +300,7 @@ orchestrator:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
+  enable_vol_encryption: true
   enable_random_termination: true
 
 chaos_monkey:
@@ -274,6 +308,7 @@ chaos_monkey:
   instance_type: t2.small
   root_vol_size: 20
   include_stack: true
+  enable_vol_encryption: true
   enable_random_termination: true
   termination_settings:
     calendar_open_hour: '9'
@@ -300,6 +335,9 @@ stack_manager:
   stack_name: aem-stack-manager
   s3_prefix: stack-manager
   utilities_stack_name: utilities
+  cloudwatch_stream:
+    s3_bucket: overwrite-me
+    s3_prefix: overwrite-me
   purge:
     live_snapshots:
       schedule: '10 20 1/3 * ? *'
@@ -334,13 +372,16 @@ logrotation:
     amazon_ssm:
       path: /var/log/amazon/ssm/*.log
       olddir: /var/log/amazon/ssm/
+      missingok: true
       postrotate: '/bin/systemctl restart amazon-ssm-agent > /dev/null 2>/dev/null||true'
     opencloud_scheduled_jobs:
       path: "%{hiera('common::log_dir')}/cron*.log"
       olddir: "%{hiera('common::log_dir')}"
+      missingok: true
     opencloud_ssm_commands:
       path: "%{hiera('common::log_dir')}/ssm*.log"
       olddir: "%{hiera('common::log_dir')}"
+      missingok: true
   author_primary:
     config:
     rules:
@@ -354,7 +395,7 @@ logrotation:
     config:
     rules:
       httpd:
-        path: /var/log/httpd/*.log
+        path: /var/log/httpd/*log
         rotate: 5
         size: 200M
         dateext: true
@@ -369,7 +410,7 @@ logrotation:
     config:
     rules:
       httpd:
-        path: /var/log/httpd/*.log
+        path: /var/log/httpd/*log
         rotate: 5
         size: 200M
         dateext: false
@@ -450,3 +491,55 @@ scheduled_jobs:
       weekday: 2-7
       hour: 1
       minute: 15
+    cloudwatch_s3_stream:
+      # enable/disable controlled by parameter aws.cloudwatch.enable_log_subscription
+      weekday: '*'
+      hour: '*'
+      minute: '30'
+
+monitoring:
+  include_stack: false
+
+cdn:
+  stack_name: cdn-stack
+  aliases:
+  custom_error_responses:
+    response_page_path: overwrite-me
+  default_root_object: index.html
+  default_cache_behavior:
+    allowed_methods: GET,HEAD
+    cached_methods: GET,HEAD
+    compress: 'false'
+    default_ttl: 30
+    forwarded_values:
+      cookies:
+        forward: all
+        whitelisted_names: overwrite-me
+      headers: overwrite-me
+      query_string: 'false'
+      query_string_cache_keys: overwrite-me
+    max_ttl: 60
+    min_ttl: 30
+    smooth_streaming: 'false'
+    viewer_protocol_policy: allow-all
+  log_bucket_name: overwrite-me.s3.amazonaws.com
+  log_bucket_prefix: reverse-proxy
+  log_include_cookies: 'false'
+  origins:
+    domain_name: overwrite-me
+    custom_origin_config:
+      origin_protocol_policy: https-only
+      origin_ssl_protocols: overwrite-me
+  price_class: PriceClass_All
+  viewer_certificate:
+    acm_certificate_arn: overwrite-me
+    cloud_front_default_certificate: 'false'
+    iam_certificate_id: overwrite-me
+    minimum_protocol_version: TLSv1.1_2016
+    ssl_support_method: overwrite-me
+  web_acl_id_parameter: overwrite-me
+
+ssh_public_keys:
+  ec2-user:
+    public_key: overwrite-me
+    public_key_type: ssh-rsa

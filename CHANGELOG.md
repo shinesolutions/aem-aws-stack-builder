@@ -8,9 +8,160 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-
 - Add new SSM command to run ToughDay 2 performance tests
 
+### Fixed
+- Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
+
+## 4.23.2 - 2019-10-17
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.20.1
+
+### Fixed
+- Pass configuration `aem.enable_bak_files_cleanup` as boolean #341
+
+## 4.23.1 - 2019-10-17
+
+### Fixed
+- Fixed parameter passing for controlling EBS volume encryption #339
+
+## 4.23.0 - 2019-10-16
+### Added
+- Add Certificate manager & Secrets manager support for certificate handling when reconfiguration runs
+- Add new configuration parameter `run_modes` for reconfiguration
+
+### Changed
+- Replaced reconfiguration parameter `certs_base` with `certificate_arn` & `certificate_key_arn`
+- Update FAQ topic to `reconfiguration`
+- Upgrade AEM AWS Stack Provisioner to 4.20.0
+
+### Removed
+- Removed reconfiguration parameter `create_system_users`, as it doesn't had any functionality
+- Add new component parameter to control EBS volume encryption
+
+## 4.22.0 - 2019-10-16
+### Added
+- Added ELB Metrics to CloudWatch Dashboard panel
+
+## 4.21.0 - 2019-10-14
+### Changed
+- Restructure monitoring stack's CloudWatch Dashboard panels
+
+## 4.20.0 - 2019-10-13
+### Added
+- Add region to DNS switch to fix issue related to CloudFormation facts
+
+## 4.19.0 - 2019-10-08
+### Added
+- Add new permissions for AEM Stack Manager to allow updating ASG scaling processes [#295]
+
+### Changed
+- Rename switch-dns parameters for consistency with AOC Manager parameter names
+- Upgrade AEM Stack Manager Cloud to 1.5.0
+- Upgrade AEM AWS Stack Provisioner to 4.19.0
+- Update default path for httpd logfile logrotation to handle log files named with .log and _log suffixes
+
+## 4.18.0 - 2019-10-01
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.18.0
+
+### Fixed
+- Change new scheduled job parameters for scheduling the cronjob from `cloudwatch_s3_Stream` to `cloudwatch_s3_stream`
+
+## 4.17.0 - 2019-09-23
+### Added
+- Add function for switching DNS by setting DNS record of a given zone to point to an AEM stack
+
+### Fixed
+- Fixed syntax issue for Monitoring Cloudformation Stack template by replacing shorthands with functions
+- Fix monitoring stack's aemAsgEventQueueName param to use output from prerequisites stack prefix
+
+## 4.16.0 - 2019-09-21
+### Changed
+- Modify extra groups handling to allow sub property names
+
+## 4.15.1 - 2019-09-21
+### Fixed
+- Fix Consolidated config extra groups to check for exact resource name
+
+## 4.15.0 - 2019-09-21
+### Added
+- Add security group support for Consolidated AuthorPublishDispatcher instance
+
+## 4.14.0 - 2019-09-21
+### Added
+- Add support for adding extra secgroups to EC2 instances
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.17.0
+- Refactor cf_security_groups module to add secgroups to any resource
+
+## 4.13.0 - 2019-09-19
+### Added
+- Add new Stack Manager function CloudwatchS3Stream
+- Add new parameters to control the AEM Stack cloudwatch log s3 stream
+- Add new scheduled job parameters for scheduling the cronjob `cloudwatch_s3_Stream`
+
+### Changed
+- Upgrade AEM Stack Manager Cloud to 1.4.0
+- Ignore missing logfiles in default logrotation rules
+
+## 4.12.0 - 2019-09-12
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.16.0
+
+## 4.11.0 - 2019-09-07
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.15.0
+
+## 4.10.0 - 2019-09-05
+### Added
+- Add new parameters to define SSH public keys to deploy on the AEM Stack [#313]
+
+## 4.9.0 - 2019-08-22
+### Added
+- Add new SSM commands to manage SAML configuration
+
+### Changed
+- Change config property monitoring.include_stack default value to false
+
+## 4.8.0 - 2019-08-16
+### Added
+- Add CloudFront CDN support [#306]
+- Add CloudWatch dashboard support for AEM Full-Set
+- Add AWS resources integration testing
+- Add hiera parameter proxy_enabled for configuring collectd proxy settings shinesolutions/puppet-aem-curator#134
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.13.0
+- Upgrade AEM Stack Manager Messenger to 2.7.0
+- Upgrade AEM Test Suite to 1.4.0
+- Change config property aem.enable_post_start_sleep default value to true
+- Change config property aem.post_start_sleep_seconds default value to 180
+- Change config property publish_dispatcher.asg_health_check_grace_period default value to 2400
+- Change config property publish.asg_health_check_grace_period default value to 1800
+- Change config property aem.snapshot_attach_timeout default value to 1800
+
+### Fixed
+- Fix invalid ServerSideEncryptionByDefault with null value when creating AWS resources S3 bucket
+
+## 4.7.0 - 2019-08-06
+### Added
+- Added additional exit code checks to stack init process [#294]
+- Add aem.snapshot_attach_timeout configuration property
+
+### Changed
+- Redirecting custom stack provisioner pre & post hook output to own logfile [#298]
+- Upgrade AEM Stack Manager Messenger to 2.5.0
+- Upgrade AEM Test Suite to 1.3.0
+- Upgrade AEM HelloWorld Custom Stack Provisioner to 0.14.0
+- Upgrade AEM Stack Manager Cloud to 1.3.5
+- Upgrade AEM AWS Stack Provisioner to 4.8.0
+
+### Fixed
+- Suppress error `aws s3api head-object` stdout & stderr [#48]
+- Fixed error with generating stack manager config [#302]
 
 ## 4.6.0 - 2019-07-24
 ### Changed

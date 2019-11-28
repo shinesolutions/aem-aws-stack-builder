@@ -105,6 +105,7 @@
       get_url:
         url: "https://dl.bintray.com/netflixoss/maven/com/netflix/simianarmy/simianarmy/{{ library.simian_army_version }}/simianarmy-{{ library.simian_army_version }}.war"
         dest: "{{ artifacts_dir }}"
+        validate_certs: false
         mode: 0644
       when: library.simian_army_version is defined
 

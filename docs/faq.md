@@ -125,23 +125,44 @@ New FS structure | >= 3.8.0   | >= 3.7.0              | >= 3.12.0
 
 To create a stack with the old FS structure you need AMIs created with Packer-AEM 3.7.0 or below and AEM-AWS-Stack-Builder 3.6.0 or below together with AEM-AWS-Stack-provisioner 3.11.0 or below.
 
-- **Q:** How can I migrate my non-AEM-OpenCloud snapshots to AEM-OpenCloud ?<br>
-  **A:** If your snapshots are already containing the new or old FS structure you are lucky and just need to create a AEM Stack with enabled reconfiguration in the configuration profile.
+- **Q:** When do I need to use the `reconfiguration` feature ?<br>
+  **A:** The purpose of the `reconfiguration` feature is to reset the AEM installation. You need to enable the reconfiguration when you want to...
 
-  If your FS has a different structure you need to manually restructure your FS before you can create a AEM Stack with AEM-OpenCloud. If you are migrating from AEM64 we recommend you to follow the new FS structure.
+  * migrate non AEM-OpenCloud installations to AEM-OpenCloud
+  * migrate older AEM-OpenCloud installations to the latest version
+  * reset AEM-OpenCloud installations to make them useable for different environments
 
-  In both cases you need to enable the reconfiguration in the configuration profile of your AEM environment before creating a AEM stack.
+  More informations of how to use the reconfiguration can be found in the FAQ topic `How do I use the reconfiguration ?` & `How does the reconfiguration works ?`.
 
+- **Q:** How do I use the reconfiguration ? <br>
+  **A:** The recommended way of using the reconfiguration is as follows...
+
+  * make sure the snapshots are containing the correct FS structure(old or new)
+  * Create configuration profile for reconfiguration
+  * Create AEM Stack with the configuration profile
+  * Run `offline-snapshot` or `offline-compaction-snapshot`
+
+  **Correct FS Structure:**
+
+  Make sure that your snapshots contain the correct FS structure as described in the FAQ topic ```Why did the filesystem structure changed with Packer-AEM 3.8.0 & aem-aws-stack-provisioner 3.12.0 ?```
+
+  **Create configuration profile:**
+
+  Create a configuration profile where the reconfiguration is enabled. It may look similar like this example
   ```
   aem:
     enable_reconfiguration: true
 
   reconfiguration:
-    enable_create_system_users: true
     enable_truststore_removal: true
     enable_truststore_migration: false
-    certs_base: s3://aem-opencloud/artifacts/ssl
+    certificate_arn: s3://aem-opencloud/artifacts/ssl/aem.certs
+    certificate_key_arn: s3://aem-opencloud/artifacts/ssl/aem.key
     ssl_keystore_password: changeit
+    author:
+      run_modes: []
+    publish:
+      run_modes: []
 
   system_users:
     admin:
@@ -164,45 +185,41 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
       path: /home/users/r
   ```
 
-  During the reconfiguration AEM OpenCloud will check if the FS contains the new structure. If not it will assume that the FS contains only the repository and therefore it tries to
+  This configuration profile will...
+  * Remove the AEM Global Truststore
+  * Configure SSL by using the public certificate & the private key as described in the configuration parameters `reconfiguration.certificate_arn` & `reconfiguration.certificate_key_arn`
+  * configure the system users `admin, deployer, exporter, importer, orchestrator & replicator`
 
-  - Backup the current FS
-  - Copy the AEM Installation following the new FS structure
-  - Copy the backup to the new location `crx-quickstart/repository`
+  All configuration parameters for the reconfiguration can be found in the  [configuration documentation](configuration.md).
 
-  Snapshots which are already AEM-OpenCloud compatible do not need to reconfigure again, unless you want to make them available for other stages. Further informations can be found at the section `How can I make my AEM-OpenCloud snapshots compatible for other stages ?`
+  **Create AEM Stack:**
 
-- **Q:** How can I migrate my AEM-OpenCloud v2 snapshot to the latest AEM-OpenCloud v3 version ?<br>
-  **A:**
+  We highly recommend to create a consolidated AEM Stack, as it saves money and there is no need to create a Full-Set Stack for the reconfiguration.
 
-  - Enable reconfiguration in configuration profile
+  **Run offline-snapshot or offline-compaction-snapshot:**
 
-    ```
-    aem:
-    enable_reconfiguration: true
-    ```
+  Trigger the `offline-snapshot` or `offline-compaction-snapshot` jobs, so the reconfigured AEM installation is available as snapshots which can than be used to create new AEM Stacks.
 
-  - Create AEM Stack with attached snapshots on AMIs created with Packer-AEM prior version 3.7.2.
+  After the snapshots were taken there is no need to run the reconfiguration again unless you want to use snapshots from different environments.
 
-  - Check Readiness of the AEM Stack
+  An example could be to provide developers with the latest production content, the reconfiguration can run each night in the dev environment and provides the developers in the morning with the latest production content in their environment.
 
-  - Run Offline-Snapshot or Offline-Compaction-Snapshot
 
-  - Use new snapshots to create new environments with latest AEM-AWS-Stack-Builder and Packer-AEM.
+- **Q:** How does the reconfiguration works ? <br>
+  **A:** The process of the reconfiguration is as follows:
 
-  To save your money and time we recommend to run the reconfiguration on a consolidated AEM stack on a nightly base in your favourite CI/CD tool.
+    The first step is the execution of the pre-reconfiguration. The pre-reconfiguration does all the required activities while AEM needs to be in the stopped state.
+    * Checking the FS structure
+    * If old FS structure detected, run FS migration
+    * resetting `crx-quickstart/bin/start` & `crx-quickstart/bin/start-env` with the parameters defined in the configuration profile
+    * Downloading SSL certificates for AEM
 
-- **Q:** How can I make my AEM-OpenCloud snapshots compatible for other stages ?<br>
-  **A:** Your snapshots may has some configuration which are specific to a stage. To make these snapshots usable for other stages you can enable the reconfiguration during stack creation. The reconfiguration will remove all configuration stored at `/apps/system/config`. The reconfiguration can be enabled in the configuration profile.
+    The second step is the reconfiguration. This step is done while AEM is up and running.
+    * Remove configurations from `/app/system/config`, `/app/system/config.author)` & `/app/system/config.publish`
+    * Remove AEM Global Truststore (Only if removing enabled & migration disabled)
+    * Cleanup `crx-quickstart/install`
+    * Install AEM Healthcheck
+    * Configure AEM
+    * Migrate AEM Global Truststore (Only if migration enabled and removing disabled)
 
-  ```
-  aem:
-    enable_reconfiguration: true
-  ```
-
-  To save your money and time we recommend you to run the reconfiguration on a consolidated AEM stack on a nightly base in your favourite CI/CD tool. A pipeline in your CI/CD tool can contain the following processes:
-
-  - Create AEM Stack
-  - Check Readiness of the AEM Stack
-  - Run Offline-Snapshot or Offline-Compaction-Snapshot
-  - Delete AEM Stack
+    This process makes sure that all configuration done with AEM OpenCloud are getting reseted and the new AEM Stack will have all it's own environment specific parameters.

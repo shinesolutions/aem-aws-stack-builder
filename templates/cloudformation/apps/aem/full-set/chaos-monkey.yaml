@@ -3,6 +3,9 @@ Description: Create the Compute resources for the AEM Chaos Monkey
 Outputs:
   ChaosMonkeyAutoScalingGroup:
     Description: The Chaos Monkey Auto Scaling Group
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup
     Value:
       Ref: ChaosMonkeyAutoScalingGroup
   ChaosMonkeyLaunchConfiguration:
@@ -29,6 +32,12 @@ Parameters:
   ChaosMonkeyRootVolSizeParameter:
     Description: Chaos Monkey Instances Root EBS Volum Size
     Type: Number
+  ChaosMonkeyEnableVolEncryptionParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wether to enable or disable EBS volume encryption.
+    Type: String
   ComputeKeyPairNameParameter:
     Description: The Compute Resources Key Pair Name
     Type: AWS::EC2::KeyPair::KeyName
@@ -114,7 +123,8 @@ Resources:
           Ref: ChaosMonkeyImageRootDevice
         Ebs:
           DeleteOnTermination: true
-          Encrypted: true
+          Encrypted:
+            Ref: ChaosMonkeyEnableVolEncryptionParameter
           VolumeSize:
             Ref: ChaosMonkeyRootVolSizeParameter
           VolumeType: gp2

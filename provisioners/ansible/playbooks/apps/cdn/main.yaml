@@ -1,0 +1,82 @@
+---
+- name: CDN CloudFormation Stack
+  hosts: all
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: Upload CloudFormation Templates to S3
+      command: >
+              aws s3 sync ../../../../../templates/cloudformation/apps/cdn
+                  s3://{{ s3.data_bucket_name }}/{{ stack_prefix }}
+                  --include "*.yaml"
+      tags:
+        - create
+
+    - name: Create CDN Stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ cdn.stack_name }}"
+        region: "{{ aws.region }}"
+        state: present
+        disable_rollback: true
+        template: "../../../../../templates/cloudformation/apps/cdn/main.yaml"
+        template_parameters:
+          StackPrefixParameter: "{{ stack_prefix }}"
+          AliasesParameter: "{{ cdn.aliases }}"
+          CustomErrorResponses404PagePathParameter: "{{ cdn.custom_error_responses.response_page_path }}"
+          DefaultCacheBehaviorAllowedMethodsParameter: "{{ cdn.default_cache_behavior.allowed_methods }}"
+          DefaultCacheBehaviorCachedMethodsParameter: "{{ cdn.default_cache_behavior.cached_methods }}"
+          DefaultCacheBehaviorCompressParameter: "{{ cdn.default_cache_behavior.compress }}"
+          DefaultCacheBehaviorDefaultTTLParameter: "{{ cdn.default_cache_behavior.default_ttl }}"
+          DefaultCacheBehaviorForwardedValuesCookiesForwardParameter: "{{ cdn.default_cache_behavior.forwarded_values.cookies.forward}}"
+          DefaultCacheBehaviorForwardedValuesCookiesWhitelistedNamesParameter: "{{ cdn.default_cache_behavior.forwarded_values.cookies.whitelisted_names }}"
+          DefaultCacheBehaviorForwardedValuesHeadersParameter: "{{ cdn.default_cache_behavior.forwarded_values.headers }}"
+          DefaultCacheBehaviorForwardedValuesQueryStringParameter: "{{ cdn.default_cache_behavior.forwarded_values.query_string }}"
+          DefaultCacheBehaviorForwardedValuesQueryStringCacheKeysParameter: "{{ cdn.default_cache_behavior.forwarded_values.query_string_cache_keys }}"
+          DefaultCacheBehaviorMaxTTLParameter: "{{ cdn.default_cache_behavior.max_ttl }}"
+          DefaultCacheBehaviorMinTTLParameter: "{{ cdn.default_cache_behavior.min_ttl }}"
+          DefaultCacheBehaviorSmoothStreamingParameter: "{{ cdn.default_cache_behavior.smooth_streaming }}"
+          DefaultCacheBehaviorViewerProtocolPolicyParameter: "{{ cdn.default_cache_behavior.viewer_protocol_policy }}"
+          DefaultRootObjectParameter: "{{ cdn.default_root_object }}"
+          LogBucketNameParameter: "{{ cdn.log_bucket_name }}"
+          LogIncludeCookiesParameter: "{{ cdn.log_include_cookies }}"
+          LogBucketPrefixParameter: "{{ cdn.log_bucket_prefix }}"
+          OriginDomainNameParameter: "{{ cdn.origins.domain_name }}"
+          OriginsCustomOriginConfigOriginProtocolPolicyParameter: "{{ cdn.origins.custom_origin_config.origin_protocol_policy }}"
+          OriginsCustomOriginConfigOriginSSLProtocolsParameter: "{{ cdn.origins.custom_origin_config.origin_ssl_protocols }}"
+          PriceClassParameter: "{{ cdn.price_class }}"
+          ViewerCertificateAcmCertificateArnParameter: "{{ cdn.viewer_certificate.acm_certificate_arn }}"
+          ViewerCertificateCloudFrontDefaultCertificateParameter: "{{ cdn.viewer_certificate.cloud_front_default_certificate }}"
+          ViewerCertificateIamCertificateIdParameter: "{{ cdn.viewer_certificate.iam_certificate_id }}"
+          ViewerCertificateMinimumProtocolVersionParameter: "{{ cdn.viewer_certificate.minimum_protocol_version }}"
+          ViewerCertificateSslSupportMethodParameter: "{{ cdn.viewer_certificate.ssl_support_method }}"
+          WebACLIdParameter: "{{ cdn.web_acl_id_parameter }}"
+      tags:
+        - create
+
+    - name: Check if a Stack Exists
+      command: >
+        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ cdn.stack_name }}"
+             --query 'Stacks[].StackName' --region "{{ aws.region }}"
+      ignore_errors: true
+      register: stack_query
+      tags:
+        - delete
+
+    - name: Report Stack Problem
+      debug:
+        msg: Stack "{{ stack_prefix }}-{{ cdn.stack_name }}" does not exist or some other errors occured
+      when:
+        "stack_query.rc != 0"
+      tags:
+        - delete
+
+    - name: Delete CDN stack
+      cloudformation:
+        stack_name: "{{ stack_prefix }}-{{ cdn.stack_name }}"
+        region: "{{ aws.region }}"
+        state: absent
+      when:
+        "stack_query.rc == 0"
+      tags:
+        - delete

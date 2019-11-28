@@ -168,6 +168,18 @@ Parameters:
     Description: >-
       The name of the file containing the UpgradeUnpackJar SSM command.
 
+  EnableSamlIncludeFileParameter:
+    Type: String
+    Default: AEM-EnableSaml.yaml
+    Description: >-
+      The name of the file containing the EnableSaml SSM command.
+
+  DisableSamlIncludeFileParameter:
+    Type: String
+    Default: AEM-DisableSaml.yaml
+    Description: >-
+      The name of the file containing the DisableSaml SSM command.
+
 Resources:
   DeployArtifact:
     Type: AWS::SSM::Document
@@ -432,6 +444,26 @@ Resources:
           Parameters:
             Location: !Sub '${S3BucketAndPrefixParameter}/${UpgradeUnpackJarIncludeFileParameter}'
 
+  EnableSaml:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${EnableSamlIncludeFileParameter}'
+
+  DisableSaml:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Sub '${S3BucketAndPrefixParameter}/${DisableSamlIncludeFileParameter}'
+
 Outputs:
   DeployArtifact:
     Description: Document name for Deploy Artifact
@@ -540,3 +572,11 @@ Outputs:
   UpgradeUnpackJar:
     Description: Documention name for AEM Upgrade preperation unpack AEM Jar
     Value: !Ref UpgradeUnpackJar
+
+  EnableSaml:
+    Description: Document name for Enable Saml
+    Value: !Ref EnableSaml
+
+  DisableSaml:
+    Description: Document name for Disable Saml
+    Value: !Ref DisableSaml
