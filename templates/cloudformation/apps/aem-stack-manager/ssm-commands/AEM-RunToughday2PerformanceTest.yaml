@@ -49,6 +49,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/upgrade/run-toughday2-performance-test.sh {{ duration }} {{ timeout }} {{ configfile }} {{ suite }} {{ runmode }} {{ publishmode }}'
+        - '/opt/shinesolutions/aem-tools/testing/run-toughday2-performance-test.sh {{ duration }} {{ timeout }} {{ configfile }} {{ suite }} {{ runmode }} {{ publishmode }}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
