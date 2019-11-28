@@ -61,6 +61,7 @@
         object: "{{stack_prefix }}/{{ stack_manager.s3_prefix }}/{{ item }}.zip"
         src: ../../../../../stage/{{ item }}.zip
         mode: put
+        overwrite: always
       with_items:
         - aem_stack_manager
         - aem_offline_snapshot

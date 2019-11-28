@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Add overwrite option for aws_s3 ansible module in stack-data #359
 
 ### Added
 - Add new SSM command to run ToughDay 2 performance tests
@@ -18,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increase AEM Stack Manager Lambda timeout from 15 seconds to 60 seconds #356
 
 ### Fixed
+- Fix upload descriptor file logic #359
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 - Fixed documentation about the export-backups-descriptor
 - Fix CloudWatch Dashboard for Consolidated DNS switch incorrectly generate Author-Dispatcher target
