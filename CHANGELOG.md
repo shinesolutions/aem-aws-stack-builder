@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increase AEM Stack Manager Lambda timeout from 15 seconds to 60 seconds #356
 - configuration parameter `system_users.[author|publish].admin.path` (previously known as `system_users.admin.path`) is now a *mandatory* parameter
 - Update FAQ for reconfiguration with new system_users parameters #352
-- Upgrade AEM AWS Stack Provisioner to 4.22.0
+- Upgrade AEM AWS Stack Provisioner to 4.23.0
 - Upgrade AEM Stack Manager Messenger to 2.9.0
 - Upgrade AEM Test Suite to 1.7.0
 
