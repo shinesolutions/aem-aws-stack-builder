@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade AEM AWS Stack Provisioner to 4.25.0
 - Upgrade AEM Stack Manager Messenger to 2.9.0
 - Upgrade AEM Test Suite to 1.7.0
+- Stack Manager MinimumPublishInstances configuration now uses `stack_manager.publish.asg_min_size` instead of `publish.asg_min_size`
 
 ### Fixed
 - Fix upload descriptor file logic #359

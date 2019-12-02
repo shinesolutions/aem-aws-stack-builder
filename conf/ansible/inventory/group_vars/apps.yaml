@@ -378,6 +378,8 @@ stack_manager:
       max_age_in_hours: 4
   alarm_notification:
     contact_email: overwrite-me
+  publish:
+    asg_min_size: 2
 
 logrotation:
   config:

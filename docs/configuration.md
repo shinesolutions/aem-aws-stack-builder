@@ -378,6 +378,7 @@ These configurations are applicable specific to AEM Stack Manager.
 | stack_manager.purge.orchestration_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | 5 0/4 * * ? * |
 | stack_manager.purge.orchestration_snapshots.max_age_in_hours | The number of hours to keep an orchestration snapshot before it expires and will be removed  | Optional | 4 |
 | stack_manager.alarm_notification.contact_email | Recipient email address where alarm notification will be sent | Mandatory | |
+| stack_manager.publish.asg_min_size | The number of minimum publish instances each Full-Set environment must have in its AutoScalingGroup. This value will be used as part of stack health check. | Optional | 2 |
 
 ### Log rotation configuration properties
 
