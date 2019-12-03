@@ -5,52 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 4.24.0 - 2019-12-03
 ### Added
-- Add overwrite option for aws_s3 ansible module in stack-data #359
+- Add overwrite option for aws_s3 ansible module in stack-data [#359]
 - Add new SSM command to run ToughDay 2 performance tests
 - Added JVM monitoring to CloudWatch Dashboard
 - Added to FAQ to explain why the admin user password change can fail
-- Added to FAQ to explain why the system user configuration parameters changed #352
-- Add new configuration parameters `system_users.[author|publish].[admin|deployer|exporter|importer|orchestrator|replicator].[name|path]` #352
-- Add new hiera parameter `author::aem_system_users` & `publish::aem_system_users` #352
+- Added to FAQ to explain why the system user configuration parameters changed [#352]
+- Add new configuration parameters `system_users.[author|publish].[admin|deployer|exporter|importer|orchestrator|replicator].[name|path]` [#352]
+- Add new hiera parameter `author::aem_system_users` & `publish::aem_system_users` [#352]
 
 ### Changed
 - Extend timeout for snapshot purge lambda function from 5 mins to 15 mins
 - Changed data collection method for CloudWatch Dashboard (MemoryUtilization, Latency, ... )
-- Change AEM Stack Manager DynamoDB Billing mode from `PROVISIONED` to `PAY_PER_REQUEST` #356
-- Increase AEM Stack Manager Lambda timeout from 15 seconds to 60 seconds #356
+- Change AEM Stack Manager DynamoDB Billing mode from `PROVISIONED` to `PAY_PER_REQUEST` [#356]
+- Increase AEM Stack Manager Lambda timeout from 15 seconds to 60 seconds [#356]
 - configuration parameter `system_users.[author|publish].admin.path` (previously known as `system_users.admin.path`) is now a *mandatory* parameter
-- Update FAQ for reconfiguration with new system_users parameters #352
+- Update FAQ for reconfiguration with new system_users parameters [#352]
 - Upgrade AEM AWS Stack Provisioner to 4.25.0
 - Upgrade AEM Stack Manager Messenger to 2.9.0
 - Upgrade AEM Test Suite to 1.7.0
 - Stack Manager MinimumPublishInstances configuration now uses `stack_manager.publish.asg_min_size` instead of `publish.asg_min_size`
 
+### Removed
+- Removed deletion of the deployment descriptor file for main stack deletion [#358]
+- Removed configuration parameters `system_users.[admin|deployer|exporter|importer|orchestrator|replicator]` [#352]
+- Removed hiera parameter `common::aem_system_users` [#352]
+
 ### Fixed
-- Fix upload descriptor file logic #359
+- Fix upload descriptor file logic [#359]
 - Fix Consolidated DNS switch incorrectly generate Author-Dispatcher target
 - Fixed documentation about the export-backups-descriptor
 - Fix CloudWatch Dashboard for Consolidated DNS switch incorrectly generate Author-Dispatcher target
 - Fix CloudWatch Dashboard Author Naming (Primary and Standby)
 
-### Removed
-- Removed deletion of the deployment descriptor file for main stack deletion #358
-- Removed configuration parameters `system_users.[admin|deployer|exporter|importer|orchestrator|replicator]` #352
-- Removed hiera parameter `common::aem_system_users` #352
-
 ## 4.23.2 - 2019-10-17
-
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.20.1
 
 ### Fixed
-- Pass configuration `aem.enable_bak_files_cleanup` as boolean #341
+- Pass configuration `aem.enable_bak_files_cleanup` as boolean [#341]
 
 ## 4.23.1 - 2019-10-17
-
 ### Fixed
-- Fixed parameter passing for controlling EBS volume encryption #339
+- Fixed parameter passing for controlling EBS volume encryption [#339]
 
 ## 4.23.0 - 2019-10-16
 ### Added
