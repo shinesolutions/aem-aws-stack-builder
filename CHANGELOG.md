@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.26.0
+
 ## 4.24.0 - 2019-12-03
 ### Added
 - Add overwrite option for aws_s3 ansible module in stack-data [#359]
