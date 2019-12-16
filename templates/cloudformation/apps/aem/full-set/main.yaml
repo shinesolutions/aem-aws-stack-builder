@@ -153,6 +153,9 @@ Parameters:
   Route53HostedZoneNameParameter:
     Description: Route53 Hosted Zone Name the Record Set will be Created in
     Type: String
+  AEMCWEventNotificationEmail:
+    Description: The EMail adress for sending CW Alarm messages
+    Type: String
 Resources:
   AuthorDispatcherStack:
     Properties:
@@ -552,7 +555,8 @@ Resources:
           Fn::Select:
             - 1
             - Ref: ImageDevices
-
+        AEMCWEventNotificationEmail:
+          Ref: AEMCWEventNotificationEmail
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/monitoring.yaml
     Type: AWS::CloudFormation::Stack
