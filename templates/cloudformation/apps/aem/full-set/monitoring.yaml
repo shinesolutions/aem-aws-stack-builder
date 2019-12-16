@@ -183,7 +183,9 @@ Resources:
                     "metrics": [
                         [ "System/Linux", "DiskSpaceUtilization", "MountPath", "/mnt/ebs1", "InstanceId", "${authorPrimaryInstance}", "Filesystem", "/mnt/ebs1" ],
                         [ "...", "${authorStandbyInstance}", ".", "." ],
-                        [ "...", "AutoScalingGroupName", "${publishAutoScalingGroupName}", ".", "." ]
+                        [ "...", "AutoScalingGroupName", "${publishAutoScalingGroupName}", ".", "." ],
+                        [ "...", "AutoScalingGroupName", "${authorDispatcherAutoScalingGroupName}", ".", "." ],
+                        [ "...", "AutoScalingGroupName", "${publishDispatcherAutoScalingGroupName}", ".", "." ]
                     ],
                     "view": "timeSeries",
                     "stacked": false,

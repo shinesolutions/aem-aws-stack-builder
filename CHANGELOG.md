@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add SNS Topic and CloudWatch Alarms related to all components 
+- Add SNS Topic and CloudWatch Alarms related to all components
+- Add Data Volume metric to CloudWatch dashboard.
 
 ## 4.24.0 - 2019-12-03
 ### Added
