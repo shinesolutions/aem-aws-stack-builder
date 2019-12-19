@@ -165,3 +165,23 @@
         "stack_query.rc == 0"
       tags:
       - delete
+
+    - name: Retrieve all available cloudwatch groups to delete
+      cloudwatchlogs_log_group_facts:
+        log_group_name: "{{ stack_prefix }}"
+      register: loggroups_found
+      when:
+        "stack_query.rc == 0" and aws.cloudwatch.enable_cloudwatch_cleanup
+      tags:
+      - delete
+
+    - name: Delete Cloudwatch Loggroups
+      cloudwatchlogs_log_group:
+        state: absent
+        log_group_name: "{{ item.log_group_name}}"
+      with_items:
+        - "{{ loggroups_found.log_groups }}"
+      when:
+        "stack_query.rc == 0" and aws.cloudwatch.enable_cloudwatch_cleanup
+      tags:
+      - delete
