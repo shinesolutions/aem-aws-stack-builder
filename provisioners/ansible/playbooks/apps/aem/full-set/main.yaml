@@ -67,7 +67,7 @@
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
           ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].data_name }}"
-          AEMCWEventNotificationEmail: "{{ stack_manager.alarm_notification.contact_email }}"
+          AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
       tags:
       - create
       when:
@@ -126,7 +126,7 @@
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_dispatcher.record_set_name }}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.publish_dispatcher.record_set_name }}"
           ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].data_name }}"
-          AEMCWEventNotificationEmail: "{{ stack_manager.alarm_notification.contact_email }}"
+          AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
       tags:
       - create
       when:
