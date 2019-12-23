@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add feature to enable removal of all available Cloudwatch Loggroups while deleting an AEM Stack [#366]
+
 ## 4.25.0 - 2019-12-17
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.26.0

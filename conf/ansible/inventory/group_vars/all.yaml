@@ -8,6 +8,7 @@ aws:
   cloudwatch:
     enable_log_subscription: false
     log_subscription_arn: overwrite-me
+    enable_cloudwatch_cleanup: false
 
 proxy:
   enabled: false

@@ -16,6 +16,7 @@ These configurations are applicable to both network and AEM application infrastr
 | aws.availability_zone_list | Comma separated list of [AWS availability zones](https://howto.lintel.in/list-of-aws-regions-and-availability-zones/) within the region defined in `aws.region` . | Optional | `ap-southeast-2a, ap-southeast-2b` |
 | aws.cloudwatch.enable_log_subscription | This flag controls if you want to enable the cronjob to subscribe all Stacks Cloudwatch logs to the AEM Stack Manager Lambda function to stream the Cloudwatch Logs to S3. This flag enabled the cronjob `cloudwatch_s3_stream` on the component orchestrator.| Optional | `false` |
 | aws.cloudwatch.log_subscription_arn | The ARN of the AEM Stack Manager Lambda `cloudwatch logs s3 stream` function. | Optional | `` |
+| aws.cloudwatch.enable_cloudwatch_cleanup | This flag controls if all Cloudwatch Loggroups belonging to the AEM stack should get removed while deleting the AEM Stack. | Optional | `false` |
 | proxy.enabled | If true, then web proxy will be used during provisioning steps. Note: this web proxy setting is not used for cron jobs | Optional | `false` |
 | proxy.protocol | Web proxy server protocol used during provisioning steps | Optional | None |
 | proxy.host | Web proxy server host used during provisioning steps | Optional | None |
