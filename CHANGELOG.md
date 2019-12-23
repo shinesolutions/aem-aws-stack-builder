@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add SNS Topic and CloudWatch Alarms related to all components
-- Add Data Volume metric to CloudWatch dashboard.
+- Add memory alarms across all AEM Full-Set components
+- Add Dispatcher data volume metric to monitoring stack's CloudWatch dashboard.
 
 ## 4.24.0 - 2019-12-03
 ### Added
