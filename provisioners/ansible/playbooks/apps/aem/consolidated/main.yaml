@@ -95,7 +95,7 @@
         log_group_name: "{{ stack_prefix }}"
       register: loggroups_found
       when:
-        "stack_query.rc == 0" and aws.cloudwatch.enable_cloudwatch_cleanup
+        "stack_query.rc == 0 and aws.cloudwatch.enable_cloudwatch_cleanup"
       tags:
       - delete
 
@@ -106,6 +106,6 @@
       with_items:
         - "{{ loggroups_found.log_groups }}"
       when:
-        "stack_query.rc == 0" and aws.cloudwatch.enable_cloudwatch_cleanup
+        "stack_query.rc == 0 and aws.cloudwatch.enable_cloudwatch_cleanup"
       tags:
       - delete
