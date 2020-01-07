@@ -552,7 +552,6 @@ Resources:
           Fn::Select:
             - 1
             - Ref: ImageDevices
-
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/monitoring.yaml
     Type: AWS::CloudFormation::Stack

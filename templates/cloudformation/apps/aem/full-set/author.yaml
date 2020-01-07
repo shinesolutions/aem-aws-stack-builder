@@ -351,3 +351,471 @@ Resources:
       Statistic: Average
       Threshold: 0
     Type: AWS::CloudWatch::Alarm
+
+  WarningAuthorPrimaryMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorPrimary-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorPrimaryMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorPrimary-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningAuthorPrimaryRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorPrimary-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorPrimaryRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorPrimary-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningAuthorPrimaryDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorPrimary-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorPrimaryDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorPrimary-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningAuthorPrimaryCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorPrimary-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 45
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorPrimaryCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorPrimary-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorPrimaryInstance
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 45
+    Type: AWS::CloudWatch::Alarm
+
+
+  WarningAuthorStandbyMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorStandby-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorStandbyMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorStandby-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningAuthorStandbyRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorStandby-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorStandbyRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorStandby-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningAuthorStandbyDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorStandby-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorStandbyDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorStandby-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningAuthorStandbyCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-AuthorStandby-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 45
+    Type: AWS::CloudWatch::Alarm
+  CriticalAuthorStandbyCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-AuthorStandby-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: "InstanceId"
+          Value:
+            Ref: AuthorStandbyInstance
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 45
+    Type: AWS::CloudWatch::Alarm
