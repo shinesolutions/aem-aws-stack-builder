@@ -36,13 +36,13 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-AuthorStandbyInstance
     Value:
       Ref: AuthorStandbyInstance
-  AuthorSyncDelayAlarm:
+  CriticalAuthorSyncDelayAlarm:
     Description: The Author Sync Delay Alarm
     Export:
       Name:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-CriticalAuthorSyncDelayAlarm
     Value:
-      Ref: AuthorSyncDelayAlarm
+      Ref: CriticalAuthorSyncDelayAlarm
 Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
@@ -277,15 +277,15 @@ Resources:
             \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-standby\
             \ ${AemAwsStackProvisionerVersionParameter}\n"
     Type: AWS::EC2::Instance
-  AuthorSyncDelayAlarm:
+  CriticalAuthorSyncDelayAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: Monitors the sync delay between the Author Standby and the Author Primary
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorSyncDelayAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-Author-SyncDelayAlarm
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
       - Name: FixedDimension
@@ -303,15 +303,15 @@ Resources:
       Statistic: Maximum
       Threshold: 60
     Type: AWS::CloudWatch::Alarm
-  MultiAuthorInstanceAlarm:
+  CriticalMultiAuthorInstanceAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: Multiple Author Instances have Entered into Service
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-MultiAuthorInstanceAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-Author-MultiAuthorInstanceAlarm
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
       - Name: LoadBalancerName
@@ -322,20 +322,20 @@ Resources:
       Namespace: AWS/ELB
       OKActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       Period: 60
       Statistic: Maximum
       Threshold: 1
     Type: AWS::CloudWatch::Alarm
-  NoAuthorInstanceAlarm:
+  CriticalNoAuthorInstanceAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: No Author Instance in Service
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-NoAuthorInstanceAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-Author-NoAuthorInstanceAlarm
       ComparisonOperator: LessThanOrEqualToThreshold
       Dimensions:
       - Name: LoadBalancerName
@@ -346,7 +346,7 @@ Resources:
       Namespace: AWS/ELB
       OKActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       Period: 60
       Statistic: Average
       Threshold: 0

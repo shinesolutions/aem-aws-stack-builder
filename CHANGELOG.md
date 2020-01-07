@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Added CloudWatch alarms related to each component
 - Added alarms SNS topic prerequisites stack
+- Migrate old SNS topic to new one which support warning and critical conditions.
 
 ## 4.24.0 - 2019-12-03
 ### Added

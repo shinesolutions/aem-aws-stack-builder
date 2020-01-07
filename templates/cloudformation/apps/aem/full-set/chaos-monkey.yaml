@@ -151,15 +151,15 @@ Resources:
             \ ${DataBucketNameParameter} ${MainStackPrefixParameter} chaos-monkey\
             \ ${AemAwsStackProvisionerVersionParameter}\n"
     Type: AWS::AutoScaling::LaunchConfiguration
-  ChaosMonkeyNoInstanceAlarm:
+  WarningChaosMonkeyNoInstanceAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       AlarmDescription: No Chaos Monkey Instance in Service
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-ChaosMonkeyNoInstanceAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Warning-ChaosMonkey-NoInstanceAlarm
       ComparisonOperator: LessThanThreshold
       Dimensions:
       - Name: AutoScalingGroupName
@@ -170,7 +170,7 @@ Resources:
       Namespace: AWS/AutoScaling
       OKActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       Period: 60
       Statistic: Average
       Threshold: 1
