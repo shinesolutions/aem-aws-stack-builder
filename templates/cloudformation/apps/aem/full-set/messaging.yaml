@@ -19,6 +19,20 @@ Outputs:
     Description: The AEM ASG Event Queue
     Value:
       Ref: AEMAutoScalingGroupEventQueue
+  CriticalAlarmNotificationTopic:
+    Description: The AEM Alarm Notification Topic
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+    Value:
+      Ref: CriticalAlarmNotificationTopic
+  WarningAlarmNotificationTopic:
+    Description: The AEM Alarm Notification Topic
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+    Value:
+      Ref: WarningAlarmNotificationTopic
   AlarmNotificationTopic:
     Description: The AEM Alarm Notification Topic
     Export:
@@ -102,6 +116,32 @@ Resources:
         Ref: AEMASGEventQueueNameParameter
       VisibilityTimeout: 60
     Type: AWS::SQS::Queue
+  WarningAlarmNotificationTopic:
+    Properties:
+      DisplayName:
+        Fn::Sub:
+          - "${PrerequisitesStackPrefixParameter}-Warning-Utilities-alarm-notification-topic"
+          - PrerequisitesStackPrefixParameter:
+              Ref: 'PrerequisitesStackPrefixParameter'
+      Subscription:
+        - Endpoint:
+            Ref: AEMCWEventNotificationEmail
+          Protocol: email
+        - Ref: AWS::NoValue
+    Type: AWS::SNS::Topic
+  CriticalAlarmNotificationTopic:
+    Properties:
+      DisplayName:
+        Fn::Sub:
+          - "${PrerequisitesStackPrefixParameter}-Critical-Utilities-alarm-notification-topic"
+          - PrerequisitesStackPrefixParameter:
+              Ref: 'PrerequisitesStackPrefixParameter'
+      Subscription:
+        - Endpoint:
+            Ref: AEMCWEventNotificationEmail
+          Protocol: email
+        - Ref: AWS::NoValue
+    Type: AWS::SNS::Topic
   AlarmNotificationTopic:
     Properties:
       DisplayName:

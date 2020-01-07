@@ -194,3 +194,236 @@ Resources:
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
             \ ${DataBucketNameParameter} ${MainStackPrefixParameter} publish ${AemAwsStackProvisionerVersionParameter}\n"
     Type: AWS::AutoScaling::LaunchConfiguration
+
+  WarningPublishMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-Publish-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalPublishMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-Publish-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningPublishRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-Publish-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalPublishRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-Publish-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningPublishDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-Publish-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+    Type: AWS::CloudWatch::Alarm
+  CriticalPublishDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-Publish-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+    Type: AWS::CloudWatch::Alarm
+  WarningPublishCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-Publish-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 45
+    Type: AWS::CloudWatch::Alarm
+  CriticalPublishCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-Publish-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 45
+    Type: AWS::CloudWatch::Alarm

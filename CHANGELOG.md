@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-### Added
-- Add memory alarms across all AEM Full-Set components
-- Add Dispatcher data volume metric to monitoring stack's CloudWatch dashboard.
+### Changed
+- Added CloudWatch alarms related to each component
+- Added alarms SNS topic prerequisites stack
 
 ## 4.24.0 - 2019-12-03
 ### Added
