@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
-- Added CloudWatch alarms related to each component
-- Added alarms SNS topic prerequisites stack
-- Migrate old SNS topic to new one which support warning and critical conditions.
+- Add memory alarms across all AEM Full-Set components
+- Add Dispatcher data volume metric to monitoring stack's CloudWatch dashboard
+- Remove AEM Full-Set generic SNS topic, migrate existing alarms to Critical/Warning SNS topics
 
 ## 4.24.0 - 2019-12-03
 ### Added
