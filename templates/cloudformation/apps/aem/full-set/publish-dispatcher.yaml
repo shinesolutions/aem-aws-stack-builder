@@ -165,10 +165,14 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${NetworkStackPrefixParameter}-PublishDispatcherSubnetList
     Type: AWS::AutoScaling::AutoScalingGroup
-  PublishDispatcherCPUHighAlarm:
+  CriticalPublishDispatcherAVGCPUHighAlarm:
     Properties:
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-PublishDispatcher-AVGCPUHighAlarm
       AlarmActions:
       - Ref: PublishDispatcherScaleUpPolicy
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: Scale up if CPU Avg > X % for X minutes
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
@@ -192,10 +196,14 @@ Resources:
           - Ref: PublishDispatcherASGCPUScalingParameters
       TreatMissingData: breaching
     Type: AWS::CloudWatch::Alarm
-  PublishDispatcherCPULowAlarm:
+  WarningPublishDispatcherAVGCPULowAlarm:
     Properties:
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-Warning-PublishDispatcher-AVGCPULowAlarm
       AlarmActions:
       - Ref: PublishDispatcherScaleDownPolicy
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       AlarmDescription: Scale down if CPU Avg < X % for X minutes
       ComparisonOperator: LessThanThreshold
       Dimensions:
@@ -219,15 +227,15 @@ Resources:
           - Ref: PublishDispatcherASGCPUScalingParameters
       TreatMissingData: breaching
     Type: AWS::CloudWatch::Alarm
-  PublishDispatcherAtLeastOneUnHealthyAlarm:
+  WarningPublishDispatcherAtLeastOneUnHealthyAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       AlarmDescription: At least one Publish Dispatcher is Unhealthy
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherAtLeastOneUnHealthyAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Warning-PublishDispatcher-AtLeastOneUnHealthyAlarm
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Dimensions:
       - Name: LoadBalancerName
@@ -238,20 +246,20 @@ Resources:
       Namespace: AWS/ELB
       OKActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       Period: 60
       Statistic: Average
       Threshold: 1
     Type: AWS::CloudWatch::Alarm
-  PublishDispatcherMoreThanOneUnHealthyAlarm:
+  CriticalPublishDispatcherMoreThanOneUnHealthyAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: More than one Publish Dispatcher is Unhealthy
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherMoreThanOneUnHealthyAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-PublishDispatcher-MoreThanOneUnHealthyAlarm
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
       - Name: LoadBalancerName
@@ -262,7 +270,7 @@ Resources:
       Namespace: AWS/ELB
       OKActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       Period: 60
       Statistic: Average
       Threshold: 1

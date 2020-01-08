@@ -33,13 +33,6 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
     Value:
       Ref: WarningAlarmNotificationTopic
-  AlarmNotificationTopic:
-    Description: The AEM Alarm Notification Topic
-    Export:
-      Name:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
-    Value:
-      Ref: AlarmNotificationTopic
 Parameters:
   AEMASGEventQueueNameParameter:
     Description: The AEM Stack Auto Scaling Group Event Quene Name
@@ -57,11 +50,11 @@ Parameters:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
 Resources:
-  AEMASGEventQueueLengthHighAlarm:
+  CriticalAEMASGEventQueueLengthHighAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
-      - Ref: AlarmNotificationTopic
+      - Ref: CriticalAlarmNotificationTopic
       AlarmDescription: Alarm if queue length avg > 10 for 2 minutes
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
@@ -141,13 +134,4 @@ Resources:
             Ref: AEMCWEventNotificationEmail
           Protocol: email
         - Ref: AWS::NoValue
-    Type: AWS::SNS::Topic
-  AlarmNotificationTopic:
-    Properties:
-      DisplayName:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-alarm-notification-topic
-      Subscription:
-      - Endpoint:
-          Ref: AEMCWEventNotificationEmail
-        Protocol: email
     Type: AWS::SNS::Topic

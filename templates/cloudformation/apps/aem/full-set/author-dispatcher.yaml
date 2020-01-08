@@ -242,15 +242,15 @@ Resources:
         Value:
           Ref: MainStackPrefixParameter
     Type: AWS::ElasticLoadBalancing::LoadBalancer
-  AuthorDispatcherAtLeastOneUnHealthyAlarm:
+  WarningAuthorDispatcherAtLeastOneUnHealthyAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       AlarmDescription: At least one Author Dispatcher is Unhealthy
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherAtLeastOneUnHealthyAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Warning-AuthorDispatcher-AtLeastOneUnHealthyAlarm
       ComparisonOperator: GreaterThanOrEqualToThreshold
       Dimensions:
       - Name: LoadBalancerName
@@ -261,20 +261,20 @@ Resources:
       Namespace: AWS/ELB
       OKActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       Period: 60
       Statistic: Average
       Threshold: 1
     Type: AWS::CloudWatch::Alarm
-  AuthorDispatcherMoreThanOneUnHealthyAlarm:
+  CriticalAuthorDispatcherMoreThanOneUnHealthyAlarm:
     Properties:
       ActionsEnabled: true
       AlarmActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: More than one Author Dispatcher is Unhealthy
       AlarmName:
-        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherMoreThanOneUnHealthyAlarm
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-AuthorDispatcher-MoreThanOneUnHealthyAlarm
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
       - Name: LoadBalancerName
@@ -285,7 +285,7 @@ Resources:
       Namespace: AWS/ELB
       OKActions:
       - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-AlarmNotificationTopic
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       Period: 60
       Statistic: Average
       Threshold: 1
