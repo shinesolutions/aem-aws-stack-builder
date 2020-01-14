@@ -171,8 +171,6 @@ Resources:
         Fn::Sub: ${MainStackPrefixParameter}-Critical-PublishDispatcher-AVGCPUHighAlarm
       AlarmActions:
       - Ref: PublishDispatcherScaleUpPolicy
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: Scale up if CPU Avg > X % for X minutes
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
@@ -202,8 +200,6 @@ Resources:
         Fn::Sub: ${MainStackPrefixParameter}-Warning-PublishDispatcher-AVGCPULowAlarm
       AlarmActions:
       - Ref: PublishDispatcherScaleDownPolicy
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       AlarmDescription: Scale down if CPU Avg < X % for X minutes
       ComparisonOperator: LessThanThreshold
       Dimensions:
