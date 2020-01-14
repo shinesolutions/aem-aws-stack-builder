@@ -171,7 +171,7 @@ Resources:
         Fn::Sub: ${MainStackPrefixParameter}-Critical-PublishDispatcher-AVGCPUHighAlarm
       AlarmActions:
       - Ref: PublishDispatcherScaleUpPolicy
-      - Fn::ImportValue:	
+      - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       AlarmDescription: Scale up if CPU Avg > X % for X minutes
       ComparisonOperator: GreaterThanThreshold
