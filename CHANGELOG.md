@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade AEM Test Suite to 1.11.0
+
 ### Fixed
 - Fix invalid tab char on publish-dispatcher CF template
 
