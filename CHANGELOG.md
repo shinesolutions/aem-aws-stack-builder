@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Replace Maven Central base URL from http://central.maven.org to https://repo.maven.apache.org
+
 ## 4.29.0 - 2020-01-14
 ### Changed
 - Upgrade AEM Test Suite to 1.11.0
