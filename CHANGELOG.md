@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Replace Maven Central base URL from http://central.maven.org to https://repo.maven.apache.org
+- Upgrade AEM Stack Manager Messenger to 2.10.0
+- Upgrade AEM Test Suite to 1.13.0
 
 ## 4.29.0 - 2020-01-14
 ### Changed
