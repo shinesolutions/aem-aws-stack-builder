@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Removed
+- Removed setting ACLs on S3 objects with 'public-read' #292
+
 ## 4.3.3 - 2019-10-02
 
 ### Removed
