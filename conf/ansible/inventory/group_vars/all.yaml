@@ -10,6 +10,26 @@ aws:
     log_subscription_arn: overwrite-me
     enable_cloudwatch_cleanup: false
 
+  encryption:
+    ebs_volume:
+      enable: true
+      kms_key_id: overwrite-me
+      managed_policy_arn: overwrite-me
+    dynamo_db:
+      # DynamoDB is always encrypted per default
+      kms_key_id: overwrite-me
+      managed_policy_arn: overwrite-me
+    lambda:
+      # Lambda functions environment variables are encrypted per default
+      kms_key_arn: overwrite-me
+      managed_policy_arn: overwrite-me
+    s3:
+      # S3 Buckets are always encrypted per default with AES256
+      kms_key_id: overwrite-me
+      managed_policy_arn: overwrite-me
+    sns:
+      kms_key_id: overwrite-me
+      managed_policy_arn: overwrite-me
 proxy:
   enabled: false
   protocol:

@@ -36,3 +36,26 @@ Alternatively, if you don't have the permission, or you have to integrate them i
 
 - Create an S3 Data Bucket for storing AEM environment states, this bucket path needs to be set in `s3.data_bucket_name` property
 - Create a [Route53 private hosted zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-creating.html), the hosted zone name needs to be set in `dns_records.route53_hosted_zone_name` property, and don't forget to include the trailing dot as part of the name
+
+
+### Encryption
+AEM OpenCloud supports the encryption of all it's AWS resources.
+
+AWS encrypts most of it's resources per default with an AWS owned CMK. While AEM OpenCloud enforces for some of it's ressources to use an AWS managed CMK where AWS KMS charges applies.
+
+#### AWS managed CMK in AEM OpenCloud:
+* AEM Stack Manager DynamoDB
+* EBS Volume if `aws.encryption.ebs_volume.enable` or deprecated configuration parameter `[aem_component].enable_vol_encryption` is set to true
+
+#### User managed CMK in AEM OpenCloud
+* S3 Bucket
+* AEM Stack Manager Lambda functions environment variables
+* AEM Stack Manager DynamoDB
+* AEM Stack Manager SNS Topics
+* AEM Stack Manager SQS Queues
+* AEM-Full-Set SNS Topics
+* AEM-Full-Set SQS Queues
+* AEM-Full-Set EBS Volumes
+* AEM-Consolidated EBS Volumes
+
+An overview of what permissions needs to be applied to the CMK can be found in the documentation [(link)](./aws-resource-encryption.md).

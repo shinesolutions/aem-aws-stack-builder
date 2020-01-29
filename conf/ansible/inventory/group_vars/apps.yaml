@@ -264,7 +264,7 @@ publish_dispatcher:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
-  enable_vol_encryption: true
+  enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
   elb_scheme: internet-facing
@@ -285,7 +285,7 @@ publish:
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 75
-  enable_vol_encryption: true
+  enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   enable_random_termination: true
   asg_min_size: 2
   asg_desired_capacity: 2
@@ -298,7 +298,7 @@ author:
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 75
-  enable_vol_encryption: true
+  enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   elb_health_check: HTTPS:5432/system/health?tags=shallow
 
 author_dispatcher:
@@ -306,7 +306,7 @@ author_dispatcher:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
-  enable_vol_encryption: true
+  enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   enable_random_termination: true
   elb_health_check: HTTPS:443/system/health?tags=shallow
   asg_min_size: 2
@@ -320,7 +320,7 @@ author_publish_dispatcher:
   instance_type: m4.xlarge
   root_vol_size: 20
   data_vol_size: 20
-  enable_vol_encryption: true
+  enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   associate_public_ip_address: true
 
 orchestrator:
@@ -328,7 +328,7 @@ orchestrator:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
-  enable_vol_encryption: true
+  enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   enable_random_termination: true
 
 chaos_monkey:
@@ -336,7 +336,7 @@ chaos_monkey:
   instance_type: t2.small
   root_vol_size: 20
   include_stack: true
-  enable_vol_encryption: true
+  enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   enable_random_termination: true
   termination_settings:
     calendar_open_hour: '9'

@@ -30,6 +30,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-SecurityGroupsStackName
     Value:
       Ref: SecurityGroupsStack
+  AWSAccountID:
+    Description: AWS Account ID
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AWSAccountId
+    Value:
+      Ref: AWS::AccountId
 Parameters:
   AEMASGEventQueueNameParameter:
     Description: The AEM Stack Auto Scaling Group Event Quene Name
@@ -46,6 +53,19 @@ Parameters:
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - Boolean for enabling/disabling EBS Volume encryption
+        - KMS Key ID used for EBS Volume encryption
+        - Managed Policy ARN for EBS Volume encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - Managed Policy ARN for SNS-Topic & SNS Queue encryption
+        - KMS Key ID used for Lambda encryption
+        - Managed Policy ARN for Lambda encryption
+        - Managed Policy ARN for accessing S3 CMK
+    Type: List<String>
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
@@ -71,6 +91,10 @@ Resources:
   InstanceProfilesStack:
     Properties:
       Parameters:
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
       TemplateURL:
@@ -87,6 +111,10 @@ Resources:
           Ref: AEMASGEventTopicNameParameter
         AEMCWEventNotificationEmail:
           Ref: AEMCWEventNotificationEmail
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
       TemplateURL:

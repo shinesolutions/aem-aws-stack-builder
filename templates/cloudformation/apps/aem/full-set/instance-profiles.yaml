@@ -1,4 +1,59 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  S3CMKAddManagedPolicyCondition:
+    Fn::Not:
+      - Fn::Equals:
+        - Fn::Select:
+          - 7
+          - Ref: AWSEncryptionParameters
+        - 'overwrite-me'
+  LambdaCMKAddManagedPolicyCondition:
+    Fn::And:
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                - 5
+                - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                - 6
+                - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+  SNSCMKAddManagedPolicyCondition:
+    Fn::And:
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                - 3
+                - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                - 4
+                - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+  EBSVolumeEncryptionCMKAddManagedPolicyCondition:
+    Fn::And:
+      - Fn::Equals:
+          - Fn::Select:
+            - 0
+            - Ref: AWSEncryptionParameters
+          - true
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                - 1
+                - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                - 2
+                - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
 Description: Create Instance Profiles for AEM Stack
 Outputs:
   AEMStackManagerSnapshotLambdaServiceRoleArn:
@@ -22,6 +77,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherInstanceProfile
     Value:
       Ref: AuthorDispatcherInstanceProfile
+  AuthorDispatcherRoleArn:
+    Description: The Author Dispatcher Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherRoleArn
+    Value:
+      Fn::GetAtt: AuthorDispatcherRole.Arn
   AuthorInstanceProfile:
     Description: The Author Instance Profile
     Export:
@@ -29,6 +91,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorInstanceProfile
     Value:
       Ref: AuthorInstanceProfile
+  AuthorRoleArn:
+    Description: The Author Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorRoleArn
+    Value:
+      Fn::GetAtt: AuthorRole.Arn
   ChaosMonkeyInstanceProfile:
     Description: The Chaos Monkey Instance Profile
     Export:
@@ -36,6 +105,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
     Value:
       Ref: ChaosMonkeyInstanceProfile
+  ChaosMonkeyRoleArn:
+    Description: The ChaosMonkeyAuthor Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyRoleArn
+    Value:
+      Fn::GetAtt: ChaosMonkeyRole.Arn
   OrchestratorInstanceProfile:
     Description: The Orchestrator Instance Profile
     Export:
@@ -43,6 +119,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorInstanceProfile
     Value:
       Ref: OrchestratorInstanceProfile
+  OrchestratorRoleArn:
+    Description: The Orchestrator Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorRoleArn
+    Value:
+      Fn::GetAtt: OrchestratorRole.Arn
   PublishDispatcherInstanceProfile:
     Description: The Publish Dispatcher Instance Profile
     Export:
@@ -50,6 +133,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
     Value:
       Ref: PublishDispatcherInstanceProfile
+  PublishDispatcherRoleArn:
+    Description: The PublishDispatcher Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherArn
+    Value:
+      Fn::GetAtt: PublishDispatcherRole.Arn
   PublishInstanceProfile:
     Description: The Publish Instance Profile
     Export:
@@ -57,10 +147,30 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishInstanceProfile
     Value:
       Ref: PublishInstanceProfile
+  PublishRoleArn:
+    Description: The Publish Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishArn
+    Value:
+      Fn::GetAtt: PublishRole.Arn
 Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - Boolean for enabling/disabling EBS Volume encryption
+        - KMS Key ID used for EBS Volume encryption
+        - Managed Policy ARN for EBS Volume encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - Managed Policy ARN for SNS-Topic & SNS Queue encryption
+        - KMS Key ID used for Lambda encryption
+        - Managed Policy ARN for Lambda encryption
+        - Managed Policy ARN for accessing S3 CMK
+    Type: List<String>
 Resources:
   AEMStackManagerSnapshotLambdaServiceRole:
     Properties:
@@ -75,6 +185,12 @@ Resources:
         Version: 2012-10-17
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - Fn::If:
+          - LambdaCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 6
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -109,6 +225,18 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -153,6 +281,18 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -203,6 +343,18 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -275,6 +427,24 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - SNSCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 4
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -351,6 +521,18 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -399,6 +581,18 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:

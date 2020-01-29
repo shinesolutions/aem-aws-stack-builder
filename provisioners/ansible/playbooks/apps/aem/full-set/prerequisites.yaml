@@ -4,6 +4,8 @@
   hosts: all
   gather_facts: no
   connection: local
+  vars:
+    stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
 
   tasks:
 
@@ -24,9 +26,9 @@
       tags:
         - create
 
-    - name: Create AEM App Prerequisite Resources Stack
+    - name: Create AEM App Prerequisite Resources Stack with Permissions Type B
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
+        stack_name: "{{ stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -43,7 +45,9 @@
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
           AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
+          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
+      register: prereq_stack_info
       tags:
         - create
       when:
@@ -51,7 +55,7 @@
 
     - name: Create AEM App Prerequisite Resources Stack with Permissions Type C
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
+        stack_name: "{{ stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -77,36 +81,269 @@
           OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
           PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
+          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
         - create
       when:
         permission_type == "c"
 
-
-    - name: Check if a Stack Exists
-      command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
-             --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: True
-      register: stack_query
+    - name: Gather all stack information
+      cloudformation_facts:
+        stack_name: "{{ stack_name }}"
+        region: "{{ aws.region }}"
+        all_facts: true
+      register: stack_info
       tags:
+        - create
         - delete
+
+    - name: "Save found stack infos"
+      set_fact:
+        stack_found: yes
+        instance_profile_stack_name: "{{ stack_info.ansible_facts.cloudformation[stack_name].stack_resources.InstanceProfilesStack.split('/')[1] }}"
+        aws_account_id: "{{ stack_info.ansible_facts.cloudformation[stack_name].stack_outputs.AWSAccountID }}"
+      when:
+        "(stack_info.ansible_facts.cloudformation | length > 0)"
+      tags:
+        - create
+        - delete
+
+    - name: Gather AEM Instance Profile stack information
+      cloudformation_facts:
+        stack_name: "{{ instance_profile_stack_name }}"
+        region: "{{ aws.region }}"
+        all_facts: true
+      register: instance_profile_stack_info
+      tags:
+        - create
+        - delete
+
+    - name: "Grant permissions for AEM App Instance Roles to use EBS Volume CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.ebs_volume.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+              - CreateGrant
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
+      when: permission_type == "b" and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM App Instance Roles to use SNS CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.sns.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
+      when: permission_type == "b" and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM Stack Manager Service Roles to use Lambda CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.lambda.kms_key_arn }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn }}"
+      when: permission_type == "b" and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM App Instance Roles to S3 CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.s3.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+              - CreateGrant
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
+      when: permission_type == "b" and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ prerequisites.stack_name }}" does not exist or some other errors occured
-      when:
-        "stack_query.rc != 0"
+        msg: "Stack {{ stack_name }} does not exist or some other errors occured"
+      when: stack_found is undefined
+      tags:
+        - delete
+
+    - name: "Gather information for EBS Voume CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.ebs_volume.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
+      register: kms_ebs_facts
+      tags:
+        - delete
+
+    - name: "Save found EBS Voume CMK Details"
+      set_fact:
+        kms_ebs_key_grants: "{{ kms_ebs_facts['keys'][0].grants }}"
+      when: "'keys' in kms_ebs_facts and (kms_ebs_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM App Instance Roles to EBS Volume CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.ebs_volume.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_ebs_key_grants }}"
+      when: (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
+            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
+            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
+            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
+            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
+            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn) or
+            (kms_ebs_key_grants is defined and item.grantee_principal == "arn:aws:iam::{{ aws_account_id }}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling")
+      tags:
+        - delete
+
+    - name: "Gather information for SNS CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.sns.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
+      register: kms_sns_facts
+      tags:
+        - delete
+
+    - name: "Save found SNS CMK Details"
+      set_fact:
+        kms_sns_key_grants: "{{ kms_sns_facts['keys'][0].grants }}"
+      when: "'keys' in kms_sns_facts and (kms_sns_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM App Instance Roles to use SNS CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.sns.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_sns_key_grants }}"
+      when: (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
+            (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn) or
+            (kms_sns_key_grants is defined and item.grantee_principal == "arn:aws:iam::{{ aws_account_id }}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling")
+      tags:
+        - delete
+
+    - name: "Gather information for Lambda CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.lambda.kms_key_arn.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
+      register: kms_lambda_facts
+      tags:
+        - delete
+
+    - name: "Save found Lambda CMK Details"
+      set_fact:
+        kms_lambda_key_grants: "{{ kms_lambda_facts['keys'][0].grants }}"
+      when: "'keys' in kms_lambda_facts and (kms_lambda_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM App Instance Roles to use Lambda CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.lambda.kms_key_arn }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_lambda_key_grants }}"
+      when: (kms_lambda_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn)
+      tags:
+        - delete
+
+    - name: "Gather information for S3 CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.s3.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      register: kms_s3_facts
+      tags:
+        - delete
+
+    - name: "Save found S3 CMK Details"
+      set_fact:
+        kms_s3_key_grants: "{{ kms_s3_facts['keys'][0].grants }}"
+      when: "'keys' in kms_s3_facts and (kms_s3_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM App Instance Roles to use S3 CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.s3.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_s3_key_grants }}"
+      when: (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
+            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
+            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
+            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
+            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
+            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
       tags:
         - delete
 
     - name: Delete AEM App Prerequisite Resources Stacks
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ prerequisites.stack_name }}"
+        stack_name: "{{ stack_name }}"
         region: "{{ aws.region }}"
         state: absent
-      when:
-        "stack_query.rc == 0"
+      when: stack_found is defined
       tags:
       - delete
 
