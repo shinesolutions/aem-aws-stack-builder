@@ -245,8 +245,7 @@
             (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
             (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
             (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
-            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn) or
-            (kms_ebs_key_grants is defined and item.grantee_principal == "arn:aws:iam::{{ aws_account_id }}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling")
+            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
       tags:
         - delete
 
@@ -274,8 +273,7 @@
       with_items:
         - "{{ kms_sns_key_grants }}"
       when: (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
-            (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn) or
-            (kms_sns_key_grants is defined and item.grantee_principal == "arn:aws:iam::{{ aws_account_id }}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling")
+            (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn)
       tags:
         - delete
 
