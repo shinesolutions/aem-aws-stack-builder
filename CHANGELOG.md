@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
-- Changed CPU Utilization Alarm Threshold for both severities
+- Increased CPU Utilization Alarm Threshold to 60 for Warning and 90 for Critical
 
 ## 4.31.0 - 2020-01-31
 ### Changed
