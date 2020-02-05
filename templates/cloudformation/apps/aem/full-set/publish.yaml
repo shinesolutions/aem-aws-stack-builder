@@ -398,7 +398,7 @@ Resources:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       Period: 300
       Statistic: Average
-      Threshold: 45
+      Threshold: 60
     Type: AWS::CloudWatch::Alarm
   CriticalPublishCPUUtilizationAlarm:
     Properties:
@@ -425,5 +425,5 @@ Resources:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       Period: 300
       Statistic: Average
-      Threshold: 45
+      Threshold: 90
     Type: AWS::CloudWatch::Alarm
