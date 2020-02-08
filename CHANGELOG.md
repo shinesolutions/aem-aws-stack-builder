@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Add new configuration parameter `aws.encryption.ebs_volume.enable` to enable EBS Volume encryption#370
+- Add feature to encrypt EBS Volues with CMK #370
+- Add feature to attach manage policy to EC2 instance role for accessing CMK for **permission-type b**  #370
+- Add feature to grant access to to EC2 instance role for accesing the CMK if no manage policy provided for **permission-type b**  #370
+- Add feature to define CMK for SSE DynamoDB Table encryption #370
+- Add feature to define CMK for encrypting Lambda functions environment variables #370
+- Add feature to define CMK for SSE S3 Buckets encryption #370
+- Add feature to define CMK for SSE SNS Topic & SNS Queue encryption #370
+- Add Monitoring Stack to AEM Full-Set permission type c
+
+### Changed
+- Configuration parameters `[aem_component].enable_vol_encryption` are now deprecated and replaced with `aws.encryption.ebs_volume.enable` #371
 
 ## 4.32.0 - 2020-02-05
 ### Changed

@@ -1,6 +1,28 @@
 ---
 
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UseCMKLambdaFunctionEncryptionCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
+  UseCMKSNSEncryptionCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
+  UseCMKDynamoDBEncryptionCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+              - 0
+              - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
 Description: Create AWS Lambda Implementation of AEM Stack Mananger Resources
 Outputs:
   AemStackManagerTableName:
@@ -22,6 +44,11 @@ Outputs:
     Value:
       Fn::ImportValue:
         Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn
+  LambdaServiceRoleArn:
+    Description: Value is needed by Ansible
+    Value:
+      Fn::ImportValue:
+        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
   StackManagerTopicArn:
     Description: AEM stack manager SNS topic Arn
     Export:
@@ -44,6 +71,17 @@ Outputs:
     Value:
       Ref: TaskStatusTopic
 Parameters:
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - KMS Key ID used for DynamoDB encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - KMS Key ARN used for Lambda function environment variable encryption
+        - Managed Policy ARN for SNS  encryption
+        - Managed Policy ARN for DynamoDB encryption
+        - Managed Policy ARN for Lambda encryption
+    Type: List<String>
   DataBucketNameParameter:
     Description: Bucket Name that Stores Files Used by the Function
     Type: String
@@ -199,6 +237,13 @@ Resources:
     Type: AWS::Lambda::Alias
   ManagerLambdaFunction:
     Properties:
+      KmsKeyArn:
+        Fn::If:
+          - UseCMKLambdaFunctionEncryptionCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Code:
         S3Bucket:
           Ref: DataBucketNameParameter
@@ -247,6 +292,13 @@ Resources:
     Type: AWS::SNS::Subscription
   OfflineBackupLambda:
     Properties:
+      KmsKeyArn:
+        Fn::If:
+          - UseCMKLambdaFunctionEncryptionCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Code:
         S3Bucket:
           Ref: DataBucketNameParameter
@@ -272,6 +324,13 @@ Resources:
     Type: AWS::Lambda::Function
   OfflineBackupTopic:
     Properties:
+      KmsMasterKeyId:
+        Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       DisplayName: AEM Backup
       TopicName:
         Fn::Sub: ${MainStackPrefixParameter}-AemOfflineBackup
@@ -295,6 +354,13 @@ Resources:
   QueryLambdaFunction:
     Properties:
       Code:
+        KmsKeyArn:
+          Fn::If:
+            - UseCMKLambdaFunctionEncryptionCondition
+            - Fn::Select:
+                - 2
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
         S3Bucket:
           Ref: DataBucketNameParameter
         S3Key:
@@ -365,6 +431,18 @@ Resources:
       BillingMode: PAY_PER_REQUEST
       SSESpecification:
         SSEEnabled: true
+        KMSMasterKeyId:
+          Fn::If:
+            - UseCMKDynamoDBEncryptionCondition
+            - Fn::Select:
+                - 0
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
+        SSEType:
+          Fn::If:
+            - UseCMKDynamoDBEncryptionCondition
+            - 'KMS'
+            - Ref: AWS::NoValue
       TableName:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerTable
       TimeToLiveSpecification:
@@ -374,6 +452,13 @@ Resources:
     Type: AWS::DynamoDB::Table
   StackManagerTopic:
     Properties:
+      KmsMasterKeyId:
+        Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       DisplayName: AEM Stack Manager Topic
       TopicName:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManager
@@ -391,6 +476,13 @@ Resources:
     Type: AWS::SNS::Subscription
   TaskStatusTopic:
     Properties:
+      KmsMasterKeyId:
+        Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       DisplayName:
         Fn::Sub: AEM Stack Manager Topic
       TopicName:

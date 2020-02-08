@@ -1,6 +1,56 @@
 ---
 
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  S3CMKAddManagedPolicyCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+              - 6
+              - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
+  LambdaCMKAddManagedPolicyCondition:
+    Fn::And:
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                  - 2
+                  - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                  - 5
+                  - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+  SNSCMKAddManagedPolicyCondition:
+    Fn::And:
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                  - 1
+                  - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                  - 3
+                  - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+  DynamoDBCMKAddManagedPolicyCondition:
+    Fn::And:
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                  - 0
+                  - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                  - 4
+                  - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
 Description: Create Instance Profiles for AEM Stack Manager
 Outputs:
   AEMStackManagerLambdaServiceRoleArn:
@@ -32,6 +82,18 @@ Outputs:
     Value:
       Ref: StackmanagerSSMServiceRole
 Parameters:
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - KMS Key ID used for DynamoDB encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - KMS Key ARN used for Lambda function environment variable encryption
+        - Managed Policy ARN for SNS  encryption
+        - Managed Policy ARN for DynamoDB encryption
+        - Managed Policy ARN for Lambda encryption
+        - Managed Policy ARN for accessing S3 CMK
+    Type: List<String>
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
     Type: String
@@ -62,6 +124,30 @@ Resources:
         Version: 2012-10-17
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - Fn::If:
+            - SNSCMKAddManagedPolicyCondition
+            - Fn::Select:
+                - 3
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
+        - Fn::If:
+            - DynamoDBCMKAddManagedPolicyCondition
+            - Fn::Select:
+                - 4
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
+        - Fn::If:
+            - LambdaCMKAddManagedPolicyCondition
+            - Fn::Select:
+                - 5
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
+        - Fn::If:
+            - S3CMKAddManagedPolicyCondition
+            - Fn::Select:
+                - 6
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
       Path: /
       Policies:
         - PolicyDocument:
@@ -115,6 +201,19 @@ Resources:
               Service:
                 - ssm.amazonaws.com
         Version: 2012-10-17
+      ManagedPolicyArns:
+        - Fn::If:
+            - SNSCMKAddManagedPolicyCondition
+            - Fn::Select:
+                - 3
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
+        - Fn::If:
+            - S3CMKAddManagedPolicyCondition
+            - Fn::Select:
+                - 6
+                - Ref: AWSEncryptionParameters
+            - Ref: AWS::NoValue
       Path: /
       Policies:
         - PolicyDocument:

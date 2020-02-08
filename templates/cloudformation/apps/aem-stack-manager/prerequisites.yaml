@@ -3,6 +3,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Overarching CF Template to Create SNS Topic
 Conditions:
+  UseCMKSNSEncryptionCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
   UseEventNotificationEmailCondition:
     Fn::Not:
       - Fn::Equals:
@@ -17,6 +24,18 @@ Outputs:
     Value:
       Ref: AlarmNotificationTopic
 Parameters:
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - KMS Key ID used for DynamoDB encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - KMS Key ARN used for Lambda function environment variable encryption
+        - Managed Policy ARN for SNS  encryption
+        - Managed Policy ARN for DynamoDB encryption
+        - Managed Policy ARN for Lambda encryption
+        - Managed Policy ARN for accessing S3 CMK
+    Type: List<String>
   AEMCWEventNotificationEmail:
     Description: The EMail adress for sending CW Alarm messages
     Type: String
@@ -26,6 +45,13 @@ Parameters:
 Resources:
   AlarmNotificationTopic:
     Properties:
+      KmsMasterKeyId:
+        Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       DisplayName:
         Fn::Sub: ${MainStackPrefixParameter}-Utilities-alarm-notification-topic
       Subscription:

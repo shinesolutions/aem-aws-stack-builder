@@ -1,6 +1,14 @@
 ---
 
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UseCMKLambdaFunctionEncryptionCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
 Description: AWS Lambda Functions for utility tasks with Default Schedule Using AWS
   Events
 Outputs:
@@ -32,6 +40,17 @@ Parameters:
   AWSRegion:
     Description: Name of the AWS region
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - KMS Key ID used for DynamoDB encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - KMS Key ARN used for Lambda function environment variable encryption
+        - Managed Policy ARN for SNS  encryption
+        - Managed Policy ARN for DynamoDB encryption
+        - Managed Policy ARN for Lambda encryption
+    Type: List<String>
   DataBucketNameParameter:
     Description: Bucket Name that Stores Files Used by the Function
     Type: String
@@ -88,6 +107,13 @@ Resources:
     Type: AWS::Lambda::Alias
   CloudWatchS3StreamLambdaFunction:
     Properties:
+      KmsKeyArn:
+        Fn::If:
+          - UseCMKLambdaFunctionEncryptionCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Code:
         S3Bucket:
           Ref: DataBucketNameParameter
@@ -237,6 +263,13 @@ Resources:
     Type: AWS::Events::Rule
   SnapshotsPurgeLambdaFunction:
     Properties:
+      KmsKeyArn:
+        Fn::If:
+          - UseCMKLambdaFunctionEncryptionCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Code:
         S3Bucket:
           Ref: DataBucketNameParameter

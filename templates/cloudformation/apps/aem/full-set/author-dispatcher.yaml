@@ -1,4 +1,29 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  # The usage of a CMK in the ASG LaunchConfiguration
+  # is not supported yet but maybe in the future ?
+  # I just leave the code here in case it's supported in the future.
+  # Atm. the EBS Volumes are getting encrypted with the key which is
+  # provided by the AMIs.
+  UseCMKEBSVolumeEncryptionCondition:
+    Fn::And:
+      - Fn::Equals:
+        - Ref: AuthorDispatcherEnableVolEncryptionParameter
+        # To support the deprecrated configuration parameters,
+        # [aem_component].enable_vol_encryption
+        #
+        # The new parameter is not support yet.
+        #
+        # - Fn::Select:
+        #   - 0
+        #   - Ref: AWSEncryptionParameters
+        - true
+      - Fn::Not:
+          - Fn::Equals:
+              - Fn::Select:
+                - 1
+                - Ref: AWSEncryptionParameters
+              - 'overwrite-me'
 Description: Create the Compute resources for the AEM Author Dispatcher
 Outputs:
   AuthorDispatcherAutoScalingGroup:
@@ -32,6 +57,13 @@ Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - Boolean for enabling/disabling EBS Volume encryption
+        - KMS Key ID used for EBS Volume encryption
+    Type: List<String>
   AuthorDispatcherASGAvailabilityZoneListParameter:
     Description: The Author Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
@@ -165,6 +197,20 @@ Resources:
           DeleteOnTermination: true
           Encrypted:
             Ref: AuthorDispatcherEnableVolEncryptionParameter
+            # To support the deprecrated configuration parameters,
+            # [aem_component].enable_vol_encryption
+            #
+            # The new parameter is not support yet.
+            # Fn::Select:
+            #   - 0
+            #   - Ref: AWSEncryptionParameters
+          # KmsKeyId:
+          #     Fn::If:
+          #     - UseCMKEBSVolumeEncryptionCondition
+          #     - Fn::Select:
+          #         - 1
+          #         - Ref: AWSEncryptionParameters
+          #     - Ref: AWS::NoValue
           VolumeSize:
             Ref: AuthorDispatcherRootVolSizeParameter
           VolumeType: gp2
@@ -174,6 +220,20 @@ Resources:
           DeleteOnTermination: true
           Encrypted:
             Ref: AuthorDispatcherEnableVolEncryptionParameter
+            # To support the deprecrated configuration parameters,
+            # [aem_component].enable_vol_encryption
+            #
+            # The new parameter is not support yet.
+            # Fn::Select:
+            #   - 0
+            #   - Ref: AWSEncryptionParameters
+          # KmsKeyId:
+          #     Fn::If:
+          #     - UseCMKEBSVolumeEncryptionCondition
+          #     - Fn::Select:
+          #         - 1
+          #         - Ref: AWSEncryptionParameters
+          #     - Ref: AWS::NoValue
           VolumeSize:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
