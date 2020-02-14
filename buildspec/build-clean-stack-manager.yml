@@ -6,4 +6,4 @@ phases:
       - echo -e 'Cleaning stack manager....'
   build:
     commands:
-      - echo -s 'Running make delete-stack-manager "stack_prefix=$BUILD_ID-sm" config_path=stage/user-config/aem-stack-manager-sandpit/'
+      - echo -e 'Running make delete-stack-manager "stack_prefix=$BUILD_ID-sm" config_path=stage/user-config/aem-stack-manager-sandpit/'
