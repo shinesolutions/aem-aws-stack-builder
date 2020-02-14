@@ -5,7 +5,8 @@ phases:
     commands:
       - echo -e 'Creating aws resources....'
       - rm -f $CONFIG_FILE
-      - echo -e "aws:\n  resources:\n    s3_bucket: ${BUILD_ID}-res" > $CONFIG_FILE
+      - echo -e "aws:\n  resources:\n    s3_bucket:" >> $CONFIG_FILE
+      - echo -e " ${BUILD_ID}-res" >> $CONFIG_FILE
       - cp $CONFIG_FILE $WORK_DIR
 
   build:
