@@ -1,0 +1,9 @@
+version: 0.1
+
+phases:
+  pre_build:
+    commands:
+      - echo -e 'Creating aws resources....'
+  build:
+    commands:
+      - echo -e 'Running make create-aws-resources "stack_prefix=$BUILD_ID-res" config_path=stage/user-config/aem-stack-manager-sandpit/...'
