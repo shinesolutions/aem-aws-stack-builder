@@ -5,6 +5,9 @@ phases:
     commands:
       - echo -e 'Creating stack manager....'
       - rm -f $CONFIG_FILE
+      - ls
+      - pwd
+      - ls stage
       - touch $CONFIG_FILE
       - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\b${BUILD_ID}-sm" > ${CONFIG_FILE}
       - cp $CONFIG_FILE $WORK_DIR

@@ -9,3 +9,5 @@ phases:
       - echo -e 'Running make deps...'
       - make deps
       - make deps-test
+      - ls
+      - pwd
