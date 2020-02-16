@@ -5,9 +5,9 @@ phases:
     commands:
       - echo -e 'Creating aws resources....'
       - rm -f $CONFIG_FILE
-      - echo -e "aws:\n  resources:\n    s3_bucket:" >> "${CONFIG_FILE}"
-      - echo -e " ${BUILD_ID}-res" >> "${CONFIG_FILE}"
+      - echo -e "aws:\n  resources:\n    s3_bucket:: ${BUILD_ID}-res" > ${CONFIG_FILE}
       - cp $CONFIG_FILE $WORK_DIR
+      - cat ${CONFIG_FILE}
 
   build:
     commands:
@@ -17,5 +17,6 @@ phases:
   post_build:
     commands:
       - make delete-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
+    finally:
       - rm -f $CONFIG_FILE
 
