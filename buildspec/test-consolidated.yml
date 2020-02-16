@@ -4,6 +4,8 @@ phases:
   pre_build:
     commands:
       - echo -e 'Testing consolidated...'
+      - make deps
+      - make deps-test
       - cp $CONFIG_FILE "stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
       - make config "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
       - cp -R stage/descriptors/consolidated/* stage/

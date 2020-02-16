@@ -4,10 +4,11 @@ phases:
   pre_build:
     commands:
       - echo -e 'Testing full set...'
+      - make deps
+      - make deps-test
       - cp $CONFIG_FILE "stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
       - make config "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
       - cp -R stage/descriptors/full-set/* stage/
-
 
   build:
     commands:
