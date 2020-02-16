@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo -e 'Installation deps....'
+  build:
+    commands:
+      - echo -e 'Running make deps...'
+      - make deps
+      - make deps-test
