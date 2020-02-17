@@ -4,6 +4,10 @@ phases:
   pre_build:
     commands:
       - echo -e 'Cleaning stack manager....'
+      - make deps
+      - make deps-test
+      - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\t${BUILD_ID}-sm" > $CONFIG_FILE
+      - cp $CONFIG_FILE $WORK_DIR
   build:
     commands:
       - echo -e 'Running make delete-stack-manager "stack_prefix=$BUILD_ID-sm" config_path=stage/user-config/aem-stack-manager-sandpit/'
