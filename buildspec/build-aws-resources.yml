@@ -3,19 +3,20 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo -e 'Creating aws resources....'
-      - rm -f $CONFIG_FILE
       - make deps
       - make deps-test
+      - rm -f $CONFIG_FILE
       - echo -e "aws:\n  resources:\n    s3_bucket:\t${BUILD_ID}-res" > $CONFIG_FILE
       - cp $CONFIG_FILE $WORK_DIR
 
   build:
     commands:
+      - echo -e 'Creating AEM aws resources....'
       - make create-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
 
   post_build:
     commands:
+      - echo -e 'Deleting AEM aws resources....'
       - make delete-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
 
 

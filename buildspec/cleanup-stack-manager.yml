@@ -3,7 +3,6 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo -e 'Cleaning stack manager...'
       - make deps
       - make deps-test
       - rm -f $CONFIG_FILE
@@ -11,4 +10,5 @@ phases:
       - cp $CONFIG_FILE $WORK_DIR
   build:
     commands:
+      - echo -e 'Deleting AEM stack manager...'
       - make delete-stack-manager "stack_prefix=${BUILD_ID}-sm" "config_path=$WORK_DIR"
