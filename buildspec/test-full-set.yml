@@ -6,6 +6,7 @@ phases:
       - echo -e 'Testing full set...'
       - make deps
       - make deps-test
+      - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\t${BUILD_ID}-sm" > $CONFIG_FILE
       - cp $CONFIG_FILE "stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
       - make config "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
       - cp -R stage/descriptors/full-set/* stage/

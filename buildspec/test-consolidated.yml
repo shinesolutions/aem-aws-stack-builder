@@ -6,6 +6,7 @@ phases:
       - echo -e 'Testing consolidated...'
       - make deps
       - make deps-test
+      - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\t${BUILD_ID}-sm" > ${CONFIG_FILE}
       - cp $CONFIG_FILE "stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
       - make config "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
       - cp -R stage/descriptors/consolidated/* stage/
@@ -13,7 +14,7 @@ phases:
   build:
     commands:
       - echo -e 'Running make $BUILD_TARGETS "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"'
- #     - make create-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
+      #     - make create-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
       - cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-con" && cd ../../
 
   post_build:

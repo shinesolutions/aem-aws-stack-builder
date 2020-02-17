@@ -7,7 +7,7 @@ phases:
       - rm -f $CONFIG_FILE
       - make deps
       - make deps-test
-      - echo -e "aws:\n  resources:\n    s3_bucket:\b${BUILD_ID}-res" > $CONFIG_FILE
+      - echo -e "aws:\n  resources:\n    s3_bucket:\t${BUILD_ID}-res" > $CONFIG_FILE
       - cp $CONFIG_FILE $WORK_DIR
       - cat $CONFIG_FILE
 
