@@ -14,12 +14,12 @@ phases:
   build:
     commands:
       - echo -e 'Running make $BUILD_TARGETS "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"'
-      #     - make create-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
-      - cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-con" && cd ../../
+#      - make create-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
+#      - cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-con" && cd ../../
 
   post_build:
     commands:
-  #    - make delete-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
+#      - make delete-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
 
 
 

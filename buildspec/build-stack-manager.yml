@@ -14,6 +14,6 @@ phases:
   build:
     commands:
       - echo -e 'Running make create-stack-manager "stack_prefix=$BUILD_ID-sm" config_path=stage/user-config/aem-stack-manager-sandpit/...'
-#      - make create-stack-manager stack_prefix=$BUILD_ID-sm config_path=$WORK_DIR
+      - make create-stack-manager stack_prefix=$BUILD_ID-sm config_path=$WORK_DIR
       - sh ./test/integration/fixtures/provision-test-dns-batch.sh $BUILD_ID
 

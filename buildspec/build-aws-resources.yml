@@ -14,10 +14,10 @@ phases:
   build:
     commands:
       - echo -e 'Running make create-aws-resources "stack_prefix=$BUILD_ID-res" config_path=stage/user-config/aem-stack-manager-sandpit/...'
-#      - make create-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
+      - make create-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
 
   post_build:
     commands:
-#      - make delete-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
+      - make delete-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
 
 
