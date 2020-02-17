@@ -3,6 +3,8 @@
   hosts: all
   gather_facts: false
   connection: local
+  vars:
+    stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
 
   tasks:
 
@@ -40,7 +42,7 @@
 
     - name: Create AEM Stack Manager Main Resources Stack with permission type b
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        stack_name: "{{ stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -59,38 +61,7 @@
           AEMCWEventNotificationEmail: "{{ stack_manager.alarm_notification.contact_email }}"
           CloudWatchS3StreamBucketNameParameter: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
           CloudWatchS3StreamPrefixParameter: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
-      register: main_stack_info
-      tags:
-        - create
-      when:
-        permission_type == "b"
-
-    - cloudformation_facts:
-        stack_name: "{{ main_stack_info.stack_resources[3].physical_resource_id.split('/')[1] }}"
-        region: "{{ aws.region }}"
-        all_facts: true
-      register: stack_manager_stack_info
-      tags:
-        - create
-      when:
-        permission_type == "b"
-
-    - name: Create Stack Manager configuration
-      stack_manager_config:
-        region: "{{ aws.region }}"
-        SSM_stack_name: "{{ main_stack_info.stack_resources[2].physical_resource_id.split('/')[1] }}"
-        S3Bucket: "{{ s3.data_bucket_name }}"
-        S3Folder: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-        TaskStatusTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
-        SSMServiceRoleArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.SSMServiceRoleArn }}"
-        S3BucketSSMOutput: "{{ s3.data_bucket_name }}"
-        S3PrefixSSMOutput: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/SSMOutput"
-        BackupTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
-        DynamoDBTableName: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
-        MinimumPublishInstances: "{{ stack_manager.publish.asg_min_size }}"
-        S3BucketCWStream: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
-        S3PrefixCWStream: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
-        state: present
+          AWSEncryptionParameters: "{{ aws.encryption.dynamo_db.kms_key_id }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.dynamo_db.managed_policy_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
         - create
       when:
@@ -98,7 +69,7 @@
 
     - name: Create AEM Stack Manager Main Resources Stack with permission type c
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        stack_name: "{{ stack_name }}"
         region: "{{ aws.region }}"
         state: present
         disable_rollback: true
@@ -119,65 +90,279 @@
           AEMStackManagerSSMServiceRoleNameParameter: "{{ stack_manager.ssm_service_role_name }}"
           AEMStackManagerSSMServiceRoleArnParameter: "{{ stack_manager.ssm_service_role_arn }}"
           AEMCWEventNotificationEmail: "{{ stack_manager.alarm_notification.contact_email }}"
-      register: main_stack_info
+          AWSEncryptionParameters: "{{ aws.encryption.dynamo_db.kms_key_id }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.dynamo_db.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
         - create
       when:
         permission_type == "c"
 
-    - cloudformation_facts:
-        stack_name: "{{ main_stack_info.stack_resources[3].physical_resource_id.split('/')[1] }}"
+    - name: Gather all stack information
+      cloudformation_facts:
+        stack_name: "{{ stack_name }}"
         region: "{{ aws.region }}"
         all_facts: true
-      register: stack_manager_stack_info
+      register: stack_info
       tags:
         - create
+        - delete
+
+    - name: "Save found stack infos"
+      set_fact:
+        stack_found: true
+        instance_profile_stack_name: "{{ stack_info.ansible_facts.cloudformation[stack_name].stack_resources.InstanceProfilesStack.split('/')[1] }}"
+        stack_manager_main_stack_name: "{{ stack_info.ansible_facts.cloudformation[stack_name].stack_resources.StackManagerStack.split('/')[1] }}"
+        ssm_document_stack_name: "{{ stack_info.ansible_facts.cloudformation[stack_name].stack_resources.SSMCommandsStack.split('/')[1] }}"
       when:
-        permission_type == "c"
+        "(stack_info.ansible_facts.cloudformation | length > 0)"
+      tags:
+        - create
+        - delete
+
+    - name: Gather AEM Instance Profile stack information
+      cloudformation_facts:
+        stack_name: "{{ instance_profile_stack_name }}"
+        region: "{{ aws.region }}"
+        all_facts: true
+      register: instance_profile_stack_info
+      when: instance_profile_stack_name is defined
+      tags:
+        - create
+        - delete
+
+    - name: Gather AEM Stack Manager Main stack information
+      cloudformation_facts:
+        stack_name: "{{ stack_manager_main_stack_name }}"
+        region: "{{ aws.region }}"
+        all_facts: true
+      register: stack_manager_main_stack_info
+      when: stack_manager_main_stack_name is defined
+      tags:
+        - create
+        - delete
 
     - name: Create Stack Manager configuration
       stack_manager_config:
         region: "{{ aws.region }}"
-        SSM_stack_name: "{{ main_stack_info.stack_resources[2].physical_resource_id.split('/')[1] }}"
+        SSM_stack_name: "{{ ssm_document_stack_name }}"
         S3Bucket: "{{ s3.data_bucket_name }}"
         S3Folder: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}"
-        TaskStatusTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.TaskStatusTopicArn }}"
-        SSMServiceRoleArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.SSMServiceRoleArn }}"
+        TaskStatusTopicArn: "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.TaskStatusTopicArn }}"
+        SSMServiceRoleArn: "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSSMServiceRoleArn }}"
         S3BucketSSMOutput: "{{ s3.data_bucket_name }}"
         S3PrefixSSMOutput: "{{ stack_prefix }}/{{ stack_manager.s3_prefix }}/SSMOutput"
-        BackupTopicArn: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.BackupTopicArn }}"
-        DynamoDBTableName: "{{ stack_manager_stack_info.ansible_facts.cloudformation[main_stack_info.stack_resources[3].physical_resource_id.split('/')[1]].stack_outputs.AemStackManagerTableName }}"
+        BackupTopicArn: "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.BackupTopicArn }}"
+        DynamoDBTableName: "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.AemStackManagerTableName }}"
         MinimumPublishInstances: "{{ stack_manager.publish.asg_min_size }}"
+        S3BucketCWStream: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
+        S3PrefixCWStream: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
         state: present
       tags:
         - create
-      when:
-        permission_type == "c"
 
-    - name: Check if a Stack Exists
-      command: >
-        aws cloudformation describe-stacks --stack-name "{{ stack_prefix }}-{{ main.stack_name }}"
-             --query 'Stacks[].StackName' --region "{{ aws.region }}"
-      ignore_errors: true
-      register: stack_query
+    - name: "Grant permissions for AEM Stack Manager Service Roles to use SNS CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.sns.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+      with_items:
+        - "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSSMServiceRoleArn }}"
+      when: permission_type == "b" and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
       tags:
-        - delete
+        - create
+
+    - name: "Grant permissions for AEM Stack Manager Service Roles to use DynamoDB CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.dynamo_db.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+      with_items:
+        - "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn }}"
+      when: permission_type == "b" and aws.encryption.dynamo_db.kms_key_id != 'overwrite-me' and aws.encryption.dynamo_db.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM Stack Manager Service Roles to use S3 CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.s3.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+      with_items:
+        - "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSSMServiceRoleArn }}"
+      when: permission_type == "b" and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM Stack Manager Service Roles to use Lambda CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.lambda.kms_key_arn }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+      with_items:
+        - "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn }}"
+      when: permission_type == "b" and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
 
     - name: Report Stack Problem
       debug:
-        msg: Stack "{{ stack_prefix }}-{{ main.stack_name }}" does not exist or some other errors occured
-      when:
-        "stack_query.rc != 0"
+        msg: Stack "{{ stack_name }}" does not exist or some other errors occured
+      when: stack_found is undefined
+      tags:
+        - delete
+
+    - name: "Gather information for SNS CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.sns.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
+      register: kms_sns_facts
+      tags:
+        - delete
+
+    - name: "Save found SNS CMK Details"
+      set_fact:
+        kms_sns_key_grants: "{{ kms_sns_facts['keys'][0].grants }}"
+      when: "'keys' in kms_sns_facts and (kms_sns_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM Stack Manager Service Roles to use SNS CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.sns.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_sns_key_grants }}"
+      when: (kms_sns_key_grants is defined and item.grantee_principal == stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn) or
+            (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSSMServiceRoleArn)
+      tags:
+        - delete
+
+    - name: "Gather information for DynamoDB CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.dynamo_db.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.dynamo_db.kms_key_id != 'overwrite-me' and aws.encryption.dynamo_db.managed_policy_arn == 'overwrite-me'
+      register: kms_dynamodb_facts
+      tags:
+        - delete
+
+    - name: "Save found DynamoDB CMK Details"
+      set_fact:
+        kms_dynamo_db_key_grants: "{{ kms_dynamodb_facts['keys'][0].grants }}"
+      when: "'keys' in kms_dynamodb_facts and (kms_dynamodb_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM Stack Manager Service Roles to use DynamoDB CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.dynamo_db.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_dynamo_db_key_grants }}"
+      when: (kms_dynamo_db_key_grants is defined and item.grantee_principal == stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn)
+      tags:
+        - delete
+
+    - name: "Gather information for Lambda CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.lambda.kms_key_arn.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
+      register: kms_lambda_facts
+      tags:
+        - delete
+
+    - name: "Save found Lambda CMK Details"
+      set_fact:
+        kms_lambda_key_grants: "{{ kms_lambda_facts['keys'][0].grants }}"
+      when: "'keys' in kms_lambda_facts and (kms_lambda_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM Stack Manager Service Roles to use Lambda CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.lambda.kms_key_arn }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_lambda_key_grants }}"
+      when: (kms_lambda_key_grants is defined and item.grantee_principal == stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn)
+      tags:
+        - delete
+
+    - name: "Gather information for S3 CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.s3.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      register: kms_s3_facts
+      tags:
+        - delete
+
+    - name: "Save found S3 CMK Details"
+      set_fact:
+        kms_s3_key_grants: "{{ kms_s3_facts['keys'][0].grants }}"
+      when: "'keys' in kms_s3_facts and (kms_s3_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM App Instance Roles to use S3 CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.s3.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_s3_key_grants }}"
+      when: (kms_s3_key_grants is defined and item.grantee_principal == stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.LambdaServiceRoleArn) or
+            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSSMServiceRoleArn)
       tags:
         - delete
 
     - name: Delete AEM Stack Manager Main Resources Stacks
       cloudformation:
-        stack_name: "{{ stack_prefix }}-{{ main.stack_name }}"
+        stack_name: "{{ stack_name }}"
         region: "{{ aws.region }}"
         state: absent
-      when:
-        "stack_query.rc == 0"
+      when: stack_found is defined
       tags:
         - delete
 

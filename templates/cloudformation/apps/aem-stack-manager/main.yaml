@@ -31,6 +31,18 @@ Parameters:
   AEMCWEventNotificationEmail:
     Description: The EMail adress for sending CW Alarm messages
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - KMS Key ID used for DynamoDB encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - KMS Key ARN used for Lambda function environment variable encryption
+        - Managed Policy ARN for SNS  encryption
+        - Managed Policy ARN for DynamoDB encryption
+        - Managed Policy ARN for Lambda encryption
+        - Managed Policy ARN for accessing S3 CMK
+    Type: List<String>
   CloudWatchS3StreamBucketNameParameter:
     Description: Bucket name that stores Stack data file
     Type: String
@@ -76,6 +88,10 @@ Resources:
   InstanceProfilesStack:
     Properties:
       Parameters:
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         MainStackPrefixParameter:
@@ -92,6 +108,10 @@ Resources:
   PrerequisitesStack:
     Properties:
       Parameters:
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         AEMCWEventNotificationEmail:
           Ref: AEMCWEventNotificationEmail
         MainStackPrefixParameter:
@@ -105,6 +125,10 @@ Resources:
       - PrerequisitesStack
     Properties:
       Parameters:
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         DynamoDBTTLAttribute:
@@ -124,6 +148,10 @@ Resources:
       Parameters:
         AWSRegion:
           Ref: AWSRegion
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         LiveSnapshotsPurgeMaxAge:

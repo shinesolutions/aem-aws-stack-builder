@@ -13,6 +13,13 @@ Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - Boolean for enabling/disabling EBS Volume encryption
+        - KMS Key ID used for EBS Volume encryption
+    Type: List<String>
   AuthorDNSRecordSetNameParameter:
     Description: Author DNS Record Set Name
     Type: String
@@ -159,6 +166,10 @@ Resources:
       Parameters:
         AemAwsStackProvisionerVersionParameter:
           Ref: AemAwsStackProvisionerVersionParameter
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         AuthorDispatcherASGAvailabilityZoneListParameter:
           Fn::Join:
             - ','
@@ -249,6 +260,10 @@ Resources:
           Fn::Select:
             - 4
             - Ref: AuthorVolParameter
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -298,6 +313,10 @@ Resources:
           Fn::Select:
             - 1
             - Ref: ChaosMonkeyVolParameter
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -386,6 +405,10 @@ Resources:
           Fn::Select:
             - 2
             - Ref: OrchestratorVolParameter
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
         PublishDispatcherStackArn:
@@ -448,6 +471,10 @@ Resources:
           Fn::Select:
             - 2
             - Ref: PublishDispatcherVolParameter
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         PublishDispatcherImageParameter:
           Ref: PublishDispatcherImageParameter
         PublishDispatcherImageRootDevice:
@@ -512,6 +539,10 @@ Resources:
           Fn::Select:
             - 4
             - Ref: PublishVolParameter
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         PublishImageParameter:
           Ref: PublishImageParameter
         PublishImageRootDevice:

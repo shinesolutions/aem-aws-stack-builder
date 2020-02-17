@@ -14,6 +14,7 @@
         disable_rollback: true
         template: "../../../../templates/cloudformation/apps/aws-resources.yaml"
         template_parameters:
+          AWSEncryptionParameters: "{{ aws.encryption.s3.kms_key_id }}"
           CreateS3Bucket: "{{ s3.create_bucket_flag }}"
           CreatePrivateHostedZone: "{{ dns_records.create_hosted_zone_flag }}"
           AemEnvS3BucketName: "{{ s3.data_bucket_name }}"

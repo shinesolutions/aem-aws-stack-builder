@@ -1,4 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UseCMKSNSEncryptionCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+            - 3
+            - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
 Description: Create Messaging resources for the AEM Stack Auto Scaling Group Events
 Outputs:
   AEMASGEventQueueName:
@@ -46,6 +54,19 @@ Parameters:
   AEMCWEventNotificationEmail:
     Description: The EMail adress for sending CW Alarm messages
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - Boolean for enabling/disabling EBS Volume encryption
+        - KMS Key ID used for EBS Volume encryption
+        - Managed Policy ARN for EBS Volume encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - Managed Policy ARN for SNS-Topic & SNS Queue encryption
+        - KMS Key ID used for Lambda encryption
+        - Managed Policy ARN for Lambda encryption
+        - Managed Policy ARN for accessing S3 CMK
+    Type: List<String>
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
@@ -92,6 +113,13 @@ Resources:
     Type: AWS::SQS::QueuePolicy
   AEMASGEventTopic:
     Properties:
+      KmsMasterKeyId:
+          Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 3
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       DisplayName:
         Ref: AEMASGEventTopicDisplayNameParameter
       Subscription:
@@ -105,12 +133,26 @@ Resources:
     Type: AWS::SNS::Topic
   AEMAutoScalingGroupEventQueue:
     Properties:
+      KmsMasterKeyId:
+          Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 3
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       QueueName:
         Ref: AEMASGEventQueueNameParameter
       VisibilityTimeout: 60
     Type: AWS::SQS::Queue
   WarningAlarmNotificationTopic:
     Properties:
+      KmsMasterKeyId:
+          Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 3
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       DisplayName:
         Fn::Sub:
           - "${PrerequisitesStackPrefixParameter}-Warning-Utilities-alarm-notification-topic"
@@ -124,6 +166,13 @@ Resources:
     Type: AWS::SNS::Topic
   CriticalAlarmNotificationTopic:
     Properties:
+      KmsMasterKeyId:
+          Fn::If:
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 3
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       DisplayName:
         Fn::Sub:
           - "${PrerequisitesStackPrefixParameter}-Critical-Utilities-alarm-notification-topic"

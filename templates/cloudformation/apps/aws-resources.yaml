@@ -11,9 +11,21 @@ Conditions:
     Fn::Equals:
       - Ref: CreatePrivateHostedZone
       - "true"
-
+  UseCMKS3BucketEncryptionCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+              - 0
+              - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
 
 Parameters:
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - KMS Key ID used for S3 Bucket encryption
+    Type: List<String>
   CreateS3Bucket:
     Type: String
     Description: Toggle creating the S3 bucket
@@ -44,7 +56,18 @@ Resources:
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
+              SSEAlgorithm:
+                Fn::If:
+                  - UseCMKS3BucketEncryptionCondition
+                  - 'aws:kms'
+                  - 'AES256'
+              KMSMasterKeyId:
+                Fn::If:
+                  - UseCMKS3BucketEncryptionCondition
+                  - Fn::Select:
+                      - 0
+                      - Ref: AWSEncryptionParameters
+                  - Ref: AWS::NoValue
   PrivateHostedZone:
     Type: AWS::Route53::HostedZone
     Condition: CreatePrivateHostedZoneCondition

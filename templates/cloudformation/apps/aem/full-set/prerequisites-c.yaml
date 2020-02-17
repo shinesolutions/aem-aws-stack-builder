@@ -46,6 +46,19 @@ Parameters:
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
+  AWSEncryptionParameters:
+    Description: |
+      A list of AWS Encyrption parameters.
+      List hast to be containing the following values in the following order:
+        - Boolean for enabling/disabling EBS Volume encryption
+        - KMS Key ID used for EBS Volume encryption
+        - Managed Policy ARN for EBS Volume encryption
+        - KMS Key ID used for SNS-Topic & SNS Queue encryption
+        - Managed Policy ARN for SNS-Topic & SNS Queue encryption
+        - KMS Key ID used for Lambda encryption
+        - Managed Policy ARN for Lambda encryption
+        - Managed Policy ARN for accessing S3 CMK
+    Type: List<String>
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
@@ -68,7 +81,7 @@ Parameters:
     Description: AEM Stack Secure Shell Inbound Cidr Ip
     Type: String
   AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
-    Description: AEM Stack Manager Lambda Role Arn 
+    Description: AEM Stack Manager Lambda Role Arn
     Type: String
   AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
     Description: AEM Stack Manager Lambda Role Name
@@ -127,6 +140,10 @@ Resources:
           Ref: AEMASGEventTopicNameParameter
         AEMCWEventNotificationEmail:
           Ref: AEMCWEventNotificationEmail
+        AWSEncryptionParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSEncryptionParameters
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
       TemplateURL:
