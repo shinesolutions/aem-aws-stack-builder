@@ -14,9 +14,8 @@ phases:
 
   build:
     commands:
-      - echo -e 'Running make $BUILD_TARGETS "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-$OS_TYPE-$AEM_VERSION/"'
-#      - make create-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
-#     - cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-fs" && cd ../../
+      - make create-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+      - cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-fs" && cd ../../
 
   post_build:
     commands:
