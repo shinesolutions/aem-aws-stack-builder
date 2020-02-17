@@ -16,8 +16,3 @@ phases:
     finally:
       - echo -e 'Deleting AEM aws resources....'
       - make delete-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
-
-
-
-
-
