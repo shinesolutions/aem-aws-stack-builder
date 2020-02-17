@@ -9,6 +9,7 @@ phases:
       - rm -f $CONFIG_FILE
       - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\t${BUILD_ID}-sm" > $CONFIG_FILE
       - cp $CONFIG_FILE "stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+      - echo "Configuring AEM Full-set environment..."
       - make config "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
       - cp -R stage/descriptors/full-set/* stage/
 
@@ -18,23 +19,6 @@ phases:
       - make create-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
       - echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
       - cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-fs" && cd ../../
-
-      # TODO: temporarily disable switch-dns testing to allow CodeBuild to pass
-      #       will re-enable when Ansible already upgrades boto sub dependency to boto3 for Route53 functionalities
-      # - echo "Testing DNS switching to point to AEM Full-Set environment..."
-      # - make switch-dns-full-set "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/" "stack_prefix=${test_id}-fs" publish_dispatcher_hosted_zone=aemopencloud.space "publish_dispatcher_record_set=${test_id}-pd-fs" author_dispatcher_hosted_zone=aemopencloud.cms "author_dispatcher_record_set=${test_id}-ad-fs"
-
-
-      # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
-      #       will re-enable when InSpec already upgrades aws-sdk sub dependency to version 3.x
-      # - echo "Testing AEM Full-Set environment readiness with AEM Test Suite..."
-      # - cd /stage/aem-test-suite/ && make test-readiness-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
-      # - echo "Testing AEM Full-Set environment acceptance with AEM Test Suite..."
-      # - cd /stage/aem-test-suite/ && make test-acceptance-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
-      # - echo "Testing AEM Full-Set environment recovery with AEM Test Suite..."
-      # - cd /stage/aem-test-suite/ && make test-recovery-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
-
-  post_build:
-    commands:
+    finally:
       - echo "Deleting AEM Full-Set environment..."
       - make delete-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
