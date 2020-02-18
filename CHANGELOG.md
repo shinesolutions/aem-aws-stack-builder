@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add boto library, which is required for the Ansible switch dns module
+
+### Changd
+- Update boto3 and botocore verison to fix incompatible pip installation error
+
+### Removed
+- Remove stack_prefix in consolidated switch dns pipeline since stack_prefix is included in the recordset config
+
 ## 4.33.0 - 2020-02-09
 ### Added
 - Add new configuration parameter `aws.encryption.ebs_volume.enable` to enable EBS Volume encryption#370
@@ -18,11 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add feature to define CMK for SSE S3 Buckets encryption [#370]
 - Add feature to define CMK for SSE SNS Topic & SNS Queue encryption [#370]
 - Add Monitoring Stack to AEM Full-Set permission type c
-
-### Fixed
-- Add boto library, which is required for the Ansible switch dns module
-- Update boto3 and botocore verison to fix incompatible pip installation error
-- Remove stack_prefix in consolidated switch dns pipeline since stack_prefix is included in the recordset config
 
 ### Changed
 - Configuration parameters `[aem_component].enable_vol_encryption` are now deprecated and replaced with `aws.encryption.ebs_volume.enable` [#371]
