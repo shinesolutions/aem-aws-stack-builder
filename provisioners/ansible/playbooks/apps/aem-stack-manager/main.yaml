@@ -58,9 +58,9 @@
           OfflineSnapshotsPurgeMaxAge: " {{ stack_manager.purge.offline_snapshots.max_age_in_hours }}"
           OrchestrationSnapshotsPurgeSchedule: "{{ stack_manager.purge.orchestration_snapshots.schedule }}"
           OrchestrationSnapshotsPurgeMaxAge: "{{ stack_manager.purge.orchestration_snapshots.max_age_in_hours }}"
-          AEMCWEventNotificationEmail: "{{ stack_manager.alarm_notification.contact_email }}"
           CloudWatchS3StreamBucketNameParameter: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
           CloudWatchS3StreamPrefixParameter: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
+          AWSNotificationParameters: "{{ stack_manager.alarm_notification.contact_email }}, {{ stack_manager.alarm_notification.https_endpoint }}"
           AWSEncryptionParameters: "{{ aws.encryption.dynamo_db.kms_key_id }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.dynamo_db.managed_policy_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
         - create
@@ -89,7 +89,7 @@
           AEMStackManagerLambdaServiceRoleArnParameter: "{{ stack_manager.lambda_service_role_arn }}"
           AEMStackManagerSSMServiceRoleNameParameter: "{{ stack_manager.ssm_service_role_name }}"
           AEMStackManagerSSMServiceRoleArnParameter: "{{ stack_manager.ssm_service_role_arn }}"
-          AEMCWEventNotificationEmail: "{{ stack_manager.alarm_notification.contact_email }}"
+          AWSNotificationParameters: "{{ stack_manager.alarm_notification.contact_email }}, {{ stack_manager.alarm_notification.https_endpoint }}"
           AWSEncryptionParameters: "{{ aws.encryption.dynamo_db.kms_key_id }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.dynamo_db.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
         - create

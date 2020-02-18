@@ -40,51 +40,29 @@ Parameters:
   AEMASGEventTopicNameParameter:
     Description: The AEM Stack Auto Scaling Group Event Topic Name
     Type: String
-  AEMCWEventNotificationEmail:
-    Description: The EMail adress for sending CW Alarm messages
-    Type: String
-  AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
-    Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
-    Type: String
-  AWSEncryptionParameters:
-    Description: |
-      A list of AWS Encyrption parameters.
-      List hast to be containing the following values in the following order:
-        - Boolean for enabling/disabling EBS Volume encryption
-        - KMS Key ID used for EBS Volume encryption
-        - Managed Policy ARN for EBS Volume encryption
-        - KMS Key ID used for SNS-Topic & SNS Queue encryption
-        - Managed Policy ARN for SNS-Topic & SNS Queue encryption
-        - KMS Key ID used for Lambda encryption
-        - Managed Policy ARN for Lambda encryption
-        - Managed Policy ARN for accessing S3 CMK
-    Type: List<String>
-  DataBucketNameParameter:
-    Description: Bucket name that stores Stack data files
-    Type: String
-  NetworkStackPrefixParameter:
-    Description: The AEM Stack Network Resources Stack Prefix
-    Type: String
-  PrerequisitesStackPrefixParameter:
-    Description: The AEM Stack Prerequisite Resources Stack Prefix
-    Type: String
-  PrivateSubnetInternetOutboundCidrIpParameter:
-    Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
-    Type: String
-  PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
-    Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
-    Type: String
-  SSLCertificateARNParameter:
-    Description: SSL Certificate ARN
-    Type: String
-  SecureShellInboundCidrIpParameter:
-    Description: AEM Stack Secure Shell Inbound Cidr Ip
-    Type: String
   AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
     Description: AEM Stack Manager Lambda Role Arn
     Type: String
   AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
     Description: AEM Stack Manager Lambda Role Name
+    Type: String
+  AWSEncryptionParameters:
+    Description: "A list of AWS Encyrption parameters.\nList hast to be containing\
+      \ the following values in the following order:\n  - Boolean for enabling/disabling\
+      \ EBS Volume encryption\n  - KMS Key ID used for EBS Volume encryption\n  -\
+      \ Managed Policy ARN for EBS Volume encryption\n  - KMS Key ID used for SNS-Topic\
+      \ & SNS Queue encryption\n  - Managed Policy ARN for SNS-Topic & SNS Queue encryption\n\
+      \  - KMS Key ID used for Lambda encryption\n  - Managed Policy ARN for Lambda\
+      \ encryption\n  - Managed Policy ARN for accessing S3 CMK\n"
+    Type: List<String>
+  AWSNotificationParameters:
+    Description: "A list of AWS notification parameters.\nList must contain the following\
+      \ values in the following order:\n  - Notification email address, if the value\
+      \ is 'overwrite-me' then it's considered to be disabled\n  - Notification https\
+      \ URL, if the value is 'overwrite-me' then it's considered to be disabled\n"
+    Type: List<String>
+  AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
   AuthorDispatcherInstanceProfileParameter:
     Description: AEM Author Dispatcher Profile name
@@ -95,8 +73,23 @@ Parameters:
   ChaosMonkeyInstanceProfileParameter:
     Description: AEM Chaos Monkey Profile name
     Type: String
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
   OrchestratorInstanceProfileParameter:
     Description: AEM Orchestrator Profile name
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  PrivateSubnetInternetOutboundCidrIpParameter:
+    Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
+    Type: String
+  PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
   PublishDispatcherInstanceProfileParameter:
     Description: AEM Publish Dispatcher Profile name
@@ -104,12 +97,16 @@ Parameters:
   PublishInstanceProfileParameter:
     Description: AEM Publish Profile name
     Type: String
+  SSLCertificateARNParameter:
+    Description: SSL Certificate ARN
+    Type: String
+  SecureShellInboundCidrIpParameter:
+    Description: AEM Stack Secure Shell Inbound Cidr Ip
+    Type: String
 Resources:
   InstanceProfilesStack:
     Properties:
       Parameters:
-        PrerequisitesStackPrefixParameter:
-          Ref: PrerequisitesStackPrefixParameter
         AEMStackManagerSnapshotLambdaServiceRoleArnParameter:
           Ref: AEMStackManagerSnapshotLambdaServiceRoleArnParameter
         AEMStackManagerSnapshotLambdaServiceRoleNameParameter:
@@ -122,6 +119,8 @@ Resources:
           Ref: ChaosMonkeyInstanceProfileParameter
         OrchestratorInstanceProfileParameter:
           Ref: OrchestratorInstanceProfileParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
         PublishDispatcherInstanceProfileParameter:
           Ref: PublishDispatcherInstanceProfileParameter
         PublishInstanceProfileParameter:
@@ -138,12 +137,14 @@ Resources:
           Ref: AEMASGEventTopicDisplayNameParameter
         AEMASGEventTopicNameParameter:
           Ref: AEMASGEventTopicNameParameter
-        AEMCWEventNotificationEmail:
-          Ref: AEMCWEventNotificationEmail
         AWSEncryptionParameters:
           Fn::Join:
-            - ','
-            - Ref: AWSEncryptionParameters
+          - ','
+          - Ref: AWSEncryptionParameters
+        AWSNotificationParameters:
+          Fn::Join:
+          - ','
+          - Ref: AWSNotificationParameters
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
       TemplateURL:

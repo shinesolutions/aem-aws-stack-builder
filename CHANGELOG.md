@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Added HTTPS endpoint SNS topic Subscription
+- Added new configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
 - Add boto library, which is required for the Ansible switch dns module
 
 ### Changed
