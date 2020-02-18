@@ -10,11 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add boto library, which is required for the Ansible switch dns module
 
-### Changd
+### Changed
 - Update boto3 and botocore verison to fix incompatible pip installation error
-
-### Removed
-- Remove stack_prefix in consolidated switch dns pipeline since stack_prefix is included in the recordset config
 
 ## 4.33.0 - 2020-02-09
 ### Added
