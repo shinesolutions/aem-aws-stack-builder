@@ -1,9 +1,9 @@
 ansible==2.9.2
-botocore==1.13.40
-boto3==1.10.35
 awscli==1.16.304
+boto==2.49.0
+boto3==1.10.35
+botocore==1.13.40
 jinja2==2.10.3
 pylint==1.9.5
 ruamel.yaml==0.16.5
 yamllint==1.19.0
-boto==2.49.0
