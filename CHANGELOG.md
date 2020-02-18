@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add boto library, which is required for the Ansible switch dns module
+
+### Changed
+- Update boto3 and botocore verison to fix incompatible pip installation error
+
 ## 4.33.0 - 2020-02-09
 ### Added
 - Add new configuration parameter `aws.encryption.ebs_volume.enable` to enable EBS Volume encryption#370
