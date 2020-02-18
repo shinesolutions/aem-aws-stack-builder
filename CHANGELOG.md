@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add feature to define CMK for SSE SNS Topic & SNS Queue encryption [#370]
 - Add Monitoring Stack to AEM Full-Set permission type c
 
+### Fixed
+- Add boto library, which is required for the Ansible switch dns module
+- Update boto3 and botocore verison to fix incompatible pip installation error
+- Remove stack_prefix in consolidated switch dns pipeline since stack_prefix is included in the recordset config
+
 ### Changed
 - Configuration parameters `[aem_component].enable_vol_encryption` are now deprecated and replaced with `aws.encryption.ebs_volume.enable` [#371]
 
