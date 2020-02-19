@@ -4,11 +4,12 @@ This upgrade guide covers the changes required when you already use AEM AWS Stac
 
 ### To 4.34.0
 
-* If you want to add a HTTPS endpoint for SNS topic subscription, set configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
+- If you want to add a HTTPS endpoint for SNS topic subscription, set configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
+- Migrate `inbound_from_bastion_host_security_group` configuration property value for secgroup for allowing Jumphost inbound rule to `<component>.extra_grroups`
 
 ### To 4.30.0
 
-* rhel7 default data volumes are now `/dev/xvdb` and `/dev/xvdc`, if you used to rely on the previous defaults of `/dev/sdb` and `/dev/sdc`, then you have to explicitly define those configurations
+- rhel7 default data volumes are now `/dev/xvdb` and `/dev/xvdc`, if you used to rely on the previous defaults of `/dev/sdb` and `/dev/sdc`, then you have to explicitly define those configurations
 
 ### To 4.24.0
 - Rename `system_users.[admin|deployer|exporter|importer|orchestrator|replicator][.name|path]` configuration property to `system_users.[author|publish].[admin|deployer|exporter|importer|orchestrator|replicator].[name|path]`
