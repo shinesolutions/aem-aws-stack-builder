@@ -13,6 +13,3 @@ phases:
     commands:
       - echo -e 'Creating AEM aws resources....'
       - make create-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
-    finally:
-      - echo -e 'Deleting AEM aws resources....'
-      - make delete-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
