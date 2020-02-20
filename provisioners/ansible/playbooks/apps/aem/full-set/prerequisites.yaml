@@ -114,6 +114,8 @@
         region: "{{ aws.region }}"
         all_facts: true
       register: instance_profile_stack_info
+      when:
+        "(stack_info.ansible_facts.cloudformation | length > 0)"
       tags:
         - create
         - delete
