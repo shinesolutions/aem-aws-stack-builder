@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Migrate integration test to CodeBuild
 
+### Added
+- Added HTTPS endpoint SNS topic Subscription
+- Added new configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
+- Add boto library, which is required for the Ansible switch dns module
+
+### Changed
+- Update boto3 and botocore verison to fix incompatible pip installation error
+
 ## 4.33.0 - 2020-02-09
 ### Added
 - Add new configuration parameter `aws.encryption.ebs_volume.enable` to enable EBS Volume encryption#370

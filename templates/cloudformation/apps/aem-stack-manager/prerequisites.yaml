@@ -1,20 +1,27 @@
----
-
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Overarching CF Template to Create SNS Topic
 Conditions:
   UseCMKSNSEncryptionCondition:
     Fn::Not:
-      - Fn::Equals:
-          - Fn::Select:
-              - 1
-              - Ref: AWSEncryptionParameters
-          - 'overwrite-me'
+    - Fn::Equals:
+      - Fn::Select:
+        - 1
+        - Ref: AWSEncryptionParameters
+      - overwrite-me
   UseEventNotificationEmailCondition:
     Fn::Not:
-      - Fn::Equals:
-          - Ref: AEMCWEventNotificationEmail
-          - overwrite-me
+    - Fn::Equals:
+      - Fn::Select:
+        - 0
+        - Ref: AWSNotificationParameters
+      - overwrite-me
+  UseEventNotificationHttpsCondition:
+    Fn::Not:
+    - Fn::Equals:
+      - Fn::Select:
+        - 1
+        - Ref: AWSNotificationParameters
+      - overwrite-me
+Description: Overarching CF Template to Create SNS Topic
 Outputs:
   AlarmNotificationTopicArn:
     Description: Arn for Alarm Notification Topic
@@ -25,40 +32,50 @@ Outputs:
       Ref: AlarmNotificationTopic
 Parameters:
   AWSEncryptionParameters:
-    Description: |
-      A list of AWS Encyrption parameters.
-      List hast to be containing the following values in the following order:
-        - KMS Key ID used for DynamoDB encryption
-        - KMS Key ID used for SNS-Topic & SNS Queue encryption
-        - KMS Key ARN used for Lambda function environment variable encryption
-        - Managed Policy ARN for SNS  encryption
-        - Managed Policy ARN for DynamoDB encryption
-        - Managed Policy ARN for Lambda encryption
-        - Managed Policy ARN for accessing S3 CMK
+    Description: "A list of AWS Encyrption parameters.\nList must contain the following\
+      \ values in the following order:\n  - KMS Key ID used for DynamoDB encryption\n\
+      \  - KMS Key ID used for SNS-Topic & SNS Queue encryption\n  - KMS Key ARN used\
+      \ for Lambda function environment variable encryption\n  - Managed Policy ARN\
+      \ for SNS  encryption\n  - Managed Policy ARN for DynamoDB encryption\n  - Managed\
+      \ Policy ARN for Lambda encryption\n  - Managed Policy ARN for accessing S3\
+      \ CMK\n"
     Type: List<String>
-  AEMCWEventNotificationEmail:
-    Description: The EMail adress for sending CW Alarm messages
-    Type: String
+  AWSNotificationParameters:
+    Description: "A list of AWS notification parameters.\nList must contain the following\
+      \ values in the following order:\n  - Notification email address, if the value\
+      \ is 'overwrite-me' then it's considered to be disabled\n  - Notification https\
+      \ URL, if the value is 'overwrite-me' then it's considered to be disabled\n"
+    Type: List<String>
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String
 Resources:
   AlarmNotificationTopic:
     Properties:
-      KmsMasterKeyId:
-        Fn::If:
-          - UseCMKSNSEncryptionCondition
-          - Fn::Select:
-              - 1
-              - Ref: AWSEncryptionParameters
-          - Ref: AWS::NoValue
       DisplayName:
         Fn::Sub: ${MainStackPrefixParameter}-Utilities-alarm-notification-topic
+      KmsMasterKeyId:
+        Fn::If:
+        - UseCMKSNSEncryptionCondition
+        - Fn::Select:
+          - 1
+          - Ref: AWSEncryptionParameters
+        - Ref: AWS::NoValue
       Subscription:
-        - Fn::If:
-            - UseEventNotificationEmailCondition
-            - Endpoint:
-                Ref: AEMCWEventNotificationEmail
-              Protocol: email
-            - Ref: AWS::NoValue
+      - Fn::If:
+        - UseEventNotificationEmailCondition
+        - Endpoint:
+            Fn::Select:
+            - 0
+            - Ref: AWSNotificationParameters
+          Protocol: email
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - UseEventNotificationHttpsCondition
+        - Endpoint:
+            Fn::Select:
+            - 1
+            - Ref: AWSNotificationParameters
+          Protocol: https
+        - Ref: AWS::NoValue
     Type: AWS::SNS::Topic
