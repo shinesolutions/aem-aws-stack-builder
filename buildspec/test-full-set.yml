@@ -20,8 +20,7 @@ phases:
       - echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
       - cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-fs" && cd ../../
       - echo "Testing DNS switching to point to AEM Full-Set environment..."
-      - make switch-dns-full-set "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/" "stack_prefix=${test_id}-fs" publish_dispatcher_hosted_zone=aemopencloud.space "publish_dispatcher_record_set=${test_id}-pd-fs" author_dispatcher_hosted_zone=aemopencloud.cms "author_dispatcher_record_set=${test_id}-ad-fs"
-
+        # TODO: enable switch dns test
         # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
         #       will re-enable when InSpec already upgrades aws-sdk sub dependency to version 3.x
     finally:

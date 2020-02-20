@@ -20,7 +20,7 @@ phases:
       - echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
       - cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-con" && cd ../../
       - echo "Testing DNS switching to point to AEM Consolidated environment..."
-      - make switch-dns-consolidated config_path=stage/user-config/aws-resources-sandpit/ "stack_prefix=${test_id}-con" author_publish_dispatcher_hosted_zone=aemopencloud.cms "author_publish_dispatcher_record_set=${test_id}-apd-con"
+      # TODO: enable switch dns test
     finally:
       - echo "Deleting AEM Consolidated environment..."
       - make delete-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
