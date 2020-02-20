@@ -13,6 +13,3 @@ phases:
     commands:
       - echo -e 'Creating AEM stack manager....'
       - make create-stack-manager stack_prefix=$BUILD_ID-sm config_path=$WORK_DIR
-
-      # Provision test DNS records, needed for switch-dns testing against AEM Consolidated and AEM Full-Set environments
-      - sh ./test/integration/fixtures/provision-test-dns-batch.sh $BUILD_ID
