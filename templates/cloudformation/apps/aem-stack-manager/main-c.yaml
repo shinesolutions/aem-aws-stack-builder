@@ -1,3 +1,4 @@
+---
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Overarching CF Template to Create AEM Stack Manager Resources Stacks
 Outputs:
@@ -109,12 +110,12 @@ Resources:
       Parameters:
         AWSEncryptionParameters:
           Fn::Join:
-          - ','
-          - Ref: AWSEncryptionParameters
+            - ','
+            - Ref: AWSEncryptionParameters
         AWSNotificationParameters:
           Fn::Join:
-          - ','
-          - Ref: AWSNotificationParameters
+            - ','
+            - Ref: AWSNotificationParameters
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
       TemplateURL:
@@ -127,14 +128,14 @@ Resources:
     Type: AWS::CloudFormation::Stack
   StackManagerStack:
     DependsOn:
-    - InstanceProfilesStack
-    - PrerequisitesStack
+      - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         AWSEncryptionParameters:
           Fn::Join:
-          - ','
-          - Ref: AWSEncryptionParameters
+            - ','
+            - Ref: AWSEncryptionParameters
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         DynamoDBTTLAttribute:
@@ -148,14 +149,14 @@ Resources:
     Type: AWS::CloudFormation::Stack
   UtilitiesStack:
     DependsOn:
-    - InstanceProfilesStack
-    - PrerequisitesStack
+      - InstanceProfilesStack
+      - PrerequisitesStack
     Properties:
       Parameters:
         AWSEncryptionParameters:
           Fn::Join:
-          - ','
-          - Ref: AWSEncryptionParameters
+            - ','
+            - Ref: AWSEncryptionParameters
         AWSRegion:
           Ref: AWSRegion
         DataBucketNameParameter:

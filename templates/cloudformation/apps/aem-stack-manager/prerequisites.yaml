@@ -1,26 +1,27 @@
+---
 AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   UseCMKSNSEncryptionCondition:
     Fn::Not:
-    - Fn::Equals:
-      - Fn::Select:
-        - 1
-        - Ref: AWSEncryptionParameters
-      - overwrite-me
+      - Fn::Equals:
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - overwrite-me
   UseEventNotificationEmailCondition:
     Fn::Not:
-    - Fn::Equals:
-      - Fn::Select:
-        - 0
-        - Ref: AWSNotificationParameters
-      - overwrite-me
+      - Fn::Equals:
+          - Fn::Select:
+              - 0
+              - Ref: AWSNotificationParameters
+          - overwrite-me
   UseEventNotificationHttpsCondition:
     Fn::Not:
-    - Fn::Equals:
-      - Fn::Select:
-        - 1
-        - Ref: AWSNotificationParameters
-      - overwrite-me
+      - Fn::Equals:
+          - Fn::Select:
+              - 1
+              - Ref: AWSNotificationParameters
+          - overwrite-me
 Description: Overarching CF Template to Create SNS Topic
 Outputs:
   AlarmNotificationTopicArn:
@@ -56,26 +57,26 @@ Resources:
         Fn::Sub: ${MainStackPrefixParameter}-Utilities-alarm-notification-topic
       KmsMasterKeyId:
         Fn::If:
-        - UseCMKSNSEncryptionCondition
-        - Fn::Select:
-          - 1
-          - Ref: AWSEncryptionParameters
-        - Ref: AWS::NoValue
+          - UseCMKSNSEncryptionCondition
+          - Fn::Select:
+              - 1
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Subscription:
-      - Fn::If:
-        - UseEventNotificationEmailCondition
-        - Endpoint:
-            Fn::Select:
-            - 0
-            - Ref: AWSNotificationParameters
-          Protocol: email
-        - Ref: AWS::NoValue
-      - Fn::If:
-        - UseEventNotificationHttpsCondition
-        - Endpoint:
-            Fn::Select:
-            - 1
-            - Ref: AWSNotificationParameters
-          Protocol: https
-        - Ref: AWS::NoValue
+        - Fn::If:
+            - UseEventNotificationEmailCondition
+            - Endpoint:
+                Fn::Select:
+                  - 0
+                  - Ref: AWSNotificationParameters
+              Protocol: email
+            - Ref: AWS::NoValue
+        - Fn::If:
+            - UseEventNotificationHttpsCondition
+            - Endpoint:
+                Fn::Select:
+                  - 1
+                  - Ref: AWSNotificationParameters
+              Protocol: https
+            - Ref: AWS::NoValue
     Type: AWS::SNS::Topic
