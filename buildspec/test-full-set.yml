@@ -33,4 +33,4 @@ phases:
       # cd /stage/aem-test-suite/ && make test-recovery-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
     finally:
       - echo "Deleting AEM Full-Set environment..."
-#      - make delete-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+      - make delete-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
