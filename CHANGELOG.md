@@ -5,8 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
+## 4.34.0 - 2020-02-23
 ### Added
 - Added HTTPS endpoint SNS topic Subscription
 - Added new configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
