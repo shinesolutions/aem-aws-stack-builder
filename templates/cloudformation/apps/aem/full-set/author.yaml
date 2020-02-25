@@ -108,9 +108,6 @@ Parameters:
   ELBCipherSuiteParameter:
     Description: ELB Cipher Suite Policy
     Type: String
-  InboundFromBastionHostSecurityGroupParameter:
-    Description: Inbound Bound from Bastion Host Security Group Id
-    Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Compute Resources Stack Prefix
     Type: String
@@ -248,7 +245,6 @@ Resources:
       SecurityGroupIds:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-AuthorPrimarySubnet
@@ -337,7 +333,6 @@ Resources:
       SecurityGroupIds:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
       SubnetId:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-AuthorStandbySubnet

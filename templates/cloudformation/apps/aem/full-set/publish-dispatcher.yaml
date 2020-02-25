@@ -73,9 +73,6 @@ Parameters:
   ELBCipherSuiteParameter:
     Description: ELB Cipher Suite Policy
     Type: String
-  InboundFromBastionHostSecurityGroupParameter:
-    Description: Inbound Bound from Bastion Host Security Group Id
-    Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Compute Resources Stack Prefix
     Type: String
@@ -370,7 +367,6 @@ Resources:
       SecurityGroups:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\

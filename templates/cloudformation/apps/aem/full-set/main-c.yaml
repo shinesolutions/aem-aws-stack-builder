@@ -90,9 +90,6 @@ Parameters:
     Default: "/dev/sda1, /dev/sdb"
     Description: The device names for the Image Id
     Type: List<String>
-  InboundFromBastionHostSecurityGroupParameter:
-    Description: Inbound Bound from Bastion Host Security Group Id
-    Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Compute Resources Stack Prefix
     Type: String
@@ -210,8 +207,6 @@ Resources:
           Ref: DataBucketNameParameter
         ELBCipherSuiteParameter:
           Ref: ELBCipherSuiteParameter
-        InboundFromBastionHostSecurityGroupParameter:
-          Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         NetworkStackPrefixParameter:
@@ -270,8 +265,6 @@ Resources:
           Ref: DataBucketNameParameter
         ELBCipherSuiteParameter:
           Ref: ELBCipherSuiteParameter
-        InboundFromBastionHostSecurityGroupParameter:
-          Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         NetworkStackPrefixParameter:
@@ -321,8 +314,6 @@ Resources:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
-        InboundFromBastionHostSecurityGroupParameter:
-          Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         NetworkStackPrefixParameter:
@@ -348,8 +339,6 @@ Resources:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
-        InboundFromBastionHostSecurityGroupParameter:
-          Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         MessagingStackArn:
@@ -419,8 +408,6 @@ Resources:
           Ref: DataBucketNameParameter
         ELBCipherSuiteParameter:
           Ref: ELBCipherSuiteParameter
-        InboundFromBastionHostSecurityGroupParameter:
-          Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         NetworkStackPrefixParameter:
@@ -483,8 +470,6 @@ Resources:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
-        InboundFromBastionHostSecurityGroupParameter:
-          Ref: InboundFromBastionHostSecurityGroupParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         NetworkStackPrefixParameter:

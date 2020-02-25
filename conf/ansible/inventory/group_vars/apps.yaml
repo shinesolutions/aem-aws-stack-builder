@@ -137,7 +137,6 @@ messaging:
 
 compute:
   key_pair_name: overwrite-me
-  inbound_from_bastion_host_security_group: overwrite-me
   # TODO: switch to ELBSecurityPolicy-TLS-1-2-2017-01 after upgrading deps
   elb_cipher_suite: ELBSecurityPolicy-2016-08
 

@@ -71,9 +71,6 @@ Parameters:
         - Boolean for enabling/disabling EBS Volume encryption
         - KMS Key ID used for EBS Volume encryption
     Type: List<String>
-  InboundFromBastionHostSecurityGroupParameter:
-    Description: Inbound from Bastion Host Security Group Id
-    Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String
@@ -198,7 +195,6 @@ Resources:
           Ref: AssociatePublicIpAddressParameter
         DeviceIndex: '0'
         GroupSet:
-        - Ref: InboundFromBastionHostSecurityGroupParameter
         - Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorPublishDispatcherSecurityGroup
         SubnetId:

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Migrate integration test to CodeBuild
 
+## 4.34.0 - 2020-02-23
 ### Added
 - Added HTTPS endpoint SNS topic Subscription
 - Added new configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
@@ -16,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Update boto3 and botocore verison to fix incompatible pip installation error
+- Any secgroup for allowing inbound rule from Jumphost is now configured as part of `<component>.extra_groups`
+
+### Removed
+- Removed configuration property `inbound_from_bastion_host_security_group`
 
 ## 4.33.0 - 2020-02-09
 ### Added
