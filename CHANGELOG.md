@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add support for Dispatcher Data volume device to consolidated #379
+
 ## 4.34.0 - 2020-02-23
 ### Added
 - Added HTTPS endpoint SNS topic Subscription

@@ -71,6 +71,8 @@ ami_device:
     author_data_attached_name: /dev/xvdb
     publish_data_name: /dev/xvdc
     publish_data_attached_name: /dev/xvdc
+    publish_dispatcher_data_name: /dev/xvdd
+    publish_dispatcher_data_attached_name: /dev/xvdd
   centos7:
     root_name: /dev/sda1
     data_name: /dev/sdb
@@ -79,6 +81,8 @@ ami_device:
     author_data_attached_name: /dev/xvdb
     publish_data_name: /dev/sdc
     publish_data_attached_name: /dev/xvdc
+    publish_dispatcher_data_name: /dev/sdd
+    publish_dispatcher_data_attached_name: /dev/xvdd
   rhel7:
     root_name: /dev/sda1
     data_name: /dev/xvdb
@@ -87,6 +91,8 @@ ami_device:
     author_data_attached_name: /dev/xvdb
     publish_data_name: /dev/xvdc
     publish_data_attached_name: /dev/xvdc
+    publish_dispatcher_data_name: /dev/xvdd
+    publish_dispatcher_data_attached_name: /dev/xvdd
 
 security_groups:
   secure_shell:
@@ -158,6 +164,12 @@ snapshots:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
   publish:
+    use_data_vol_snapshot: false
+    data_vol_snapshot_id: overwrite-me
+  author_dispatcher:
+    use_data_vol_snapshot: false
+    data_vol_snapshot_id: overwrite-me
+  publish_dispatcher:
     use_data_vol_snapshot: false
     data_vol_snapshot_id: overwrite-me
 

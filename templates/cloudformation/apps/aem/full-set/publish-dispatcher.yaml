@@ -24,6 +24,10 @@ Conditions:
                 - 1
                 - Ref: AWSEncryptionParameters
               - 'overwrite-me'
+  UsePublishDispatcherDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UsePublishDispatcherDataVolSnapshotParameter
+    - true
 Description: Create the Compute resources for the AEM Publish Dispatcher
 Outputs:
   PublishDispatcherAutoScalingGroup:
@@ -124,6 +128,15 @@ Parameters:
   PublishDispatcherRootVolSizeParameter:
     Description: PublishDispatcher Instances Root EBS Volume Size
     Type: Number
+  UsePublishDispatcherDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Publish Dispatcher Snapshot Data Volume.
+    Type: String
+  PublishDispatcherDataVolSnapshotParameter:
+    Description: The Publish Dispatcher Data Volume Snapshot Id
+    Type: String
 Resources:
   PublishDispatcherAutoScalingGroup:
     Properties:
@@ -351,6 +364,11 @@ Resources:
           #         - 1
           #         - Ref: AWSEncryptionParameters
           #     - Ref: AWS::NoValue
+          SnapshotId:
+            Fn::If:
+            - UsePublishDispatcherDataVolSnapshotCondition
+            - Ref: PublishDispatcherDataVolSnapshotParameter
+            - Ref: AWS::NoValue
           VolumeSize:
             Ref: PublishDispatcherDataVolSizeParameter
           VolumeType: gp2
