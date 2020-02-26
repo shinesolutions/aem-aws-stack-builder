@@ -15,14 +15,14 @@ phases:
 
   build:
     commands:
-      - echo "Creating AEM Full-Set environment..."
-      - make create-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
-      - echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
-      - cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-fs" && cd ../../
-      - echo "Testing DNS switching to point to AEM Full-Set environment..."
+#      - echo "Creating AEM Full-Set environment..."
+#      - make create-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+#      - echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
+#      - cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-fs" && cd ../../
+#      - echo "Testing DNS switching to point to AEM Full-Set environment..."
         # TODO: enable switch dns test
         # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
         #       will re-enable when InSpec already upgrades aws-sdk sub dependency to version 3.x
     finally:
-      - echo "Deleting AEM Full-Set environment..."
-      - make delete-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+#      - echo "Deleting AEM Full-Set environment..."
+#      - make delete-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
