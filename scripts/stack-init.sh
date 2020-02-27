@@ -27,10 +27,14 @@ PATH=/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin:$PATH
 
 # Download stack provisioner artifacts from S3.
 download_provisioner() {
+
   dest_dir=$1
   s3_object_name=$2
   mkdir -p "${dest_dir}"
   pushd "${dest_dir}"
+
+  set +o errexit
+
   aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/${s3_object_name}" .
   handle_exit_code "$?"
   # Don't add verbose flag while unarchiving the provisioner artifact in order
@@ -41,6 +45,9 @@ download_provisioner() {
   # to fail.
   tar -xzf "${s3_object_name}"
   handle_exit_code "$?"
+
+  set -o errexit
+
   rm "${s3_object_name}"
   chown -R root:root .
   popd
@@ -53,9 +60,13 @@ run_custom_stage() {
   stage=${1}
   script=${custom_provisioner_dir}/${stage}.sh
   if [ -x "${script}" ]; then
+    set +o errexit
+
     echo "${label} Executing the ${stage} script of Custom Stack Provisioner..."
     "${script}" "${stack_prefix}" "${component}" >> "${log_dir}/custom-stack-init-${stage}.log"
     handle_exit_code "$?"
+
+    set -o errexit
   else
     echo "${label} ${stage} script of Custom Stack Provisioner is either not provided or not executable"
   fi
@@ -109,14 +120,19 @@ echo "${label} Ruby version: $(ruby --version)"
 # Inject infrastructure parameters as custom Facter facts
 echo "${label} Downloading custom Facter facts..."
 mkdir -p /opt/puppetlabs/facts/facts.d
+
+set +o errexit
+
 aws s3 cp "s3://${data_bucket_name}/${stack_prefix}/stack-facts.txt" /opt/puppetlabs/facter/facts.d/stack-facts.txt
 handle_exit_code "$?"
+
 export FACTER_data_bucket_name="${data_bucket_name}"
 export FACTER_stack_prefix="${stack_prefix}"
 aws_region=$(facter aws_region)
 
 # Set ec2 instance tag that provisioning is InProgress
 AWS_DEFAULT_REGION="${aws_region}" aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
+handle_exit_code "$?"
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz" > /dev/null 2>&1; then
   echo "${label} Downloading Custom Stack Provisioner..."
@@ -132,10 +148,15 @@ cd "${aws_provisioner_dir}"
 
 if [[ -d data ]]; then
   echo "${label} Downloading custom configuration..."
+  set +o errexit
+
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/data/" data/
   handle_exit_code "$?"
+
   aws s3 sync "s3://${data_bucket_name}/${stack_prefix}/conf/" conf/
   handle_exit_code "$?"
+
+  set -o errexit
 fi
 
 # When extra_local.yaml file is provided, the configuration in that file will
@@ -159,8 +180,6 @@ puppet apply \
 
 translate_puppet_exit_code "$?"
 
-set -o errexit
-
 echo "${label} Checking orchestration tags for ${component} component..."
 /opt/shinesolutions/aws-tools/wait_for_ec2tags.py "$component"
 handle_exit_code "$?"
@@ -183,10 +202,6 @@ puppet apply \
 
 translate_puppet_exit_code "$?"
 
-set -o errexit
-
-set +o errexit
-
 echo "${label} Applying post-common scheduled jobs action Puppet manifest for all components..."
 puppet apply \
   --detailed-exitcodes \
@@ -197,9 +212,9 @@ puppet apply \
 
 translate_puppet_exit_code "$?"
 
-set -o errexit
-
 run_custom_stage post-common
+
+set +o errexit
 
 echo "${label} Testing ${component} component using InSpec..."
 cd "${aws_provisioner_dir}/test/inspec"
@@ -219,3 +234,5 @@ echo "${label} Completed ${component} component initialisation"
 # Additionally we are setting a ec2 tags so the orchestrator can check if provisioning was a success.
 touch "${aws_builder_dir}/stack-init-completed"
 aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Success
+
+set -o errexit

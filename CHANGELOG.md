@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Improve error handling for stack-init script
+
 ## 4.34.0 - 2020-02-23
 ### Added
 - Added HTTPS endpoint SNS topic Subscription
