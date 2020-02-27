@@ -8,6 +8,7 @@ phases:
       - rm -f $CONFIG_FILE
       - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\t${BUILD_ID}-sm" > $CONFIG_FILE
       - cp $CONFIG_FILE $WORK_DIR
+
   build:
     commands:
       - echo -e 'Deleting AEM stack manager...'
