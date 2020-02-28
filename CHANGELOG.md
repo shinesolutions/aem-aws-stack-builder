@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade AEM Stack Manager Cloud to 1.6.0
+
 ## 4.34.0 - 2020-02-23
 ### Added
 - Added HTTPS endpoint SNS topic Subscription
