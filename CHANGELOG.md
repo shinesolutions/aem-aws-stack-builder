@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increase SSM Timeout for offline-snapshot to 14400 sec
 - Increase SSM Timeout for test-readiness to 14400 sec
 - Improve error handling for stack-init script
+- Upgrade AEM Stack Manager Cloud to 1.6.0
 
 ### Removed
 - Remove configuration parameter `aem.snapshot_attach_timeout`
