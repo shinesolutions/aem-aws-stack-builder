@@ -257,3 +257,6 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
 
 - **Q:** What JDK version does AEM OpenCloud support ?<br>
   **A:** AEM OpenCloud supports Oracle Java JDK 8 from update 171 onwards.
+
+- **Q:** Is there any risk of having a dead replication agent? (replication agent which points to an inexisting instance)<br>
+  **A:** Yes. A dead replication agent can contain some items in its queue, but they will never be cleared from the queue because the destination instance doesn't exist. This condition will cause AEM Health Check to fail, with the `ReplicationQueueHealthCheck` having non `OK` status, and this will cause AEM provisioning to fail.
