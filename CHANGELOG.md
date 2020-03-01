@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Increase SSM Timeout for offline-compaction-snapshot to 14400 sec
+- Increase SSM Timeout for offline-snapshot to 14400 sec
+- Increase SSM Timeout for test-readiness to 14400 sec
+
 ### Added
 - Add support for Dispatcher Data volume device to consolidated #379
 
