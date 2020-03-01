@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve error handling for stack-init script
 - Upgrade AEM Stack Manager Cloud to 1.6.0
 - Upgrade AEM Stack Manager Messenger to 2.11.0
+- Upgrade AEM AWS Stack Provisioner to 4.29.0
 
 ### Removed
 - Remove configuration parameter `aem.snapshot_attach_timeout`
