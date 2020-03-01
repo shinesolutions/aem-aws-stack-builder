@@ -7,8 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add support for Dispatcher Data volume device to consolidated #379
+
 ### Changed
+- Increase SSM Timeout for offline-compaction-snapshot to 14400 sec
+- Increase SSM Timeout for offline-snapshot to 14400 sec
+- Increase SSM Timeout for test-readiness to 14400 sec
 - Improve error handling for stack-init script
+
+### Removed
+- Remove configuration parameter `aem.snapshot_attach_timeout`
 
 ## 4.34.0 - 2020-02-23
 ### Added
