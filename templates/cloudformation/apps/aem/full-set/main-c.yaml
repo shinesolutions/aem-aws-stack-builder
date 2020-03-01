@@ -201,6 +201,14 @@ Resources:
           Fn::Select:
             - 2
             - Ref: AuthorDispatcherVolParameter
+        AuthorDispatcherDataVolSnapshotParameter:
+          Fn::Select:
+            - 3
+            - Ref: AuthorDispatcherVolParameter
+        UseAuthorDispatcherDataVolSnapshotParameter:
+          Fn::Select:
+            - 4
+            - Ref: AuthorDispatcherVolParameter
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -453,6 +461,14 @@ Resources:
         PublishDispatcherEnableVolEncryptionParameter:
           Fn::Select:
             - 2
+            - Ref: PublishDispatcherVolParameter
+        PublishDispatcherDataVolSnapshotParameter:
+          Fn::Select:
+            - 3
+            - Ref: PublishDispatcherVolParameter
+        UsePublishDispatcherDataVolSnapshotParameter:
+          Fn::Select:
+            - 4
             - Ref: PublishDispatcherVolParameter
         AWSEncryptionParameters:
           Fn::Join:

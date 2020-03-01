@@ -12,6 +12,12 @@ Conditions:
           - 3
           - Ref: AuthorPublishDispatcherVolParameter
       - true
+  UsePublishDispatcherDataVolSnapshotCondition:
+    Fn::Equals:
+      - Fn::Select:
+          - 5
+          - Ref: AuthorPublishDispatcherVolParameter
+      - true
   UseCMKEBSVolumeEncryptionCondition:
     Fn::And:
       - Fn::Equals:
@@ -49,7 +55,7 @@ Parameters:
     Description: AMI Id used for the Host
     Type: AWS::EC2::Image::Id
   ImageDevices:
-    Default: "/dev/sda1, /dev/sdb  /dev/sdc"
+    Default: "/dev/sda1, /dev/sdb, /dev/sdc"
     Description: The device names for the Image Id
     Type: List<String>
   AuthorPublishDispatcherInstanceTypeParameter:
@@ -88,6 +94,9 @@ Parameters:
     Type: String
   Route53HostedZoneNameParameter:
     Description: Route53 Hosted Zone Name the Record Set will be Created in
+    Type: String
+  PublishDispatcherDataVolSnapshotParameter:
+    Description: The Dispatcher Data Volume Snapshot Id
     Type: String
 Resources:
   AuthorPublishDispatcherInstance:
@@ -181,6 +190,39 @@ Resources:
             Fn::If:
             - UsePublishDataVolSnapshotCondition
             - Ref: PublishDataVolSnapshotParameter
+            - Ref: AWS::NoValue
+          VolumeSize:
+            Fn::Select:
+              - 1
+              - Ref: AuthorPublishDispatcherVolParameter
+          VolumeType: gp2
+      - DeviceName:
+          Fn::Select:
+            - 3
+            - Ref: ImageDevices
+        Ebs:
+          DeleteOnTermination: true
+          Encrypted:
+            Fn::Select:
+              - 4
+              - Ref: AuthorPublishDispatcherVolParameter
+              # To support the deprecrated configuration parameters,
+              # [aem_component].enable_vol_encryption
+              #
+              # The new parameter is not support yet.
+              # - 0
+              # - Ref: AWSEncryptionParameters
+          KmsKeyId:
+              Fn::If:
+              - UseCMKEBSVolumeEncryptionCondition
+              - Fn::Select:
+                  - 1
+                  - Ref: AWSEncryptionParameters
+              - Ref: AWS::NoValue
+          SnapshotId:
+            Fn::If:
+            - UsePublishDispatcherDataVolSnapshotCondition
+            - Ref: PublishDispatcherDataVolSnapshotParameter
             - Ref: AWS::NoValue
           VolumeSize:
             Fn::Select:
