@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Removed
+- Remove configuration parameter `aem.snapshot_attach_timeout`
+
 ### Changed
 - Increase SSM Timeout for offline-compaction-snapshot to 14400 sec
 - Increase SSM Timeout for offline-snapshot to 14400 sec
