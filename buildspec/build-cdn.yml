@@ -11,5 +11,5 @@ phases:
 
   build:
     commands:
-      - echo -e 'Creating AEM aws resources....'
-      - make create-aws-resources "stack_prefix=${BUILD_ID}-res" "config_path=${WORK_DIR}"
+      - echo -e "Creating CDN..."
+      - make create-cdn "stack_prefix=${test_id}-cdn" "config_path=stage/user-config/cdn-sandpit/"
