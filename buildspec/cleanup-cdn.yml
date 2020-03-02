@@ -12,4 +12,4 @@ phases:
   build:
     commands:
       - echo -e "Deleting CDN..."
-      - make delete-cdn "stack_prefix=${BUILD_ID}-cdn" "config_path=stage/user-config/cdn-sandpit/"
+      - make delete-cdn "stack_prefix=${BUILD_ID}-cdn" "config_path=${WORK_DIR}"
