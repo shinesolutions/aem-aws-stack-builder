@@ -30,6 +30,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-SecurityGroupsStackName
     Value:
       Ref: SecurityGroupsStack
+  AWSAccountID:
+    Description: AWS Account ID
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AWSAccountId
+    Value:
+      Ref: AWS::AccountId
 Parameters:
   AEMASGEventQueueNameParameter:
     Description: The AEM Stack Auto Scaling Group Event Quene Name
