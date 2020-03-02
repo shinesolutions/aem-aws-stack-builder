@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Add missing CF Stack output parameter for full-set permission type c [#378]
+
 ## 4.35.0 - 2020-03-01
 ### Added
 - Add support for Dispatcher Data volume device to consolidated [#379]
