@@ -511,6 +511,13 @@ Resources:
             - Ref: AWS::NoValue
       TableName:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerTable
+      Tags:
+        - Key: StackPrefix
+          Value:
+            Ref: MainStackPrefixParameter
+        - Key: Name
+          Value:
+            Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerTable
       TimeToLiveSpecification:
         AttributeName:
           Ref: DynamoDBTTLAttribute

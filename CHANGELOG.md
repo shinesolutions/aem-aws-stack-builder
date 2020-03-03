@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add Tagging support to AEM Stack Manager DynamoDB
+- Add Tagging support to AOC managed S3 Bucket
+
 ## 4.35.1 - 2020-03-02
 ### Fixed
 - Add missing CF Stack output parameter for full-set permission type c [#378]

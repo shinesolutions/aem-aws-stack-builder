@@ -68,6 +68,9 @@ Resources:
                       - 0
                       - Ref: AWSEncryptionParameters
                   - Ref: AWS::NoValue
+      Tags:
+        - Key: Name
+          Value: AEM OpenCloud Managed S3 Bucket
   PrivateHostedZone:
     Type: AWS::Route53::HostedZone
     Condition: CreatePrivateHostedZoneCondition
