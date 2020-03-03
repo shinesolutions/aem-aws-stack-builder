@@ -189,7 +189,7 @@ Permissions which needs to be applied to the CMK
 | Permission | Required Permissions | Notes |
 |------|-------------|------|
 | publish_dispatcher.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
-| publish.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
+| publish.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey, CreateGrant, ListGrants, RevokeGrant| |
 | author.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
 | author_dispatcher.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
 | orchestrator.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
