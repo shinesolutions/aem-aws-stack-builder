@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add boto library, which is required for the Ansible switch dns module
+
 ### Changed
+- Update boto3 and botocore verison to fix incompatible pip installation error
+- Remove stack-prefix from the value used in the dns switch pipeline, since the config includes stack-prefix. 
 - Update documentation for EBS volume encryption
 - Change default live snapshot to not run between 1am to 2am
 
@@ -37,10 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added HTTPS endpoint SNS topic Subscription
 - Added new configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
-- Add boto library, which is required for the Ansible switch dns module
-
-### Changed
-- Update boto3 and botocore verison to fix incompatible pip installation error
 - Any secgroup for allowing inbound rule from Jumphost is now configured as part of `<component>.extra_groups`
 
 ### Removed
