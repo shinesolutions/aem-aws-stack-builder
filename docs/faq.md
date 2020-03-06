@@ -253,3 +253,10 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
   **A:** The provisioning process ```"[author|publish]: Set admin password for current stack"``` ([Link](https://github.com/shinesolutions/puppet-aem-curator/blob/master/manifests/config_aem_system_users.pp#L48)) can fail, when the user path of the `admin` user is not correct in the configuration profile([Author](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/conf/ansible/inventory/group_vars/apps.yaml#L180)|[Publish](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/conf/ansible/inventory/group_vars/apps.yaml#L207)).
 
   To check the path you need to configure you can either look in the repository at `/home/users` or search for the `admin` user in [useradmin](http://localhost:4502/useradmin).
+
+
+- **Q:** What JDK version does AEM OpenCloud support ?<br>
+  **A:** AEM OpenCloud supports Oracle Java JDK 8 from update 171 onwards.
+
+- **Q:** Is there any risk of having a dead replication agent? (replication agent which points to an inexisting instance)<br>
+  **A:** Yes. A dead replication agent can contain some items in its queue, but they will never be cleared from the queue because the destination instance doesn't exist. This condition will cause AEM Health Check to fail, with the `ReplicationQueueHealthCheck` having non `OK` status, and this will cause AEM provisioning to fail.

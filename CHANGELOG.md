@@ -13,6 +13,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update boto3 and botocore verison to fix incompatible pip installation error
 - Remove stack-prefix from the value used in the dns switch pipeline, since the config includes stack-prefix. 
+- Update documentation for EBS volume encryption
+- Change default live snapshot to not run between 1am to 2am
+
+## 4.35.1 - 2020-03-02
+
+### Fixed
+- Add missing CF Stack output parameter for full-set permission type c [#378]
+
+## 4.35.0 - 2020-03-01
+### Added
+- Add support for Dispatcher Data volume device to consolidated [#379]
+
+### Changed
+- Increase SSM Timeout for offline-compaction-snapshot to 14400 sec
+- Increase SSM Timeout for offline-snapshot to 14400 sec
+- Increase SSM Timeout for test-readiness to 14400 sec
+- Improve error handling for stack-init script
+- Upgrade AEM Stack Manager Cloud to 1.6.0
+- Upgrade AEM Stack Manager Messenger to 2.11.0
+- Upgrade AEM AWS Stack Provisioner to 4.29.0
+- Upgrade AEM Test Suite to 1.15.0
+
+### Removed
+- Remove configuration parameter `aem.snapshot_attach_timeout`
+
+## 4.34.0 - 2020-02-23
+### Added
+- Added HTTPS endpoint SNS topic Subscription
+- Added new configuration properties `stack_manager.alarm_notification.https_endpoint` and `messaging.alarm_notification.https_endpoint`
+- Any secgroup for allowing inbound rule from Jumphost is now configured as part of `<component>.extra_groups`
+
+### Removed
+- Removed configuration property `inbound_from_bastion_host_security_group`
 
 ## 4.33.0 - 2020-02-09
 ### Added

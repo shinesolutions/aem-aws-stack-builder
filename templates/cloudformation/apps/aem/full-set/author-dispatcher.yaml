@@ -24,6 +24,10 @@ Conditions:
                 - 1
                 - Ref: AWSEncryptionParameters
               - 'overwrite-me'
+  UseAuthorDispatcherDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UseAuthorDispatcherDataVolSnapshotParameter
+    - true
 Description: Create the Compute resources for the AEM Author Dispatcher
 Outputs:
   AuthorDispatcherAutoScalingGroup:
@@ -108,9 +112,6 @@ Parameters:
   ELBCipherSuiteParameter:
     Description: ELB Cipher Suite Policy
     Type: String
-  InboundFromBastionHostSecurityGroupParameter:
-    Description: Inbound Bound from Bastion Host Security Group Id
-    Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Compute Resources Stack Prefix
     Type: String
@@ -119,6 +120,15 @@ Parameters:
     Type: String
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  UseAuthorDispatcherDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Author Dispatcher Snapshot Data Volume.
+    Type: String
+  AuthorDispatcherDataVolSnapshotParameter:
+    Description: The Author Dispatcher Data Volume Snapshot Id
     Type: String
 Resources:
   AuthorDispatcherAutoScalingGroup:
@@ -234,6 +244,11 @@ Resources:
           #         - 1
           #         - Ref: AWSEncryptionParameters
           #     - Ref: AWS::NoValue
+          SnapshotId:
+            Fn::If:
+            - UseAuthorDispatcherDataVolSnapshotCondition
+            - Ref: AuthorDispatcherDataVolSnapshotParameter
+            - Ref: AWS::NoValue
           VolumeSize:
             Ref: AuthorDispatcherDataVolSizeParameter
           VolumeType: gp2
@@ -250,7 +265,6 @@ Resources:
       SecurityGroups:
       - Fn::ImportValue:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherSecurityGroup
-      - Ref: InboundFromBastionHostSecurityGroupParameter
       UserData:
         Fn::Base64:
           Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\

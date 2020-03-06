@@ -2,11 +2,25 @@ AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   UseCMKSNSEncryptionCondition:
     Fn::Not:
-      - Fn::Equals:
-          - Fn::Select:
-            - 3
-            - Ref: AWSEncryptionParameters
-          - 'overwrite-me'
+    - Fn::Equals:
+      - Fn::Select:
+        - 3
+        - Ref: AWSEncryptionParameters
+      - overwrite-me
+  UseEventNotificationEmailCondition:
+    Fn::Not:
+    - Fn::Equals:
+      - Fn::Select:
+        - 0
+        - Ref: AWSNotificationParameters
+      - overwrite-me
+  UseEventNotificationHttpsCondition:
+    Fn::Not:
+    - Fn::Equals:
+      - Fn::Select:
+        - 1
+        - Ref: AWSNotificationParameters
+      - overwrite-me
 Description: Create Messaging resources for the AEM Stack Auto Scaling Group Events
 Outputs:
   AEMASGEventQueueName:
@@ -51,45 +65,25 @@ Parameters:
   AEMASGEventTopicNameParameter:
     Description: The AEM Stack Auto Scaling Group Event Topic Name
     Type: String
-  AEMCWEventNotificationEmail:
-    Description: The EMail adress for sending CW Alarm messages
-    Type: String
   AWSEncryptionParameters:
-    Description: |
-      A list of AWS Encyrption parameters.
-      List hast to be containing the following values in the following order:
-        - Boolean for enabling/disabling EBS Volume encryption
-        - KMS Key ID used for EBS Volume encryption
-        - Managed Policy ARN for EBS Volume encryption
-        - KMS Key ID used for SNS-Topic & SNS Queue encryption
-        - Managed Policy ARN for SNS-Topic & SNS Queue encryption
-        - KMS Key ID used for Lambda encryption
-        - Managed Policy ARN for Lambda encryption
-        - Managed Policy ARN for accessing S3 CMK
+    Description: "A list of AWS Encyrption parameters.\nList hast to be containing\
+      \ the following values in the following order:\n  - Boolean for enabling/disabling\
+      \ EBS Volume encryption\n  - KMS Key ID used for EBS Volume encryption\n  -\
+      \ Managed Policy ARN for EBS Volume encryption\n  - KMS Key ID used for SNS-Topic\
+      \ & SNS Queue encryption\n  - Managed Policy ARN for SNS-Topic & SNS Queue encryption\n\
+      \  - KMS Key ID used for Lambda encryption\n  - Managed Policy ARN for Lambda\
+      \ encryption\n  - Managed Policy ARN for accessing S3 CMK\n"
+    Type: List<String>
+  AWSNotificationParameters:
+    Description: "A list of AWS notification parameters.\nList must contain the following\
+      \ values in the following order:\n  - Notification email address, if the value\
+      \ is 'overwrite-me' then it's considered to be disabled\n  - Notification https\
+      \ URL, if the value is 'overwrite-me' then it's considered to be disabled\n"
     Type: List<String>
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
 Resources:
-  CriticalAEMASGEventQueueLengthHighAlarm:
-    Properties:
-      ActionsEnabled: true
-      AlarmActions:
-      - Ref: CriticalAlarmNotificationTopic
-      AlarmDescription: Alarm if queue length avg > 10 for 2 minutes
-      ComparisonOperator: GreaterThanThreshold
-      Dimensions:
-      - Name: QueueName
-        Value:
-          Ref: AEMASGEventQueueNameParameter
-      EvaluationPeriods: 2
-      MetricName: ApproximateNumberOfMessagesVisible
-      Namespace: AWS/SQS
-      Period: 60
-      Statistic: Average
-      Threshold: 10
-      TreatMissingData: ignore
-    Type: AWS::CloudWatch::Alarm
   AEMASGEventQueuePolicy:
     Properties:
       PolicyDocument:
@@ -113,15 +107,15 @@ Resources:
     Type: AWS::SQS::QueuePolicy
   AEMASGEventTopic:
     Properties:
-      KmsMasterKeyId:
-          Fn::If:
-          - UseCMKSNSEncryptionCondition
-          - Fn::Select:
-              - 3
-              - Ref: AWSEncryptionParameters
-          - Ref: AWS::NoValue
       DisplayName:
         Ref: AEMASGEventTopicDisplayNameParameter
+      KmsMasterKeyId:
+        Fn::If:
+        - UseCMKSNSEncryptionCondition
+        - Fn::Select:
+          - 3
+          - Ref: AWSEncryptionParameters
+        - Ref: AWS::NoValue
       Subscription:
       - Endpoint:
           Fn::GetAtt:
@@ -134,53 +128,96 @@ Resources:
   AEMAutoScalingGroupEventQueue:
     Properties:
       KmsMasterKeyId:
-          Fn::If:
-          - UseCMKSNSEncryptionCondition
-          - Fn::Select:
-              - 3
-              - Ref: AWSEncryptionParameters
-          - Ref: AWS::NoValue
+        Fn::If:
+        - UseCMKSNSEncryptionCondition
+        - Fn::Select:
+          - 3
+          - Ref: AWSEncryptionParameters
+        - Ref: AWS::NoValue
       QueueName:
         Ref: AEMASGEventQueueNameParameter
       VisibilityTimeout: 60
     Type: AWS::SQS::Queue
-  WarningAlarmNotificationTopic:
+  CriticalAEMASGEventQueueLengthHighAlarm:
     Properties:
-      KmsMasterKeyId:
-          Fn::If:
-          - UseCMKSNSEncryptionCondition
-          - Fn::Select:
-              - 3
-              - Ref: AWSEncryptionParameters
-          - Ref: AWS::NoValue
-      DisplayName:
-        Fn::Sub:
-          - "${PrerequisitesStackPrefixParameter}-Warning-Utilities-alarm-notification-topic"
-          - PrerequisitesStackPrefixParameter:
-              Ref: 'PrerequisitesStackPrefixParameter'
-      Subscription:
-        - Endpoint:
-            Ref: AEMCWEventNotificationEmail
-          Protocol: email
-        - Ref: AWS::NoValue
-    Type: AWS::SNS::Topic
+      ActionsEnabled: true
+      AlarmActions:
+      - Ref: CriticalAlarmNotificationTopic
+      AlarmDescription: Alarm if queue length avg > 10 for 2 minutes
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: QueueName
+        Value:
+          Ref: AEMASGEventQueueNameParameter
+      EvaluationPeriods: 2
+      MetricName: ApproximateNumberOfMessagesVisible
+      Namespace: AWS/SQS
+      Period: 60
+      Statistic: Average
+      Threshold: 10
+      TreatMissingData: ignore
+    Type: AWS::CloudWatch::Alarm
   CriticalAlarmNotificationTopic:
     Properties:
-      KmsMasterKeyId:
-          Fn::If:
-          - UseCMKSNSEncryptionCondition
-          - Fn::Select:
-              - 3
-              - Ref: AWSEncryptionParameters
-          - Ref: AWS::NoValue
       DisplayName:
         Fn::Sub:
-          - "${PrerequisitesStackPrefixParameter}-Critical-Utilities-alarm-notification-topic"
-          - PrerequisitesStackPrefixParameter:
-              Ref: 'PrerequisitesStackPrefixParameter'
+        - ${PrerequisitesStackPrefixParameter}-Critical-Utilities-alarm-notification-topic
+        - PrerequisitesStackPrefixParameter:
+            Ref: PrerequisitesStackPrefixParameter
+      KmsMasterKeyId:
+        Fn::If:
+        - UseCMKSNSEncryptionCondition
+        - Fn::Select:
+          - 3
+          - Ref: AWSEncryptionParameters
+        - Ref: AWS::NoValue
       Subscription:
+      - Fn::If:
+        - UseEventNotificationEmailCondition
         - Endpoint:
-            Ref: AEMCWEventNotificationEmail
+            Fn::Select:
+            - 0
+            - Ref: AWSNotificationParameters
           Protocol: email
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - UseEventNotificationHttpsCondition
+        - Endpoint:
+            Fn::Select:
+            - 1
+            - Ref: AWSNotificationParameters
+          Protocol: https
+        - Ref: AWS::NoValue
+    Type: AWS::SNS::Topic
+  WarningAlarmNotificationTopic:
+    Properties:
+      DisplayName:
+        Fn::Sub:
+        - ${PrerequisitesStackPrefixParameter}-Warning-Utilities-alarm-notification-topic
+        - PrerequisitesStackPrefixParameter:
+            Ref: PrerequisitesStackPrefixParameter
+      KmsMasterKeyId:
+        Fn::If:
+        - UseCMKSNSEncryptionCondition
+        - Fn::Select:
+          - 3
+          - Ref: AWSEncryptionParameters
+        - Ref: AWS::NoValue
+      Subscription:
+      - Fn::If:
+        - UseEventNotificationEmailCondition
+        - Endpoint:
+            Fn::Select:
+            - 0
+            - Ref: AWSNotificationParameters
+          Protocol: email
+        - Ref: AWS::NoValue
+      - Fn::If:
+        - UseEventNotificationHttpsCondition
+        - Endpoint:
+            Fn::Select:
+            - 1
+            - Ref: AWSNotificationParameters
+          Protocol: https
         - Ref: AWS::NoValue
     Type: AWS::SNS::Topic

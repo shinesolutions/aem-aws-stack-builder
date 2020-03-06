@@ -19,18 +19,18 @@
           AuthorPublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_publish_dispatcher.record_set_name }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
-          AuthorPublishDispatcherVolParameter: "{{ author_publish_dispatcher.root_vol_size }}, {{ author_publish_dispatcher.data_vol_size }}, {{ snapshots.author.use_data_vol_snapshot | lower }}, {{ snapshots.publish.use_data_vol_snapshot | lower }}, {{ author_publish_dispatcher.enable_vol_encryption | lower }}"
+          AuthorPublishDispatcherVolParameter: "{{ author_publish_dispatcher.root_vol_size }}, {{ author_publish_dispatcher.data_vol_size }}, {{ snapshots.author.use_data_vol_snapshot | lower }}, {{ snapshots.publish.use_data_vol_snapshot | lower }}, {{ author_publish_dispatcher.enable_vol_encryption | lower }}, {{ snapshots.publish_dispatcher.use_data_vol_snapshot | lower }}"
           AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          PublishDispatcherDataVolSnapshotParameter: "{{ snapshots.publish_dispatcher.data_vol_snapshot_id }}"
           DNSRecordSetTTL: "{{ dns_records.author_publish_dispatcher.ttl }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
-          InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
           Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
-          ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}"
+          ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}, {{ ami_device[os_type].publish_dispatcher_data_name }}"
       tags:
       - create
       when:
@@ -50,16 +50,16 @@
           AuthorPublishDispatcherDNSRecordSetNameParameter: "{{ dns_records.author_publish_dispatcher.record_set_name }}"
           AuthorPublishDispatcherImageParameter: "{{ ami_ids.author_publish_dispatcher }}"
           AuthorPublishDispatcherInstanceTypeParameter: "{{ author_publish_dispatcher.instance_type }}"
-          AuthorPublishDispatcherVolParameter: "{{ author_publish_dispatcher.root_vol_size }}, {{ author_publish_dispatcher.data_vol_size }}, {{ snapshots.author.use_data_vol_snapshot | lower }}, {{ snapshots.publish.use_data_vol_snapshot | lower }}, {{ author_publish_dispatcher.enable_vol_encryption | lower }}"
+          AuthorPublishDispatcherVolParameter: "{{ author_publish_dispatcher.root_vol_size }}, {{ author_publish_dispatcher.data_vol_size }}, {{ snapshots.author.use_data_vol_snapshot | lower }}, {{ snapshots.publish.use_data_vol_snapshot | lower }}, {{ author_publish_dispatcher.enable_vol_encryption | lower }}, {{ snapshots.publish_dispatcher.use_data_vol_snapshot | lower }}"
           AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}"
           ComputeKeyPairNameParameter: "{{ compute.key_pair_name }}"
+          PublishDispatcherDataVolSnapshotParameter: "{{ snapshots.publish_dispatcher.data_vol_snapshot_id }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
-          InboundFromBastionHostSecurityGroupParameter: "{{ compute.inbound_from_bastion_host_security_group }}"
           MainStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
-          ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}"
+          ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}, {{ ami_device[os_type].publish_dispatcher_data_name }}"
       tags:
       - create
       when:

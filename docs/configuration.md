@@ -121,9 +121,9 @@ These configurations are applicable to AWS resources used by the AEM environment
 | messaging.asg_event_sqs_queue_name | Scaling event SQS queue name to be appended to the stack prefix. | Optional | `aem-asg-event-queue` |
 | messaging.asg_event_sns_topic_name | Scaling event SNS topic resource name to be appended to the stack prefix. | Optional | `aem-asg-event-topic` |
 | messaging.asg_event_sns_topic_display_name | Scaling event SNS topic display name. | Optional | `AEM ASG Event Topic` |
-| messaging.alarm_notification.contact_email | Recipient email address where alarm notification will be sent to.  | Mandatory | |
+| messaging.alarm_notification.contact_email | Recipient email address where AEM Full-Set alarm notification will be sent to.  | Optional | |
+| messaging.alarm_notification.https_endpoint | Notification https endpoint where AEM Full-Set alarm notification will be sent to.  | Optional | |
 | compute.key_pair_name | [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to be provisioned on all EC2 instances within the AEM environment. | Mandatory | |
-| compute.inbound_from_bastion_host_security_group | Security group to allow inbound access from a bastion host. | Mandatory | |
 | s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors and credentials. | Mandatory | |
 | s3.create_bucket_flag | If "true", an S3 bucket with name: `s3.data_bucket_name` will be created as part of `make create-aws-resources` | Optional | "true" |
 | dns_records.create_hosted_zone_flag | If "true", a Route53 Private HostedZone with name: `dns_records.route53_hosted_zone_name` will be created as part of `make create-aws-resources` | Optional | "true" |
@@ -292,7 +292,6 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.truststore.enable_creation | If set to true, AEM Global Truststore will be created for AEM Author | Optional | false |
 | aem.truststore.password | AEM Global Truststore password | Optional | false |
-| aem.snapshot_attach_timeout | The number of seconds to attach snapshot before timing out | Optional | 1800 |
 
 ### AEM Full-Set specific configuration properties:
 
@@ -389,7 +388,8 @@ These configurations are applicable specific to AEM Stack Manager.
 | stack_manager.purge.offline_snapshots.max_age_in_hours | The number of hours to keep an offline snapshot before it expires and will be removed  | Optional | 61320 |
 | stack_manager.purge.orchestration_snapshots.schedule | [Lambda cron expression](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html) | Optional | 5 0/4 * * ? * |
 | stack_manager.purge.orchestration_snapshots.max_age_in_hours | The number of hours to keep an orchestration snapshot before it expires and will be removed  | Optional | 4 |
-| stack_manager.alarm_notification.contact_email | Recipient email address where alarm notification will be sent | Mandatory | |
+| stack_manager.alarm_notification.contact_email | Recipient email address where AEM Stack Manager alarm notification will be sent | Optional | |
+| stack_manager.alarm_notification.https_endpoint | Notification https endpoint where AEM Stack Manager alarm notification will be sent to.  | Optional | |
 | stack_manager.publish.asg_min_size | The number of minimum publish instances each Full-Set environment must have in its AutoScalingGroup. This value will be used as part of stack health check. | Optional | 2 |
 
 ### Log rotation configuration properties

@@ -44,7 +44,7 @@
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
-          AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
+          AWSNotificationParameters: "{{ messaging.alarm_notification.contact_email }}, {{ messaging.alarm_notification.https_endpoint }}"
           AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
       register: prereq_stack_info
@@ -71,7 +71,6 @@
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
-          AEMCWEventNotificationEmail: "{{ messaging.alarm_notification.contact_email }}"
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
           AEMStackManagerSnapshotLambdaServiceRoleArnParameter: "{{ stack_manager.snapshot_lambda_service_role_arn }}"
           AEMStackManagerSnapshotLambdaServiceRoleNameParameter: "{{ stack_manager.snapshot_lambda_service_role_name }}"
@@ -81,6 +80,7 @@
           OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
           PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
           PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
+          AWSNotificationParameters: "{{ messaging.alarm_notification.contact_email }}, {{ messaging.alarm_notification.https_endpoint }}"
           AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
         - create

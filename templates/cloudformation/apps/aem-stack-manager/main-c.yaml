@@ -1,5 +1,4 @@
 ---
-
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Overarching CF Template to Create AEM Stack Manager Resources Stacks
 Outputs:
@@ -25,24 +24,36 @@ Outputs:
     Value:
       Ref: UtilitiesStack
 Parameters:
+  AEMStackManagerLambdaServiceRoleArnParameter:
+    Description: Stack Manager Lambda Service Role Arn
+    Type: String
+  AEMStackManagerLambdaServiceRoleNameParameter:
+    Description: Stack Manager Lambda Service Role Name
+    Type: String
+  AEMStackManagerSSMServiceRoleArnParameter:
+    Description: Stack Manager SSM Service Role Arn
+    Type: String
+  AEMStackManagerSSMServiceRoleNameParameter:
+    Description: Stack Manager SSM Service Role Name
+    Type: String
+  AWSEncryptionParameters:
+    Description: "A list of AWS Encyrption parameters.\nList hast to be containing\
+      \ the following values in the following order:\n  - KMS Key ID used for DynamoDB\
+      \ encryption\n  - KMS Key ID used for SNS-Topic & SNS Queue encryption\n  -\
+      \ KMS Key ARN used for Lambda function environment variable encryption\n  -\
+      \ Managed Policy ARN for SNS  encryption\n  - Managed Policy ARN for DynamoDB\
+      \ encryption\n  - Managed Policy ARN for Lambda encryption\n  - Managed Policy\
+      \ ARN for accessing S3 CMK\n"
+    Type: List<String>
+  AWSNotificationParameters:
+    Description: "A list of AWS notification parameters.\nList must contain the following\
+      \ values in the following order:\n  - Notification email address, if the value\
+      \ is 'overwrite-me' then it's considered to be disabled\n  - Notification https\
+      \ URL, if the value is empty '' then it's considered to be disabled\n"
+    Type: List<String>
   AWSRegion:
     Description: Name of the AWS region
     Type: String
-  AEMCWEventNotificationEmail:
-    Description: The EMail adress for sending CW Alarm messages
-    Type: String
-  AWSEncryptionParameters:
-    Description: |
-      A list of AWS Encyrption parameters.
-      List hast to be containing the following values in the following order:
-        - KMS Key ID used for DynamoDB encryption
-        - KMS Key ID used for SNS-Topic & SNS Queue encryption
-        - KMS Key ARN used for Lambda function environment variable encryption
-        - Managed Policy ARN for SNS  encryption
-        - Managed Policy ARN for DynamoDB encryption
-        - Managed Policy ARN for Lambda encryption
-        - Managed Policy ARN for accessing S3 CMK
-    Type: List<String>
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data file
     Type: String
@@ -73,41 +84,24 @@ Parameters:
   S3DataStackManagerPrefix:
     Description: Prefix within the Bucket to Locate Files
     Type: String
-  AEMStackManagerSSMServiceRoleNameParameter:
-    Description: Stack Manager SSM Service Role Name
-    Type: String
-  AEMStackManagerSSMServiceRoleArnParameter:
-    Description: Stack Manager SSM Service Role Arn
-    Type: String
-  AEMStackManagerLambdaServiceRoleNameParameter:
-    Description: Stack Manager Lambda Service Role Name
-    Type: String
-  AEMStackManagerLambdaServiceRoleArnParameter:
-    Description: Stack Manager Lambda Service Role Arn
-    Type: String
 Resources:
-  SSMCommandsStack:
-    Properties:
-      TemplateURL:
-        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/ssm-commands.yaml
-    Type: AWS::CloudFormation::Stack
   InstanceProfilesStack:
     Properties:
       Parameters:
+        AEMStackManagerLambdaServiceRoleArnParameter:
+          Ref: AEMStackManagerLambdaServiceRoleArnParameter
+        AEMStackManagerLambdaServiceRoleNameParameter:
+          Ref: AEMStackManagerLambdaServiceRoleNameParameter
+        AEMStackManagerSSMServiceRoleArnParameter:
+          Ref: AEMStackManagerSSMServiceRoleArnParameter
+        AEMStackManagerSSMServiceRoleNameParameter:
+          Ref: AEMStackManagerSSMServiceRoleNameParameter
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
         S3DataStackManagerPrefix:
           Ref: S3DataStackManagerPrefix
-        AEMStackManagerLambdaServiceRoleNameParameter:
-          Ref: AEMStackManagerLambdaServiceRoleNameParameter
-        AEMStackManagerLambdaServiceRoleArnParameter:
-          Ref: AEMStackManagerLambdaServiceRoleArnParameter
-        AEMStackManagerSSMServiceRoleNameParameter:
-          Ref: AEMStackManagerSSMServiceRoleNameParameter
-        AEMStackManagerSSMServiceRoleArnParameter:
-          Ref: AEMStackManagerSSMServiceRoleArnParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles-exports.yaml
     Type: AWS::CloudFormation::Stack
@@ -118,12 +112,19 @@ Resources:
           Fn::Join:
             - ','
             - Ref: AWSEncryptionParameters
-        AEMCWEventNotificationEmail:
-          Ref: AEMCWEventNotificationEmail
+        AWSNotificationParameters:
+          Fn::Join:
+            - ','
+            - Ref: AWSNotificationParameters
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/prerequisites.yaml
+    Type: AWS::CloudFormation::Stack
+  SSMCommandsStack:
+    Properties:
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/ssm-commands.yaml
     Type: AWS::CloudFormation::Stack
   StackManagerStack:
     DependsOn:
@@ -152,12 +153,12 @@ Resources:
       - PrerequisitesStack
     Properties:
       Parameters:
-        AWSRegion:
-          Ref: AWSRegion
         AWSEncryptionParameters:
           Fn::Join:
             - ','
             - Ref: AWSEncryptionParameters
+        AWSRegion:
+          Ref: AWSRegion
         DataBucketNameParameter:
           Ref: DataBucketNameParameter
         LiveSnapshotsPurgeMaxAge:
