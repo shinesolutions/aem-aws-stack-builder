@@ -14,9 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Update boto3 and botocore verison to fix incompatible pip installation error
-- Remove stack-prefix from the value used in the dns switch pipeline, since the config includes stack-prefix. 
+- Remove stack-prefix from the value used in the dns switch pipeline, since the config includes stack-prefix.
 - Update documentation for EBS volume encryption
 - Change default live snapshot to not run between 1am to 2am
+- Upgrade AEM Stack Manager Cloud to 1.8.0
 
 ## 4.35.1 - 2020-03-02
 
