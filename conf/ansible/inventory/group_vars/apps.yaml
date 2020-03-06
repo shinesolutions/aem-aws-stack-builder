@@ -486,14 +486,14 @@ scheduled_jobs:
     live_snapshot:
       enable: true
       weekday: 0-7
-      hour: '*'
+      hour: '0,2-23'
       minute: 0
 
   author_standby:
     live_snapshot:
       enable: true
       weekday: 0-7
-      hour: '*'
+      hour: '0,2-23'
       minute: 0
 
   publish:
@@ -510,7 +510,7 @@ scheduled_jobs:
     live_snapshot:
       enable: true
       weekday: 0-7
-      hour: '*'
+      hour: '0,2-23'
       minute: 0
 
   publish_dispatcher:
