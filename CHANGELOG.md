@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update documentation for EBS volume encryption
 - Change default live snapshot to not run between 1am to 2am
 - Upgrade AEM Stack Manager Cloud to 1.8.0
+- Upgrade AEM AWS Stack Provisioner to 4.31.0
 
 ## 4.35.1 - 2020-03-02
 
