@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Changed
-- As an example, disable live_snapshot from 1 to 2 in the morning.
+- Change default live snapshot to not run between 1am to 2am
 
 ## 4.35.1 - 2020-03-02
 ### Fixed
