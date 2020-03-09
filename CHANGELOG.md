@@ -5,8 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
+## 4.36.0 - 2020-03-09
 ### Added
 - Add Tagging support to AEM Stack Manager DynamoDB
 - Add Tagging support to AOC managed S3 Bucket
@@ -21,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade AEM AWS Stack Provisioner to 4.31.0
 
 ## 4.35.1 - 2020-03-02
-
 ### Fixed
 - Add missing CF Stack output parameter for full-set permission type c [#378]
 
