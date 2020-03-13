@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fix incorrect version number for AEM AWS Stack Provisioner upgrade to 4.31.0
+
 ## 4.36.0 - 2020-03-09
 ### Added
 - Add Tagging support to AEM Stack Manager DynamoDB
