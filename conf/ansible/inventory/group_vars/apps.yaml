@@ -51,6 +51,8 @@ aem:
     jvm_opts: ""
     jmxremote:
       port: 5982
+  compaction:
+    jvm_mem_opts: ""
 
 ami_ids:
   author: overwrite-me
