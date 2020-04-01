@@ -62,9 +62,13 @@ run_custom_stage() {
   if [ -x "${script}" ]; then
     set +o errexit
 
+    cd ${custom_provisioner_dir}
+
     echo "${label} Executing the ${stage} script of Custom Stack Provisioner..."
     "${script}" "${stack_prefix}" "${component}" >> "${log_dir}/custom-stack-init-${stage}.log"
     handle_exit_code "$?"
+
+    cd "${aws_provisioner_dir}"
 
     set -o errexit
   else

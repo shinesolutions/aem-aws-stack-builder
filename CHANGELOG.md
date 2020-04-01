@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.32.0
 
+### Changed
+- Update stack-init script to change dir to custom-stack-provisioner path
+
 ## 4.36.1 - 2020-03-13
 ### Fixed
 - Fix incorrect version number for AEM AWS Stack Provisioner upgrade to 4.31.0
