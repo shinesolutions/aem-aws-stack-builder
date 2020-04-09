@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Tagging support to AEM Stack Manager DynamoDB
 - Add Tagging support to AOC managed S3 Bucket
 - Add boto library, which is required for the Ansible switch dns module
+- Add `aws_region` support for `stack-init` script [shinesolutions/aem-opencloud-manager#65]
 
 ### Changed
 - Update boto3 and botocore verison to fix incompatible pip installation error
