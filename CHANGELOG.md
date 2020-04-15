@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.34.0
+
+## 4.38.0 - 2020-03-19
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.33.0
+
+## 4.37.0 - 2020-03-18
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.32.0
+
+### Changed
+- Update stack-init script to change dir to custom-stack-provisioner path
 
 ### Added
 - Add variable jvm_mem_opts to configure JVM Memory for offline compaction in order to solve our-of-memory failure in c4.xlarge (7.5Gb  memory)
@@ -19,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Tagging support to AEM Stack Manager DynamoDB
 - Add Tagging support to AOC managed S3 Bucket
 - Add boto library, which is required for the Ansible switch dns module
+- Add `aws_region` support for `stack-init` script [shinesolutions/aem-opencloud-manager#65]
 
 ### Changed
 - Update boto3 and botocore verison to fix incompatible pip installation error

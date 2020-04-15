@@ -62,9 +62,13 @@ run_custom_stage() {
   if [ -x "${script}" ]; then
     set +o errexit
 
+    cd ${custom_provisioner_dir}
+
     echo "${label} Executing the ${stage} script of Custom Stack Provisioner..."
     "${script}" "${stack_prefix}" "${component}" >> "${log_dir}/custom-stack-init-${stage}.log"
     handle_exit_code "$?"
+
+    cd "${aws_provisioner_dir}"
 
     set -o errexit
   else
@@ -130,8 +134,11 @@ export FACTER_data_bucket_name="${data_bucket_name}"
 export FACTER_stack_prefix="${stack_prefix}"
 aws_region=$(facter aws_region)
 
+export AWS_DEFAULT_REGION="${aws_region}"
+echo "AWS Region: ${AWS_DEFAULT_REGION}"
+
 # Set ec2 instance tag that provisioning is InProgress
-AWS_DEFAULT_REGION="${aws_region}" aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
+aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=InProgress
 handle_exit_code "$?"
 
 if aws s3api head-object --bucket "${data_bucket_name}" --key "${stack_prefix}/aem-custom-stack-provisioner.tar.gz" > /dev/null 2>&1; then
