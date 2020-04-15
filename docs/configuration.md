@@ -287,6 +287,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.client_timeout | The number of seconds before [AEM API client](https://github.com/shinesolutions/ruby_aem) HTTP request times out. | Optional | `1200` |
 | aem.post_start_sleep_seconds | Sleep for x Seconds after starting the AEM Service for the first time. Set this number to a high value if your AEM application causes AEM start up to take longer, further causing AEM Password Reset to be delayed. | Optional | `180` |
 | aem.[author\|publish].jvm_mem_opts | AEM Author/Publish's memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xss4m -Xms4096m -Xmx8192m` |
+| aem.compaction.jvm_mem_opts | AEM compaction memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xms2048m -Xmx4096m -XX:-UseGCOverheadLimit` |
 | aem.[author\|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
 | aem.author.jmxremote.port | AEM Author's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
