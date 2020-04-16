@@ -870,7 +870,7 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       Period: 300
-      Statistic: Average
+      Statistic: Maximum
       Threshold: 45
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorStandbyCPUUtilizationAlarm:
@@ -897,6 +897,6 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       Period: 300
-      Statistic: Average
+      Statistic: Maximum
       Threshold: 45
     Type: AWS::CloudWatch::Alarm
