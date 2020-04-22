@@ -20,7 +20,7 @@ parameters:
       (optional) Seconds to sleep after the upgrade is triggered.
       This value should always be higher than it actually takes AEM to upgrade.
     type: String
-    default: '600'
+    default: '1200'
 mainSteps:
   - action: aws:runShellScript
     name: runShellScript

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Increase SSM Document `RunAEMUpgrade` default sleep timer to `1200` seconds [#401]
+
 ## 4.39.0 - 2020-04-15
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.34.0
