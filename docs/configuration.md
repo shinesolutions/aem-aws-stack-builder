@@ -1,7 +1,7 @@
 Configuration
 -------------
 
-The following configurations are available for users to customise the creation process and the resulting machine images.
+The following configurations are available for users to customise the creation process and the resulting AEM environments.
 
 Check out the [example configuration files](https://github.com/shinesolutions/aem-helloworld-config/tree/master/aem-aws-stack-builder/) as reference.
 
