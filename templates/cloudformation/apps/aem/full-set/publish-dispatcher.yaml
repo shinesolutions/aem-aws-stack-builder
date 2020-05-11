@@ -442,7 +442,10 @@ Resources:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName:
         Ref: PublishDispatcherAutoScalingGroup
-      Cooldown: 480
+      Cooldown:
+        Fn::Select:
+          - 6
+          - Ref: PublishDispatcherASGCPUScalingParameters
       ScalingAdjustment: -1
     Type: AWS::AutoScaling::ScalingPolicy
   PublishDispatcherScaleUpPolicy:
@@ -450,7 +453,10 @@ Resources:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName:
         Ref: PublishDispatcherAutoScalingGroup
-      Cooldown: 480
+      Cooldown:
+        Fn::Select:
+          - 5
+          - Ref: PublishDispatcherASGCPUScalingParameters
       ScalingAdjustment: 1
     Type: AWS::AutoScaling::ScalingPolicy
 

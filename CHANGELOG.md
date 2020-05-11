@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Added new parameters to parameterise Publish-Dispatcher ASG Scaling policies cooldown timer [#405]
+
 ### Changed
 - Increase SSM Document `RunAEMUpgrade` default sleep timer to `1200` seconds [#401]
 - Increase SSM Document `AEM-ExportPackage`,`AEM-ExportPackages`,`AEM-DeployArtifacts` & `AEM-ImportPackage` default executionTimeout to `14400` seconds [#401]
+- Increase default cooldown time for Publish-Dispatcher ASG Scale out policy from `480` to `2880` seconds
 
 ## 4.39.0 - 2020-04-15
 ### Changed

@@ -188,6 +188,8 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish_dispatcher.asg_max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_health_check_grace_period | Warmup time in seconds before a instance gets killed due to ASG termination rule. | Optional | `2400` |
 | publish_dispatcher.asg_cooldown | Wait defined seconds before resuming scaling activity. | Optional | `480` |
+| publish_dispatcher.asg_cpu_high_scaling_cooldown | Wait defined seconds before next scaling activity can happen after the scaling policy CPU High was triggered. | Optional | `2880` |
+| publish_dispatcher.asg_cpu_low_scaling_cooldown | Wait defined seconds before next scaling activity can happen after the scaling policy CPU Low was triggered. | Optional | `480` |
 | publish_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `publish-dispatcher` component. | Optional | `HTTPS:443/system/health?tags=shallow` |
 | publish_dispatcher.elb_scheme | The [scheme](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-ec2-elb-scheme) for the ELB sitting in front of `publish-dispatcher` component. | Optional | `internet-facing` |
 | publish_dispatcher.allowed_client | The allowed source IP address where AEM Dispatcher running on `publish-dispatcher` component. Default to everything because users tend to have different network design, some might restrict inbound access from AEM Publish, some might allow external resource such as a CDN service to flush the cache. | Optional | `*.*.*.*` |
