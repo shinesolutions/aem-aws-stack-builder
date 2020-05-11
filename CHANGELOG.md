@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Changed default value for `[publish_dispatcher|publish|author_dispatcher].asg_cooldown` to `[publish_dispatcher|publish|author_dispatcher].asg_health_check_grace_period` + 5 minutes to increase stack reliability in events of high load
+
 ## 4.39.0 - 2020-04-15
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.34.0

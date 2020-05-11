@@ -286,7 +286,7 @@ publish_dispatcher:
   asg_desired_capacity: 2
   asg_max_size: 2
   asg_health_check_grace_period: 2400
-  asg_cooldown: 480
+  asg_cooldown: 2700
   asg_cpu_scaling_threshold: 49
   asg_cpu_high_period: 300
   asg_cpu_high_eval_period: 1
@@ -304,7 +304,7 @@ publish:
   asg_desired_capacity: 2
   asg_max_size: 2
   asg_health_check_grace_period: 1800
-  asg_cooldown: 480
+  asg_cooldown: 2280
 
 author:
   instance_profile: overwrite-me
@@ -326,7 +326,7 @@ author_dispatcher:
   asg_desired_capacity: 2
   asg_max_size: 2
   asg_health_check_grace_period: 900
-  asg_cooldown: 480
+  asg_cooldown: 1380
 
 author_publish_dispatcher:
   instance_profile: overwrite-me
