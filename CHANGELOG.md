@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Added new parameters to parameterise Publish-Dispatcher ASG Scaling policies cooldown timer [#405]
+- Add new configuration parameters `aem.[author|publish].run_modes` for configuring AEM run_modes
 
 ### Changed
 - Increase SSM Document `RunAEMUpgrade` default sleep timer to `1200` seconds [#401]
@@ -17,8 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change CPU Utilization alarm metric statistic to Maximum  [#398]   
 - Upgrade AEM AWS Stack Provisioner to 4.35.0
 
-### Added
-- Add new configuration parameters `aem.[author|publish].run_modes` for configuring AEM run_modes
+### Fixed
+- Fixed Author-standby sync issue [#280]
 
 ### Removed
 - Removed configuration parameters `reconfiguration.[author|publish].run_modes`
