@@ -406,7 +406,7 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
       Period: 300
-      Statistic: Average
+      Statistic: Maximum
       Threshold: 60
     Type: AWS::CloudWatch::Alarm
   CriticalOrchestratorCPUUtilizationAlarm:
@@ -433,6 +433,6 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
       Period: 300
-      Statistic: Average
+      Statistic: Maximum
       Threshold: 90
     Type: AWS::CloudWatch::Alarm
