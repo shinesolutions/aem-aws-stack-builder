@@ -291,6 +291,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.[author\|publish].jvm_mem_opts | AEM Author/Publish's memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xss4m -Xms4096m -Xmx8192m` |
 | aem.compaction.jvm_mem_opts | AEM compaction memory-specific [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | `-Xms2048m -Xmx4096m -XX:-UseGCOverheadLimit` |
 | aem.[author\|publish].jvm_opts | AEM Author/Publish's [JVM arguments](https://docs.oracle.com/cd/E22289_01/html/821-1274/configuring-the-default-jvm-and-java-arguments.html) | Optional | None |
+| aem.[author|publish].run_modes | A list of additional runmodes to configure in AEM | Optional | `[]` |
 | aem.author.jmxremote.port | AEM Author's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.truststore.enable_creation | If set to true, AEM Global Truststore will be created for AEM Author | Optional | false |
@@ -328,8 +329,6 @@ These configurations are applicable only when you run repository reconfiguration
 | reconfiguration.certificate_arn | The ARN of the Certificate in either the [AWS Certificate Manager (ACM)](https://console.aws.amazon.com/acm/home) or IAM Server Certificate or an S3 key path to the certificate object.  Valid values are either `arn:aws:acm:...` or `arn:aws:iam:...`, `s3://...`, `http://...`, `https://...` or `file://...`| mandatory(for reconfiguration) | |
 | reconfiguration.certificate_key_arn | The ARN of the secret containing TLS certificate's secret key in the [AWS Secrets Manager]. Valid values are either `arn:aws:secretsmanager:...`, `s3://...`, `http://...`, `https://...` or `file://...`(https://console.aws.amazon.com/secretsmanager/home) | mandatory(for reconfiguration) | |
 | reconfiguration.ssl_keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
-| reconfiguration.author.run_modes | A list of runmodes you want to set in `start-env` | Optional | `[]` |
-| reconfiguration.publish.run_modes | A list of runmodes you want to set in `start-env` | Optional | `[]` |
 | reconfiguration.ssl_keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
 | system_users.[author|publish].[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user username for each component. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
 | system_users.[author|publish].admin.path | AEM admin user path in the repository for each component. | mandatory | |

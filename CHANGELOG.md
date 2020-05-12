@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change CPU Utilization alarm metric statistic to Maximum  [#398]   
 - Upgrade AEM AWS Stack Provisioner to 4.35.0
 
+### Added
+- Add new configuration parameters `aem.[author|publish].run_modes` for configuring AEM run_modes
+
+### Removed
+- Removed configuration parameters `reconfiguration.[author|publish].run_modes`
+
 ## 4.39.0 - 2020-04-15
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.34.0
