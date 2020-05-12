@@ -96,7 +96,8 @@ common::proxy_noproxy:
 aem_curator::config_author_primary::aem_password_reset_version: '{{ library.aem_password_reset_version }}'
 aem_curator::config_author_primary::enable_crxde: {{ aem.enable_crxde }}
 aem_curator::config_author_primary::enable_default_passwords: {{ aem.enable_default_passwords }}
-aem_curator::config_author_primary::run_modes: {{ aem.author.run_modes }}
+aem_curator::config_author_primary::aem_runmodes:
+{{ aem.author.run_modes | to_nice_yaml }}
 aem_curator::config_author_primary::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
 aem_curator::config_author_primary::jmxremote_port: {{ aem.author.jmxremote.port }}
 aem_curator::config_author_primary::jvm_opts: {{ aem.author.jvm_opts }}
@@ -105,12 +106,14 @@ aem_curator::config_author_primary::author_timeout: {{ aem.client_timeout }}
 aem_curator::config_author_standby::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
 aem_curator::config_author_standby::jmxremote_port: {{ aem.author.jmxremote.port }}
 aem_curator::config_author_standby::jvm_opts: {{ aem.author.jvm_opts }}
-aem_curator::config_author_standby::run_modes: {{ aem.author.run_modes }}
+aem_curator::config_author_standby::aem_runmodes:
+{{ aem.author.run_modes | to_nice_yaml}}
 
 aem_curator::config_publish::aem_password_reset_version: {{ library.aem_password_reset_version }}
 aem_curator::config_publish::enable_crxde: {{ aem.enable_crxde }}
 aem_curator::config_publish::enable_default_passwords: {{ aem.enable_default_passwords }}
-aem_curator::config_publish::run_modes: {{ aem.publish.run_modes }}
+aem_curator::config_publish::aem_runmodes:
+{{ aem.publish.run_modes | to_nice_yaml}}
 aem_curator::config_publish::jvm_mem_opts: {{ aem.publish.jvm_mem_opts }}
 aem_curator::config_publish::jmxremote_port: {{ aem.publish.jmxremote.port }}
 aem_curator::config_publish::jvm_opts: {{ aem.publish.jvm_opts }}
