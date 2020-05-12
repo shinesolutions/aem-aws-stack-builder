@@ -260,3 +260,13 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
 
 - **Q:** Is there any risk of having a dead replication agent? (replication agent which points to an inexisting instance)<br>
   **A:** Yes. A dead replication agent can contain some items in its queue, but they will never be cleared from the queue because the destination instance doesn't exist. This condition will cause AEM Health Check to fail, with the `ReplicationQueueHealthCheck` having non `OK` status, and this will cause AEM provisioning to fail.
+
+- **Q:** Can I exclude Chaos-Monkey stack and include the monitoring Stack <br>
+  **A:** No you can't. The Monitoring stack can only be created for a Full-Set environment with included Chaos Monkey.
+
+- **Q:** How to avoid flipping of the AEM Publish/Publish-Dispatcher instances when the AEM stack is under heavy load ?<br>
+  **A:** If your AEM Stack is continuously under heavy load you may experience that the Publish-Dispatcher ASG is scaling up and down (flipping). In a worst case you could end up in a scenario that no Publish/Publish-Dispatcher is healthy to serve content. This behaviour is due to a too low configured `publish_dispatcher.asg_cpu_high_scaling_cooldown`.  
+
+  To avoid the likelihood of this scenario it's recommended to increase this value. As a rule of thumb use `publish_dispatcher.asg_health_check_grace_period` + `publish_dispatcher.asg_cpu_low_period` + ~3 minutes.
+
+  This will give the ASG sufficient time to determine the state of the new instance and react if not healthy.
