@@ -5,8 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
+## 4.40.0 - 2020-05-14
 ### Added
 - Added new parameters to parameterise Publish-Dispatcher ASG Scaling policies cooldown timer [#405]
 - Add new configuration parameters `aem.[author|publish].run_modes` for configuring AEM run_modes
@@ -15,15 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increase SSM Document `RunAEMUpgrade` default sleep timer to `1200` seconds [#401]
 - Increase SSM Document `AEM-ExportPackage`,`AEM-ExportPackages`,`AEM-DeployArtifacts` & `AEM-ImportPackage` default executionTimeout to `14400` seconds [#401]
 - Increase default Publish-Dispatcher ASG Scale out policy cooldown time from `480` to `2880` seconds
-- Change CPU Utilization alarm metric statistic to Maximum  [#398]   
+- Change CPU Utilization alarm metric statistic to Maximum  [#398]
 - Upgrade AEM AWS Stack Provisioner to 4.36.2
+
+### Removed
+- Removed configuration parameters `reconfiguration.[author|publish].run_modes`
 
 ### Fixed
 - Fixed Author-standby sync issue [#280]
 - Fix missing hiera parameters for author-standby promotion
-
-### Removed
-- Removed configuration parameters `reconfiguration.[author|publish].run_modes`
 
 ## 4.39.0 - 2020-04-15
 ### Changed
