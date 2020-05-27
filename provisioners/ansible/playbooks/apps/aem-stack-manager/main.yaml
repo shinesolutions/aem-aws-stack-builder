@@ -251,7 +251,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.sns.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
       register: kms_sns_facts
       tags:
         - delete
@@ -279,7 +279,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.dynamo_db.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.dynamo_db.kms_key_id != 'overwrite-me' and aws.encryption.dynamo_db.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.dynamo_db.kms_key_id != 'overwrite-me' and aws.encryption.dynamo_db.managed_policy_arn == 'overwrite-me'
       register: kms_dynamodb_facts
       tags:
         - delete
@@ -306,7 +306,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.lambda.kms_key_arn.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
       register: kms_lambda_facts
       tags:
         - delete
@@ -333,7 +333,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.s3.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
       register: kms_s3_facts
       tags:
         - delete
