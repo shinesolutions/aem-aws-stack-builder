@@ -148,7 +148,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.ebs_volume.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
       register: kms_ebs_facts
       tags:
         - delete
@@ -175,7 +175,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.s3.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
       register: kms_s3_facts
       tags:
         - delete

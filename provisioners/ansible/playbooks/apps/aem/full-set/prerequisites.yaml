@@ -65,7 +65,7 @@
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
-          PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
+          PublishDispatch qerELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
           AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
           PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internet_outbound_cidr_ip }}"
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
@@ -221,7 +221,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.ebs_volume.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
       register: kms_ebs_facts
       tags:
         - delete
@@ -253,7 +253,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.sns.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
       register: kms_sns_facts
       tags:
         - delete
@@ -281,7 +281,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.lambda.kms_key_arn.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
       register: kms_lambda_facts
       tags:
         - delete
@@ -308,7 +308,7 @@
       aws_kms_facts:
         filters:
           key-id: "{{ aws.encryption.s3.kms_key_id.split('/')[1] }}"
-      when: stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      when: stack_found is defined and permission_type == "b" and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
       register: kms_s3_facts
       tags:
         - delete
