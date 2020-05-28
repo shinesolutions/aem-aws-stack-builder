@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed Stack deletion process for **permission-type c** when AWS resource encryption via CMK is enabled[#407]
 
+### Changed
+- Changed default parameter `compute.elb_cipher_suite` to `AOCELBSecurityPolicy-TLS-1-2-2017-01`
+- Disable TLS 1.0 & TLS 1.1 support for Author-Dispatcher, Publish-Dispatcher & Author ELB
+
 ## 4.40.0 - 2020-05-14
 ### Added
 - Added new parameters to parameterise Publish-Dispatcher ASG Scaling policies cooldown timer [#405]
