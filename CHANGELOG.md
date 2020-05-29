@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Changed default parameter `compute.elb_cipher_suite` to `AOCELBSecurityPolicy-TLS-1-2-2017-01`
+- Disable TLS 1.0 & TLS 1.1 support for Author-Dispatcher, Publish-Dispatcher & Author ELB
 
 ## 4.35.3 - 2020-05-28
 ### Fixed

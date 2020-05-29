@@ -124,6 +124,7 @@ These configurations are applicable to AWS resources used by the AEM environment
 | messaging.alarm_notification.contact_email | Recipient email address where AEM Full-Set alarm notification will be sent to.  | Optional | |
 | messaging.alarm_notification.https_endpoint | Notification https endpoint where AEM Full-Set alarm notification will be sent to.  | Optional | |
 | compute.key_pair_name | [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to be provisioned on all EC2 instances within the AEM environment. | Mandatory | |
+| compute.elb_cipher_suite | Cipher to use for the AEM Full-Set Author-Dispatcher, Publish-Dispatcher & Author ELB. Default parameter is a 1:1 copy of AWS default SSL policy `ELBSecurityPolicy-TLS-1-2-2017-01`| optional | `AOCELBSecurityPolicy-TLS-1-2-2017-01` |
 | s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors and credentials. | Mandatory | |
 | s3.create_bucket_flag | If "true", an S3 bucket with name: `s3.data_bucket_name` will be created as part of `make create-aws-resources` | Optional | "true" |
 | dns_records.create_hosted_zone_flag | If "true", a Route53 Private HostedZone with name: `dns_records.route53_hosted_zone_name` will be created as part of `make create-aws-resources` | Optional | "true" |

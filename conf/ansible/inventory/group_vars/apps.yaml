@@ -142,8 +142,7 @@ messaging:
 
 compute:
   key_pair_name: overwrite-me
-  # TODO: switch to ELBSecurityPolicy-TLS-1-2-2017-01 after upgrading deps
-  elb_cipher_suite: ELBSecurityPolicy-2016-08
+  elb_cipher_suite: AOCELBSecurityPolicy-TLS-1-2-2017-01
 
 s3:
   data_bucket_name: overwrite-me
