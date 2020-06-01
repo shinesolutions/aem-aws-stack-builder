@@ -164,7 +164,7 @@ Testing
 
 ### Testing with remote dependencies
 
-You can run integration test for creating, testing, and deleting the AEM Stack Manager, AEM Consolidated, AEM Full-Set environments using the command `make test-integration test_id=<sometestid>`, which downloads the dependencies from the Internet.
+You can run integration test for creating, testing, and deleting the AEM Stack Manager, AEM Consolidated, AEM Full-Set environments using the command `make test-integration-<aem_version>-<os_type> test_id=<sometestid>`, which downloads the dependencies from the Internet.
 
 ### Testing with local dependencies
 
@@ -172,7 +172,7 @@ If you're working on the dependencies of AEM AWS Stack Builder and would like to
 
 - Clone the dependency repos [AEM AWS Stack Provisioner](https://github.com/shinesolutions/aem-aws-stack-provisioner), [Puppet AEM Resources](https://github.com/shinesolutions/puppet-aem-resources), [Puppet AEM Curator](https://github.com/shinesolutions/puppet-aem-curator), [Puppet AEM Orchestrator](https://github.com/shinesolutions/puppet-aem-orchestrator), [Puppet SimianArmy](https://github.com/shinesolutions/puppet-simianarmy), [AEM Hello World Custom Stack Provisioner](https://github.com/shinesolutions/aem-helloworld-custom-stack-provisioner), [AEM Hello World Config](https://github.com/shinesolutions/aem-helloworld-config) at the same directory level as AEM AWS Stack Builder
 - Make your code changes against those dependency repos
-- Run `make test-integration-local test_id=<sometestid>` for integration testing using local dependencies, which copies those local dependency repos to your local AEM AWS Stack Provisioner, packages it and versioned with your `test_id`, uploads to S3, and uses them as part of the test
+- Run `make test-integration-local-<aem_version>-<os_type> test_id=<sometestid>` for integration testing using local dependencies, which copies those local dependency repos to your local AEM AWS Stack Provisioner, packages it and versioned with your `test_id`, uploads to S3, and uses them as part of the test
 
 Presentations
 -------------
