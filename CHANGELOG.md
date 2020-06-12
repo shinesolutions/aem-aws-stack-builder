@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fixed Stack deletion process for **permission-type c** when AWS resource encryption via CMK is enabled[#407]
 
+### Added
+- Added configurable ttl value for Switch-DNS function. [#411]
+
 ## 4.40.0 - 2020-05-14
 ### Added
 - Added new parameters to parameterise Publish-Dispatcher ASG Scaling policies cooldown timer [#405]

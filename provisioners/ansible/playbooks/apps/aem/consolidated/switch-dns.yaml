@@ -53,4 +53,5 @@
         value: "{{ dns_records.author_publish_dispatcher.record_set_name }}.{{ sanitise_author_dispatcher_hosted_zone.msg[0] }}"
         overwrite: yes
         type: "{{ author_publish_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
+        ttl: "{{ dns_records.author_publish_dispatcher.ttl }}"
       tags: switch

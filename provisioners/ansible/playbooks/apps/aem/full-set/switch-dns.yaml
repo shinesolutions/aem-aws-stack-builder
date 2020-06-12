@@ -108,6 +108,7 @@
         value: "{{ PublishDispatcherStack['ansible_facts']['cloudformation'][stack_facts['ansible_facts']['cloudformation'][stack_prefix + '-' + main.stack_name]['stack_resources']['PublishDispatcherStack'].split('/')[1]]['stack_outputs']['PublishDispatcherLoadBalancerDNSName'] }}"
         overwrite: yes
         type: "{{ publish_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
+        ttl: "{{ dns_records.publish_dispatcher.ttl }}"
       tags: switch
 
     - name: Change Author Dispatcher Hosted Zone Record Set Value
@@ -119,4 +120,5 @@
         value: "{{ dns_records.author_dispatcher.record_set_name }}.{{ dns_records.route53_hosted_zone_name }}"
         overwrite: yes
         type: "{{ author_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
+        ttl: "{{ dns_records.author_dispatcher.ttl }}"
       tags: switch
