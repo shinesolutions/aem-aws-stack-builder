@@ -36,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.34.0
 
+### Added
+- Add new configuration parameter for the reconfiguration process to update the location of the AEM Keystore [shinesolutions/packer-aem#209]
+
 ## 4.38.0 - 2020-03-19
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.33.0

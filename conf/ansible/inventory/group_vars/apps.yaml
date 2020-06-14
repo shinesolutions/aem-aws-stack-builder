@@ -181,6 +181,10 @@ reconfiguration:
   certificate_arn: overwrite-me
   certificate_key_arn: overwrite-me
   ssl_keystore_password: changeit
+  author:
+    ssl_keystore_path: /etc/ssl/aem-author/author.ks
+  publish:
+    ssl_keystore_path: /etc/ssl/aem-publish/publish.ks
 
 system_users:
   author:
