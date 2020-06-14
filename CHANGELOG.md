@@ -6,11 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-### Fixed
-- Fixed Stack deletion process for **permission-type c** when AWS resource encryption via CMK is enabled[#407]
-
 ### Added
 - Added configurable ttl value for Switch-DNS function. [#411]
+
+### Changed
+- Changed default parameter `compute.elb_cipher_suite` to `AOCELBSecurityPolicy-TLS-1-2-2017-01`
+- Disable TLS 1.0 & TLS 1.1 support for Author-Dispatcher, Publish-Dispatcher & Author ELB
+
+### Fixed
+- Fixed Stack deletion process for **permission-type c** when AWS resource encryption via CMK is enabled[#407]
 
 ## 4.40.0 - 2020-05-14
 ### Added
@@ -34,6 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 4.39.0 - 2020-04-15
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.34.0
+
+### Added
+- Add new configuration parameter for the reconfiguration process to update the location of the AEM Keystore [shinesolutions/packer-aem#209]
 
 ## 4.38.0 - 2020-03-19
 ### Changed

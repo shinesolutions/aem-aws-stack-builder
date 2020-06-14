@@ -124,6 +124,7 @@ These configurations are applicable to AWS resources used by the AEM environment
 | messaging.alarm_notification.contact_email | Recipient email address where AEM Full-Set alarm notification will be sent to.  | Optional | |
 | messaging.alarm_notification.https_endpoint | Notification https endpoint where AEM Full-Set alarm notification will be sent to.  | Optional | |
 | compute.key_pair_name | [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to be provisioned on all EC2 instances within the AEM environment. | Mandatory | |
+| compute.elb_cipher_suite | Cipher to use for the AEM Full-Set Author-Dispatcher, Publish-Dispatcher & Author ELB. Default parameter is a 1:1 copy of AWS default SSL policy `ELBSecurityPolicy-TLS-1-2-2017-01`| optional | `AOCELBSecurityPolicy-TLS-1-2-2017-01` |
 | s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors and credentials. | Mandatory | |
 | s3.create_bucket_flag | If "true", an S3 bucket with name: `s3.data_bucket_name` will be created as part of `make create-aws-resources` | Optional | "true" |
 | dns_records.create_hosted_zone_flag | If "true", a Route53 Private HostedZone with name: `dns_records.route53_hosted_zone_name` will be created as part of `make create-aws-resources` | Optional | "true" |
@@ -331,6 +332,8 @@ These configurations are applicable only when you run repository reconfiguration
 | reconfiguration.certificate_arn | The ARN of the Certificate in either the [AWS Certificate Manager (ACM)](https://console.aws.amazon.com/acm/home) or IAM Server Certificate or an S3 key path to the certificate object.  Valid values are either `arn:aws:acm:...` or `arn:aws:iam:...`, `s3://...`, `http://...`, `https://...` or `file://...`| mandatory(for reconfiguration) | |
 | reconfiguration.certificate_key_arn | The ARN of the secret containing TLS certificate's secret key in the [AWS Secrets Manager]. Valid values are either `arn:aws:secretsmanager:...`, `s3://...`, `http://...`, `https://...` or `file://...`(https://console.aws.amazon.com/secretsmanager/home) | mandatory(for reconfiguration) | |
 | reconfiguration.ssl_keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
+| reconfiguration.author.ssl_keystore_path | The path to the AEM Keystore on the FS | Optional | `/etc/ssl/aem-author/author.ks` |
+| reconfiguration.publish.ssl_keystore_path | The path to the AEM Keystore on the FS | Optional | `/etc/ssl/aem-publish/publish.ks` |
 | reconfiguration.ssl_keystore_password | [Java Keystore](https://www.digitalocean.com/community/tutorials/java-keytool-essentials-working-with-java-keystores) password used in AEM Author and Publish.  | Optional | `changeit` |
 | system_users.[author|publish].[admin|deployer|exporter|importer|orchestrator|replicator].name | AEM system user username for each component. Don't overwrite this unless you want to use non-AEM OpenCloud system users. | Optional | |
 | system_users.[author|publish].admin.path | AEM admin user path in the repository for each component. | mandatory | |
