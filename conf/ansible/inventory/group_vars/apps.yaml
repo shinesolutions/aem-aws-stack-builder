@@ -368,8 +368,10 @@ dns_records:
     record_set_name: author
   author_dispatcher:
     record_set_name: author-dispatcher
+    ttl: 300
   publish_dispatcher:
     record_set_name: publish-dispatcher
+    ttl: 300
   author_publish_dispatcher:
     record_set_name: author-publish-dispatcher
     ttl: 300
