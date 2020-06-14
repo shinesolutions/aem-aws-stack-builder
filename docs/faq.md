@@ -270,3 +270,36 @@ To create a stack with the old FS structure you need AMIs created with Packer-AE
   To avoid the likelihood of this scenario it's recommended to increase this value. As a rule of thumb use `publish_dispatcher.asg_health_check_grace_period` + `publish_dispatcher.asg_cpu_low_period` + ~3 minutes.
 
   This will give the ASG sufficient time to determine the state of the new instance and react if not healthy.
+
+- **Q:** Why is my AEM Keystore password not working ?<br>
+  **A:** With [Packer-AEM](https://github.com/shinesolutions/packer-aem) `4.0.0` a new feature too lookup the AEM Keystore password on the AWS SSM Parameter store via the configuration parameter `aem.keystore_password_parameter` was introduced. The early implementation of this feature contained a bug which was fixed with [Packer-AEM](https://github.com/shinesolutions/packer-aem) `4.10.0`. If you are using an AEM installation baked with these early versions of [Packer-AEM](https://github.com/shinesolutions/packer-aem) you are affected.
+
+  The bug relied in the implementation of the hiera plugin which was not able to lookup the value from the AWS Parameter store. Therefore the AEM Keystore password follows the following schema `lookup({{ aem.keystore_password_parameter }})`.
+
+  If you have set the configuration parameter `aem.keystore_password_parameter` e.g. to `changeit` your AEM Keystore password is `lookup(changeit)`. If you haven't set it the AEM Keystore password is `lookup(overwrite-me)`
+
+- **Q:** Why is my new SSL certificate not in the AEM Keystore ?<br>
+  **A:** With the release of AEM Opencloud 4 the whole AEM installation including the AEM Keystore is part of the snapshot. If you create an AEM OpenCloud Stack and attach a snapshot to the AEM OpenCloud Stack the baked in AEM Keystore gets overwritten with the one from the Snapshot. In the future we will move the AEM Keystore from `/opt/aem/(author|publish)/crx-quick  start/ssl` to `/etc/ssl/aem-(author|publish)/(author|publish).ks`.
+
+- **Q:** How can I use the new AEM Keystore location in AEM ?<br>
+  **A:** We moved the AEM Keystore location from `/opt/aem/(author|publish)/crx-quickstart/ssl` to `/etc/ssl/aem-(author|publish)/(author|publish).ks` so the AEM Keystore is part of the AMI again and not anymore of the snapshot. To make sure your AEM installation uses the new AEM Keystore location you have to update the configuration `org.apache.felix.https.keystore` in the configuration node `org.apache.felix.http` with the new path. If the password changed make sure you update the configuration `org.apache.felix.https.keystore.key.password` as well.
+
+- **Q:** How can I replace the SSL Certificate in the AEM Keystore ?<br>
+  **A:** There are several methods to replace the AEM Keystore SSL certificate.
+
+  **Method 1: Save the AEM Keystore file from a Vanilla Stack**
+  * Create a vanilla Consolidated or Full-Set environment
+  * SSH into an Author, publish or a consolidated instance
+  * Go to `/opt/aem/(author|publish)/crx-quickstart/ssl` and save the `aem.ks` file to a location where the other AEM OpenCloud  stack has access to
+  * SSH into the other AEM OpenCloud Stack
+  * Copy the previous saved file `aem.ks` to the destination instance
+  * stop AEM
+  * replace file at `/opt/aem/(author|publish)/crx-quickstart/ssl/aem.ks` with the previous saved one
+  * start AEM
+  * AEM SSL Access to Author(port 5432) & Publish(port 5433) should now use the new certificate
+
+  **Method 2: Bake new AMIs**
+  Before using this Method make sure AMIs are baked with the latest available [Packer-AEM](https://github.com/shinesolutions/packer-aem) version where the location of the AEM SSL Keystore is at `/etc/ssl/aem-(author|publish)/(author|publish).ks` and is configured as a keystore in the configuration node `org.apache.felix.http`
+  * Upload the new Certificate to AWS
+  * Update the packer-aem configuration profile
+  * Bake new AMIs
