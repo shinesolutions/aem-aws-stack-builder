@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 4.41.0 - 2020-06-15
 ### Added
 - Added configurable ttl value for Switch-DNS function. [#411]
 
@@ -36,11 +36,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix missing hiera parameters for author-standby promotion
 
 ## 4.39.0 - 2020-04-15
-### Changed
-- Upgrade AEM AWS Stack Provisioner to 4.34.0
-
 ### Added
 - Add new configuration parameter for the reconfiguration process to update the location of the AEM Keystore [shinesolutions/packer-aem#209]
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.34.0
 
 ## 4.38.0 - 2020-03-19
 ### Changed
