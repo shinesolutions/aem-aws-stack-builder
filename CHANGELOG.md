@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix Network component playbook
+- Fix AEM jvm_opts default value
 
 ## 4.41.0 - 2020-06-15
 ### Added
