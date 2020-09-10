@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add new reconfiguration parameter `reconfiguration.[author|publish].aem_ssl_method`
+
 ### Fixed
 - Fix Network component playbook
 - Fix AEM jvm_opts default value
