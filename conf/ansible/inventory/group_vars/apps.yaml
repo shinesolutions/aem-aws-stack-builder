@@ -182,8 +182,10 @@ reconfiguration:
   certificate_key_arn: overwrite-me
   ssl_keystore_password: changeit
   author:
+    aem_ssl_method: jetty
     ssl_keystore_path: /etc/ssl/aem-author/author.ks
   publish:
+    aem_ssl_method: jetty
     ssl_keystore_path: /etc/ssl/aem-publish/publish.ks
 
 system_users:

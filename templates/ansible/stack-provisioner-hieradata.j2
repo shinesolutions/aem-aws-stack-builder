@@ -171,7 +171,9 @@ aem_curator::action_deploy_artifact::retries_max_sleep_seconds: {{ aem.deploymen
 
 # AEM Reconfiguration Parameters
 aem_curator::config_author_primary::aem_keystore_path: {{ reconfiguration.author.ssl_keystore_path }}
+aem_curator::config_author_primary::aem_ssl_method: {{ reconfiguration.author.aem_ssl_method }}
 aem_curator::config_publish::aem_keystore_path: {{ reconfiguration.publish.ssl_keystore_path }}
+aem_curator::config_publish::aem_ssl_method: {{ reconfiguration.publish.aem_ssl_method }}
 
 common::aem_healthcheck_version: {{ library.aem_healthcheck_version }}
 common::enable_aem_reconfiguration: {{ aem.enable_reconfiguration }}
