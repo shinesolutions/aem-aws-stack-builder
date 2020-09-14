@@ -17,9 +17,10 @@ fi
 test_id=$1
 aem_version=${2:-aem64}
 os_type=${3:-amazon-linux2}
+jdk_version=${4:-jdk8}
 integration_test_config_file=stage/user-config/zzz-test.yaml
 
-echo "Running AEM AWS Stack Builder integration test with test_id: ${test_id}, aem_version: ${aem_version}, os_type: ${os_type}"
+echo "Running AEM AWS Stack Builder integration test with test_id: ${test_id}, aem_version: ${aem_version}, os_type: ${os_type}, jdk_version: ${jdk_version}"
 
 # Create integration test configuration for CDN testing
 echo "Creating integration test configuration file..."
@@ -65,12 +66,12 @@ make create-stack-manager "stack_prefix=${test_id}-sm" config_path=stage/user-co
 ./test/integration/fixtures/provision-test-dns-batch.sh "${test_id}"
 
 # Create, test, and delete AEM Consolidated environment
-cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+cp "${integration_test_config_file}" "stage/user-config/aem-consolidated-${os_type}-${aem_version}-${jdk_version}/"
 echo "Configuring AEM Consolidated environment..."
-make config "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+make config "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}-${jdk_version}/"
 echo "Creating AEM Consolidated environment..."
 cp -R stage/descriptors/consolidated/* stage/
-make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+make create-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}-${jdk_version}/"
 echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-con" && cd ../../
 # TODO: temporarily disable switch-dns testing to allow CodeBuild to pass
@@ -78,23 +79,23 @@ cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${
 # echo "Testing DNS switching to point to AEM Consolidated environment..."
 # make switch-dns-consolidated config_path=stage/user-config/aws-resources-sandpit/ "stack_prefix=${test_id}-con" author_publish_dispatcher_hosted_zone=aemopencloud.cms "author_publish_dispatcher_record_set=${test_id}-apd-con"
 echo "Deleting AEM Consolidated environment..."
-make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}/"
+make delete-consolidated "stack_prefix=${test_id}-con" "config_path=stage/user-config/aem-consolidated-${os_type}-${aem_version}-${jdk_version}/"
 
 # Create, test, and delete AEM Full-Set environment
-cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+cp "${integration_test_config_file}" "stage/user-config/aem-full-set-${os_type}-${aem_version}-${jdk_version}/"
 # TODO: temporarily disable config here due to inability to restore from original while building on CodeBuild
 #       This will have to be revisited after templates staging has been implemented
 # echo "Configuring AEM Full-Set environment..."
-# make config "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+# make config "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}-${jdk_version}/"
 echo "Creating AEM Full-Set environment..."
 cp -R stage/descriptors/full-set/* stage/
-make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+make create-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}-${jdk_version}/"
 echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
 cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test_id}-sm" "target_aem_stack_prefix=${test_id}-fs" && cd ../../
 # TODO: temporarily disable switch-dns testing to allow CodeBuild to pass
 #       will re-enable when Ansible already upgrades boto sub dependency to boto3 for Route53 functionalities
 # echo "Testing DNS switching to point to AEM Full-Set environment..."
-# make switch-dns-full-set "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/" "stack_prefix=${test_id}-fs" publish_dispatcher_hosted_zone=aemopencloud.space "publish_dispatcher_record_set=${test_id}-pd-fs" author_dispatcher_hosted_zone=aemopencloud.cms "author_dispatcher_record_set=${test_id}-ad-fs"
+# make switch-dns-full-set "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}-${jdk_version}/" "stack_prefix=${test_id}-fs" publish_dispatcher_hosted_zone=aemopencloud.space "publish_dispatcher_record_set=${test_id}-pd-fs" author_dispatcher_hosted_zone=aemopencloud.cms "author_dispatcher_record_set=${test_id}-ad-fs"
 # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
 #       will re-enable when InSpec already upgrades aws-sdk sub dependency to version 3.x
 # echo "Testing AEM Full-Set environment readiness with AEM Test Suite..."
@@ -104,7 +105,7 @@ cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${test
 # echo "Testing AEM Full-Set environment recovery with AEM Test Suite..."
 # cd /stage/aem-test-suite/ && make test-recovery-full-set "stack_prefix=${test_id}-fs" config_path=conf/ && cd ../../
 echo "Deleting AEM Full-Set environment..."
-make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}/"
+make delete-full-set "stack_prefix=${test_id}-fs" "config_path=stage/user-config/aem-full-set-${os_type}-${aem_version}-${jdk_version}/"
 
 # Delete AEM Stack Manager
 echo "Deleting AEM Stack Manager environment..."
