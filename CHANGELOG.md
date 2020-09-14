@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 4.37.0
+
 ### Fixed
 - Fix Network component playbook
 - Fix AEM jvm_opts default value
