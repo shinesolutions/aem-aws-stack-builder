@@ -107,6 +107,8 @@ Resources:
             - autoscaling:CreateOrUpdateTags
             - iam:PassRole
             - cloudwatch:PutMetricData
+            - acm:GetCertificate
+            - secretsmanager:GetSecretValue
             Effect: Allow
             Resource: '*'
           - Action:
