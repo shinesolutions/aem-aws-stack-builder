@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add new reconfiguration parameter `reconfiguration.[author|publish].aem_ssl_method`
 
 ### Changed
-- Upgrade AEM AWS Stack Provisioner to 4.37.0
+- Upgrade AEM AWS Stack Provisioner to 4.38.0
 
 ### Fixed
 - Fix Network component playbook
