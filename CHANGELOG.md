@@ -11,10 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.38.0
+- Changed default Load Balancer Listener SSL Policy `compute.elb_cipher_suite` to `ELBSecurityPolicy-TLS-1-2-2017-01`
+- Replaced Classic Load Balancer for Author, Author-Dispatcher & Publish-Dispatcher with Application Load Balancers [#41]
 
 ### Fixed
 - Fix Network component playbook
 - Fix AEM jvm_opts default value
+
+### Removed
+- Removed insecure HTTP Ports from Load Balancer
 
 ## 4.41.0 - 2020-06-15
 ### Added

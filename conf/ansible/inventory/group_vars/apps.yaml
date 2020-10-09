@@ -146,7 +146,7 @@ messaging:
 
 compute:
   key_pair_name: overwrite-me
-  elb_cipher_suite: AOCELBSecurityPolicy-TLS-1-2-2017-01
+  elb_cipher_suite: ELBSecurityPolicy-TLS-1-2-2017-01
 
 s3:
   data_bucket_name: overwrite-me
@@ -281,7 +281,7 @@ publish_dispatcher:
   data_vol_size: 20
   enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   enable_random_termination: true
-  elb_health_check: HTTPS:443/system/health?tags=shallow
+  elb_health_check: /system/health?tags=shallow
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
   asg_min_size: 2
@@ -316,7 +316,7 @@ author:
   root_vol_size: 20
   data_vol_size: 75
   enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
-  elb_health_check: HTTPS:5432/system/health?tags=shallow
+  elb_health_check: /system/health?tags=shallow
 
 author_dispatcher:
   instance_profile: overwrite-me
@@ -325,7 +325,7 @@ author_dispatcher:
   data_vol_size: 20
   enable_vol_encryption: "{{ aws.encryption.ebs_volume.enable }}"
   enable_random_termination: true
-  elb_health_check: HTTPS:443/system/health?tags=shallow
+  elb_health_check: /system/health?tags=shallow
   asg_min_size: 2
   asg_desired_capacity: 2
   asg_max_size: 2
