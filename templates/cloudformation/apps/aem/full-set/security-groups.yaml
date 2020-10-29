@@ -104,17 +104,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  AuthorDipatcherSecurityGroupEgress2:
-    Properties:
-      CidrIp:
-        Ref: PrivateSubnetInternetOutboundCidrIpParameter
-      FromPort: '80'
-      GroupId:
-        Ref: AuthorDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-    Type: AWS::EC2::SecurityGroupEgress
-  AuthorDipatcherSecurityGroupEgress3:
+  AuthorDipatcherSecurityGroupEgress1:
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -170,17 +160,7 @@ Resources:
         Ref: AuthorDispatcherELBSecurityGroup
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupIngress
-  AuthorDispatcherSecurityGroupIngress3:
-    Properties:
-      FromPort: '4502'
-      GroupId:
-        Ref: AuthorDispatcherSecurityGroup
-      IpProtocol: tcp
-      SourceSecurityGroupId:
-        Ref: AuthorSecurityGroup
-      ToPort: '4502'
-    Type: AWS::EC2::SecurityGroupIngress
-  AuthorDispatcherSecurityGroupIngress4:
+  AuthorDispatcherSecurityGroupIngress1:
     Properties:
       FromPort: '5432'
       GroupId:
@@ -190,7 +170,7 @@ Resources:
         Ref: AuthorSecurityGroup
       ToPort: '5432'
     Type: AWS::EC2::SecurityGroupIngress
-  AuthorDispatcherSecurityGroupIngress5:
+  AuthorDispatcherSecurityGroupIngress2:
     Properties:
       CidrIp:
         Ref: SecureShellInboundCidrIpParameter
@@ -213,7 +193,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
-  AuthorELBSecurityGroupEgress1:
+  AuthorELBSecurityGroupEgress0:
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorSecurityGroup
@@ -233,7 +213,7 @@ Resources:
         Ref: AuthorDispatcherSecurityGroup
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupIngress
-  AuthorELBSecurityGroupIngress3:
+  AuthorELBSecurityGroupIngress1:
     Properties:
       FromPort: '443'
       GroupId:
@@ -260,33 +240,13 @@ Resources:
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishSecurityGroup
-      FromPort: '4503'
-      GroupId:
-        Ref: AuthorSecurityGroup
-      IpProtocol: tcp
-      ToPort: '4503'
-    Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupEgress1:
-    Properties:
-      DestinationSecurityGroupId:
-        Ref: PublishSecurityGroup
       FromPort: '5433'
       GroupId:
         Ref: AuthorSecurityGroup
       IpProtocol: tcp
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupEgress2:
-    Properties:
-      DestinationSecurityGroupId:
-        Ref: AuthorSecurityGroup
-      FromPort: '4502'
-      GroupId:
-        Ref: AuthorSecurityGroup
-      IpProtocol: tcp
-      ToPort: '4502'
-    Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupEgress3:
+  AuthorSecurityGroupEgress1:
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorSecurityGroup
@@ -296,7 +256,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '5432'
     Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupEgress4:
+  AuthorSecurityGroupEgress2:
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorSecurityGroup
@@ -306,7 +266,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '8023'
     Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupEgress6:
+  AuthorSecurityGroupEgress3:
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorDispatcherSecurityGroup
@@ -316,17 +276,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupEgress7:
-    Properties:
-      CidrIp:
-        Ref: PrivateSubnetInternetOutboundCidrIpParameter
-      FromPort: '80'
-      GroupId:
-        Ref: AuthorSecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-    Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupEgress8:
+  AuthorSecurityGroupEgress4:
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -336,7 +286,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  AuthorSecurityGroupIngress1:
+  AuthorSecurityGroupIngress0:
     Properties:
       FromPort: '5432'
       GroupId:
@@ -346,7 +296,7 @@ Resources:
         Ref: AuthorELBSecurityGroup
       ToPort: '5432'
     Type: AWS::EC2::SecurityGroupIngress
-  AuthorSecurityGroupIngress3:
+  AuthorSecurityGroupIngress1:
     Properties:
       FromPort: '5432'
       GroupId:
@@ -356,7 +306,7 @@ Resources:
         Ref: AuthorSecurityGroup
       ToPort: '5432'
     Type: AWS::EC2::SecurityGroupIngress
-  AuthorSecurityGroupIngress4:
+  AuthorSecurityGroupIngress2:
     Properties:
       FromPort: '8023'
       GroupId:
@@ -366,7 +316,7 @@ Resources:
         Ref: AuthorSecurityGroup
       ToPort: '8023'
     Type: AWS::EC2::SecurityGroupIngress
-  AuthorSecurityGroupIngress5:
+  AuthorSecurityGroupIngress3:
     Properties:
       CidrIp:
         Ref: SecureShellInboundCidrIpParameter
@@ -403,16 +353,6 @@ Resources:
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
-      FromPort: '80'
-      GroupId:
-        Ref: ChaosMonkeySecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-    Type: AWS::EC2::SecurityGroupEgress
-  ChaosSecurityGroupEgress1:
-    Properties:
-      CidrIp:
-        Ref: PrivateSubnetInternetOutboundCidrIpParameter
       FromPort: '443'
       GroupId:
         Ref: ChaosMonkeySecurityGroup
@@ -432,7 +372,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
-  OrchestratorSecurityGroupEgress2:
+  OrchestratorSecurityGroupEgress0:
     Properties:
       DestinationSecurityGroupId:
         Ref: AuthorELBSecurityGroup
@@ -442,17 +382,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  OrchestratorSecurityGroupEgress3:
-    Properties:
-      CidrIp:
-        Ref: PrivateSubnetInternetOutboundCidrIpParameter
-      FromPort: '80'
-      GroupId:
-        Ref: OrchestratorSecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-    Type: AWS::EC2::SecurityGroupEgress
-  OrchestratorSecurityGroupEgress4:
+  OrchestratorSecurityGroupEgress1:
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -462,7 +392,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  OrchestratorSecurityGroupEgress5:
+  OrchestratorSecurityGroupEgress2:
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishSecurityGroup
@@ -528,7 +458,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
-  PublishDispatcherSecurityGroupEgress1:
+  PublishDispatcherSecurityGroupEgress0:
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishSecurityGroup
@@ -538,17 +468,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupEgress
-  PublishDispatcherSecurityGroupEgress2:
-    Properties:
-      CidrIp:
-        Ref: PrivateSubnetInternetOutboundCidrIpParameter
-      FromPort: '80'
-      GroupId:
-        Ref: PublishDispatcherSecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-    Type: AWS::EC2::SecurityGroupEgress
-  PublishDispatcherSecurityGroupEgress3:
+  PublishDispatcherSecurityGroupEgress1:
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -558,7 +478,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  PublishDispatcherSecurityGroupIngress1:
+  PublishDispatcherSecurityGroupIngress0:
     Properties:
       FromPort: '443'
       GroupId:
@@ -568,7 +488,7 @@ Resources:
         Ref: PublishDispatcherELBSecurityGroup
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupIngress
-  PublishDispatcherSecurityGroupIngress3:
+  PublishDispatcherSecurityGroupIngress1:
     Properties:
       FromPort: '443'
       GroupId:
@@ -578,7 +498,7 @@ Resources:
         Ref: PublishSecurityGroup
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupIngress
-  PublishDispatcherSecurityGroupIngress4:
+  PublishDispatcherSecurityGroupIngress2:
     Properties:
       CidrIp:
         Ref: SecureShellInboundCidrIpParameter
@@ -601,7 +521,7 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
-  PublishSecurityGroupEgress1:
+  PublishSecurityGroupEgress0:
     Properties:
       DestinationSecurityGroupId:
         Ref: PublishDispatcherSecurityGroup
@@ -611,17 +531,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  PublishSecurityGroupEgress2:
-    Properties:
-      CidrIp:
-        Ref: PrivateSubnetInternetOutboundCidrIpParameter
-      FromPort: '80'
-      GroupId:
-        Ref: PublishSecurityGroup
-      IpProtocol: tcp
-      ToPort: '80'
-    Type: AWS::EC2::SecurityGroupEgress
-  PublishSecurityGroupEgress3:
+  PublishSecurityGroupEgress1:
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -631,7 +541,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
-  PublishSecurityGroupIngress1:
+  PublishSecurityGroupIngress0:
     Properties:
       FromPort: '5433'
       GroupId:
@@ -641,7 +551,7 @@ Resources:
         Ref: PublishDispatcherSecurityGroup
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupIngress
-  PublishSecurityGroupIngress2:
+  PublishSecurityGroupIngress1:
     Properties:
       FromPort: '5433'
       GroupId:
@@ -651,7 +561,7 @@ Resources:
         Ref: AuthorSecurityGroup
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupIngress
-  PublishSecurityGroupIngress3:
+  PublishSecurityGroupIngress2:
     Properties:
       CidrIp:
         Ref: SecureShellInboundCidrIpParameter
@@ -661,7 +571,7 @@ Resources:
       IpProtocol: tcp
       ToPort: '22'
     Type: AWS::EC2::SecurityGroupIngress
-  PublishSecurityGroupIngress4:
+  PublishSecurityGroupIngress3:
     Properties:
       FromPort: '5433'
       GroupId:
