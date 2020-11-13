@@ -6,7 +6,7 @@ aem_helloworld_custom_stack_provisioner_version = 0.14.0
 ci: clean deps lint package
 
 clean:
-	rm -rf logs/ stage/ *.cert *.key provisioners/ansible/playbooks/apps/*.retry
+	rm -rf logs/ stage/ *.cert *.key provisioners/ansible/playbooks/apps/*.retry provisioners/ansible/playbooks/network/network-resources-generated.yaml
 
 stage:
 	mkdir -p stage/ stage/user-config/ stage/descriptors/
