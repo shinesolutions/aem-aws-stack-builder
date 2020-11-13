@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.38.0
+- Upgrade AEM Stack Manager Cloud to 1.9.0
 
 ### Fixed
 - Fix Network component playbook
