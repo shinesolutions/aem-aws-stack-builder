@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Add new reconfiguration parameter `reconfiguration.[author|publish].aem_ssl_method`
+- Added missing certificate permission for Consolidated
 
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.38.0
