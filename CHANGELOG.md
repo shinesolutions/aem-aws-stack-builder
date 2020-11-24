@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Changed default Load Balancer Listener SSL Policy `compute.elb_cipher_suite` to `ELBSecurityPolicy-TLS-1-2-2017-01`
 - Replaced Classic Load Balancer for Author, Author-Dispatcher & Publish-Dispatcher with Application Load Balancers [#41]
+- Upgrade AEM Orchestrator library to version 3.0.0 [#41]
 
 ### Removed
 - Removed insecure HTTP Ports from Load Balancer
