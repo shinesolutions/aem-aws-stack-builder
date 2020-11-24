@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf8 -*-
 
 ANSIBLE_METADATA = {'metadata_version': '1.1'}
@@ -52,8 +52,8 @@ class CFFunctionYAMLObject(yaml.YAMLObject):
 
     @classmethod
     def from_yaml(cls, loader, node):
-        if node.tag == u'!Ref':
-            key = u'Ref'
+        if node.tag == '!Ref':
+            key = 'Ref'
         else:
             key = node.tag.replace('!', 'Fn::')
 
@@ -65,13 +65,13 @@ class CFFunctionYAMLObject(yaml.YAMLObject):
         return data
 
 class CFSub(CFFunctionYAMLObject):
-    yaml_tag = u'!Sub'
+    yaml_tag = '!Sub'
 
 class CFRef(CFFunctionYAMLObject):
-    yaml_tag = u'!Ref'
+    yaml_tag = '!Ref'
 
 class CFJoin(CFFunctionYAMLObject):
-    yaml_tag = u'!Join'
+    yaml_tag = '!Join'
 
 class CreateSSMCFTemplate:
     def __init__(self, module):

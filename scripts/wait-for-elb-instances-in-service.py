@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse, re, time
 from assume_role_lib import log, sts
 from assume_role_lib.util import unwrap

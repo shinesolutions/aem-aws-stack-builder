@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # -*- coding: utf8 -*-
 
@@ -27,8 +27,8 @@ def write_stack_outputs(stack_name, output_key, output_yaml):
     output={}
 
     for stack in stacks:
-        entries = map(operator.itemgetter('OutputKey','OutputValue'),
-                      stack.outputs)
+        entries = list(map(operator.itemgetter('OutputKey','OutputValue'),
+                      stack.outputs))
         for key, value in entries:
             output[key]=value
 
@@ -44,9 +44,9 @@ def write_stack_outputs(stack_name, output_key, output_yaml):
 if __name__ == "__main__":
 
     if len(sys.argv) != 4:
-        print('Usage: {} <stack_name> <output_key> <outout_yaml_file>'.format(
+        print(('Usage: {} <stack_name> <output_key> <outout_yaml_file>'.format(
             sys.argv[0]
-        ))
+        )))
         sys.exit(1)
 
     stack_name = sys.argv[1]

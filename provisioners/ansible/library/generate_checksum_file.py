@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from ansible.module_utils.basic import *
 import sys, os, hashlib, json, yaml

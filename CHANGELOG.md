@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Convert python scripts to be executed using Python 3
+
 ## 4.42.0 - 2020-11-16
 ### Added
 - Add new reconfiguration parameter `reconfiguration.[author|publish].aem_ssl_method`

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Add security groups to CloudFormation template files.
 # This will modify the CloudFormation template files.
