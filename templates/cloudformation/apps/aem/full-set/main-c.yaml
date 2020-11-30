@@ -13,13 +13,15 @@ Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
     Type: String
-  AWSEncryptionParameters:
+  EnableVolumeEncryptionParameter:
     Description: |
-      A list of AWS Encyrption parameters.
-      List hast to be containing the following values in the following order:
-        - Boolean for enabling/disabling EBS Volume encryption
-        - KMS Key ID used for EBS Volume encryption
-    Type: List<String>
+      Boolean to Enable/Disable EBS Volume Encryption.
+      Needs to be ENabled if Source AMI has volumes encrypted
+    Type: String
+    Default: 'true'
+    AllowedValues:
+    - true
+    - false
   AuthorDNSRecordSetNameParameter:
     Description: Author DNS Record Set Name
     Type: String
@@ -74,9 +76,9 @@ Parameters:
     Default: ''
     Description: The Chaos Monkey Instance Type
     Type: String
-  ChaosMonkeyVolParameter:
-    Description: Comma seperated list of Chaos Monkey Instances Volume parameters
-    Type: List<String>
+  ChaosMonkeyRootVolSizeParameter:
+    Description: Chaos Monkey Instances Root EBS Volum Size
+    Type: String
   ComputeKeyPairNameParameter:
     Description: The Compute Resources Key Pair Name
     Type: AWS::EC2::KeyPair::KeyName
@@ -163,10 +165,6 @@ Resources:
       Parameters:
         AemAwsStackProvisionerVersionParameter:
           Ref: AemAwsStackProvisionerVersionParameter
-        AWSEncryptionParameters:
-          Fn::Join:
-            - ','
-            - Ref: AWSEncryptionParameters
         AuthorDispatcherASGAvailabilityZoneListParameter:
           Fn::Join:
             - ','
@@ -199,15 +197,15 @@ Resources:
             - Ref: AuthorDispatcherVolParameter
         AuthorDispatcherEnableVolEncryptionParameter:
           Fn::Select:
-            - 2
-            - Ref: AuthorDispatcherVolParameter
+            - 0
+            - Ref: EnableVolumeEncryptionParameter
         AuthorDispatcherDataVolSnapshotParameter:
           Fn::Select:
-            - 3
+            - 2
             - Ref: AuthorDispatcherVolParameter
         UseAuthorDispatcherDataVolSnapshotParameter:
           Fn::Select:
-            - 4
+            - 3
             - Ref: AuthorDispatcherVolParameter
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
@@ -261,12 +259,8 @@ Resources:
             - Ref: AuthorVolParameter
         AuthorEnableVolEncryptionParameter:
           Fn::Select:
-            - 4
-            - Ref: AuthorVolParameter
-        AWSEncryptionParameters:
-          Fn::Join:
-            - ','
-            - Ref: AWSEncryptionParameters
+            - 0
+            - Ref: EnableVolumeEncryptionParameter
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -309,15 +303,11 @@ Resources:
         ChaosMonkeyRootVolSizeParameter:
           Fn::Select:
             - 0
-            - Ref: ChaosMonkeyVolParameter
+            - Ref: ChaosMonkeyRootVolSizeParameter
         ChaosMonkeyEnableVolEncryptionParameter:
           Fn::Select:
-            - 1
-            - Ref: ChaosMonkeyVolParameter
-        AWSEncryptionParameters:
-          Fn::Join:
-            - ','
-            - Ref: AWSEncryptionParameters
+            - 0
+            - Ref: EnableVolumeEncryptionParameter
         ComputeKeyPairNameParameter:
           Ref: ComputeKeyPairNameParameter
         DataBucketNameParameter:
@@ -380,12 +370,8 @@ Resources:
             - Ref: OrchestratorVolParameter
         OrchestratorEnableVolEncryptionParameter:
           Fn::Select:
-            - 2
-            - Ref: OrchestratorVolParameter
-        AWSEncryptionParameters:
-          Fn::Join:
-            - ','
-            - Ref: AWSEncryptionParameters
+            - 0
+            - Ref: EnableVolumeEncryptionParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
         PublishDispatcherStackArn:
@@ -460,20 +446,16 @@ Resources:
             - Ref: PublishDispatcherVolParameter
         PublishDispatcherEnableVolEncryptionParameter:
           Fn::Select:
-            - 2
-            - Ref: PublishDispatcherVolParameter
+            - 0
+            - Ref: EnableVolumeEncryptionParameter
         PublishDispatcherDataVolSnapshotParameter:
           Fn::Select:
-            - 3
+            - 2
             - Ref: PublishDispatcherVolParameter
         UsePublishDispatcherDataVolSnapshotParameter:
           Fn::Select:
-            - 4
+            - 3
             - Ref: PublishDispatcherVolParameter
-        AWSEncryptionParameters:
-          Fn::Join:
-            - ','
-            - Ref: AWSEncryptionParameters
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish-dispatcher.yaml
     Type: AWS::CloudFormation::Stack
@@ -518,12 +500,8 @@ Resources:
             - Ref: PublishVolParameter
         PublishEnableVolEncryptionParameter:
           Fn::Select:
-            - 4
-            - Ref: PublishVolParameter
-        AWSEncryptionParameters:
-          Fn::Join:
-            - ','
-            - Ref: AWSEncryptionParameters
+            - 0
+            - Ref: EnableVolumeEncryptionParameter
         PublishImageParameter:
           Ref: PublishImageParameter
         PublishImageRootDevice:

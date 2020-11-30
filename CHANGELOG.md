@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix Network component playbook
 - Fix AEM jvm_opts default value
 
+### Removed
+- Removed deprecated configuration parameters [#371]
+
 ## 4.41.0 - 2020-06-15
 ### Added
 - Added configurable ttl value for Switch-DNS function. [#411]
