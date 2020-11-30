@@ -146,7 +146,7 @@ messaging:
 
 compute:
   key_pair_name: overwrite-me
-  elb_cipher_suite: AOCELBSecurityPolicy-TLS-1-2-2017-01
+  elb_cipher_suite: ELBSecurityPolicy-TLS-1-2-2017-01
 
 s3:
   data_bucket_name: overwrite-me
@@ -154,7 +154,7 @@ s3:
 
 library:
   aem_aws_stack_provisioner_version: 5.0.0
-  aem_orchestrator_version: 2.0.1
+  aem_orchestrator_version: 3.0.0
   aem_password_reset_version: 1.1.0
   oak_run_version: 1.8.3
   aem_stack_manager_version: 1.9.1
@@ -280,7 +280,7 @@ publish_dispatcher:
   root_vol_size: 20
   data_vol_size: 20
   enable_random_termination: true
-  elb_health_check: HTTPS:443/system/health?tags=shallow
+  elb_health_check: /system/health?tags=shallow
   elb_scheme: internet-facing
   allowed_client: '*.*.*.*'
   asg_min_size: 2
@@ -313,7 +313,7 @@ author:
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 75
-  elb_health_check: HTTPS:5432/system/health?tags=shallow
+  elb_health_check: /system/health?tags=shallow
 
 author_dispatcher:
   instance_profile: overwrite-me
@@ -321,7 +321,7 @@ author_dispatcher:
   root_vol_size: 20
   data_vol_size: 20
   enable_random_termination: true
-  elb_health_check: HTTPS:443/system/health?tags=shallow
+  elb_health_check: /system/health?tags=shallow
   asg_min_size: 2
   asg_desired_capacity: 2
   asg_max_size: 2
