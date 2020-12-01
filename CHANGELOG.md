@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 5.0.0 - 2020-12-01
 ### Changed
 - Changed default Load Balancer Listener SSL Policy `compute.elb_cipher_suite` to `ELBSecurityPolicy-TLS-1-2-2017-01`
 - Configuring Load Balancer deregistration delay to 30 seconds
@@ -25,12 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade AEM AWS Stack Provisioner to 4.38.0
 - Upgrade AEM Stack Manager Cloud to 1.9.1
 
+### Removed
+- Removed deprecated configuration parameters [#371]
+
 ### Fixed
 - Fix Network component playbook
 - Fix AEM jvm_opts default value
-
-### Removed
-- Removed deprecated configuration parameters [#371]
 
 ## 4.41.0 - 2020-06-15
 ### Added
