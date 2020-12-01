@@ -370,6 +370,9 @@ Resources:
       VpcId:
         Fn::ImportValue:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: '30'
       Tags:
       - Key: Name
         Value: AEM Publish Dispatcher Load Balancer TargetGroup
