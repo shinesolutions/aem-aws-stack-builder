@@ -15,28 +15,9 @@ Conditions:
   UsePublishDispatcherDataVolSnapshotCondition:
     Fn::Equals:
       - Fn::Select:
-          - 5
+          - 4
           - Ref: AuthorPublishDispatcherVolParameter
       - true
-  UseCMKEBSVolumeEncryptionCondition:
-    Fn::And:
-      - Fn::Equals:
-          - Fn::Select:
-            - 4
-            - Ref: AuthorPublishDispatcherVolParameter
-            # To support the deprecrated configuration parameters,
-            # [aem_component].enable_vol_encryption
-            #
-            # The new parameter is not support yet.
-            # - 0
-            # - Ref: AWSEncryptionParameters
-          - true
-      - Fn::Not:
-          - Fn::Equals:
-              - Fn::Select:
-                - 1
-                - Ref: AWSEncryptionParameters
-              - 'overwrite-me'
 Description: Create AEM Consolidated Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -73,13 +54,15 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
-  AWSEncryptionParameters:
+  EnableVolumeEncryptionParameter:
     Description: |
-      A list of AWS Encyrption parameters.
-      List hast to be containing the following values in the following order:
-        - Boolean for enabling/disabling EBS Volume encryption
-        - KMS Key ID used for EBS Volume encryption
-    Type: List<String>
+      Boolean to Enable/Disable EBS Volume Encryption.
+      Needs to be ENabled if Source AMI has volumes encrypted
+    Type: String
+    Default: 'true'
+    AllowedValues:
+    - true
+    - false
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String
@@ -109,22 +92,7 @@ Resources:
         Ebs:
           DeleteOnTermination: true
           Encrypted:
-            Fn::Select:
-              - 4
-              - Ref: AuthorPublishDispatcherVolParameter
-              # To support the deprecrated configuration parameters,
-              # [aem_component].enable_vol_encryption
-              #
-              # The new parameter is not support yet.
-              # - 0
-              # - Ref: AWSEncryptionParameters
-          KmsKeyId:
-              Fn::If:
-              - UseCMKEBSVolumeEncryptionCondition
-              - Fn::Select:
-                  - 1
-                  - Ref: AWSEncryptionParameters
-              - Ref: AWS::NoValue
+            Ref: EnableVolumeEncryptionParameter
           VolumeSize:
             Fn::Select:
               - 0
@@ -137,22 +105,7 @@ Resources:
         Ebs:
           DeleteOnTermination: true
           Encrypted:
-            Fn::Select:
-              - 4
-              - Ref: AuthorPublishDispatcherVolParameter
-              # To support the deprecrated configuration parameters,
-              # [aem_component].enable_vol_encryption
-              #
-              # The new parameter is not support yet.
-              # - 0
-              # - Ref: AWSEncryptionParameters
-          KmsKeyId:
-              Fn::If:
-              - UseCMKEBSVolumeEncryptionCondition
-              - Fn::Select:
-                  - 1
-                  - Ref: AWSEncryptionParameters
-              - Ref: AWS::NoValue
+            Ref: EnableVolumeEncryptionParameter
           SnapshotId:
             Fn::If:
             - UseAuthorDataVolSnapshotCondition
@@ -170,22 +123,7 @@ Resources:
         Ebs:
           DeleteOnTermination: true
           Encrypted:
-            Fn::Select:
-              - 4
-              - Ref: AuthorPublishDispatcherVolParameter
-              # To support the deprecrated configuration parameters,
-              # [aem_component].enable_vol_encryption
-              #
-              # The new parameter is not support yet.
-              # - 0
-              # - Ref: AWSEncryptionParameters
-          KmsKeyId:
-              Fn::If:
-              - UseCMKEBSVolumeEncryptionCondition
-              - Fn::Select:
-                  - 1
-                  - Ref: AWSEncryptionParameters
-              - Ref: AWS::NoValue
+            Ref: EnableVolumeEncryptionParameter
           SnapshotId:
             Fn::If:
             - UsePublishDataVolSnapshotCondition
@@ -203,22 +141,7 @@ Resources:
         Ebs:
           DeleteOnTermination: true
           Encrypted:
-            Fn::Select:
-              - 4
-              - Ref: AuthorPublishDispatcherVolParameter
-              # To support the deprecrated configuration parameters,
-              # [aem_component].enable_vol_encryption
-              #
-              # The new parameter is not support yet.
-              # - 0
-              # - Ref: AWSEncryptionParameters
-          KmsKeyId:
-              Fn::If:
-              - UseCMKEBSVolumeEncryptionCondition
-              - Fn::Select:
-                  - 1
-                  - Ref: AWSEncryptionParameters
-              - Ref: AWS::NoValue
+            Ref: EnableVolumeEncryptionParameter
           SnapshotId:
             Fn::If:
             - UsePublishDispatcherDataVolSnapshotCondition
