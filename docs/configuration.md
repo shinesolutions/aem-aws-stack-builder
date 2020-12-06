@@ -18,7 +18,7 @@ These configurations are applicable to both network and AEM application infrastr
 | aws.cloudwatch.log_subscription_arn | The ARN of the AEM Stack Manager Lambda `cloudwatch logs s3 stream` function. | Optional | `` |
 | aws.cloudwatch.enable_cloudwatch_cleanup | This flag controls if all Cloudwatch Loggroups belonging to the AEM stack should get removed while deleting the AEM Stack. | Optional | `false` |
 | aws.encryption.ebs_volume.enable | Enable/disable EBS volume encryption. | Optional | `true` |
-| aws.encryption.ebs_volume.kms_key_id | Use to encrypt the EBS Volume with. Configuration `aws.encryption.ebs_volume.enable` needs to be set to true. Valid values are described [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ebs-volume.html#cfn-ec2-ebs-volume-kmskeyid) | Optional | None |
+| aws.encryption.ebs_volume.kms_key_id | Provide the KMS Key ID which was used to encrypt the EBS Volumes of the Source AMI. Configuration `aws.encryption.ebs_volume.enable` needs to be set to true. Valid values are described [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ebs-volume.html#cfn-ec2-ebs-volume-kmskeyid). Mandatory if source Volumes are encrypted and configuration parameter `aws.encryption.ebs_volume.managed_policy_arn` is not set, so permissions for accessing the key can be granted for the AEM Stack. | Optional | None |
 | aws.encryption.ebs_volume.managed_policy_arn | Managed policy arn with permissions to access the CMK defined in the configuration parameter `aws.encryption.ebs_volume.kms_key_id`. If no managed policy is defined permissions for the instance profiles for accessing the CMK key is set via grants. | Optional(permission-type b) | None |
 | aws.encryption.dynamo_db.kms_key_id | If provided AEM Stack Manager DynamoDB table uses this key for SSE encryption.| Optional | None |
 | aws.encryption.dynamo_db.managed_policy_arn | Managed policy arn with permissions to access the CMK defined in the configuration parameter `aws.encryption.dynamo_db.kms_key_id`. If no managed policy is defined, permissions for the AEM Stack Manager instance profiles for accessing the CMK key is set via grants. | Optional(permission-type b) | None |
@@ -185,7 +185,6 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish-dispatcher` component instances. | Optional | `t2.small` |
 | publish_dispatcher.root_vol_size | The root volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
 | publish_dispatcher.data_vol_size | The data volume size in Gb of `publish-dispatcher` component instances. | Optional | `20` |
-| publish_dispatcher.enable_vol_encryption | Replaced with the configuration parameter aws.encryption.ebs_volume.enable . | Deprecated | `true` |
 | publish_dispatcher.asg_desired_capacity | The desired number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_min_size | The minimum number of `publish-dispatcher` component instances. | Optional | `2` |
 | publish_dispatcher.asg_max_size | The maximum number of `publish-dispatcher` component instances. | Optional | `2` |
@@ -201,7 +200,6 @@ These configurations are applicable to the components used within AEM Full-Set a
 | publish.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `publish` component instances. | Optional | `m3.large` |
 | publish.root_vol_size | The root volume size in Gb of `publish` component instances. | Optional | `20` |
 | publish.data_vol_size | The data volume size in Gb of `publish` component instances. | Optional | `75` |
-| publish.enable_vol_encryption | Replaced with the configuration parameter aws.encryption.ebs_volume.enable . | Deprecated | `true` |
 | publish.asg_desired_capacity | The desired number of `publish` component instances. | Optional | `2` |
 | publish.asg_min_size | The minimum number of `publish` component instances. | Optional | `2` |
 | publish.asg_max_size | The maximum number of `publish` component instances. | Optional | `2` |
@@ -212,13 +210,11 @@ These configurations are applicable to the components used within AEM Full-Set a
 | author.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author` component instances. | Optional | `m3.large` |
 | author.root_vol_size | The root volume size in Gb of `author` component instances. | Optional | `20` |
 | author.data_vol_size | The data volume size in Gb of `author` component instances. | Optional | `75` |
-| author.enable_vol_encryption | Replaced with the configuration parameter aws.encryption.ebs_volume.enable . | Deprecated | `true` |
 | author_dispatcher.elb_health_check | The health check to be performed on the ELB sitting in front of `author-dispatcher` component. | Optional | `HTTPS:5432/system/health?tags=shallow` |
 | author_dispatcher.instance_profile | ARN of the IAM instance profile to be used on `author_dispatcher` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
 | author_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_dispatcher` component instances. | Optional | `t2.small` |
 | author_dispatcher.root_vol_size | The root volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
 | author_dispatcher.data_vol_size | The data volume size in Gb of `author_dispatcher` component instances. | Optional | `20` |
-| author_dispatcher.enable_vol_encryption | Replaced with the configuration parameter aws.encryption.ebs_volume.enable . | Deprecated | `true` |
 | author_dispatcher.asg_desired_capacity | The desired number of `author_dispatcher` component instances. | Optional | `2` |
 | author_dispatcher.asg_min_size | The minimum number of `author_dispatcher` component instances. | Optional | `2` |
 | author_dispatcher.asg_max_size | The maximum number of `author_dispatcher` component instances. | Optional | `2` |
@@ -230,18 +226,15 @@ These configurations are applicable to the components used within AEM Full-Set a
 | author_publish_dispatcher.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `author_publish_dispatcher` component instances. | Optional | `m4.xlarge` |
 | author_publish_dispatcher.root_vol_size | The root volume size in Gb of `author_publish_dispatcher` component instances. | Optional | `20` |
 | author_publish_dispatcher.data_vol_size | The data volume size in Gb of `author_publish_dispatcher` component instances. | Optional | `20` |
-| author_publish_dispatcher.enable_vol_encryption | Replaced with the configuration parameter aws.encryption.ebs_volume.enable . | Deprecated | `true` |
 | author_publish_dispatcher.associate_public_ip_address | If true, then a public IP address will be associated to the `author-publish-dispatcher` instance. | Optional | `true` |
 | orchestrator.instance_profile | ARN of the IAM instance profile to be used on `orchestrator` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
 | orchestrator.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `orchestrator` component instances. | Optional | `t2.small` |
 | orchestrator.root_vol_size | The root volume size in Gb of `orchestrator` component instances. | Optional | `20` |
 | orchestrator.data_vol_size | The data volume size in Gb of `orchestrator` component instances. | Optional | `20` |
-| orchestrator.enable_vol_encryption | Replaced with the configuration parameter aws.encryption.ebs_volume.enable . | Deprecated | `true` |
 | orchestrator.enable_random_termination | If true, Chaos Monkey will attempt to randomly terminate an EC2 instance within this component's AutoScalingGroup. | Optional | `true` |
 | chaos_monkey.instance_profile | ARN of the IAM instance profile to be used on `chaos_monkey` component. | Mandatory for instance profile exports stack, ignore this for other stacks. | |
 | chaos_monkey.instance_type | The [EC2 instance type](https://aws.amazon.com/ec2/instance-types/) of `chaos_monkey` component instances. | Optional | `t2.small` |
 | chaos_monkey.root_vol_size | The root volume size in Gb of `chaos_monkey` component instances. | Optional | `20` |
-| chaos_monkey.enable_vol_encryption Replaced with the configuration parameter aws.encryption.ebs_volume.enable . | Deprecated | `true` |
 | chaos_monkey.include_stack | If true, `chaos-monkey` component will be included in the created AEM environment. If false, then the environment won't have `chaos-monkey` component. | Optional | `true` |
 | chaos_monkey.termination_settings.calendar_open_hour | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendaropenhour) specifying the starting hour of the day when Chaos Monkey starts operating. | Optional | `9` |
 | chaos_monkey.termination_settings.calendar_close_hour | Chaos Monkey [setting](https://github.com/Netflix/SimianArmy/wiki/Global-Settings#simianarmycalendarclosehour) specifying the ending hour of the day when Chaos Monkey starts operating. | Optional | `15` |

@@ -10,6 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Convert python scripts to be executed using Python 3
 
+## 5.0.2 - 2020-12-02
+### Changed
+- Upgrade AEM Orchestrator to 3.0.1
+
+## 5.0.1 - 2020-12-01
+### Fixed
+- Fixed Consolidated Encryption parameters
+
+## 5.0.0 - 2020-12-01
+### Changed
+- Changed default Load Balancer Listener SSL Policy `compute.elb_cipher_suite` to `ELBSecurityPolicy-TLS-1-2-2017-01`
+- Configuring Load Balancer deregistration delay to 30 seconds
+- Replaced Classic Load Balancer for Author, Author-Dispatcher & Publish-Dispatcher with Application Load Balancers [#41]
+- Upgrade AEM Orchestrator library to version 3.0.0 [#41]
+- Upgrade AEM AWS Stack Provisioner to 5.0.0
+
+### Removed
+- Removed insecure HTTP Ports from Load Balancer
+
 ## 4.42.0 - 2020-11-16
 ### Added
 - Add new reconfiguration parameter `reconfiguration.[author|publish].aem_ssl_method`
@@ -18,6 +37,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 4.38.0
 - Upgrade AEM Stack Manager Cloud to 1.9.1
+
+### Removed
+- Removed deprecated configuration parameters [#371]
 
 ### Fixed
 - Fix Network component playbook
