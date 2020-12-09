@@ -72,7 +72,7 @@ lint:
 
 # resolve dependencies from remote artifact registries
 deps: stage
-	pip install -r requirements.txt
+	pip3 install -r requirements.txt
 
 # resolve test dependencies from remote artifact registries
 deps-test: stage
