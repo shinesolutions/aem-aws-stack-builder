@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys, os, logging
 from socket import gethostname as ghn
 from .util import clamp

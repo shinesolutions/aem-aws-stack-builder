@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf8 -*-
 
 ANSIBLE_METADATA = {'metadata_version': '1.1'}
@@ -222,7 +222,7 @@ class config:
 
             result = ec2_run_command
             changed = True
-        except Exception, e:
+        except Exception as e:
             self.module.fail_json(msg="Error: Could not create JSON Configfile - " + str(e))
 
         self.module.exit_json(changed=changed, stack_manager_config=result)

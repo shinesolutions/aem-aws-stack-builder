@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys, os, argparse, yaml, boto3
 from dateutil.parser import parse as parse_dt
@@ -16,7 +16,7 @@ def most_recent_ami(ami_name, filterList):
         _, _, values = values.partition('=')
         filters.append({
             'Name': name.strip(),
-            'Values': map(lambda x: x.strip(), values.split(','))
+            'Values': [x.strip() for x in values.split(',')]
         })
 
     ec2 = boto3.resource('ec2')

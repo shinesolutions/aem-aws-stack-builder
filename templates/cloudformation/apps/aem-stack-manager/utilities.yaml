@@ -283,6 +283,6 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python2.7
+      Runtime: python3.6
       Timeout: 900
     Type: AWS::Lambda::Function

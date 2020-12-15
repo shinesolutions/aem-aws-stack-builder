@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Add tags (set in `aws.tags` configuration) to CloudFormation template files.
 # This will modify the CloudFormation template files described in `tag_keys`,

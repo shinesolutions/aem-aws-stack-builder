@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 def clamp(low, x, high):
     return low if x < low else high if x > high else x

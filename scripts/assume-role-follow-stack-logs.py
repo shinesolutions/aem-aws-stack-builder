@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse, re, time
 from assume_role_lib import log, sts
 from assume_role_lib.util import unwrap
@@ -73,7 +73,7 @@ def find_instances(ec2, args):
     logger.debug('Filters: %r', filters)
 
     instances = list(ec2.instances.filter(
-        Filters = [ {'Name': k, 'Values': v} for k,v in filters.iteritems() ]
+        Filters = [ {'Name': k, 'Values': v} for k,v in filters.items() ]
     ))
 
     return ( instance(i) for i in instances )
@@ -133,7 +133,7 @@ def main():
     logger.info(
         'Found %d instances: %r', len(instances), instances
     )
-    instance_ids = set( instances.iterkeys() )
+    instance_ids = set( instances.keys() )
     complete_instance_ids = set()
 
     cwlogs = session.client('logs')
@@ -184,13 +184,13 @@ def main():
 
         # corner case: an existing instance might be replaced by a new one
         current_instances = {i.id: i for i in find_instances(ec2, args)}
-        new_instances = filter(lambda x: x[0] not in instance_ids, current_instances.items())
+        new_instances = [x for x in list(current_instances.items()) if x[0] not in instance_ids]
         if len(new_instances) > 0:
             logger.info(
                 'Found %d new instances %r', len(new_instances), new_instances
             )
             instances = current_instances
-            instance_ids = set(current_instances.iterkeys())
+            instance_ids = set(current_instances.keys())
             remaining_instance_ids = instance_ids - complete_instance_ids
 
     if all_failures > 0:

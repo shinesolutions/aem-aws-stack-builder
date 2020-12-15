@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys, os, logging, argparse, boto3, socket, textwrap
-from urlparse import urlparse
+from urllib.parse import urlparse
 from socket import gethostname as ghn
 
 __version__ = '0.1'

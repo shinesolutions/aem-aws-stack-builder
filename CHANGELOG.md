@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Lock down pylint to 2.6.0
+- Use Python3 virtualenv for GitHub actions
+- Use pip3 for python package management
+- Convert python scripts to be executed using Python 3
+
 ## 5.0.2 - 2020-12-02
 ### Changed
 - Upgrade AEM Orchestrator to 3.0.1
