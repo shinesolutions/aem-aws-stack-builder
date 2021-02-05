@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use Python3 virtualenv for GitHub actions
 - Use pip3 for python package management
 - Convert python scripts to be executed using Python 3
+- Set default Ansible Python interpreter to python3
 
 ## 5.0.2 - 2020-12-02
 ### Changed
