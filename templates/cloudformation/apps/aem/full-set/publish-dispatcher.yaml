@@ -337,7 +337,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Type: application
-      Scheme: internet-facing
+      Scheme:
+        Ref: PublishDispatcherLoadBalancerSchemeParameter
       Subnets:
         Fn::Split:
         - ','
