@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Convert python scripts to be executed using Python 3
 
 ### Fixed
-- Change Publish-Dispatcher ELB Scheme to use config. [#429]
+- Fix missing Publish-Dispatcher ELB Scheme value with config param PublishDispatcherLoadBalancerSchemeParameter. [#429]
 
 ## 5.0.2 - 2020-12-02
 ### Changed
