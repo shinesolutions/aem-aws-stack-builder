@@ -1,8 +1,8 @@
 ansible==2.9.2
-awscli==1.16.304
+awscli==1.19.8
 boto==2.49.0
-boto3==1.10.35
-botocore==1.13.40
+boto3==1.17.8
+botocore==1.20.8
 jinja2==2.10.3
 pylint==2.6.0
 ruamel.yaml==0.16.5
