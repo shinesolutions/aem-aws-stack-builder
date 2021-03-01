@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - update boto3 to 1.17.8
 - update botocore to 1.20.8
 - Update Ansible to 3.0.0
+- Update jinja2 to 2.11.3
 
 ## 5.1.0 - 2021-02-11
 ### Changed
