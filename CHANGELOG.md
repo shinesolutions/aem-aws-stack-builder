@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
-- Changed AWSCLI, Boto3 and Botocore version to remove version inconsistency with PIP 21.0.1
+- update awscli to 1.19.8
+- update boto3 to 1.17.8
+- update botocore to 1.20.8
 
 ## 5.1.0 - 2021-02-11
 ### Changed
