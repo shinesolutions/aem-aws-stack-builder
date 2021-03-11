@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo -e 'Testing full set...'
+      - make deps
+      - make deps-test
+      - rm -f $CONFIG_FILE
+      - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\t${BUILD_ID}-sm" > $CONFIG_FILE
+      - cp $CONFIG_FILE "stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+      - echo "Configuring AEM Full-set environment..."
+      - make config "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+      - cp -R stage/descriptors/full-set/* stage/
+
+  build:
+    commands:
+      # aem full-set environment build
+      - echo "Creating AEM Full-Set environment..."
+      - make create-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"
+      # aem full-set environment test
+      - echo "Testing AEM Full-Set environment with AEM Stack Manager Messenger events..."
+      - cd stage/aem-stack-manager-messenger/ && make test-full-set "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-fs" && cd ../../
+      # switch dns test
+      # TODO: temporarily disable switch-dns testing to allow CodeBuild to pass
+      # aem-test-suite test
+      # TODO: temporarily disable aem-test-suite testing to allow CodeBuild to pass
+    finally:
+      - echo "Deleting AEM Full-Set environment..."
+      - make delete-full-set "stack_prefix=${BUILD_ID}-fs" "config_path=stage/user-config/aem-full-set-${OS_TYPE}-${AEM_VERSION}/"

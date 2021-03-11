@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo -e 'Testing consolidated...'
+      - make deps
+      - make deps-test
+      - rm -f $CONFIG_FILE
+      - echo -e "scheduled_jobs:\n  aem_orchestrator:\n    stack_manager_pair:\n        stack_prefix:\t${BUILD_ID}-sm" > ${CONFIG_FILE}
+      - cp $CONFIG_FILE "stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
+      - echo "Configuring AEM Consolidated environment..."
+      - make config "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
+      - cp -R stage/descriptors/consolidated/* stage/
+
+  build:
+    commands:
+      # aem consolidated environment build
+      - echo "Creating AEM Consolidated environment..."
+      - make create-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"
+      # aem consolidated environment test
+      - echo "Testing AEM Consolidated environment with AEM Stack Manager Messenger events..."
+      - cd stage/aem-stack-manager-messenger/ && make test-consolidated "stack_prefix=${BUILD_ID}-sm" "target_aem_stack_prefix=${BUILD_ID}-con" && cd ../../
+      # switch dns test
+      # TODO: temporarily disable switch-dns testing to allow CodeBuild to pass
+    finally:
+      - echo "Deleting AEM Consolidated environment..."
+      - make delete-consolidated "stack_prefix=${BUILD_ID}-con" "config_path=stage/user-config/aem-consolidated-${OS_TYPE}-${AEM_VERSION}/"

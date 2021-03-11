@@ -1,0 +1,13 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - make deps
+      - make deps-test
+
+  build:
+    commands:
+      - echo -e 'Creating AEM dns batch....'
+      # Provision test DNS records, needed for switch-dns testing against AEM Consolidated and AEM Full-Set environments
+      - sh ./test/integration/fixtures/provision-test-dns-batch.sh $BUILD_ID
