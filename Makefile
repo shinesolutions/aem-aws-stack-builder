@@ -39,6 +39,7 @@ release:
 	rtk release
 
 publish:
+	gh release create $(version) --title $(version) --notes "" || echo "Release $(version) has been created on GitHub"
 	gh release upload $(version) stage/aem-aws-stack-builder-$(version).tar.gz
 
 ################################################################################
