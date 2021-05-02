@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add log message on finishing stack builder provisioning
+
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 5.2.0
 - Upgrade AEM Stack Manager Messenger to 2.14.1

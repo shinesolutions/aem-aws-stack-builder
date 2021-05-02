@@ -242,4 +242,6 @@ echo "${label} Completed ${component} component initialisation"
 touch "${aws_builder_dir}/stack-init-completed"
 aws ec2 create-tags --resources "${instance_id}" --tags Key=ComponentInitStatus,Value=Success
 
+echo "${label} Finishing AEM Stack Builder provisioning..."
+
 set -o errexit
