@@ -112,9 +112,9 @@ Resources:
                 "height": 3,
                 "properties": {
                     "metrics": [
-                        [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorELB}" ],
-                        [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                        [ "AWS/ELB", "HealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
+                        ["AWS/ApplicationELB", "HealthyHostCount", "TargetGroup", "${authorLoadBalancerTargetGroup}", "LoadBalancer", "${authorALB}" ],
+                        ["AWS/ApplicationELB", "HealthyHostCount", "TargetGroup", "${authorDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${authorDispatcherALB}" ],
+                        ["AWS/ApplicationELB", "HealthyHostCount", "TargetGroup", "${publishDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${publishDispatcherALB}" ]
                     ],
                     "view": "timeSeries",
                     "stacked": false,
@@ -131,9 +131,9 @@ Resources:
                 "height": 3,
                 "properties": {
                     "metrics": [
-                        [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorELB}" ],
-                        [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${authorDispatcherELB}" ],
-                        [ "AWS/ELB", "UnHealthyHostCount", "LoadBalancerName", "${publishDispatcherELB}" ]
+                        ["AWS/ApplicationELB", "UnHealthyHostCount", "TargetGroup", "${authorLoadBalancerTargetGroup}", "LoadBalancer", "${authorALB}" ],
+                        ["AWS/ApplicationELB", "UnHealthyHostCount", "TargetGroup", "${authorDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${authorDispatcherALB}" ],
+                        ["AWS/ApplicationELB", "UnHealthyHostCount", "TargetGroup", "${publishDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${publishDispatcherALB}" ]
                     ],
                     "view": "timeSeries",
                     "stacked": false,
@@ -150,16 +150,16 @@ Resources:
                 "height": 3,
                 "properties": {
                     "metrics": [
-                        [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_3XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_4XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_5XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "period": 60 } ]
+                        [ "AWS/ApplicationELB", "HTTPCode_Target_2XX_Count", "LoadBalancer", "${authorDispatcherALB}", { "period": 60, "stat": "Sum" }],
+                        [ ".", "HTTPCode_Target_3XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_4XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_5XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "TargetConnectionErrorCount", ".", ".", { "period": 60, "stat": "Sum" } ]
                     ],
                     "view": "timeSeries",
                     "stacked": false,
                     "region": "${awsRegion}",
-                    "title": "Author Dispatcher - HTTP Backend",
+                    "title": "Author Dispatcher - HTTP Target",
                     "period": 300
                 }
             },
@@ -273,13 +273,12 @@ Resources:
                 "height": 3,
                 "properties": {
                     "metrics": [
-                        [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}", { "label": "Publish Dispatcher - HTTPCode_Backend_2XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "HTTPCode_Backend_3XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_3XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Publish Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - RequestCount", "period": 86400 } ],
-                        [ ".", "Latency", ".", ".", { "label": "Publish Dispatcher - Latency", "stat": "Average", "period": 3600 } ],
-                        [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Publish Dispatcher - BackendConnectionErrors", "period": 86400 } ]
+                        [ "AWS/ApplicationELB", "HTTPCode_Target_2XX_Count", "LoadBalancer", "${publishDispatcherALB}", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_3XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_4XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_5XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "TargetConnectionErrorCount", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "RequestCount", "TargetGroup", "${publishDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${publishDispatcherALB}", { "period": 86400, "stat": "Sum" } ]
                     ],
                     "view": "singleValue",
                     "title": "Publish Dispatcher - Counts",
@@ -295,16 +294,16 @@ Resources:
                 "height": 3,
                 "properties": {
                     "metrics": [
-                        [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${publishDispatcherELB}", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_3XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_4XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_5XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "period": 60 } ]
+                        [ "AWS/ApplicationELB", "HTTPCode_Target_2XX_Count", "LoadBalancer", "${publishDispatcherALB}", { "period": 60, "stat": "Sum" }],
+                        [ ".", "HTTPCode_Target_3XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_4XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_5XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "TargetConnectionErrorCount", ".", ".", { "period": 60, "stat": "Sum" } ]
                     ],
                     "view": "timeSeries",
                     "stacked": false,
                     "region": "${awsRegion}",
-                    "title": "Publish Dispatcher - HTTP Backend",
+                    "title": "Publish Dispatcher - HTTP Target",
                     "period": 300
                 }
             },
@@ -316,13 +315,12 @@ Resources:
                 "height": 3,
                 "properties": {
                     "metrics": [
-                        [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorDispatcherELB}", { "label": "Author Dispatcher - HTTPCode_Backend_2XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "HTTPCode_Backend_3XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_3XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "HTTPCode_Backend_4XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_4XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "HTTPCode_Backend_5XX", ".", ".", { "label": "Author Dispatcher - HTTPCode_Backend_5XX", "stat": "Sum", "period": 86400 } ],
-                        [ ".", "RequestCount", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - RequestCount", "period": 86400 } ],
-                        [ ".", "Latency", ".", ".", { "label": "Author Dispatcher - Latency", "stat": "Average", "period": 3600 } ],
-                        [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "label": "Author Dispatcher - BackendConnectionErrors", "period": 86400 } ]
+                        [ "AWS/ApplicationELB", "HTTPCode_Target_2XX_Count", "LoadBalancer", "${authorDispatcherALB}", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_3XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_4XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_5XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "TargetConnectionErrorCount", ".", ".", { "period": 86400, "stat": "Sum" } ],
+                        [ ".", "RequestCount", "TargetGroup", "${authorDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${authorDispatcherALB}", { "period": 86400, "stat": "Sum" } ]
                     ],
                     "view": "singleValue",
                     "title": "Author Dispatcher - Counts",
@@ -338,16 +336,16 @@ Resources:
                 "height": 3,
                 "properties": {
                     "metrics": [
-                        [ "AWS/ELB", "HTTPCode_Backend_2XX", "LoadBalancerName", "${authorELB}", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_3XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_4XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "HTTPCode_Backend_5XX", ".", ".", { "stat": "Sum", "period": 60 } ],
-                        [ ".", "BackendConnectionErrors", ".", ".", { "stat": "Sum", "period": 60 } ]
+                        [ "AWS/ApplicationELB", "HTTPCode_Target_2XX_Count", "LoadBalancer", "${authorALB}", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_3XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_4XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "HTTPCode_Target_5XX_Count", ".", ".", { "period": 60, "stat": "Sum" } ],
+                        [ ".", "TargetConnectionErrorCount", ".", ".", { "period": 60, "stat": "Sum" } ]
                     ],
                     "view": "timeSeries",
                     "stacked": false,
                     "region": "${awsRegion}",
-                    "title": "Author - HTTP Backend",
+                    "title": "Author - HTTP Target",
                     "period": 300
                 }
             },
@@ -402,15 +400,90 @@ Resources:
             authorStandbyInstance:
               Fn::ImportValue:
                 Fn::Sub: "${MainStackPrefixParameter}-AuthorStandbyInstance"
-            authorELB:
-              Fn::ImportValue:
-                Fn::Sub: "${MainStackPrefixParameter}-AuthorLoadBalancer"
-            authorDispatcherELB:
-              Fn::ImportValue:
-                Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer"
-            publishDispatcherELB:
-              Fn::ImportValue:
-                Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherLoadBalancer"
+            authorLoadBalancerTargetGroup:
+              Fn::Select:
+                - 5
+                - Fn::Split:
+                  - ':'
+                  - Fn::ImportValue:
+                      Fn::Sub: "${MainStackPrefixParameter}-AuthorLoadBalancerTargetGroup"
+            authorALB:
+              Fn::Join:
+                - '/'
+                - - Fn::Select:
+                    - 1
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-AuthorLoadBalancer"
+                  - Fn::Select:
+                    - 2
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-AuthorLoadBalancer"
+                  - Fn::Select:
+                    - 3
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-AuthorLoadBalancer"
+            authorDispatcherLoadBalancerTargetGroup:
+              Fn::Select:
+                - 5
+                - Fn::Split:
+                  - ':'
+                  - Fn::ImportValue:
+                      Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerTargetGroup"
+            authorDispatcherALB:
+              Fn::Join:
+                - '/'
+                - - Fn::Select:
+                    - 1
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer"
+                  - Fn::Select:
+                    - 2
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer"
+                  - Fn::Select:
+                    - 3
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer"
+            publishDispatcherLoadBalancerTargetGroup:
+              Fn::Select:
+                - 5
+                - Fn::Split:
+                  - ':'
+                  - Fn::ImportValue:
+                      Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherLoadBalancerTargetGroup"
+            publishDispatcherALB:
+              Fn::Join:
+                - '/'
+                - - Fn::Select:
+                    - 1
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherLoadBalancer"
+                  - Fn::Select:
+                    - 2
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherLoadBalancer"
+                  - Fn::Select:
+                    - 3
+                    - Fn::Split:
+                      - '/'
+                      - Fn::ImportValue:
+                          Fn::Sub: "${MainStackPrefixParameter}-PublishDispatcherLoadBalancer"
             aemAsgEventQueueName:
               Fn::ImportValue:
                 Fn::Sub: "${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName"

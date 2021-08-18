@@ -24,6 +24,13 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancer
     Value:
       Ref: PublishDispatcherLoadBalancer
+  PublishDispatcherLoadBalancerTargetGroup:
+    Description: Target group of Publish Dispatcher Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerTargetGroup
+    Value:
+      Ref: PublishDispatcherLoadBalancerTargetGroup
   PublishDispatcherLoadBalancerDNSName:
     Description: The Publish Dispatcher Load Balancer DNSName
     Export:
