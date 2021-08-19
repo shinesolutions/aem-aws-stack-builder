@@ -278,7 +278,7 @@ Resources:
                         [ ".", "HTTPCode_Target_4XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
                         [ ".", "HTTPCode_Target_5XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
                         [ ".", "TargetConnectionErrorCount", ".", ".", { "period": 86400, "stat": "Sum" } ],
-                        [ ".", "RequestCount", "TargetGroup", "${publishDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${publishDispatcherALB}", { "period": 86400, "stat": "Sum" } ]
+                        [ ".", "RequestCount", "TargetGroup", "${publishDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${publishDispatcherALB}", { "period": 86400, "stat": "Sum", "label": "RequestCount" } ]
                     ],
                     "view": "singleValue",
                     "title": "Publish Dispatcher - Counts",
@@ -320,7 +320,7 @@ Resources:
                         [ ".", "HTTPCode_Target_4XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
                         [ ".", "HTTPCode_Target_5XX_Count", ".", ".", { "period": 86400, "stat": "Sum" } ],
                         [ ".", "TargetConnectionErrorCount", ".", ".", { "period": 86400, "stat": "Sum" } ],
-                        [ ".", "RequestCount", "TargetGroup", "${authorDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${authorDispatcherALB}", { "period": 86400, "stat": "Sum" } ]
+                        [ ".", "RequestCount", "TargetGroup", "${authorDispatcherLoadBalancerTargetGroup}", "LoadBalancer", "${authorDispatcherALB}", { "period": 86400, "stat": "Sum", "label": "RequestCount" } ]
                     ],
                     "view": "singleValue",
                     "title": "Author Dispatcher - Counts",
