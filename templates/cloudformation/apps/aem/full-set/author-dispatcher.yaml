@@ -24,6 +24,13 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancer
     Value:
       Ref: AuthorDispatcherLoadBalancer
+  AuthorDispatcherLoadBalancerTargetGroup:
+    Description: Target group of Author Dispatcher Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-AuthorDispatcherLoadBalancerTargetGroup
+    Value:
+      Ref: AuthorDispatcherLoadBalancerTargetGroup
   AuthorDispatcherLoadBalancerDNSName:
     Description: The Author Dispatcher Load Balancer
     Export:
