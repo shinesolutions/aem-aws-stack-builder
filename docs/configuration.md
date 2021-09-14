@@ -279,6 +279,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.deployment_delay_in_seconds | The number of seconds delay after AEM package deployment upload/installation, before resuming to perform health checks | Optional | `60` |
 | aem.deployment_check_retries | The maximum number of times AEM package deployment upload/installation/health status will be checked | Optional | `120` |
 | aem.deployment_check_delay_in_seconds | The number of seconds delay before retrying the deployment status check | Optional | `15` |
+| aem.httpd_graceful_restart | Execute an Apache graceful restart when deploying artifacts | Optional | `true` |
 | aem.login_ready_max_tries | The number of times AEM login page will be checked | Optional | 60 |
 | aem.login_ready_base_sleep_seconds | The number of seconds to wait at least before retrying the login page ready check | Optional | 5 |
 | aem.login_ready_max_sleep_seconds | The number of seconds to wait maximum before retrying the login page ready check | Optional | 10 |
