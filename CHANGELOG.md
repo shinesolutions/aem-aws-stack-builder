@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fix CloudWatch Dashboard load balancer metrics #435
-- Fix incorrect keyword KMSMasterKeyID during S3 Bucket creation
+- Fix incorrect keyword into KMSMasterKeyID during AWS Resources S3 Bucket creation
 
 ## 5.4.0 - 2021-06-18
 ### Changed
