@@ -185,4 +185,5 @@ Resources:
 Outputs:
     AuthorPublishDispatcherInstanceIp:
         Description: Ip Address of the resulting instance.
-        Value: !GetAtt AuthorPublishDispatcherInstance.PrivateIp
+        Value:
+          Fn::GetAtt: AuthorPublishDispatcherInstance.PrivateIp

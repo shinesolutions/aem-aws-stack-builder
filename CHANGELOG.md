@@ -6,10 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Set Python3 to be the default for Ansible
 
 ### Fixed
 - Fix CloudWatch Dashboard load balancer metrics #435
 - Fix incorrect keyword into KMSMasterKeyID during AWS Resources S3 Bucket creation
+- Use long form Keywords to work with ‘make config’ target
 
 ## 5.4.0 - 2021-06-18
 ### Changed
