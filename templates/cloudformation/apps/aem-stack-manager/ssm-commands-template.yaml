@@ -189,7 +189,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${DeployArtifactIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${DeployArtifactIncludeFileParameter}'
 
   DeployArtifacts:
     Type: AWS::SSM::Document
@@ -199,7 +200,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${DeployArtifactsIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${DeployArtifactsIncludeFileParameter}'
 
   ExportPackage:
     Type: AWS::SSM::Document
@@ -209,7 +211,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ExportPackageIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${ExportPackageIncludeFileParameter}'
 
   ExportPackages:
     Type: AWS::SSM::Document
@@ -219,7 +222,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ExportPackagesIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${ExportPackagesIncludeFileParameter}'
 
   ImportPackage:
     Type: AWS::SSM::Document
@@ -229,7 +233,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ImportPackageIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${ImportPackageIncludeFileParameter}'
 
   InstallAEMProfile:
     Type: AWS::SSM::Document
@@ -239,7 +244,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${InstallAEMProfileIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${InstallAEMProfileIncludeFileParameter}'
 
   ReconfigureAEM:
     Type: AWS::SSM::Document
@@ -249,7 +255,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ReconfigureAEMIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${ReconfigureAEMIncludeFileParameter}'
 
   PromoteAuthor:
     Type: AWS::SSM::Document
@@ -259,7 +266,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${PromoteAuthorIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${PromoteAuthorIncludeFileParameter}'
 
   ManageService:
     Type: AWS::SSM::Document
@@ -269,7 +277,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ManageServiceIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${ManageServiceIncludeFileParameter}'
 
   OfflineCompactionSnapshotConsolidated:
     Type: AWS::SSM::Document
@@ -279,7 +288,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotConsolidatedIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotConsolidatedIncludeFileParameter}'
 
   OfflineSnapshotConsolidated:
     Type: AWS::SSM::Document
@@ -289,7 +299,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotConsolidatedIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${OfflineSnapshotConsolidatedIncludeFileParameter}'
 
   OfflineCompactionSnapshotFullset:
     Type: AWS::SSM::Document
@@ -299,7 +310,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotFullsetIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${OfflineCompactionSnapshotFullsetIncludeFileParameter}'
 
   OfflineSnapshotFullset:
     Type: AWS::SSM::Document
@@ -309,7 +321,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${OfflineSnapshotFullsetIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${OfflineSnapshotFullsetIncludeFileParameter}'
 
   WaitUntilReady:
     Type: AWS::SSM::Document
@@ -318,7 +331,8 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${WaitUntilReadyIncludeFileParameter}'
+          Parameters:
+            Fn::Sub: '${S3BucketAndPrefixParameter}/${WaitUntilReadyIncludeFileParameter}'
 
   EnableCrxde:
     Type: AWS::SSM::Document
@@ -327,7 +341,8 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${EnableCrxdeIncludeFileParameter}'
+          Parameters:
+            Fn::Sub: '${S3BucketAndPrefixParameter}/${EnableCrxdeIncludeFileParameter}'
 
   DisableCrxde:
     Type: AWS::SSM::Document
@@ -336,7 +351,8 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${DisableCrxdeIncludeFileParameter}'
+          Parameters:
+            Fn::Sub: '${S3BucketAndPrefixParameter}/${DisableCrxdeIncludeFileParameter}'
 
   ListPackages:
     Type: AWS::SSM::Document
@@ -345,7 +361,8 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${ListPackagesIncludeFileParameter}'
+          Parameters:
+            Fn::Sub: '${S3BucketAndPrefixParameter}/${ListPackagesIncludeFileParameter}'
 
   RunAdhocPuppet:
     Type: AWS::SSM::Document
@@ -354,7 +371,8 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${RunAdhocPuppetIncludeFileParameter}'
+          Parameters:
+            Fn::Sub: '${S3BucketAndPrefixParameter}/${RunAdhocPuppetIncludeFileParameter}'
 
   LiveSnapshot:
     Type: AWS::SSM::Document
@@ -363,7 +381,8 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${LiveSnapshotIncludeFileParameter}'
+          Parameters:
+            Fn::Sub: '${S3BucketAndPrefixParameter}/${LiveSnapshotIncludeFileParameter}'
 
   FlushDispatcherCache:
     Type: AWS::SSM::Document
@@ -372,7 +391,8 @@ Resources:
       Content:
         Fn::Transform:
           Name: 'AWS::Include'
-          Parameters: !Sub '${S3BucketAndPrefixParameter}/${FlushDispatcherCacheIncludeFileParameter}'
+          Parameters:
+            Fn::Sub: '${S3BucketAndPrefixParameter}/${FlushDispatcherCacheIncludeFileParameter}'
 
   ScheduleSnapshot:
     Type: AWS::SSM::Document
@@ -382,7 +402,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${ScheduleSnapshotIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${ScheduleSnapshotIncludeFileParameter}'
 
   TestReadinessFullset:
     Type: AWS::SSM::Document
@@ -392,7 +413,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${TestReadinessFullsetIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${TestReadinessFullsetIncludeFileParameter}'
 
   TestReadinessConsolidated:
     Type: AWS::SSM::Document
@@ -402,7 +424,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${TestReadinessConsolidatedIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${TestReadinessConsolidatedIncludeFileParameter}'
 
   RunAemUpgrade:
     Type: AWS::SSM::Document
@@ -412,7 +435,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${RunAemUpgradeIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${RunAemUpgradeIncludeFileParameter}'
 
   RunToughday2PerformanceTest:
     Type: AWS::SSM::Document
@@ -422,7 +446,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${RunToughday2PerformanceTestIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${RunToughday2PerformanceTestIncludeFileParameter}'
 
   UpgradeRepositoryMigration:
     Type: AWS::SSM::Document
@@ -432,7 +457,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${UpgradeRepositoryMigrationIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${UpgradeRepositoryMigrationIncludeFileParameter}'
 
   UpgradeUnpackJar:
     Type: AWS::SSM::Document
@@ -442,7 +468,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${UpgradeUnpackJarIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${UpgradeUnpackJarIncludeFileParameter}'
 
   EnableSaml:
     Type: AWS::SSM::Document
@@ -452,7 +479,8 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${EnableSamlIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${EnableSamlIncludeFileParameter}'
 
   DisableSaml:
     Type: AWS::SSM::Document
@@ -462,121 +490,151 @@ Resources:
         Fn::Transform:
           Name: 'AWS::Include'
           Parameters:
-            Location: !Sub '${S3BucketAndPrefixParameter}/${DisableSamlIncludeFileParameter}'
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${DisableSamlIncludeFileParameter}'
 
 Outputs:
   DeployArtifact:
     Description: Document name for Deploy Artifact
-    Value: !Ref DeployArtifact
+    Value:
+      Ref: DeployArtifact
 
   DeployArtifacts:
     Description: Document name for Deploy Artifacts
-    Value: !Ref DeployArtifacts
+    Value:
+      Ref: DeployArtifacts
 
   ExportPackage:
     Description: Document name for Export Package
-    Value: !Ref ExportPackage
+    Value:
+      Ref: ExportPackage
 
   ExportPackages:
     Description: Document name for Export Package
-    Value: !Ref ExportPackages
+    Value:
+      Ref: ExportPackages
 
   ImportPackage:
     Description: Document name for Import Package
-    Value: !Ref ImportPackage
+    Value:
+      Ref: ImportPackage
 
   InstallAEMProfile:
     Description: Document name for Install AEM Profile
-    Value: !Ref InstallAEMProfile
+    Value:
+      Ref: InstallAEMProfile
 
   ReconfigureAEM:
     Description: Document name for Reconfigure AEM
-    Value: !Ref ReconfigureAEM
+    Value:
+      Ref: ReconfigureAEM
 
   PromoteAuthor:
     Description: Documention name for Promote Author
-    Value: !Ref PromoteAuthor
+    Value:
+      Ref: PromoteAuthor
 
   ManageService:
     Description: Document name for Manage Service
-    Value: !Ref ManageService
+    Value:
+      Ref: ManageService
 
   OfflineCompactionSnapshotConsolidated:
     Description: Document name for Offline Compaction Snapshot Consolidated
-    Value: !Ref OfflineCompactionSnapshotConsolidated
+    Value:
+      Ref: OfflineCompactionSnapshotConsolidated
 
   OfflineSnapshotConsolidated:
     Description: Document name for Offline Snapshot Consolidated
-    Value: !Ref OfflineSnapshotConsolidated
+    Value:
+      Ref: OfflineSnapshotConsolidated
 
   OfflineCompactionSnapshotFullset:
     Description: Document name for Offline Compaction Snapshot Fullset
-    Value: !Ref OfflineCompactionSnapshotFullset
+    Value:
+      Ref: OfflineCompactionSnapshotFullset
 
   OfflineSnapshotFullset:
     Description: Document name for Offline Snapshot Fullset
-    Value: !Ref OfflineSnapshotFullset
+    Value:
+      Ref: OfflineSnapshotFullset
 
   WaitUntilReady:
     Description: Document name for Wait Until Ready
-    Value: !Ref WaitUntilReady
+    Value:
+      Ref: WaitUntilReady
 
   EnableCrxde:
     Description: Document name for Enable Crxde
-    Value: !Ref EnableCrxde
+    Value:
+      Ref: EnableCrxde
 
   DisableCrxde:
     Description: Document name for Disable Crxde
-    Value: !Ref DisableCrxde
+    Value:
+      Ref: DisableCrxde
 
   ListPackages:
     Description: Document name for List Packages
-    Value: !Ref ListPackages
+    Value:
+      Ref: ListPackages
 
   RunAdhocPuppet:
     Description: Document name for Run Adhoc Puppet
-    Value: !Ref RunAdhocPuppet
+    Value:
+      Ref: RunAdhocPuppet
 
   LiveSnapshot:
     Description: Document name for Live Snapshot
-    Value: !Ref LiveSnapshot
+    Value:
+      Ref: LiveSnapshot
 
   FlushDispatcherCache:
     Description: Document name for FlushDispatcherCache
-    Value: !Ref FlushDispatcherCache
+    Value:
+      Ref: FlushDispatcherCache
 
   RunAemUpgrade:
     Description: Documention name for AEM Upgrade.
-    Value: !Ref RunAemUpgrade
+    Value:
+      Ref: RunAemUpgrade
 
   RunToughday2PerformanceTest:
     Description: Documention name for run Toughday2 performance test.
-    Value: !Ref RunToughday2PerformanceTest
+    Value:
+      Ref: RunToughday2PerformanceTest
 
   ScheduleSnapshot:
     Description: Documention name for Test Readiness Fullset
-    Value: !Ref ScheduleSnapshot
+    Value:
+      Ref: ScheduleSnapshot
 
   TestReadinessFullset:
     Description: Documention name for Test Readiness Fullset
-    Value: !Ref TestReadinessFullset
+    Value:
+      Ref: TestReadinessFullset
 
   TestReadinessConsolidated:
     Description: Documention name for Test Readiness Consolidated
-    Value: !Ref TestReadinessConsolidated
+    Value:
+      Ref: TestReadinessConsolidated
 
   UpgradeRepositoryMigration:
     Description: Documention name for AEM Upgrade preperation repository migration
-    Value: !Ref UpgradeRepositoryMigration
+    Value:
+      Ref: UpgradeRepositoryMigration
 
   UpgradeUnpackJar:
     Description: Documention name for AEM Upgrade preperation unpack AEM Jar
-    Value: !Ref UpgradeUnpackJar
+    Value:
+      Ref: UpgradeUnpackJar
 
   EnableSaml:
     Description: Document name for Enable Saml
-    Value: !Ref EnableSaml
+    Value:
+      Ref: EnableSaml
 
   DisableSaml:
     Description: Document name for Disable Saml
-    Value: !Ref DisableSaml
+    Value:
+      Ref: DisableSaml
