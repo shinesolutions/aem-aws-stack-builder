@@ -61,7 +61,7 @@ Resources:
                   - UseCMKS3BucketEncryptionCondition
                   - 'aws:kms'
                   - 'AES256'
-              KMSMasterKeyId:
+              KMSMasterKeyID:
                 Fn::If:
                   - UseCMKS3BucketEncryptionCondition
                   - Fn::Select:
