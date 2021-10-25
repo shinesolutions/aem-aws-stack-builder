@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Set Python3 to be the default for Ansible
 - Enable proxy during UserData/stack-init.sh phase for Consolidated
+- Enable proxy during UserData/stack-init.sh phase for FullSet
 
 ### Fixed
 - Fix CloudWatch Dashboard load balancer metrics #435
