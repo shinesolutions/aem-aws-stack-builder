@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Set Python3 to be the default for Ansible
+- Proxy provisioning feature toggle on cloud-init user data for both Full-Set and Consolidated
 
 ### Fixed
 - Fix CloudWatch Dashboard load balancer metrics #435

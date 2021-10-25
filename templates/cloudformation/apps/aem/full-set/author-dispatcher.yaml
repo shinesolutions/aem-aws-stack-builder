@@ -106,6 +106,15 @@ Parameters:
   AuthorDispatcherDataVolSnapshotParameter:
     Description: The Author Dispatcher Data Volume Snapshot Id
     Type: String
+  HttpProxyParameter:
+    Description: http_proxy parameter
+    Type: String
+  HttpsProxyParameter:
+    Description: https_proxy parameter
+    Type: String
+  NoProxyParameter:
+    Description: no_proxy parameter
+    Type: String
 Resources:
   AuthorDispatcherAutoScalingGroup:
     Properties:
@@ -215,7 +224,8 @@ Resources:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-AuthorDispatcherSecurityGroup
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\n source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+          Fn::Sub: "#!/bin/bash -x\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\ 
+            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\

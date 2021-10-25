@@ -31,6 +31,9 @@
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
           Route53HostedZoneNameParameter: "{{ dns_records.route53_hosted_zone_name }}"
           ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}, {{ ami_device[os_type].publish_dispatcher_data_name }}"
+          HttpProxyParameter: "{%- if proxy.enabled %}{% if proxy.user is none %}{{ proxy.protocol }}://{{ proxy.host }}:{{ proxy.port }}{% else %}{{ proxy.protocol }}://{{ proxy.user }}:{{ proxy.password }}@{{ proxy.host }}:{{ proxy.port }}{% endif %}{% endif %}"
+          HttpsProxyParameter: "{%- if proxy.enabled %}{% if proxy.user is none %}{{ proxy.protocol }}://{{ proxy.host }}:{{ proxy.port }}{% else %}{{ proxy.protocol }}://{{ proxy.user }}:{{ proxy.password }}@{{ proxy.host }}:{{ proxy.port }}{% endif %}{% endif %}"
+          NoProxyParameter: "{%- if proxy.enabled %}{% for item in proxy.noproxy %}{{ item }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}"
       tags:
       - create
       when:
@@ -61,6 +64,9 @@
           PrerequisitesStackPrefixParameter: "{{ prerequisites_stack_prefix }}"
           PublishDataVolSnapshotParameter: "{{ snapshots.publish.data_vol_snapshot_id }}"
           ImageDevices: "{{ ami_device[os_type].root_name }}, {{ ami_device[os_type].author_data_name }}, {{ ami_device[os_type].publish_data_name }}, {{ ami_device[os_type].publish_dispatcher_data_name }}"
+          HttpProxyParameter: "{%- if proxy.enabled %}{% if proxy.user is none %}{{ proxy.protocol }}://{{ proxy.host }}:{{ proxy.port }}{% else %}{{ proxy.protocol }}://{{ proxy.user }}:{{ proxy.password }}@{{ proxy.host }}:{{ proxy.port }}{% endif %}{% endif %}"
+          HttpsProxyParameter: "{%- if proxy.enabled %}{% if proxy.user is none %}{{ proxy.protocol }}://{{ proxy.host }}:{{ proxy.port }}{% else %}{{ proxy.protocol }}://{{ proxy.user }}:{{ proxy.password }}@{{ proxy.host }}:{{ proxy.port }}{% endif %}{% endif %}"
+          NoProxyParameter: "{%- if proxy.enabled %}{% for item in proxy.noproxy %}{{ item }}{% if not loop.last %},{% endif %}{% endfor %}{% endif %}"
       tags:
       - create
       when:

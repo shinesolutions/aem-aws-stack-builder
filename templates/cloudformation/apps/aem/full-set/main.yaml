@@ -159,6 +159,15 @@ Parameters:
   Route53HostedZoneNameParameter:
     Description: Route53 Hosted Zone Name the Record Set will be Created in
     Type: String
+  HttpProxyParameter:
+    Description: http_proxy parameter
+    Type: String
+  HttpsProxyParameter:
+    Description: https_proxy parameter
+    Type: String
+  NoProxyParameter:
+    Description: no_proxy parameter
+    Type: String
 Resources:
   AuthorDispatcherStack:
     Properties:
@@ -217,6 +226,12 @@ Resources:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/author-dispatcher.yaml
     Type: AWS::CloudFormation::Stack
@@ -269,6 +284,12 @@ Resources:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/author.yaml
     Type: AWS::CloudFormation::Stack
@@ -310,6 +331,12 @@ Resources:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/chaos-monkey.yaml
     Type: AWS::CloudFormation::Stack
@@ -398,6 +425,12 @@ Resources:
               - Ref: PublishDispatcherStack
         PublishStackArn:
           Ref: PublishStack
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/orchestrator.yaml
     Type: AWS::CloudFormation::Stack
@@ -464,6 +497,12 @@ Resources:
           Ref: PublishDispatcherLoadBalancerHealthCheckTargetParameter
         PublishDispatcherLoadBalancerSchemeParameter:
           Ref: PublishDispatcherLoadBalancerSchemeParameter
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish-dispatcher.yaml
     Type: AWS::CloudFormation::Stack
@@ -520,6 +559,12 @@ Resources:
             - Ref: ImageDevices
         PublishInstanceTypeParameter:
           Ref: PublishInstanceTypeParameter
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish.yaml
     Type: AWS::CloudFormation::Stack
