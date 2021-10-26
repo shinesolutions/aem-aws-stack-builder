@@ -1,0 +1,4 @@
+name: 'Release Minor'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

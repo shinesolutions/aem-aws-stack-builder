@@ -1,0 +1,19 @@
+---
+name: Release Patch
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: shinesolutions
+          password: ${{ secrets.SHINEOPENSOURCE_GITHUB_TOKEN }}
+      - uses: ./.github/actions/release-patch-action
+      - uses: ad-m/github-push-action@master
+        with:
+          tags: true
+          github_token: ${{ secrets.SHINEOPENSOURCE_GITHUB_TOKEN }}
+          branch: ${{ github.ref }}

@@ -35,8 +35,16 @@ package:
 	    stage/aem-aws-stack-builder-$(version).tar ./
 	gzip stage/aem-aws-stack-builder-$(version).tar
 
-release:
-	rtk release
+release-major:
+	rtk release --release-increment-type major
+
+release-minor:
+	rtk release --release-increment-type minor
+
+release-patch:
+	rtk release --release-increment-type patch
+
+release: release-minor
 
 publish:
 	gh release create $(version) --title $(version) --notes "" || echo "Release $(version) has been created on GitHub"
@@ -324,4 +332,4 @@ create-ssm-documents:
 delete-ssm-documents:
 	./scripts/delete-stack.sh apps/stack-manager/ssm-documents "$(config_path)" "$(stack_prefix)"
 
-.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config release publish
+.PHONY: stage create-aem delete-aem create-network delete-network ci clean deps lint create-cert upload-cert delete-cert package git-archive generate-network-config release release-major release-minor release-patch publish
