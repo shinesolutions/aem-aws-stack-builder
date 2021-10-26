@@ -164,6 +164,7 @@ aem_curator::action_deploy_artifacts::retries_max_tries: {{ aem.deployment_check
 aem_curator::action_deploy_artifacts::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifacts::retries_max_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
 aem_curator::action_deploy_artifacts::deployment_sleep_seconds: {{ aem.deployment_delay_in_seconds }}
+aem_curator::action_deploy_artifacts::httpd_graceful_restart: {{ aem.httpd_graceful_restart }}
 
 aem_curator::action_deploy_artifact::retries_max_tries: {{ aem.deployment_check_retries }}
 aem_curator::action_deploy_artifact::retries_base_sleep_seconds: {{ aem.deployment_check_delay_in_seconds }}
