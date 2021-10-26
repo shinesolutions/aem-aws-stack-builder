@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Proxy provisioning feature toggle on cloud-init user data for both Full-Set and Consolidated
 - Add release-major, release-minor, release-patch, and publish Makefile targets and GitHub Actions
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 5.5.0
+
 ### Fixed
 - Fix CloudWatch Dashboard load balancer metrics #435
 - Fix incorrect keyword into KMSMasterKeyID during AWS Resources S3 Bucket creation
