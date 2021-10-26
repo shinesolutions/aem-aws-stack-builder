@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 5.5.0 - 2021-10-26
 ### Added
 - Option to execute an Apache graceful or hard restart when deploying artifacts
 - Set Python3 to be the default for Ansible
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade AEM AWS Stack Provisioner to 5.5.0
 
 ### Fixed
-- Fix CloudWatch Dashboard load balancer metrics #435
+- Fix CloudWatch Dashboard load balancer metrics [#435]
 - Fix incorrect keyword into KMSMasterKeyID during AWS Resources S3 Bucket creation
 - Use long form Keywords to work with ‘make config’ target
 
