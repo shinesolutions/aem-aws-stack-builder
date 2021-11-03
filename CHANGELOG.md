@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- Fix broken Netflix Bintray Simian Army artifact package URL by switching to a mirror location #447
+
 ## 5.5.0 - 2021-10-26
 ### Added
 - Option to execute an Apache graceful or hard restart when deploying artifacts
