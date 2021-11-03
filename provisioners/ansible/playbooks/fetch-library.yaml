@@ -103,7 +103,7 @@
     # Simian Army Tasks
     - name: "Download Simian Army {{ library.simian_army_version }} from Bintray"
       get_url:
-        url: "https://dl.bintray.com/netflixoss/maven/com/netflix/simianarmy/simianarmy/{{ library.simian_army_version }}/simianarmy-{{ library.simian_army_version }}.war"
+        url: "https://github.com/shinesolutions-opensource/SimianArmy-2.5.3-mirror/blob/master/simianarmy-{{ library.simian_army_version }}.war?raw=true"
         dest: "{{ artifacts_dir }}"
         validate_certs: false
         mode: 0644
