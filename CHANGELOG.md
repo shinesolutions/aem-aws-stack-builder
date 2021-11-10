@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Update Simian Army artifact URL to use main branch #441
+- Update awscli to 1.22.1
+- Update boto3 to 1.20.0
+- Update boto to 2.49.0
+- Update botocore to 1.23.1
+- Update Ansible to 4.8.0
 
 ## 5.5.1 - 2021-11-03
 ### Fixed
