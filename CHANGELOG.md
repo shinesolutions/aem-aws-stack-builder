@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 5.5.1
+
+### Fixed
+- Fix Consolidated deploy on init timeout configuration
+
 ## 5.6.0 - 2021-11-10
 ### Changed
 - Update Simian Army artifact URL to use main branch [#441]
