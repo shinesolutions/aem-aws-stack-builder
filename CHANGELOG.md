@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 5.6.0
+
 ## 5.7.0 - 2021-11-17
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 5.5.1
