@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add permission for components instance profile to retrieve SSM parameter with /aem-opencloud/* prefix
+
 ## 5.10.0 - 2021-12-02
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 5.8.0

@@ -248,6 +248,12 @@ Resources:
             Effect: Allow
             Resource: '*'
           - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          - Action:
             - s3:Get*
             - s3:List*
             Effect: Allow
@@ -308,6 +314,12 @@ Resources:
             - cloudwatch:PutMetricData
             Effect: Allow
             Resource: '*'
+          - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -394,6 +406,12 @@ Resources:
             Effect: Allow
             Resource: '*'
           - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          - Action:
             - s3:Get*
             - s3:List*
             Effect: Allow
@@ -456,6 +474,12 @@ Resources:
             - ec2:TerminateInstances
             Effect: Allow
             Resource: '*'
+          - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -548,6 +572,12 @@ Resources:
             Effect: Allow
             Resource: '*'
           - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          - Action:
             - s3:Get*
             - s3:List*
             Effect: Allow
@@ -609,6 +639,12 @@ Resources:
             - cloudwatch:PutMetricData
             Effect: Allow
             Resource: '*'
+          - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
           - Action:
             - s3:Get*
             - s3:List*

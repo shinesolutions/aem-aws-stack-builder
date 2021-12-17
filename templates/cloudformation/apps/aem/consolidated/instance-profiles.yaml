@@ -112,6 +112,12 @@ Resources:
             Effect: Allow
             Resource: '*'
           - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          - Action:
             - s3:Get*
             - s3:List*
             - s3:Put*
