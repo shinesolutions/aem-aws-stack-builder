@@ -114,6 +114,7 @@
         region: "{{ aws.region }}"
         all_facts: true
       register: instance_profile_stack_info
+      when: stack_found is defined
       tags:
         - create
         - delete
@@ -140,7 +141,7 @@
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
-      when: permission_type == "b" and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
       tags:
         - create
 
@@ -160,7 +161,7 @@
       with_items:
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
-      when: permission_type == "b" and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.sns.kms_key_id != 'overwrite-me' and aws.encryption.sns.managed_policy_arn == 'overwrite-me'
       tags:
         - create
 
@@ -180,7 +181,7 @@
               - RetireGrant
       with_items:
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn }}"
-      when: permission_type == "b" and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.lambda.kms_key_arn != 'overwrite-me' and aws.encryption.lambda.managed_policy_arn == 'overwrite-me'
       tags:
         - create
 
@@ -206,7 +207,7 @@
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
-      when: permission_type == "b" and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
       tags:
         - create
 
@@ -240,12 +241,12 @@
                 --grant-id "{{ item.grant_id }}"
       with_items:
         - "{{ kms_ebs_key_grants }}"
-      when: (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
-            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
-            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
-            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
-            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
-            (kms_ebs_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
+      when: (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
       tags:
         - delete
 
@@ -272,8 +273,8 @@
                 --grant-id "{{ item.grant_id }}"
       with_items:
         - "{{ kms_sns_key_grants }}"
-      when: (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
-            (kms_sns_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn)
+      when: (kms_sns_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
+            (kms_sns_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn)
       tags:
         - delete
 
@@ -300,7 +301,7 @@
                 --grant-id "{{ item.grant_id }}"
       with_items:
         - "{{ kms_lambda_key_grants }}"
-      when: (kms_lambda_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn)
+      when: (kms_lambda_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AEMStackManagerSnapshotLambdaServiceRoleArn)
       tags:
         - delete
 
@@ -327,12 +328,12 @@
                 --grant-id "{{ item.grant_id }}"
       with_items:
         - "{{ kms_s3_key_grants }}"
-      when: (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
-            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
-            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
-            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
-            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
-            (kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
+      when: (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
       tags:
         - delete
 
