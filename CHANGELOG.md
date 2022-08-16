@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Increase memory for SnapshotsPurgeLambdaFunction to handle larger number of snapshots
 
+### Fixed
+- Fix Stack Creation for permission type c
+
 ## 5.13.0 - 2022-08-12
 ### Changed
 - Upgrade Lambda runtime of AEM Stack Manager Lambda function to Python3.7 [#455]
