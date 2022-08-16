@@ -279,7 +279,7 @@ Resources:
       FunctionName:
         Fn::Sub: ${MainStackPrefixParameter}-AemSnapshotsPurge
       Handler: purge_snapshots.handler
-      MemorySize: 128
+      MemorySize: 512
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
