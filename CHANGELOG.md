@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Update Consolidated EC2 Userdata to wait until AWS S3 API can be accessed before proceeding with provisioning [#460]
+- Set AWS_DEFAULT_REGION in EC2 Userdata [#463]
 
 ## 5.16.0 - 2022-09-01
 ### Changed

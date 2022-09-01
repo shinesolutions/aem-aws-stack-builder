@@ -244,7 +244,7 @@ Resources:
         Value: author-primary
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
+          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
             \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
@@ -309,7 +309,7 @@ Resources:
           - PrivateIp
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
+          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
             \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
