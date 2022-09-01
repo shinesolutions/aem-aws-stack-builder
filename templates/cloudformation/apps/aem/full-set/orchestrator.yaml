@@ -173,7 +173,7 @@ Resources:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorSecurityGroup
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
+          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
             \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ # Configure other stack names in Orchestrator's stack provisioner's\
             \ local.yaml\n echo '\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_author:\
