@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Add extra groups configuration support for Author LoadBalancer
+
 ## 5.16.1 - 2022-09-01
 ### Changed
 - Update Consolidated EC2 Userdata to wait until AWS S3 API can be accessed before proceeding with provisioning [#460]
