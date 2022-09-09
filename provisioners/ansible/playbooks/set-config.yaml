@@ -25,6 +25,7 @@
       with_items:
         - {resource: 'AuthorDispatcherLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'author_dispatcher_elb'}
         - {resource: 'AuthorDispatcherLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'author_dispatcher'}
+        - {resource: 'AuthorLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'author_elb'}
         - {resource: 'AuthorPrimaryInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_primary'}
         - {resource: 'AuthorStandbyInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_standby'}
         - {resource: 'ChaosMonkeyLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'chaos_monkey'}

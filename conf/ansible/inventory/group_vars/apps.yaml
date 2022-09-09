@@ -116,6 +116,9 @@ security_groups:
     inbound_cidr_ip: overwrite-me
     extra_groups:
 
+  author_elb:
+    extra_groups:
+
   author_primary:
     extra_groups:
 
