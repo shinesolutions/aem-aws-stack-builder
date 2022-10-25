@@ -10,6 +10,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added port and protocol Configuration for publish replication agent of consolidated env.
 - Upgrade AEM AWS Stack Provisioner to 5.11.0
 
+## 5.17.0 - 2022-09-09
+### Added
+- Add extra groups configuration support for Author LoadBalancer
+
+## 5.16.1 - 2022-09-01
+### Changed
+- Update Consolidated EC2 Userdata to wait until AWS S3 API can be accessed before proceeding with provisioning [#460]
+- Set AWS_DEFAULT_REGION in EC2 Userdata [#463]
+
+## 5.16.0 - 2022-09-01
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 5.10.0
+
+## 5.15.0 - 2022-08-29
+### Changed
+- Update EC2 Userdata to wait until AWS S3 API can be accessed before proceeding with provisioning [#460]
+
+## 5.14.1 - 2022-08-16
+### Fixed
+- Fix stack deletion failure when stack does not exists
+
+## 5.14.0 - 2022-08-16
+### Changed
+- Increase memory for SnapshotsPurgeLambdaFunction to handle larger number of snapshots
+
+### Fixed
+- Fix Stack Creation for permission type c
+
+## 5.13.0 - 2022-08-12
+### Changed
+- Upgrade Lambda runtime of AEM Stack Manager Lambda function to Python3.7 [#455]
+
 ## 5.12.4 - 2022-03-11
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 5.9.3

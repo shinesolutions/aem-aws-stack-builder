@@ -173,7 +173,7 @@ Resources:
           Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorSecurityGroup
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
+          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
             \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
             \ # Configure other stack names in Orchestrator's stack provisioner's\
             \ local.yaml\n echo '\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_author:\
@@ -183,6 +183,7 @@ Resources:
             \ \"${PublishDispatcherStackName}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging:\
             \ \"${MessagingStackArn}\"\n aem_orchestrator::application_properties::aws_sqs_queue_name:\
             \ \"${AEMASGEventQueueName}\"\n ' > /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n\
+            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
             \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
             \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
