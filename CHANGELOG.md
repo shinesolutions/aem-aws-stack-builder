@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Added port and protocol Configuration for publish replication agent of consolidated env.
+- Upgrade AEM AWS Stack Provisioner to 5.11.0
 
 ## 5.12.4 - 2022-03-11
 ### Changed
