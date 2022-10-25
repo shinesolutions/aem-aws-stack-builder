@@ -335,6 +335,9 @@ author_publish_dispatcher:
   root_vol_size: 20
   data_vol_size: 20
   associate_public_ip_address: true
+  replication_agent:
+    publish_protocol: https
+    publish_port: 5433
 
 orchestrator:
   instance_profile: overwrite-me
