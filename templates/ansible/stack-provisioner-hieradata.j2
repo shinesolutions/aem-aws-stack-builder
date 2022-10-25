@@ -260,3 +260,8 @@ common::ssh_public_keys:
 # Enable Cloudwatch S3 stream to Lambda
 orchestrator::enable_cloudwatch_s3_stream: {{ aws.cloudwatch.enable_log_subscription }}
 action_scheduled_jobs::cloudwatch_log_subscription_arn: {{ aws.cloudwatch.log_subscription_arn }}
+
+# Configuration of Publish replication-agent for Consolidated env.
+aem_aws_stack_provisioner::author_publish_dispatcher::publish_replication_agent_protocol: {{ author_publish_dispatcher.replication_agent.publish_protocol }}
+aem_aws_stack_provisioner::author_publish_dispatcher::publish_replication_agent_port: {{ author_publish_dispatcher.replication_agent.publish_port }}
+

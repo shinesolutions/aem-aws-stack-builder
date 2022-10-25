@@ -160,7 +160,7 @@ s3:
   create_bucket_flag: 'true'
 
 library:
-  aem_aws_stack_provisioner_version: 5.10.0
+  aem_aws_stack_provisioner_version: 5.11.0
   aem_orchestrator_version: 3.0.1
   aem_password_reset_version: 1.1.0
   oak_run_version: 1.8.3
@@ -341,6 +341,9 @@ author_publish_dispatcher:
   root_vol_size: 20
   data_vol_size: 20
   associate_public_ip_address: true
+  replication_agent:
+    publish_protocol: https
+    publish_port: 5433
 
 orchestrator:
   instance_profile: overwrite-me
