@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/shinesolutions/aem-aws-stack-builder/workflows/CI/badge.svg)](https://github.com/shinesolutions/aem-aws-stack-builder/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/shinesolutions/aem-aws-stack-builder-internal/workflows/CI/badge.svg)](https://github.com/shinesolutions/aem-aws-stack-builder-internal/actions?query=workflow%3ACI)
 [![Known Vulnerabilities](https://snyk.io/test/github/shinesolutions/aem-aws-stack-builder/badge.svg)](https://snyk.io/test/github/shinesolutions/aem-aws-stack-builder)
 
 AEM AWS Stack Builder
@@ -18,50 +18,50 @@ Stack Builder has been designed with a focus on modularity, allowing the separat
 * `author-publish-dispatcher` - contains AEM Author, AEM Publish, and AEM Dispatcher
 
 Stack Builder currently supports the following AEM architectures:
-* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-full-set.png)) - includes AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
-* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-consolidated.png)) - includes AEM Author, Publish, and Dispatcher on a single EC2 instance with backup and compaction support and a much lower AWS cost footprint, suitable for testing and development environments
+* Full Set ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/architecture-full-set.png)) - includes AEM Author, Publish, and Dispatcher on separate EC2 instances with blue-green deployment, auto-recovery, auto-scaling, backup, and compaction support, suitable for all types (e.g. production, staging, testing, and development) of environments
+* Consolidated ([diagram](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/architecture-consolidated.png)) - includes AEM Author, Publish, and Dispatcher on a single EC2 instance with backup and compaction support and a much lower AWS cost footprint, suitable for testing and development environments
 
 Other than the above AEM architectures, Stack Builder also provides the following utilities:
-* Stack Manager([diagram](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/architecture-stack-manager.png)) - includes [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud), set of AWS Lambda functions that will execute AEM functionalities via an SSM agent
+* Stack Manager([diagram](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/architecture-stack-manager.png)) - includes [AEM Stack Manager](https://github.com/shinesolutions/aem-stack-manager-cloud), set of AWS Lambda functions that will execute AEM functionalities via an SSM agent
 * Network - includes CloudFormation templates for creating VPC, subnets, and some sample NAT Gateway and Bastion set up
 
 Learn more about AEM AWS Stack Builder:
 
-* [Installation](https://github.com/shinesolutions/aem-aws-stack-builder#installation)
-* [Configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
-* [Usage](https://github.com/shinesolutions/aem-aws-stack-builder#usage)
-  * [Network](https://github.com/shinesolutions/aem-aws-stack-builder#network)
-  * [AEM Full-Set Architecture](https://github.com/shinesolutions/aem-aws-stack-builder#aem-full-set-architecture)
-  * [AEM Consolidated Architecture](https://github.com/shinesolutions/aem-aws-stack-builder#aem-consolidated-architecture)
-  * [AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder#aem-stack-manager)
-* [Testing](https://github.com/shinesolutions/aem-aws-stack-builder#testing)
-* [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
-* [AWS System Tags](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-system-tags.md)
-* [Customisation Points](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/customisation-points.md)
-* [Recovery](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery.md)
-  * [Recovery Steps](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-steps.md)
-  * [Recovery Scenarios](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/recovery-scenarios.md)
-* [Descriptors](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md)
-  * [Deployment Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-deployment.md)
-  * [Package Backup Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-package-backup.md)
-  * [Content Health Check Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors-definition-content-health-check.md)
-* [Logs](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/logs.md)
-* [Communication Flow](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/communication-flow.md)
-* [Permission Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/permission-types.md)
-* [Snapshot Types](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/snapshot-types.md)
-* [Frequently Asked Questions](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/faq.md)
-* [Troubleshooting Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/troubleshooting-guide.md)
-* [Upgrade Guide](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/upgrade-guide.md)
-* [Stacks Structure](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/stacks-structure.md)
-* [AWS Services](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-services.md)
-* [Presentations](https://github.com/shinesolutions/aem-aws-stack-builder/#presentations)
+* [Installation](https://github.com/shinesolutions/aem-aws-stack-builder-internal#installation)
+* [Configuration](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/configuration.md)
+* [Usage](https://github.com/shinesolutions/aem-aws-stack-builder-internal#usage)
+  * [Network](https://github.com/shinesolutions/aem-aws-stack-builder-internal#network)
+  * [AEM Full-Set Architecture](https://github.com/shinesolutions/aem-aws-stack-builder-internal#aem-full-set-architecture)
+  * [AEM Consolidated Architecture](https://github.com/shinesolutions/aem-aws-stack-builder-internal#aem-consolidated-architecture)
+  * [AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder-internal#aem-stack-manager)
+* [Testing](https://github.com/shinesolutions/aem-aws-stack-builder-internal#testing)
+* [AWS Resources](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/aws-resources.md)
+* [AWS System Tags](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/aws-system-tags.md)
+* [Customisation Points](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/customisation-points.md)
+* [Recovery](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/recovery.md)
+  * [Recovery Steps](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/recovery-steps.md)
+  * [Recovery Scenarios](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/recovery-scenarios.md)
+* [Descriptors](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/descriptors.md)
+  * [Deployment Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/descriptors-definition-deployment.md)
+  * [Package Backup Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/descriptors-definition-package-backup.md)
+  * [Content Health Check Descriptor Definition](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/descriptors-definition-content-health-check.md)
+* [Logs](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/logs.md)
+* [Communication Flow](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/communication-flow.md)
+* [Permission Types](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/permission-types.md)
+* [Snapshot Types](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/snapshot-types.md)
+* [Frequently Asked Questions](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/faq.md)
+* [Troubleshooting Guide](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/troubleshooting-guide.md)
+* [Upgrade Guide](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/upgrade-guide.md)
+* [Stacks Structure](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/stacks-structure.md)
+* [AWS Services](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/aws-services.md)
+* [Presentations](https://github.com/shinesolutions/aem-aws-stack-builder-internal/#presentations)
 
 AEM AWS Stack Builder is part of [AEM OpenCloud](https://aemopencloud.io) platform.
 
 Installation
 ------------
 
-- Either clone AEM AWS Stack Builder `git clone https://github.com/shinesolutions/aem-aws-stack-builder.git` or download one of the [released versions](https://github.com/shinesolutions/aem-aws-stack-builder/releases)
+- Either clone AEM AWS Stack Builder `git clone https://github.com/shinesolutions/aem-aws-stack-builder-internal.git` or download one of the [released versions](https://github.com/shinesolutions/aem-aws-stack-builder-internal/releases)
 - Install the following required tools:
   * [Ruby](https://www.ruby-lang.org/en/) version 2.3.0 or later
   * [Python](https://www.python.org/downloads/) version 2.7.x
@@ -73,14 +73,14 @@ Installation
 Usage
 -----
 
-- Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/aws-resources.md)
-- Create [configuration file](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md)
+- Set up the required [AWS resources](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/aws-resources.md)
+- Create [configuration file](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/configuration.md)
 - Set up the configuration files by running `make config config_path=<path/to/config/dir>`
 - Download open source library artifacts and upload them to S3 by running `make library config_path=<path/to/config/dir>`
 
 ### Network
 
-Ensure [configuration file for network](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
+Ensure [configuration file for network](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/configuration.md) has been set up.
 
 From the above base configuration, generate template network configuration file:
 
@@ -104,7 +104,7 @@ Alternatively, if you don't have the permission to create VPC and/or network res
 
 <img width="600" alt="AEM Stack Manager Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-stack-manager.png"/>
 
-Ensure [configuration file for AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
+Ensure [configuration file for AEM Stack Manager](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/configuration.md) has been set up.
 
 Create AEM Stack Manager stacks:
 
@@ -114,7 +114,7 @@ Create AEM Stack Manager stacks:
 
 <img width="800" alt="AEM Full-Set Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-full-set.png"/>
 
-Ensure [configuration file for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
+Ensure [configuration file for AEM Full-Set architecture](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/configuration.md) has been set up.
 
 The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
 
@@ -134,7 +134,7 @@ Create main stack which contains EC2 and Route53 resources:
 
 <img width="500" alt="AEM Consolidated Architecture Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/architecture-consolidated.png"/>
 
-Ensure [configuration file for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) has been set up.
+Ensure [configuration file for AEM Consolidated architecture](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/configuration.md) has been set up.
 
 The simplest way to create this AEM architecture is by standing up both full set prerequisites and main stacks in one go:
 
@@ -149,7 +149,7 @@ Create prerequisites stack which contains the instance profiles and security gro
 Create main stack which contains EC2 and Route53 resources:
 
     make create-consolidated-main stack_prefix=<consolidated_main_stack_prefix> prerequisites_stack_prefix=<consolidated_prerequisites_stack_prefix> config_path=<path/to/config/dir>
-    
+
 ### Switch DNS
 
 You can point a DNS record to an AEM Full-Set or AEM Consolidated architecture:

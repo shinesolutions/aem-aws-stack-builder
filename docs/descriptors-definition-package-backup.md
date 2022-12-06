@@ -1,13 +1,13 @@
 Package Backup Descriptor Definition
 ------------------------------------
 
-[Package Backup Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/descriptors.md#package-backup-descriptor) file is a JSON file that defines the list of AEM packages to be exported as a backup and then uploaded to S3.
+[Package Backup Descriptor](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/descriptors.md#package-backup-descriptor) file is a JSON file that defines the list of AEM packages to be exported as a backup and then uploaded to S3.
 
 Please find below the properties that you can define within the descriptor file:
 
 | Property Name | Description | Value Type |
 |---------------|-------------|------------|
-| \<component> | [AEM AWS Stack Builder component name](https://github.com/shinesolutions/aem-aws-stack-builder#aem-aws-stack-builder). AEM packages are applicable for `author`, `publish`, and `author-publish-dispatcher` components. | Object |
+| \<component> | [AEM AWS Stack Builder component name](https://github.com/shinesolutions/aem-aws-stack-builder-internal#aem-aws-stack-builder). AEM packages are applicable for `author`, `publish`, and `author-publish-dispatcher` components. | Object |
 | \<component>.packages | A list of AEM packages to be exported and then uploaded to S3. | Array |
 | \<component>.packages.group | AEM package group, will be included in AEM package's metadata. | String |
 | \<component>.packages.name | AEM package name, will be included in AEM package's metadata. | String |
