@@ -1,4 +1,5 @@
 version ?= 5.19.1-pre.0
+package_name ?= aem-aws-stack-builder-internal
 aem_stack_manager_messenger_version = 2.14.1
 aem_test_suite_version = 2.0.0
 aem_helloworld_custom_stack_provisioner_version = 0.15.0
@@ -32,8 +33,8 @@ package:
 	    --exclude='*.retry' \
 	    --exclude='*.iml' \
 	    -cvf \
-	    stage/aem-aws-stack-builder-$(version).tar ./
-	gzip stage/aem-aws-stack-builder-$(version).tar
+	    stage/$(package_name)-$(version).tar ./
+	gzip stage/$(package_name)-$(version).tar
 
 release-major:
 	rtk release --release-increment-type major
@@ -48,7 +49,7 @@ release: release-minor
 
 publish:
 	gh release create $(version) --title $(version) --notes "" || echo "Release $(version) has been created on GitHub"
-	gh release upload $(version) stage/aem-aws-stack-builder-$(version).tar.gz
+	gh release upload $(version) stage/$(package_name)-$(version).tar.gz
 
 ################################################################################
 # Code styling check and validation targets:
