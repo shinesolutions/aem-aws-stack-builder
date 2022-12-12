@@ -8,10 +8,10 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-ChaosMonkeyAutoScalingGroup
     Value:
       Ref: ChaosMonkeyAutoScalingGroup
-  ChaosMonkeyLaunchConfiguration:
-    Description: The Chaos Monkey Launch Configuration
+  ChaosMonkeyLaunchTemplate:
+    Description: The Chaos Monkey Launch Template
     Value:
-      Ref: ChaosMonkeyLaunchConfiguration
+      Ref: ChaosMonkeyLaunchTemplate
 Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
@@ -69,8 +69,13 @@ Resources:
         Ref: ChaosMonkeyASGAvailabilityZoneListParameter
       HealthCheckGracePeriod: 300
       HealthCheckType: EC2
-      LaunchConfigurationName:
-        Ref: ChaosMonkeyLaunchConfiguration
+      LaunchTemplate:
+        Version:
+          Fn::GetAtt:
+          - ChaosMonkeyLaunchTemplate
+          - LatestVersionNumber
+        LaunchTemplateId:
+          Ref: ChaosMonkeyLaunchTemplate
       MaxSize: 1
       MetricsCollection:
       - Granularity: 1Minute
@@ -121,43 +126,53 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${NetworkStackPrefixParameter}-ChaosMonkeySubnetList
     Type: AWS::AutoScaling::AutoScalingGroup
-  ChaosMonkeyLaunchConfiguration:
+  ChaosMonkeyLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
     Properties:
-      AssociatePublicIpAddress: false
-      BlockDeviceMappings:
-      - DeviceName:
-          Ref: ChaosMonkeyImageRootDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: ChaosMonkeyEnableVolEncryptionParameter
-          VolumeSize:
-            Ref: ChaosMonkeyRootVolSizeParameter
-          VolumeType: gp2
-      IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
-      ImageId:
-        Ref: ChaosMonkeyImageParameter
-      InstanceMonitoring: false
-      InstanceType:
-        Ref: ChaosMonkeyInstanceTypeParameter
-      KeyName:
-        Ref: ComputeKeyPairNameParameter
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeySecurityGroup
-      UserData:
-        Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
-            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
-            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} chaos-monkey\
-            \ ${AemAwsStackProvisionerVersionParameter}\n"
-    Type: AWS::AutoScaling::LaunchConfiguration
+      LaunchTemplateData:
+        BlockDeviceMappings:
+        - DeviceName:
+            Ref: ChaosMonkeyImageRootDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: ChaosMonkeyEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: ChaosMonkeyRootVolSizeParameter
+            VolumeType: gp2
+        IamInstanceProfile:
+          Name:
+            Fn::ImportValue:
+              Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
+        ImageId:
+          Ref: ChaosMonkeyImageParameter
+        Monitoring:
+          Enabled: false
+        InstanceType:
+          Ref: ChaosMonkeyInstanceTypeParameter
+        KeyName:
+          Ref: ComputeKeyPairNameParameter
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeySecurityGroup
+        UserData:
+          Fn::Base64:
+            Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
+              \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
+              \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
+              \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
+              \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
+              \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
+              \ ${DataBucketNameParameter} ${MainStackPrefixParameter} chaos-monkey\
+              \ ${AemAwsStackProvisionerVersionParameter}\n"
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+          - Key: Name
+            Value: AEM Chaos Monkey Launch Template
+          - Key: StackPrefix
+            Value:
+              Ref: MainStackPrefixParameter
   WarningChaosMonkeyNoInstanceAlarm:
     Properties:
       ActionsEnabled: true

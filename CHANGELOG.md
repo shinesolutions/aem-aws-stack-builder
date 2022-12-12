@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Update AEM-AWS-Stack-Buiilder Release artifact name to aem-aws-stack-builder-internal
 
+### Added
+- Added syntax check of Cloudformation templates with cfn-lint
+
+### Changed
+- Replaced ASG Launch Configuration with EC2 Launch Template for all ASG
+
+### Fixed
+- Fixed syntax errors in Cloudformation templates
+
 ## 5.19.0 - 2022-11-22
 
 ## 5.18.0 - 2022-10-26

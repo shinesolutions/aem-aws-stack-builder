@@ -29,9 +29,6 @@ Parameters:
   AssociatePublicIpAddressParameter:
     Description: Add Public IP Address to instance
     Type: String
-  AuthorPublishDispatcherDNSRecordSetNameParameter:
-    Description: Author Publish Dispatcher DNS Record Set Name
-    Type: String
   AuthorPublishDispatcherImageParameter:
     Description: AMI Id used for the Host
     Type: AWS::EC2::Image::Id
@@ -58,8 +55,8 @@ Parameters:
     Type: String
     Default: 'true'
     AllowedValues:
-    - true
-    - false
+    - 'true'
+    - 'false'
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String

@@ -5,9 +5,13 @@ Conditions:
       - Ref: ChaosMonkeyIncludeStack
       - 'true'
   CreateMonitoringStackCondition:
-    Fn::Equals:
-      - Ref: MonitoringIncludeStack
-      - 'true'
+    Fn::And:
+    - Fn::Equals:
+        - Ref: MonitoringIncludeStack
+        - 'true'
+    - Fn::Equals:
+        - Ref: ChaosMonkeyIncludeStack
+        - 'true'
 Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -20,20 +24,14 @@ Parameters:
     Type: String
     Default: 'true'
     AllowedValues:
-    - true
-    - false
-  AuthorDNSRecordSetNameParameter:
-    Description: Author DNS Record Set Name
-    Type: String
+    - 'true'
+    - 'false'
   AuthorDispatcherASGAvailabilityZoneListParameter:
     Description: The Author Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
   AuthorDispatcherASGConfigurationParameters:
     Description: The ASG configuration parameters
     Type: List<String>
-  AuthorDispatcherDNSRecordSetNameParameter:
-    Description: AuthorDispatcher DNS Record Set Name
-    Type: String
   AuthorDispatcherImageParameter:
     Description: The Author Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -129,9 +127,6 @@ Parameters:
     Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances
       are scaled up/down at
     Type: List<Number>
-  PublishDispatcherDNSRecordSetNameParameter:
-    Description: PublishDispatcher DNS Record Set Name
-    Type: String
   PublishDispatcherImageParameter:
     Description: The Publish Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -156,9 +151,6 @@ Parameters:
   PublishVolParameter:
     Description: Comma seperated list of Publish Instances Volume parameters
     Type: List<String>
-  Route53HostedZoneNameParameter:
-    Description: Route53 Hosted Zone Name the Record Set will be Created in
-    Type: String
   HttpProxyParameter:
     Description: http_proxy parameter
     Type: String
@@ -391,8 +383,6 @@ Resources:
           Ref: EnableVolumeEncryptionParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
-        PublishDispatcherStackArn:
-          Ref: PublishDispatcherStack
         PublishDispatcherStackName:
           # As of May '18, CloudFormation doesn't provide a way to retrieve the Stack Name with Fn::GetAtt or Ref functions
           # Resorting to parsing the ARN to obtain it
@@ -565,14 +555,6 @@ Resources:
           Ref: PrerequisitesStackPrefixParameter
         AwsRegionParameter:
           Fn::Sub: ${AWS::Region}
-        RootDeviceParameter:
-          Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        DataDeviceParameter:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/monitoring.yaml
     Type: AWS::CloudFormation::Stack

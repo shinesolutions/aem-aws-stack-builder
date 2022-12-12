@@ -387,7 +387,6 @@ Resources:
             - autoscaling:DeleteAutoScalingGroup
             - autoscaling:DescribeAutoScalingGroups
             - autoscaling:DescribeAutoScalingInstances
-            - autoscaling:DescribeLaunchConfigurations
             Effect: Allow
             Resource: '*'
           - Action:
@@ -564,13 +563,30 @@ Resources:
           - Action:
             - ec2:Describe*
             - ec2:CreateTags
-            - autoscaling:CreateLaunchConfiguration
-            - autoscaling:DescribeLaunchConfigurations
             - autoscaling:UpdateAutoScalingGroup
             - autoscaling:CreateOrUpdateTags
             - cloudwatch:PutMetricData
             Effect: Allow
             Resource: '*'
+          - Action:
+            - ec2:CreateLaunchTemplateVersion
+            - ec2:ModifyLaunchTemplate
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+          - Action:
+            - ec2:RunInstances # Required for updating ASG with a new Launch Template version
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:key-pair/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:subnet/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::image/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
           - Action:
             - ssm:GetParameter
             Effect: Allow
@@ -652,14 +668,30 @@ Resources:
             Effect: Allow
             Resource: '*'
           - Action:
-            - autoscaling:CreateLaunchConfiguration
-            - autoscaling:DeleteLaunchConfiguration
             - autoscaling:DescribeAutoScalingGroups
-            - autoscaling:DescribeLaunchConfigurations
             - autoscaling:UpdateAutoScalingGroup
             - iam:PassRole
             Effect: Allow
             Resource: '*'
+          - Action:
+            - ec2:CreateLaunchTemplateVersion
+            - ec2:ModifyLaunchTemplate
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+          - Action:
+            - ec2:RunInstances # Required for updating ASG with a new Launch Template version
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:key-pair/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:subnet/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::image/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
           - Action:
             - logs:*
             Effect: Allow

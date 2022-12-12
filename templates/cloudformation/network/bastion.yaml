@@ -15,10 +15,6 @@ Parameters:
   BastionSubnet:
     Description: Subnet Ids the Bastion Host Will be Launched into
     Type: AWS::EC2::Subnet::Id
-  StackPrefix:
-    Default: ''
-    Description: Used to Namespace the Exported Resources
-    Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
     Type: String

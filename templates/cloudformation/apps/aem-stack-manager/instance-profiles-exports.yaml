@@ -32,14 +32,8 @@ Outputs:
     Value:
       Ref: AEMStackManagerSSMServiceRoleNameParameter
 Parameters:
-  DataBucketNameParameter:
-    Description: Bucket name that stores Stack data file
-    Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
-    Type: String
-  S3DataStackManagerPrefix:
-    Description: Prefix within the Bucket to Locate Files
     Type: String
   AEMStackManagerSSMServiceRoleNameParameter:
     Description: Stack Manager SSM Service Role Name

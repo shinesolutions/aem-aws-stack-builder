@@ -80,14 +80,12 @@ Parameters:
     Type: String
 Resources:
   CloudWatchS3StreamInitialVersion:
-    DependsOn: CloudWatchS3StreamLambdaFunction
     Properties:
       Description: Initial Version to Start With
       FunctionName:
         Ref: CloudWatchS3StreamLambdaFunction
     Type: AWS::Lambda::Version
   CloudWatchS3StreamLambdaDevAlias:
-    DependsOn: CloudWatchS3StreamLambdaFunction
     Properties:
       Description: Lambda Alias for Development Use
       FunctionName:
@@ -96,7 +94,6 @@ Resources:
       Name: dev
     Type: AWS::Lambda::Alias
   CloudWatchS3StreamLambdaProdAlias:
-    DependsOn: CloudWatchS3StreamInitialVersion
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName:

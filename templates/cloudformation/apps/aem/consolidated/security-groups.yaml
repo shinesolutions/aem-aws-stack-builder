@@ -18,9 +18,6 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
-  SecureShellInboundCidrIpParameter:
-    Description: AEM Stack Secure Shell Inbound Cidr Ip
-    Type: String
 Resources:
   AuthorPublishDispatcherSecurityGroup:
     Properties:

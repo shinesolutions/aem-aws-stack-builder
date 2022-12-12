@@ -139,8 +139,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   AuthorLoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -174,8 +172,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   AuthorLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
