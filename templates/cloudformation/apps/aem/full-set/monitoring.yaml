@@ -12,15 +12,6 @@ Parameters:
   AwsRegionParameter:
     Type: String
     Description: AWS region
-  RootDeviceParameter:
-    Type: String
-    Description: Root Volume Mount point to be monitored
-    Default: '/dev/sda1'
-  DataDeviceParameter:
-    Type: String
-    Description: Data Volume Mount point to be monitored
-    Default: '/dev/xvdb'
-
 
 Resources:
   ApplicationDashboard:
@@ -487,10 +478,6 @@ Resources:
             aemAsgEventQueueName:
               Fn::ImportValue:
                 Fn::Sub: "${PrerequisitesStackPrefixParameter}-AEMASGEventQueueName"
-            rootVolName:
-              Ref: 'RootDeviceParameter'
-            dataVolName:
-              Ref: 'DataDeviceParameter'
             stackPrefix:
               Ref: 'MainStackPrefixParameter'
             awsRegion:

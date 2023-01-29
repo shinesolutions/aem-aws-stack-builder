@@ -61,8 +61,8 @@ Parameters:
     Type: String
     Default: 'true'
     AllowedValues:
-    - true
-    - false
+    - 'true'
+    - 'false'
   MainStackPrefixParameter:
     Description: The AEM Stack Main Resources Stack Prefix
     Type: String

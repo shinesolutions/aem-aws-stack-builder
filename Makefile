@@ -69,6 +69,17 @@ lint:
 	for playbook in provisioners/ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
+	cfn-lint --ignore-templates \
+		templates/cloudformation/apps/aem-stack-manager/ssm-commands-template.yaml \
+		templates/cloudformation/apps/cdn/main.yaml \
+		templates/cloudformation/apps/cert-private.yaml \
+		templates/cloudformation/apps/cert-public.yaml \
+	  templates/cloudformation/apps/aem-stack-manager/ssm-commands/*.yaml \
+		-t \
+		templates/cloudformation/*/*/*/*.yaml \
+		templates/cloudformation/*/*/*.yaml \
+		templates/cloudformation/*/*.yaml
+
 	# TODO: re-enable template validation after sorting out CI credential
 	# for template in $$(find templates/cloudformation/ -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
 	# 	echo "Checking template $$template ...."; \

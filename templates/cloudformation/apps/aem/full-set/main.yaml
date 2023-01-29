@@ -5,9 +5,13 @@ Conditions:
       - Ref: ChaosMonkeyIncludeStack
       - 'true'
   CreateMonitoringStackCondition:
-    Fn::Equals:
-      - Ref: MonitoringIncludeStack
-      - 'true'
+    Fn::And:
+    - Fn::Equals:
+        - Ref: MonitoringIncludeStack
+        - 'true'
+    - Fn::Equals:
+        - Ref: ChaosMonkeyIncludeStack
+        - 'true'
 Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -20,8 +24,8 @@ Parameters:
     Type: String
     Default: 'true'
     AllowedValues:
-    - true
-    - false
+    - 'true'
+    - 'false'
   AuthorDNSRecordSetNameParameter:
     Description: Author DNS Record Set Name
     Type: String
@@ -411,8 +415,6 @@ Resources:
           Ref: EnableVolumeEncryptionParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
-        PublishDispatcherStackArn:
-          Ref: PublishDispatcherStack
         PublishDispatcherStackName:
           # As of May '18, CloudFormation doesn't provide a way to retrieve the Stack Name with Fn::GetAtt or Ref functions
           # Resorting to parsing the ARN to obtain it
@@ -585,14 +587,6 @@ Resources:
           Ref: PrerequisitesStackPrefixParameter
         AwsRegionParameter:
           Fn::Sub: ${AWS::Region}
-        RootDeviceParameter:
-          Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        DataDeviceParameter:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/monitoring.yaml
     Type: AWS::CloudFormation::Stack

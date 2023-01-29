@@ -24,15 +24,15 @@
         security_groups: "{{ security_groups[item.config_property]['extra_groups'] }}"
       with_items:
         - {resource: 'AuthorDispatcherLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'author_dispatcher_elb'}
-        - {resource: 'AuthorDispatcherLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'author_dispatcher'}
+        - {resource: 'AuthorDispatcherLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'author_dispatcher'}
         - {resource: 'AuthorLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'author_elb'}
         - {resource: 'AuthorPrimaryInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_primary'}
         - {resource: 'AuthorStandbyInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_standby'}
-        - {resource: 'ChaosMonkeyLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'chaos_monkey'}
-        - {resource: 'OrchestratorLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'orchestrator'}
+        - {resource: 'ChaosMonkeyLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'chaos_monkey'}
+        - {resource: 'OrchestratorLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'orchestrator'}
         - {resource: 'PublishDispatcherLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'publish_dispatcher_elb'}
-        - {resource: 'PublishLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'publish'}
-        - {resource: 'PublishDispatcherLaunchConfiguration', resource_properties: 'SecurityGroups', config_property: 'publish_dispatcher'}
+        - {resource: 'PublishLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'publish'}
+        - {resource: 'PublishDispatcherLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'publish_dispatcher'}
       when: security_groups is defined and security_groups[item.config_property] is defined and security_groups[item.config_property]['extra_groups'] is defined
 
     - name: Add extra AWS Security Groups to Consolidated CloudFormation template files
