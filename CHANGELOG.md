@@ -5,15 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-### Changed
-- Update AEM-AWS-Stack-Buiilder Release artifact name to aem-aws-stack-builder-internal
-- Upgrade AEM AWS Stack Provisioner to 6.0.0
-
+## 6.0.0 - 2023-01-29
 ### Added
 - Added syntax check of Cloudformation templates with cfn-lint
 
 ### Changed
+- Update AEM-AWS-Stack-Buiilder Release artifact name to aem-aws-stack-builder-internal
+- Upgrade AEM AWS Stack Provisioner to 6.0.0
 - Replaced ASG Launch Configuration with EC2 Launch Template for all ASG
 
 ### Fixed
