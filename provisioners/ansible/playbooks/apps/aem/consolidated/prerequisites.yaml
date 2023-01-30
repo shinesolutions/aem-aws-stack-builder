@@ -38,7 +38,6 @@
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_publish_dispatcher.inbound_cidr_ip }}"
-          SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
       - create
@@ -58,7 +57,6 @@
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AuthorPublishDispatcherInstanceProfileParameter: "{{ author_publish_dispatcher.instance_profile }}"
           AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_publish_dispatcher.inbound_cidr_ip }}"
-          SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
       tags:
       - create
       when:
