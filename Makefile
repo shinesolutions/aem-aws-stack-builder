@@ -1,4 +1,4 @@
-version ?= 6.0.2-pre.0
+version ?= 6.1.0
 package_name ?= aem-aws-stack-builder-internal
 aem_stack_manager_messenger_version = 2.14.1
 aem_test_suite_version = 2.0.0
