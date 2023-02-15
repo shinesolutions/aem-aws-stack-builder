@@ -265,3 +265,5 @@ action_scheduled_jobs::cloudwatch_log_subscription_arn: {{ aws.cloudwatch.log_su
 author_publish_dispatcher::publish_replication_agent_protocol: {{ author_publish_dispatcher.replication_agent.publish_protocol }}
 author_publish_dispatcher::publish_replication_agent_port: {{ author_publish_dispatcher.replication_agent.publish_port }}
 
+# JMX Configuration
+common::jmxremote::user_password: {{ lookup('community.general.random_string', length=12, special=false) }}
