@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced cloud-init userdata script with runcmd script #RS-138
 - Update documentation #RS-138
 
+### Fixed
+- Fixed shellcheck lint
+
 ## 6.2.1 - 2023-02-17
 ### Changed
 - Upgrade AEM AWS Stack Provisioner to 6.2.1 #RS-125

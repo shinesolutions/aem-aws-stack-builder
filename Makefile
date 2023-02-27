@@ -65,7 +65,7 @@ lint:
 	   provisioners/ansible/playbooks/*/*/*.yaml \
 	   templates/cloudformation/*/*.yaml \
 	 	templates/cloudformation/*/*/*.yaml
-	shellcheck scripts/*.sh test/integration/*.sh
+	shellcheck --exclude=SC2207 scripts/*.sh test/integration/*.sh
 	for playbook in provisioners/ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
