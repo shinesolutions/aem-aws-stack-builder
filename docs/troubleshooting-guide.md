@@ -154,4 +154,4 @@ Here's an example of filtering errors from AEM Orchestrator log:
 
 #### Reproducing provisioning error
 
-If there's a provisioning error and you would like to reproduce the error, run the command `/var/lib/cloud/instance/scripts/part-001` to re-run exactly the same steps during cloud-init.
+If there's a provisioning error and you would like to reproduce the error, run the command `/var/lib/cloud/instance/scripts/runcmd` to re-run exactly the same steps during cloud-init.
