@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Disabled Repository & Package update/upgrade during EC2 instance start #RS-138
+- Replaced cloud-init userdata script with runcmd script #RS-138
+- Update documentation #RS-138
+
+### Fixed
+- Fixed shellcheck lint
 
 ## 6.2.1 - 2023-02-17
 ### Changed
