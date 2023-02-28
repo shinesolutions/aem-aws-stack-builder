@@ -184,6 +184,16 @@ Resources:
               package_update: false
               package_upgrade: false
 
+              write_files:
+                - path: /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
+                  defer: true
+                  content: |
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_author: ${AuthorStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher: ${AuthorDispatcherStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish: ${PublishStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher: ${PublishDispatcherStackName}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging: ${MessagingStackArn}
+                    aem_orchestrator::application_properties::aws_sqs_queue_name: ${AEMASGEventQueueName}
               runcmd:
               - set -x
               - export AWS_DEFAULT_REGION=${AWS::Region}
@@ -191,14 +201,6 @@ Resources:
               - export http_proxy=${HttpProxyParameter}
               - export https_proxy=${HttpsProxyParameter}
               - source /etc/profile
-              - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
-              - # Configure other stack names in Orchestrator's stack provisioner's local.yaml
-              - echo "aem_orchestrator::application_properties::aws_cloudformation_stack_name_author: ${AuthorStackArn}" >> /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
-              - echo "aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher: ${AuthorDispatcherStackArn}" >> /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
-              - echo "aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish: ${PublishStackArn}" >> /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
-              - echo "aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher: ${PublishDispatcherStackName}" >> /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
-              - echo "aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging: ${MessagingStackArn}" >> /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
-              - echo "aem_orchestrator::application_properties::aws_sqs_queue_name: ${AEMASGEventQueueName}" >> /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
               - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
               - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
               - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
