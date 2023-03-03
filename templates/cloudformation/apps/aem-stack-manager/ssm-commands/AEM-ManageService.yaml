@@ -1,4 +1,4 @@
----
+--
 schemaVersion: '2.0'
 description: >-
   Start or Stop the AEM service on the instance
@@ -52,7 +52,7 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/sbin/service aem-{{ aemid }} {{ action }} >>{{ logDir }}/ssm-manage-service.log 2>&1'
+        - '/bin/systemctl {{ action }} aem-{{ aemid }} >>{{ logDir }}/ssm-manage-service.log 2>&1'
         - '[ {{action}} = "start" ] || /opt/shinesolutions/aem-tools/crx-process-quited.sh {{repeats}}  {{interval}} >>{{ logDir }}/ssm-manage-service.log 2>&1'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
