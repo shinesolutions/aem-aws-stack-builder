@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Changed aem service management to systemd #RS-40
 - Upgrade AEM AWS Stack Provisioner to 6.4.0 #RS-40
+- Changed SSM managed service to use systemd #RS-40
 
 ## 6.4.0 - 2023-03-01
 ### Changed
