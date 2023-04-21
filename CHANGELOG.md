@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added AEM installation profile aem65_sp16 #RS-142
 
+## 6.5.1 - 2023-03-24
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 6.4.1 #RS-139
+
+### Fixed
+- Revert removal of default Apache httpd files introduced in RS-138 #RS-139
+
 ## 6.5.0 - 2023-03-09
 ### Changed
 - Changed aem service management to systemd #RS-40
