@@ -295,6 +295,7 @@ These configurations are applicable for both AEM Full-Set and Consolidated archi
 | aem.author.jmxremote.port | AEM Author's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.publish.jmxremote.port | AEM Publish's [JMX](https://docs.oracle.com/javase/8/docs/technotes/guides/management/agent.html) remote port. | Optional | 59182 |
 | aem.truststore.enable_creation | If set to true, AEM Global Truststore will be created for AEM Author | Optional | false |
+| aem.truststore.enable_deletion_before_creation | If set to true, AEM Global Truststore will be deleted first before it is created for AEM Author. This is only relevant if `aem.truststore.enable_creation` is set to true | Optional | false |
 | aem.truststore.password | AEM Global Truststore password | Optional | false |
 
 ### AEM Full-Set specific configuration properties:
