@@ -109,12 +109,22 @@ Resources:
         PropagateAtLaunch: true
         Value:
           Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishAutoScalingGroup
+      - Key: PreviewPublisherASG
+        PropagateAtLaunch: true
+        Value:
+          Fn::ImportValue:
             Fn::Sub: ${MainStackPrefixParameter}-PublishAutoScalingGroup
       - Key: PublisherDispatcherASG
         PropagateAtLaunch: true
         Value:
           Fn::ImportValue:
             Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup
+      - Key: PreviewPublisherDispatcherASG
+        PropagateAtLaunch: true
+        Value:
+          Fn::ImportValue:
+            Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherAutoScalingGroup
       - Key: AuthorDispatcherASG
         PropagateAtLaunch: true
         Value:

@@ -13,6 +13,9 @@ Parameters:
   PublishDispatcherDNSRecordSetNameParameter:
     Description: PublishDispatcher DNS Record Set Name
     Type: String
+  PreviewPublishDispatcherDNSRecordSetNameParameter:
+    Description: PreviewPublishDispatcher DNS Record Set Name
+    Type: String
   Route53HostedZoneNameParameter:
     Description: Route53 Hosted Zone Name the Record Set will be Created in
     Type: String
@@ -50,6 +53,18 @@ Resources:
       ResourceRecords:
       - Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
+      TTL: 300
+      Type: CNAME
+    Type: AWS::Route53::RecordSet
+  PreviewPublishDispatcherRoute53RecordSet:
+    Properties:
+      HostedZoneName:
+        Ref: Route53HostedZoneNameParameter
+      Name:
+        Fn::Sub: ${PreviewPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+      ResourceRecords:
+      - Fn::ImportValue:
+          Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
     Type: AWS::Route53::RecordSet

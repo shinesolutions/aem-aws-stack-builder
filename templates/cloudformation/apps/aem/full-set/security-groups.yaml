@@ -50,6 +50,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherELBSecurityGroup
     Value:
       Ref: PublishDispatcherELBSecurityGroup
+  PreviewPublishDispatcherELBSecurityGroup:
+    Description: The Publish Dispatcher ELB Security Group
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherELBSecurityGroup
+    Value:
+      Ref: PreviewPublishDispatcherELBSecurityGroup
   PublishDispatcherSecurityGroup:
     Description: The Publish Dispatcher Security Group
     Export:
@@ -57,6 +64,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherSecurityGroup
     Value:
       Ref: PublishDispatcherSecurityGroup
+  PreviewPublishDispatcherSecurityGroup:
+    Description: The Preview Publish Dispatcher Security Group
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherSecurityGroup
+    Value:
+      Ref: PreviewPublishDispatcherSecurityGroup
   PublishSecurityGroup:
     Description: The Publish Security Group
     Export:
@@ -64,6 +78,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishSecurityGroup
     Value:
       Ref: PublishSecurityGroup
+  PreviewPublishSecurityGroup:
+    Description: The Preview Publish Security Group
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishSecurityGroup
+    Value:
+      Ref: PreviewPublishSecurityGroup
 Parameters:
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
@@ -79,6 +100,9 @@ Parameters:
     Type: String
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
+  PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Preview Publish Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
   SecureShellInboundCidrIpParameter:
     Description: AEM Stack Secure Shell Inbound Cidr Ip
@@ -286,6 +310,16 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
+  AuthorSecurityGroupEgress5:
+    Properties:
+      DestinationSecurityGroupId:
+        Ref: PreviewPublishSecurityGroup
+      FromPort: '5433'
+      GroupId:
+        Ref: AuthorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupEgress
   AuthorSecurityGroupIngress0:
     Properties:
       FromPort: '5432'
@@ -402,6 +436,16 @@ Resources:
       IpProtocol: tcp
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupEgress
+  OrchestratorSecurityGroupEgress3:
+    Properties:
+      DestinationSecurityGroupId:
+        Ref: PreviewPublishSecurityGroup
+      FromPort: '5433'
+      GroupId:
+        Ref: OrchestratorSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupEgress
   OrchestratorSecurityGroupIngress0:
     Properties:
       CidrIp:
@@ -445,6 +489,41 @@ Resources:
       IpProtocol: tcp
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupIngress
+
+  PreviewPublishDispatcherELBSecurityGroup:
+    Properties:
+      GroupDescription: AEM Preview Publish Dispatcher ELB Security Group
+      Tags:
+      - Key: Name
+        Value: AEM Preview Publish Dispatcher ELB Security Group
+      - Key: StackPrefix
+        Value:
+          Ref: PrerequisitesStackPrefixParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+    Type: AWS::EC2::SecurityGroup
+  PreviewPublishDispatcherELBSecurityGroupEgress0:
+    Properties:
+      DestinationSecurityGroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      FromPort: '443'
+      GroupId:
+        Ref: PreviewPublishDispatcherELBSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+    Type: AWS::EC2::SecurityGroupEgress
+  PreviewPublishDispatcherELBSecurityGroupIngress0:
+    Properties:
+      CidrIp:
+        Ref: PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: PreviewPublishDispatcherELBSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+    Type: AWS::EC2::SecurityGroupIngress
+
   PublishDispatcherSecurityGroup:
     Properties:
       GroupDescription: AEM Publish Dispatcher Security Group
@@ -508,6 +587,71 @@ Resources:
       IpProtocol: tcp
       ToPort: '22'
     Type: AWS::EC2::SecurityGroupIngress
+
+  PreviewPublishDispatcherSecurityGroup:
+    Properties:
+      GroupDescription: AEM Preview Publish Dispatcher Security Group
+      Tags:
+      - Key: Name
+        Value: AEM Preview Publish Dispatcher Security Group
+      - Key: StackPrefix
+        Value:
+          Ref: PrerequisitesStackPrefixParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+    Type: AWS::EC2::SecurityGroup
+  PreviewPublishDispatcherSecurityGroupEgress0:
+    Properties:
+      DestinationSecurityGroupId:
+        Ref: PreviewPublishSecurityGroup
+      FromPort: '5433'
+      GroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupEgress
+  PreviewPublishDispatcherSecurityGroupEgress1:
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+    Type: AWS::EC2::SecurityGroupEgress
+  PreviewPublishDispatcherSecurityGroupIngress0:
+    Properties:
+      FromPort: '443'
+      GroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Ref: PreviewPublishDispatcherELBSecurityGroup
+      ToPort: '443'
+    Type: AWS::EC2::SecurityGroupIngress
+  PreviewPublishDispatcherSecurityGroupIngress1:
+    Properties:
+      FromPort: '443'
+      GroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Ref: PreviewPublishSecurityGroup
+      ToPort: '443'
+    Type: AWS::EC2::SecurityGroupIngress
+  PreviewPublishDispatcherSecurityGroupIngress2:
+    Properties:
+      CidrIp:
+        Ref: SecureShellInboundCidrIpParameter
+      FromPort: '22'
+      GroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      IpProtocol: tcp
+      ToPort: '22'
+    Type: AWS::EC2::SecurityGroupIngress
+
   PublishSecurityGroup:
     Properties:
       GroupDescription: AEM Publish Security Group
@@ -576,6 +720,80 @@ Resources:
       FromPort: '5433'
       GroupId:
         Ref: PublishSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Ref: OrchestratorSecurityGroup
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupIngress
+
+  PreviewPublishSecurityGroup:
+    Properties:
+      GroupDescription: AEM Preview Publish Security Group
+      Tags:
+      - Key: Name
+        Value: AEM Preview Publish Security Group
+      - Key: StackPrefix
+        Value:
+          Ref: PrerequisitesStackPrefixParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+    Type: AWS::EC2::SecurityGroup
+  PreviewPublishSecurityGroupEgress0:
+    Properties:
+      DestinationSecurityGroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      FromPort: '443'
+      GroupId:
+        Ref: PreviewPublishSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+    Type: AWS::EC2::SecurityGroupEgress
+  PreviewPublishSecurityGroupEgress1:
+    Properties:
+      CidrIp:
+        Ref: PrivateSubnetInternetOutboundCidrIpParameter
+      FromPort: '443'
+      GroupId:
+        Ref: PreviewPublishSecurityGroup
+      IpProtocol: tcp
+      ToPort: '443'
+    Type: AWS::EC2::SecurityGroupEgress
+  PreviewPublishSecurityGroupIngress0:
+    Properties:
+      FromPort: '5433'
+      GroupId:
+        Ref: PreviewPublishSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Ref: PreviewPublishDispatcherSecurityGroup
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupIngress
+  PreviewPublishSecurityGroupIngress1:
+    Properties:
+      FromPort: '5433'
+      GroupId:
+        Ref: PreviewPublishSecurityGroup
+      IpProtocol: tcp
+      SourceSecurityGroupId:
+        Ref: AuthorSecurityGroup
+      ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupIngress
+  PreviewPublishSecurityGroupIngress2:
+    Properties:
+      CidrIp:
+        Ref: SecureShellInboundCidrIpParameter
+      FromPort: '22'
+      GroupId:
+        Ref: PreviewPublishSecurityGroup
+      IpProtocol: tcp
+      ToPort: '22'
+    Type: AWS::EC2::SecurityGroupIngress
+  PreviewPublishSecurityGroupIngress3:
+    Properties:
+      FromPort: '5433'
+      GroupId:
+        Ref: PreviewPublishSecurityGroup
       IpProtocol: tcp
       SourceSecurityGroupId:
         Ref: OrchestratorSecurityGroup

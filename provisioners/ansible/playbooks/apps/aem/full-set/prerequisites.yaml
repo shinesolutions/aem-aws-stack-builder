@@ -39,6 +39,7 @@
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
+          PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.preview_publish_dispatcher_elb.inbound_cidr_ip }}"
           AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
           PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internet_outbound_cidr_ip }}"
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
@@ -66,6 +67,7 @@
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
+          PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.preview_publish_dispatcher_elb.inbound_cidr_ip }}"
           AuthorDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_dispatcher_elb.inbound_cidr_ip }}"
           PrivateSubnetInternetOutboundCidrIpParameter: "{{ security_groups.private_subnet_internet_outbound_cidr_ip }}"
           AEMASGEventQueueNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sqs_queue_name }}"
@@ -78,8 +80,8 @@
           AuthorInstanceProfileParameter: "{{ author.instance_profile }}"
           ChaosMonkeyInstanceProfileParameter: "{{ chaos_monkey.instance_profile }}"
           OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
-          PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
-          PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
+          PreviewPublishDispatcherInstanceProfileParameter: "{{ preview_publish_dispatcher.instance_profile }}"
+          PreviewPublishInstanceProfileParameter: "{{ preview_publish.instance_profile }}"
           AWSNotificationParameters: "{{ messaging.alarm_notification.contact_email }}, {{ messaging.alarm_notification.https_endpoint }}"
           AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
       tags:
@@ -140,7 +142,9 @@
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
       when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
       tags:
         - create
@@ -206,7 +210,9 @@
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
       when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me'
       tags:
         - create
@@ -246,7 +252,9 @@
             (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
             (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
             (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
-            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn) or
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn) or
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn)
       tags:
         - delete
 
@@ -333,7 +341,9 @@
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
-            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn) or
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn) or
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn)
       tags:
         - delete
 

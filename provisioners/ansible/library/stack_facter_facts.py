@@ -12,6 +12,7 @@ cron_http_proxy=%s
 cron_https_proxy=%s
 cron_no_proxy=%s
 publish_dispatcher_allowed_client=%s
+preview_publish_dispatcher_allowed_client=%s
 """ % (
             params['stack_prefix'],
             params['aws_region'],
@@ -20,6 +21,7 @@ publish_dispatcher_allowed_client=%s
             params['cron_https_proxy'],
             params['cron_no_proxy'],
             params['publish_dispatcher_allowed_client'],
+            params['preview_publish_dispatcher_allowed_client'],
         )
 
 def main():
@@ -33,6 +35,7 @@ def main():
         cron_https_proxy                  = dict(required=True, type='str'),
         cron_no_proxy                     = dict(required=True, type='str'),
         publish_dispatcher_allowed_client = dict(required=True, type='str'),
+        preview_publish_dispatcher_allowed_client = dict(required=True, type='str'),
       )
     )
     response = generate_facts(module.params)
