@@ -439,11 +439,11 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  PreviewPublishDispatcherELBSubnet{{ az[-1] | upper }}PublicRouteTableAssociation:
+  PreviewPublishDispatcherELBSubnet{{ az[-1] | upper }}PrivateRouteTableAssociation:
     Condition: CreatePreviewPublishDispatcherELBSubnet{{ az[-1] | upper }}
     Properties:
       RouteTableId:
-        Ref: PublicRouteTable
+        Ref: PrivateRouteTable
       SubnetId:
         Ref: PreviewPublishDispatcherELBSubnet{{ az[-1] | upper }}
     Type: AWS::EC2::SubnetRouteTableAssociation

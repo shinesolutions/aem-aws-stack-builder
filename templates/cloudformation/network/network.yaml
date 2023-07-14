@@ -1018,11 +1018,11 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  PreviewPublishDispatcherELBSubnetAPublicRouteTableAssociation:
+  PreviewPublishDispatcherELBSubnetAPrivateRouteTableAssociation:
     Condition: !Ref CreatePreviewPublishDispatcherELBSubnetA
     Properties:
       RouteTableId:
-        Ref: PublicRouteTable
+        Ref: PrivateRouteTable
       SubnetId:
         Ref: PreviewPublishDispatcherELBSubnetA
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -1042,11 +1042,11 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  PreviewPublishDispatcherELBSubnetBPublicRouteTableAssociation:
+  PreviewPublishDispatcherELBSubnetBPrivateRouteTableAssociation:
     Condition: !Ref CreatePreviewPublishDispatcherELBSubnetB
     Properties:
       RouteTableId:
-        Ref: PublicRouteTable
+        Ref: PrivateRouteTable
       SubnetId:
         Ref: PreviewPublishDispatcherELBSubnetB
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -1066,11 +1066,11 @@ Resources:
         Fn::ImportValue:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
-  PreviewPublishDispatcherELBSubnetCPublicRouteTableAssociation:
+  PreviewPublishDispatcherELBSubnetCPrivateRouteTableAssociation:
     Condition: !Ref CreatePreviewPublishDispatcherELBSubnetC
     Properties:
       RouteTableId:
-        Ref: PublicRouteTable
+        Ref: PrivateRouteTable
       SubnetId:
         Ref: PreviewPublishDispatcherELBSubnetC
     Type: AWS::EC2::SubnetRouteTableAssociation
