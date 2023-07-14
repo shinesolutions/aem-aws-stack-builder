@@ -1003,7 +1003,7 @@ Resources:
         Ref: PublishSubnetC
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishDispatcherELBSubnetA:
-    Condition: !Ref CreatePreviewPublishDispatcherELBSubnetA
+    Condition: CreatePreviewPublishDispatcherELBSubnetA
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneAParameter
@@ -1019,7 +1019,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishDispatcherELBSubnetAPrivateRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishDispatcherELBSubnetA
+    Condition: CreatePreviewPublishDispatcherELBSubnetA
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1027,7 +1027,7 @@ Resources:
         Ref: PreviewPublishDispatcherELBSubnetA
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishDispatcherELBSubnetB:
-    Condition: !Ref CreatePreviewPublishDispatcherELBSubnetB
+    Condition: CreatePreviewPublishDispatcherELBSubnetB
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneBParameter
@@ -1043,7 +1043,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishDispatcherELBSubnetBPrivateRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishDispatcherELBSubnetB
+    Condition: CreatePreviewPublishDispatcherELBSubnetB
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1051,7 +1051,7 @@ Resources:
         Ref: PreviewPublishDispatcherELBSubnetB
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishDispatcherELBSubnetC:
-    Condition: !Ref CreatePreviewPublishDispatcherELBSubnetC
+    Condition: CreatePreviewPublishDispatcherELBSubnetC
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneCParameter
@@ -1067,7 +1067,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishDispatcherELBSubnetCPrivateRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishDispatcherELBSubnetC
+    Condition: CreatePreviewPublishDispatcherELBSubnetC
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1075,7 +1075,7 @@ Resources:
         Ref: PreviewPublishDispatcherELBSubnetC
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishDispatcherSubnetA:
-    Condition: !Ref CreatePreviewPublishDispatcherSubnetA
+    Condition: CreatePreviewPublishDispatcherSubnetA
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneAParameter
@@ -1091,7 +1091,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishDispatcherSubnetAPrivateRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishDispatcherSubnetA
+    Condition: CreatePreviewPublishDispatcherSubnetA
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1099,7 +1099,7 @@ Resources:
         Ref: PreviewPublishDispatcherSubnetA
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishDispatcherSubnetB:
-    Condition: !Ref CreatePreviewPublishDispatcherSubnetB
+    Condition: CreatePreviewPublishDispatcherSubnetB
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneBParameter
@@ -1115,7 +1115,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishDispatcherSubnetBPrivateRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishDispatcherSubnetB
+    Condition: CreatePreviewPublishDispatcherSubnetB
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1123,7 +1123,7 @@ Resources:
         Ref: PreviewPublishDispatcherSubnetB
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishDispatcherSubnetC:
-    Condition: !Ref CreatePreviewPublishDispatcherSubnetC
+    Condition: CreatePreviewPublishDispatcherSubnetC
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneCParameter
@@ -1139,7 +1139,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishDispatcherSubnetCPrivateRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishDispatcherSubnetC
+    Condition: CreatePreviewPublishDispatcherSubnetC
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1147,7 +1147,7 @@ Resources:
         Ref: PreviewPublishDispatcherSubnetC
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishSubnetA:
-    Condition: !Ref CreatePreviewPublishSubnetA
+    Condition: CreatePreviewPublishSubnetA
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneAParameter
@@ -1163,7 +1163,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishSubnetAPrivatecRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishSubnetA
+    Condition: CreatePreviewPublishSubnetA
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1171,7 +1171,7 @@ Resources:
         Ref: PreviewPublishSubnetA
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishSubnetB:
-    Condition: !Ref CreatePreviewPublishSubnetB
+    Condition: CreatePreviewPublishSubnetB
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneBParameter
@@ -1187,7 +1187,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishSubnetBPrivatecRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishSubnetB
+    Condition: CreatePreviewPublishSubnetB
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
@@ -1195,7 +1195,7 @@ Resources:
         Ref: PreviewPublishSubnetB
     Type: AWS::EC2::SubnetRouteTableAssociation
   PreviewPublishSubnetC:
-    Condition: !Ref CreatePreviewPublishSubnetC
+    Condition: CreatePreviewPublishSubnetC
     Properties:
       AvailabilityZone:
         Ref: AvailabilityZoneCParameter
@@ -1211,7 +1211,7 @@ Resources:
           Fn::Sub: ${StackPrefix}-VPCId
     Type: AWS::EC2::Subnet
   PreviewPublishSubnetCPrivatecRouteTableAssociation:
-    Condition: !Ref CreatePreviewPublishSubnetC
+    Condition: CreatePreviewPublishSubnetC
     Properties:
       RouteTableId:
         Ref: PrivateRouteTable
