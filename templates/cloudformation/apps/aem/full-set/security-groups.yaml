@@ -1,5 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Create Security Groups for the AEM Stack
+Conditions:
+  CreateChaosMonkeyStackCondition:
+    Fn::Equals:
+      - Ref: ChaosMonkeyIncludeStack
+      - 'true'
+  CreatePreviewStackCondition:
+    Fn::Equals:
+      - Ref: PreviewIncludeStack
+      - 'true'
 Outputs:
   AuthorDispatcherELBSecurityGroup:
     Description: The Author Dispatcher ELB Security Group
@@ -36,6 +45,7 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeySecurityGroup
     Value:
       Ref: ChaosMonkeySecurityGroup
+    Condition: CreateChaosMonkeyStackCondition
   OrchestratorSecurityGroup:
     Description: The Orchestrator Security Group
     Export:
@@ -51,6 +61,7 @@ Outputs:
     Value:
       Ref: PublishDispatcherELBSecurityGroup
   PreviewPublishDispatcherELBSecurityGroup:
+    Condition: CreatePreviewStackCondition
     Description: The Publish Dispatcher ELB Security Group
     Export:
       Name:
@@ -65,6 +76,7 @@ Outputs:
     Value:
       Ref: PublishDispatcherSecurityGroup
   PreviewPublishDispatcherSecurityGroup:
+    Condition: CreatePreviewStackCondition
     Description: The Preview Publish Dispatcher Security Group
     Export:
       Name:
@@ -79,6 +91,7 @@ Outputs:
     Value:
       Ref: PublishSecurityGroup
   PreviewPublishSecurityGroup:
+    Condition: CreatePreviewStackCondition
     Description: The Preview Publish Security Group
     Export:
       Name:
@@ -88,6 +101,14 @@ Outputs:
 Parameters:
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
+  ChaosMonkeyIncludeStack:
+    Default: 'true'
+    Description: Creates the ChaosMonkey stack or not
+    Type: String
+  PreviewIncludeStack:
+    Default: 'false'
+    Description: Creates the Preview stack resources or not
     Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
@@ -311,6 +332,7 @@ Resources:
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
   AuthorSecurityGroupEgress5:
+    Condition: CreatePreviewStackCondition
     Properties:
       DestinationSecurityGroupId:
         Ref: PreviewPublishSecurityGroup
@@ -361,6 +383,7 @@ Resources:
       ToPort: '22'
     Type: AWS::EC2::SecurityGroupIngress
   ChaosMonkeySecurityGroup:
+    Condition: CreateChaosMonkeyStackCondition
     Properties:
       GroupDescription: AEM Chaos Monkey Security Group
       Tags:
@@ -374,6 +397,7 @@ Resources:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
   ChaosMonkeySecurityGroupIngress0:
+    Condition: CreateChaosMonkeyStackCondition
     Properties:
       CidrIp:
         Ref: SecureShellInboundCidrIpParameter
@@ -384,6 +408,7 @@ Resources:
       ToPort: '22'
     Type: AWS::EC2::SecurityGroupIngress
   ChaosSecurityGroupEgress0:
+    Condition: CreateChaosMonkeyStackCondition
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -437,6 +462,7 @@ Resources:
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupEgress
   OrchestratorSecurityGroupEgress3:
+    Condition: CreatePreviewStackCondition
     Properties:
       DestinationSecurityGroupId:
         Ref: PreviewPublishSecurityGroup
@@ -491,6 +517,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupIngress
 
   PreviewPublishDispatcherELBSecurityGroup:
+    Condition: CreatePreviewStackCondition
     Properties:
       GroupDescription: AEM Preview Publish Dispatcher ELB Security Group
       Tags:
@@ -504,6 +531,7 @@ Resources:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
   PreviewPublishDispatcherELBSecurityGroupEgress0:
+    Condition: CreatePreviewStackCondition
     Properties:
       DestinationSecurityGroupId:
         Ref: PreviewPublishDispatcherSecurityGroup
@@ -514,6 +542,7 @@ Resources:
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
   PreviewPublishDispatcherELBSecurityGroupIngress0:
+    Condition: CreatePreviewStackCondition
     Properties:
       CidrIp:
         Ref: PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter
@@ -589,6 +618,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupIngress
 
   PreviewPublishDispatcherSecurityGroup:
+    Condition: CreatePreviewStackCondition
     Properties:
       GroupDescription: AEM Preview Publish Dispatcher Security Group
       Tags:
@@ -602,6 +632,7 @@ Resources:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
   PreviewPublishDispatcherSecurityGroupEgress0:
+    Condition: CreatePreviewStackCondition
     Properties:
       DestinationSecurityGroupId:
         Ref: PreviewPublishSecurityGroup
@@ -612,6 +643,7 @@ Resources:
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupEgress
   PreviewPublishDispatcherSecurityGroupEgress1:
+    Condition: CreatePreviewStackCondition
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -622,6 +654,7 @@ Resources:
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
   PreviewPublishDispatcherSecurityGroupIngress0:
+    Condition: CreatePreviewStackCondition
     Properties:
       FromPort: '443'
       GroupId:
@@ -632,6 +665,7 @@ Resources:
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupIngress
   PreviewPublishDispatcherSecurityGroupIngress1:
+    Condition: CreatePreviewStackCondition
     Properties:
       FromPort: '443'
       GroupId:
@@ -642,6 +676,7 @@ Resources:
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupIngress
   PreviewPublishDispatcherSecurityGroupIngress2:
+    Condition: CreatePreviewStackCondition
     Properties:
       CidrIp:
         Ref: SecureShellInboundCidrIpParameter
@@ -727,6 +762,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupIngress
 
   PreviewPublishSecurityGroup:
+    Condition: CreatePreviewStackCondition
     Properties:
       GroupDescription: AEM Preview Publish Security Group
       Tags:
@@ -740,6 +776,7 @@ Resources:
           Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
     Type: AWS::EC2::SecurityGroup
   PreviewPublishSecurityGroupEgress0:
+    Condition: CreatePreviewStackCondition
     Properties:
       DestinationSecurityGroupId:
         Ref: PreviewPublishDispatcherSecurityGroup
@@ -750,6 +787,7 @@ Resources:
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
   PreviewPublishSecurityGroupEgress1:
+    Condition: CreatePreviewStackCondition
     Properties:
       CidrIp:
         Ref: PrivateSubnetInternetOutboundCidrIpParameter
@@ -760,6 +798,7 @@ Resources:
       ToPort: '443'
     Type: AWS::EC2::SecurityGroupEgress
   PreviewPublishSecurityGroupIngress0:
+    Condition: CreatePreviewStackCondition
     Properties:
       FromPort: '5433'
       GroupId:
@@ -770,6 +809,7 @@ Resources:
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupIngress
   PreviewPublishSecurityGroupIngress1:
+    Condition: CreatePreviewStackCondition
     Properties:
       FromPort: '5433'
       GroupId:
@@ -780,6 +820,7 @@ Resources:
       ToPort: '5433'
     Type: AWS::EC2::SecurityGroupIngress
   PreviewPublishSecurityGroupIngress2:
+    Condition: CreatePreviewStackCondition
     Properties:
       CidrIp:
         Ref: SecureShellInboundCidrIpParameter
@@ -790,6 +831,7 @@ Resources:
       ToPort: '22'
     Type: AWS::EC2::SecurityGroupIngress
   PreviewPublishSecurityGroupIngress3:
+    Condition: CreatePreviewStackCondition
     Properties:
       FromPort: '5433'
       GroupId:

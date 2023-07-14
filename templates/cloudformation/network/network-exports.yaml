@@ -94,6 +94,27 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublishSubnetList
     Value:
       Ref: PublishSubnetList
+  PreviewPublishDispatcherELBSubnetList:
+    Description: Comma-separated Preview Publish Dispatcher ELB Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherELBSubnetList
+    Value:
+      Ref: PreviewPublishDispatcherELBSubnetList
+  PreviewPublishDispatcherSubnetList:
+    Description: Comma-separated Preview Publish Dispatcher Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherSubnetList
+    Value:
+      Ref: PreviewPublishDispatcherSubnetList
+  PreviewPublishSubnetList:
+    Description: Comma-separated Preview Publish Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishSubnetList
+    Value:
+      Ref: PreviewPublishSubnetList
   ToolSubnetList:
     Description: Comma-separated Tool Subnet List
     Export:
@@ -144,6 +165,18 @@ Parameters:
   PublishSubnetList:
     Description: Comma-separated Publish Subnet List
     Type: String
+  PreviewPublishDispatcherELBSubnetList:
+    Description: Comma-separated PreviewPublish Dispatcher ELB Subnet List
+    Type: String
+      Default: ''
+  PreviewPublishDispatcherSubnetList:
+    Description: Comma-separated PreviewPublish Dispatcher Subnet List
+    Type: String
+      Default: ''
+  PreviewPublishSubnetList:
+    Description: Comma-separated PreviewPublish Subnet List
+    Type: String
+      Default: ''
   StackPrefix:
     Default: ''
     Description: Used to Namespace the Exported Resources

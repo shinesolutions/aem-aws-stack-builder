@@ -83,6 +83,10 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
+  ChaosMonkeyIncludeStack:
+    Default: 'true'
+    Description: Creates the ChaosMonkey stack resources or not
+    Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
     Type: String
@@ -91,6 +95,19 @@ Parameters:
     Type: String
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  PreviewIncludeStack:
+    Default: 'false'
+    Description: Creates the Preview stack resources or not
+    Type: String
+  PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Preview Publish Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
+  PreviewPublishInstanceProfileParameter:
+    Description: AEM Preview Publish Profile name
+    Type: String
+  PreviewPublishDispatcherInstanceProfileParameter:
+    Description: AEM Preview Publish Dispatcher Profile name
     Type: String
   PrivateSubnetInternetOutboundCidrIpParameter:
     Description: AEM Stack Private Subnet Internet Outbound Cidr Ip Destination
@@ -128,6 +145,10 @@ Resources:
           Ref: OrchestratorInstanceProfileParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
+        PreviewPublishInstanceProfileParameter:
+          Ref: PreviewPublishInstanceProfileParameter
+        PreviewPublishDispatcherInstanceProfileParameter:
+          Ref: PreviewPublishDispatcherInstanceProfileParameter
         PublishDispatcherInstanceProfileParameter:
           Ref: PublishDispatcherInstanceProfileParameter
         PublishInstanceProfileParameter:
@@ -162,10 +183,16 @@ Resources:
       Parameters:
         AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
           Ref: AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
+        ChaosMonkeyIncludeStack: 
+          Ref: ChaosMonkeyIncludeStack
+        PreviewIncludeStack: 
+          Ref: PreviewIncludeStack
         NetworkStackPrefixParameter:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
+        PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+          Ref: PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter
         PrivateSubnetInternetOutboundCidrIpParameter:
           Ref: PrivateSubnetInternetOutboundCidrIpParameter
         PublishDispatcherELBSecurityGroupInboundCidrIpParameter:

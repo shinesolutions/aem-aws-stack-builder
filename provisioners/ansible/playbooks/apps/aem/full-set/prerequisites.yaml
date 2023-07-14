@@ -37,6 +37,8 @@
           PrerequisitesStackPrefixParameter: "{{ stack_prefix }}"
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
+          ChaosMonkeyIncludeStack: "{{ chaos_monkey.include_stack | lower }}"
+          PreviewIncludeStack: "{{ preview_publish.include_stack | lower }}"
           SecureShellInboundCidrIpParameter: "{{ security_groups.secure_shell.inbound_cidr_ip }}"
           PublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.publish_dispatcher_elb.inbound_cidr_ip }}"
           PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter: "{{ security_groups.preview_publish_dispatcher_elb.inbound_cidr_ip }}"
@@ -80,6 +82,8 @@
           AuthorInstanceProfileParameter: "{{ author.instance_profile }}"
           ChaosMonkeyInstanceProfileParameter: "{{ chaos_monkey.instance_profile }}"
           OrchestratorInstanceProfileParameter: "{{ orchestrator.instance_profile }}"
+          PublishDispatcherInstanceProfileParameter: "{{ publish_dispatcher.instance_profile }}"
+          PublishInstanceProfileParameter: "{{ publish.instance_profile }}"
           PreviewPublishDispatcherInstanceProfileParameter: "{{ preview_publish_dispatcher.instance_profile }}"
           PreviewPublishInstanceProfileParameter: "{{ preview_publish.instance_profile }}"
           AWSNotificationParameters: "{{ messaging.alarm_notification.contact_email }}, {{ messaging.alarm_notification.https_endpoint }}"
@@ -139,13 +143,53 @@
       with_items:
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn }}"
-        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
-        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
-        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
       when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM App Instance Roles to use EBS Volume CMK for permission type b for ChaosMonkey component"
+      aws_kms:
+        key_id: "{{ aws.encryption.ebs_volume.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+              - CreateGrant
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
+      when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me' and chaos_monkey.include_stack == 'true'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM App Instance Roles to use EBS Volume CMK for permission type b for Preview components"
+      aws_kms:
+        key_id: "{{ aws.encryption.ebs_volume.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+              - CreateGrant
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
+      when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me' and preview_publish.include_stack == 'true'
       tags:
         - create
 
@@ -217,6 +261,49 @@
       tags:
         - create
 
+    - name: "Grant permissions for AEM App Instance Roles to S3 CMK for permission type b for ChaosMonkey component"
+      aws_kms:
+        key_id: "{{ aws.encryption.s3.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+              - CreateGrant
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
+      when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me' and chaos_monkey.include_stack == 'true'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM App Instance Roles to S3 CMK for permission type b for Preview components"
+      aws_kms:
+        key_id: "{{ aws.encryption.s3.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item }}-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Encrypt
+              - Decrypt
+              - DescribeKey
+              - GenerateDataKey
+              - ReEncryptFrom
+              - ReEncryptTo
+              - RetireGrant
+              - CreateGrant
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
+      when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me' and preview_publish.include_stack == 'true'
+      tags:
+        - create
+
     - name: Report Stack Problem
       debug:
         msg: "Stack {{ stack_name }} does not exist or some other errors occured"
@@ -249,12 +336,9 @@
         - "{{ kms_ebs_key_grants }}"
       when: (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
             (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
-            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
             (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
             (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
-            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn) or
-            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn) or
-            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn)
+            (kms_ebs_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
       tags:
         - delete
 
@@ -338,12 +422,9 @@
         - "{{ kms_s3_key_grants }}"
       when: (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
-            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
-            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn) or
-            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn) or
-            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn)
+            (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
       tags:
         - delete
 

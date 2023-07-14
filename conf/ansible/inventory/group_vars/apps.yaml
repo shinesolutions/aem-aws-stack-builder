@@ -375,9 +375,9 @@ preview_publish_dispatcher:
   instance_type: t2.small
   root_vol_size: 20
   data_vol_size: 20
-  enable_random_termination: true
+  enable_random_termination: false
   elb_health_check: /system/health?tags=shallow
-  elb_scheme: internet-facing
+  elb_scheme: internal
   allowed_client: '*.*.*.*'
   asg_min_size: 2
   asg_desired_capacity: 2
@@ -405,11 +405,12 @@ publish:
   asg_cooldown: 480
 
 preview_publish:
+  include_stack: false
   instance_profile: overwrite-me
   instance_type: m3.large
   root_vol_size: 20
   data_vol_size: 75
-  enable_random_termination: true
+  enable_random_termination: false
   asg_min_size: 2
   asg_desired_capacity: 2
   asg_max_size: 2
@@ -507,7 +508,9 @@ stack_manager:
     https_endpoint: overwrite-me
 
   publish:
-    asg_min_size: 2
+    asg_min_size: {{ publish.asg_min_size}}
+  preview_publish:
+    asg_min_size: {{ preview_publish.asg_min_size}}
 
   preview_publish:
     asg_min_size: 2
@@ -648,7 +651,6 @@ scheduled_jobs:
       weekday: 0-7
       hour: '0,2-23'
       minute: 0
-
   preview_publish:
     offline_compaction:
       enable: false
@@ -656,7 +658,7 @@ scheduled_jobs:
       hour: 3
       minute: 0
     export:
-      enable: true
+      enable: false
       weekday: 0-7
       hour: 2
       minute: 0
@@ -665,10 +667,15 @@ scheduled_jobs:
       weekday: 0-7
       hour: '0,2-23'
       minute: 0
-
   publish_dispatcher:
     content_health_check:
       enable: true
+      weekday: '*'
+      hour: '*'
+      minute: '*'
+  preview_publish_dispatcher:
+    content_health_check:
+      enable: false
       weekday: '*'
       hour: '*'
       minute: '*'

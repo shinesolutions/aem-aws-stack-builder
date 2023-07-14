@@ -28,12 +28,33 @@
         - {resource: 'AuthorLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'author_elb'}
         - {resource: 'AuthorPrimaryInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_primary'}
         - {resource: 'AuthorStandbyInstance', resource_properties: 'SecurityGroupIds', config_property: 'author_standby'}
-        - {resource: 'ChaosMonkeyLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'chaos_monkey'}
         - {resource: 'OrchestratorLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'orchestrator'}
         - {resource: 'PublishDispatcherLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'publish_dispatcher_elb'}
         - {resource: 'PublishLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'publish'}
         - {resource: 'PublishDispatcherLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'publish_dispatcher'}
       when: security_groups is defined and security_groups[item.config_property] is defined and security_groups[item.config_property]['extra_groups'] is defined
+
+    - name: Add extra AWS Security Groups to Chaos Monkey CloudFormation template files
+      cf_security_groups:
+        template_dir: '../../../templates/cloudformation/apps/aem/full-set/'
+        resource_name: "{{ item.resource }}"
+        resource_properties: "{{ item.resource_properties }}"
+        security_groups: "{{ security_groups[item.config_property]['extra_groups'] }}"
+      with_items:
+        - {resource: 'ChaosMonkeyLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'chaos_monkey'}
+      when: security_groups is defined and security_groups[item.config_property] is defined and security_groups[item.config_property]['extra_groups'] is defined and chaos_monkey.include_stack == 'true'
+
+    - name: Add extra AWS Security Groups to Preview component CloudFormation template files
+      cf_security_groups:
+        template_dir: '../../../templates/cloudformation/apps/aem/full-set/'
+        resource_name: "{{ item.resource }}"
+        resource_properties: "{{ item.resource_properties }}"
+        security_groups: "{{ security_groups[item.config_property]['extra_groups'] }}"
+      with_items:
+        - {resource: 'PreviewPublishDispatcherLoadBalancer', resource_properties: 'SecurityGroups', config_property: 'preview_publish_dispatcher_elb'}
+        - {resource: 'PreviewPublishLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'preview_publish'}
+        - {resource: 'PreviewPublishDispatcherLaunchTemplate', resource_properties: 'LaunchTemplateData,SecurityGroupIds', config_property: 'preview_publish_dispatcher'}
+      when: security_groups is defined and security_groups[item.config_property] is defined and security_groups[item.config_property]['extra_groups'] is defined and chaos_monkey.include_stack == 'true'
 
     - name: Add extra AWS Security Groups to Consolidated CloudFormation template files
       cf_security_groups:

@@ -28,6 +28,19 @@ publish::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.publish.live
 publish::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.hour }}"
 publish::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.minute }}"
 
+preview_publish::scheduled_jobs::enable::offline_compaction: {{ scheduled_jobs.preview_publish.offline_compaction.enable }}
+preview_publish::scheduled_jobs::weekday::offline_compaction: "{{ scheduled_jobs.preview_publish.offline_compaction.weekday }}"
+preview_publish::scheduled_jobs::hour::offline_compaction: "{{ scheduled_jobs.preview_publish.offline_compaction.hour }}"
+preview_publish::scheduled_jobs::minute::offline_compaction: "{{ scheduled_jobs.preview_publish.offline_compaction.minute }}"
+preview_publish::scheduled_jobs::enable::export: {{ scheduled_jobs.preview_publish.export.enable }}
+preview_publish::scheduled_jobs::weekday::export: "{{ scheduled_jobs.preview_publish.export.weekday }}"
+preview_publish::scheduled_jobs::hour::export: "{{ scheduled_jobs.preview_publish.export.hour }}"
+preview_publish::scheduled_jobs::minute::export: "{{ scheduled_jobs.preview_publish.export.minute }}"
+preview_publish::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.preview_publish.live_snapshot.enable }}
+preview_publish::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.preview_publish.live_snapshot.weekday }}"
+preview_publish::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.preview_publish.live_snapshot.hour }}"
+preview_publish::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.preview_publish.live_snapshot.minute }}"
+
 author_standby::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.author_standby.live_snapshot.enable }}
 author_standby::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.weekday }}"
 author_standby::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.hour }}"
@@ -50,8 +63,15 @@ publish_dispatcher::scheduled_jobs::weekday::content_health_check: "{{ scheduled
 publish_dispatcher::scheduled_jobs::hour::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.hour }}"
 publish_dispatcher::scheduled_jobs::minute::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.minute }}"
 
+preview_publish_dispatcher::scheduled_jobs::enable::content_health_check: {{ scheduled_jobs.preview_publish_dispatcher.content_health_check.enable }}
+preview_publish_dispatcher::scheduled_jobs::weekday::content_health_check: "{{ scheduled_jobs.preview_publish_dispatcher.content_health_check.weekday }}"
+preview_publish_dispatcher::scheduled_jobs::hour::content_health_check: "{{ scheduled_jobs.preview_publish_dispatcher.content_health_check.hour }}"
+preview_publish_dispatcher::scheduled_jobs::minute::content_health_check: "{{ scheduled_jobs.preview_publish_dispatcher.content_health_check.minute }}"
+
 publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
+
+preview_publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
 
 author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 
@@ -70,7 +90,9 @@ chaos_monkey::asg_max_terminations_per_day: '{{ chaos_monkey.termination_setting
 chaos_monkey::orchestrator_enable_random_termination: {{ orchestrator.enable_random_termination }}
 chaos_monkey::chaos_monkey_enable_random_termination: {{ chaos_monkey.enable_random_termination }}
 chaos_monkey::publish_enable_random_termination: {{ publish.enable_random_termination }}
+chaos_monkey::preview_publish_enable_random_termination: {{ preview_publish.enable_random_termination }}
 chaos_monkey::publish_dispatcher_enable_random_termination: {{ publish_dispatcher.enable_random_termination }}
+chaos_monkey::preview_publish_dispatcher_enable_random_termination: {{ preview_publish_dispatcher.enable_random_termination }}
 chaos_monkey::author_dispatcher_enable_random_termination: {{ author_dispatcher.enable_random_termination }}
 chaos_monkey::include_stack: {{ chaos_monkey.include_stack }}
 
@@ -122,15 +144,27 @@ aem_curator::config_publish::aem_password_reset_version: {{ library.aem_password
 aem_curator::config_publish::enable_crxde: {{ aem.enable_crxde }}
 aem_curator::config_publish::enable_default_passwords: {{ aem.enable_default_passwords }}
 {% if aem.publish.run_modes is defined and (aem.publish.run_modes | length > 0)  %}
-aem_curator::config_publish::aem_runmodes:
+publish::aem_runmodes:
 {% for run_mode in aem.publish.run_modes %}
 - {{ run_mode }}
 {% endfor %}
 {% endif %}
 
-aem_curator::config_publish::jvm_mem_opts: {{ aem.publish.jvm_mem_opts }}
-aem_curator::config_publish::jmxremote_port: {{ aem.publish.jmxremote.port }}
-aem_curator::config_publish::jvm_opts: {{ aem.publish.jvm_opts }}
+{% if aem.preview_publish.run_modes is defined and (aem.preview_publish.run_modes | length > 0)  %}
+preview_publish::aem_runmodes:
+{% for run_mode in aem.preview_publish.run_modes %}
+- {{ run_mode }}
+{% endfor %}
+{% endif %}
+
+publish::jvm_mem_opts: {{ aem.publish.jvm_mem_opts }}
+publish::jmxremote_port: {{ aem.publish.jmxremote.port }}
+publish::jvm_opts: {{ aem.publish.jvm_opts }}
+
+preview_publish::jvm_mem_opts: {{ aem.preview_publish.jvm_mem_opts }}
+preview_publish::jmxremote_port: {{ aem.preview_publish.jmxremote.port }}
+preview_publish::jvm_opts: {{ aem.preview_publish.jvm_opts }}
+
 aem_curator::config_publish::publish_timeout: {{ aem.client_timeout }}
 
 aem_curator::config_aem_tools::oak_run_version: '{{ library.oak_run_version }}'
@@ -188,6 +222,8 @@ author::aem_system_users:
 {{ system_users.author | to_nice_yaml | indent(width=2, first=True) }}
 publish::aem_system_users:
 {{ system_users.publish | to_nice_yaml | indent(width=2, first=True) }}
+preview_publish::aem_system_users:
+{{ system_users.preview_publish | to_nice_yaml | indent(width=2, first=True) }}
 
 # Logrotation configuration. For configuration parameters see https://github.com/voxpupuli/puppet-logrotate
 common::logrotation::config:
@@ -202,10 +238,14 @@ author_standby::logrotation:
 {{ logrotation.author_standby | to_nice_yaml | indent(width=2, first=True) }}
 publish::logrotation:
 {{ logrotation.publish | to_nice_yaml | indent(width=2, first=True) }}
+preview_publish::logrotation:
+{{ logrotation.preview_publish | to_nice_yaml | indent(width=2, first=True) }}
 author_dispatcher::logrotation:
 {{ logrotation.author_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
 publish_dispatcher::logrotation:
 {{ logrotation.publish_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
+preview_publish_dispatcher::logrotation:
+{{ logrotation.preview_publish_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
 aem_orchestrator::logrotation:
 {{ logrotation.orchestrator | to_nice_yaml | indent(width=2, first=True) }}
 simianarmy::logrotation:
