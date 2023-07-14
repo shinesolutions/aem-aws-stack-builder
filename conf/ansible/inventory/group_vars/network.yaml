@@ -17,6 +17,17 @@ network:
       cidr_block: overwrite-me
       tag_name: AEM Publish Dispatcher ELB Subnet C
 
+  preview_publish_dispatcher_elb:
+    ap-southeast-2a:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Dispatcher ELB Subnet A
+    ap-southeast-2b:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Dispatcher ELB Subnet B
+    ap-southeast-2c:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Dispatcher ELB Subnet C
+
   publish_dispatcher:
     ap-southeast-2a:
       cidr_block: overwrite-me
@@ -28,6 +39,17 @@ network:
       cidr_block: overwrite-me
       tag_name: AEM Publish Dispatcher Subnet C
 
+  preview_publish_dispatcher:
+    ap-southeast-2a:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Dispatcher Subnet A
+    ap-southeast-2b:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Dispatcher Subnet B
+    ap-southeast-2c:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Dispatcher Subnet C
+
   publish:
     ap-southeast-2a:
       cidr_block: overwrite-me
@@ -38,6 +60,17 @@ network:
     ap-southeast-2c:
       cidr_block: overwrite-me
       tag_name: AEM Publish Subnet C
+
+  preview_publish:
+    ap-southeast-2a:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Subnet A
+    ap-southeast-2b:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Subnet B
+    ap-southeast-2c:
+      cidr_block: overwrite-me
+      tag_name: AEM Preview Publish Subnet C
 
   author:
     ap-southeast-2a:
@@ -100,6 +133,9 @@ network_exports:
   PublishDispatcherELBSubnetList: subnet-12345678,subnet-87654321
   PublishDispatcherSubnetList: subnet-12345678,subnet-87654321
   PublishSubnetList: subnet-12345678,subnet-87654321
+  PreviewPublishDispatcherELBSubnetList: overwrite-me
+  PreviewPublishDispatcherSubnetList: overwrite-me
+  PreviewPublishSubnetList: overwrite-me
   AuthorPrimarySubnet: subnet-12345678
   AuthorStandbySubnet: subnet-87654321
   AuthorELBSubnetList: subnet-12345678,subnet-87654321

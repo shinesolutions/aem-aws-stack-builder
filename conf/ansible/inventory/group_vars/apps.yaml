@@ -508,9 +508,9 @@ stack_manager:
     https_endpoint: overwrite-me
 
   publish:
-    asg_min_size: {{ publish.asg_min_size}}
+    asg_min_size: "{{ publish.asg_min_size}}"
   preview_publish:
-    asg_min_size: {{ preview_publish.asg_min_size}}
+    asg_min_size: "{{ preview_publish.asg_min_size}}"
 
   preview_publish:
     asg_min_size: 2
