@@ -258,16 +258,17 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherELBSubnetList
     Value:
-      - ','
-      - - Ref: PreviewPublishDispatcherELBSubnetA
-        - Fn::If:
-            - CreatePreviewPublishDispatcherELBSubnetB
-            - Ref: PreviewPublishDispatcherELBSubnetB
-            - Ref: AWS::NoValue
-        - Fn::If:
-            - CreatePreviewPublishDispatcherELBSubnetC
-            - Ref: PreviewPublishDispatcherELBSubnetC
-            - Ref: AWS::NoValue
+      Fn::Join:
+        - ','
+        - - Ref: PreviewPublishDispatcherELBSubnetA
+          - Fn::If:
+              - CreatePreviewPublishDispatcherELBSubnetB
+              - Ref: PreviewPublishDispatcherELBSubnetB
+              - Ref: AWS::NoValue
+          - Fn::If:
+              - CreatePreviewPublishDispatcherELBSubnetC
+              - Ref: PreviewPublishDispatcherELBSubnetC
+              - Ref: AWS::NoValue
   PreviewPublishDispatcherSubnetA:
     Condition: CreatePreviewPublishDispatcherSubnetA
     Description: The Preview Publish Dispatcher Subnet in Availability Zone A
@@ -299,18 +300,19 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherSubnetList
     Value:
-      - ','
-      - - Ref: PreviewPublishDispatcherSubnetA
-        - Fn::If:
-            - CreatePreviewPublishDispatcherSubnetB
-            - Ref: PreviewPublishDispatcherSubnetB
-            - Ref: AWS::NoValue
-        - Fn::If:
-            - CreatePreviewPublishDispatcherSubnetC
-            - Ref: PreviewPublishDispatcherSubnetC
-            - Ref: AWS::NoValue
+      Fn::Join:
+        - ','
+        - - Ref: PreviewPublishDispatcherSubnetA
+          - Fn::If:
+              - CreatePreviewPublishDispatcherSubnetB
+              - Ref: PreviewPublishDispatcherSubnetB
+              - Ref: AWS::NoValue
+          - Fn::If:
+              - CreatePreviewPublishDispatcherSubnetC
+              - Ref: PreviewPublishDispatcherSubnetC
+              - Ref: AWS::NoValue
   PreviewPublishSubnetA:
-    Condition:
+    Condition: CreatePreviewPublishSubnetA
     Description: The Preview Publish Subnet in Availability Zone A
     Export:
       Name:
@@ -318,7 +320,7 @@ Outputs:
     Value:
       Ref: PreviewPublishSubnetA
   PreviewPublishSubnetB:
-    Condition:
+    Condition: CreatePreviewPublishSubnetB
     Description: The Preview Publish Subnet in Availability Zone B
     Export:
       Name:
@@ -326,7 +328,7 @@ Outputs:
     Value:
       Ref: PreviewPublishSubnetB
   PreviewPublishSubnetC:
-    Condition:
+    Condition: CreatePreviewPublishSubnetC
     Description: The Preview Publish Subnet in Availability Zone C
     Export:
       Name:
@@ -334,22 +336,23 @@ Outputs:
     Value:
       Ref: PreviewPublishSubnetC
   PreviewPublishSubnetList:
-    Condition:
+    Condition: CreatePreviewPublishSubnetA
     Description: The Preview Publish Subnet List
     Export:
       Name:
         Fn::Sub: ${StackPrefix}-PreviewPublishSubnetList
     Value:
-      - ','
-      - - Ref: PreviewPublishSubnetA
-        - Fn::If:
-            - CreatePreviewPublishSubnetB
-            - Ref: PreviewPublishSubnetB
-            - Ref: AWS::NoValue
-        - Fn::If:
-            - CreatePreviewPublishSubnetC
-            - Ref: PreviewPublishSubnetC
-            - Ref: AWS::NoValue
+      Fn::Join:
+        - ','
+        - - Ref: PreviewPublishSubnetA
+          - Fn::If:
+              - CreatePreviewPublishSubnetB
+              - Ref: PreviewPublishSubnetB
+              - Ref: AWS::NoValue
+          - Fn::If:
+              - CreatePreviewPublishSubnetC
+              - Ref: PreviewPublishSubnetC
+              - Ref: AWS::NoValue
   ToolSubnetA:
     Description: The Tool Subnet in Availability Zone A
     Export:

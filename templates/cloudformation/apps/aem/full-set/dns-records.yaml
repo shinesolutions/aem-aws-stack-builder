@@ -16,9 +16,6 @@ Parameters:
   MainStackPrefixParameter:
     Description: The AEM Stack Compute Resources Stack Prefix
     Type: String
-  PreviewPublishDispatcherDNSRecordSetNameParameter:
-    Description: PreviewPublishDispatcher DNS Record Set Name
-    Type: String
   PreviewPublishDispatcherLoadBalancerDNSName:
     Default: overwrite-me
     Description: PreviewPublishDispatcher LoadBalancer DNS Name
@@ -78,18 +75,6 @@ Resources:
       ResourceRecords:
       - Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherLoadBalancerDNSName
-      TTL: 300
-      Type: CNAME
-    Type: AWS::Route53::RecordSet
-  PreviewPublishDispatcherRoute53RecordSet:
-    Properties:
-      HostedZoneName:
-        Ref: Route53HostedZoneNameParameter
-      Name:
-        Fn::Sub: ${PreviewPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
-      ResourceRecords:
-      - Fn::ImportValue:
-          Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
     Type: AWS::Route53::RecordSet

@@ -144,9 +144,6 @@ Parameters:
     Description: The ASG CPU scaling parameters that extra Preview Publish Dispatcher instances
       are scaled up/down at
     Type: List<Number>
-  PreviewPublishDispatcherDNSRecordSetNameParameter:
-    Description: PreviewPublishDispatcher DNS Record Set Name
-    Type: String
   PreviewPublishDispatcherImageParameter:
     Description: The Preview Publish Dispatcher Image Id
     Type: String

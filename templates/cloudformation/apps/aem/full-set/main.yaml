@@ -357,10 +357,8 @@ Resources:
     DependsOn:
     - AuthorStack
     - PublishStack
-    - PreviewPublishStack
     - AuthorDispatcherStack
     - PublishDispatcherStack
-    - PreviewPublishDispatcherStack
     - OrchestratorStack
     Properties:
       Parameters:
@@ -416,7 +414,6 @@ Resources:
     - AuthorDispatcherStack
     - AuthorStack
     - PublishDispatcherStack
-    - PreviewPublishDispatcherStack
     Properties:
       Parameters:
         AuthorDNSRecordSetNameParameter:
@@ -800,10 +797,8 @@ Resources:
     DependsOn:
     - AuthorStack
     - PublishStack
-    - PreviewPublishStack
     - AuthorDispatcherStack
     - PublishDispatcherStack
-    - PreviewPublishDispatcherStack
     - OrchestratorStack
     - ChaosMonkeyStack
     Properties:
