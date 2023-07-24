@@ -13,10 +13,10 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherAutoScalingGroup
     Value:
       Ref: PreviewPublishDispatcherAutoScalingGroup
-  PreviewPublishDispatcherLaunchConfiguration:
+  PreviewPublishDispatcherLaunchTemplate:
     Description: The Preview Publish Dispatcher Launch Configuration
     Value:
-      Ref: PreviewPublishDispatcherLaunchConfiguration
+      Ref: PreviewPublishDispatcherLaunchTemplate
   PreviewPublishDispatcherLoadBalancer:
     Description: The Preview Publish Dispatcher Load Balancer
     Export:
@@ -73,7 +73,7 @@ Parameters:
       are scaled up/down at
     Type: CommaDelimitedList
   PreviewPublishDispatcherDataVolSizeParameter:
-    Description: PreviewPublishDispatcher Instances Root EBS Volume Size
+    Description: Preview Publish Dispatcher Instances Root EBS Volume Size
     Type: Number
   PreviewPublishDispatcherEnableVolEncryptionParameter:
     AllowedValues:
@@ -140,8 +140,13 @@ Resources:
           - 3
           - Ref: PreviewPublishDispatcherASGConfigurationParameters
       HealthCheckType: ELB
-      LaunchConfigurationName:
-        Ref: PreviewPublishDispatcherLaunchConfiguration
+      LaunchTemplate:
+        Version:
+          Fn::GetAtt:
+          - PreviewPublishDispatcherLaunchTemplate
+          - LatestVersionNumber
+        LaunchTemplateId:
+          Ref: PreviewPublishDispatcherLaunchTemplate
       TargetGroupARNs:
         - Ref: PreviewPublishDispatcherLoadBalancerTargetGroup
       MaxSize:
@@ -182,7 +187,7 @@ Resources:
           Ref: MainStackPrefixParameter
       - Key: Component
         PropagateAtLaunch: true
-        Value: publish-dispatcher
+        Value: preview-publish-dispatcher
       - Key: ApplicationDescriptorUrl
         PropagateAtLaunch: true
         Value: PLACEHOLDER
@@ -300,57 +305,78 @@ Resources:
       Statistic: Average
       Threshold: 1
     Type: AWS::CloudWatch::Alarm
-  PreviewPublishDispatcherLaunchConfiguration:
+  PreviewPublishDispatcherLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
     Properties:
-      AssociatePublicIpAddress: false
-      BlockDeviceMappings:
-      - DeviceName:
-          Ref: PreviewPublishDispatcherImageRootDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: PreviewPublishDispatcherEnableVolEncryptionParameter
-          VolumeSize:
-            Ref: PreviewPublishDispatcherRootVolSizeParameter
-          VolumeType: gp2
-      - DeviceName:
-          Ref: PreviewPublishDispatcherImageDataDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: PreviewPublishDispatcherEnableVolEncryptionParameter
-          SnapshotId:
-            Fn::If:
-            - UsePreviewPublishDispatcherDataVolSnapshotCondition
-            - Ref: PreviewPublishDispatcherDataVolSnapshotParameter
-            - Ref: AWS::NoValue
-          VolumeSize:
-            Ref: PreviewPublishDispatcherDataVolSizeParameter
-          VolumeType: gp2
-      IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherInstanceProfile
-      ImageId:
-        Ref: PreviewPublishDispatcherImageParameter
-      InstanceMonitoring: false
-      InstanceType:
-        Ref: PreviewPublishDispatcherInstanceTypeParameter
-      KeyName:
-        Ref: ComputeKeyPairNameParameter
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherSecurityGroup
-      UserData:
-        Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
-            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
-            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} publish-dispatcher\
-            \ ${AemAwsStackProvisionerVersionParameter}\n"
-    Type: AWS::AutoScaling::LaunchConfiguration
+      LaunchTemplateData:
+        BlockDeviceMappings:
+        - DeviceName:
+            Ref: PreviewPublishDispatcherImageRootDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishDispatcherEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: PreviewPublishDispatcherRootVolSizeParameter
+            VolumeType: gp2
+        - DeviceName:
+            Ref: PreviewPublishDispatcherImageDataDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishDispatcherEnableVolEncryptionParameter
+            SnapshotId:
+              Fn::If:
+              - UsePreviewPublishDispatcherDataVolSnapshotCondition
+              - Ref: PreviewPublishDispatcherDataVolSnapshotParameter
+              - Ref: AWS::NoValue
+            VolumeSize:
+              Ref: PreviewPublishDispatcherDataVolSizeParameter
+            VolumeType: gp2
+        IamInstanceProfile:
+          Name:
+            Fn::ImportValue:
+              Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherInstanceProfile
+        ImageId:
+          Ref: PreviewPublishDispatcherImageParameter
+        Monitoring:
+          Enabled: false
+        InstanceType:
+          Ref: PreviewPublishDispatcherInstanceTypeParameter
+        KeyName:
+          Ref: ComputeKeyPairNameParameter
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherSecurityGroup
+        UserData:
+          Fn::Base64:
+            Fn::Sub: |
+              #cloud-config
+              repo_upgrade: false
+              repo_upgrade: false
+              package_update: false
+              package_upgrade: false
+
+              runcmd:
+              - set -x
+              - export AWS_DEFAULT_REGION=${AWS::Region}
+              - export no_proxy=${NoProxyParameter}
+              - export http_proxy=${HttpProxyParameter}
+              - export https_proxy=${HttpsProxyParameter}
+              - source /etc/profile
+              - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
+              - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+              - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} preview-publish-dispatcher ${AemAwsStackProvisionerVersionParameter}
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+          - Key: Name
+            Value: AEM Preview Publish-Dispatcher Launch Template
+          - Key: StackPrefix
+            Value:
+              Ref: MainStackPrefixParameter
   PreviewPublishDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -371,8 +397,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   PreviewPublishDispatcherLoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -398,8 +422,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   PreviewPublishDispatcherLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:

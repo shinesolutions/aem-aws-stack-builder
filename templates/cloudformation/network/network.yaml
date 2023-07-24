@@ -2,54 +2,54 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
   CreatePreviewPublishDispatcherELBSubnetA:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishDispatcherELBSubnetACidrBlockParameter
           - 'overwrite-me'
 
   CreatePreviewPublishDispatcherELBSubnetB:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishDispatcherELBSubnetBCidrBlockParameter
           - 'overwrite-me'
 
   CreatePreviewPublishDispatcherELBSubnetC:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishDispatcherELBSubnetCCidrBlockParameter
           - 'overwrite-me'
   CreatePreviewPublishDispatcherSubnetA:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishDispatcherSubnetACidrBlockParameter
           - 'overwrite-me'
 
   CreatePreviewPublishDispatcherSubnetB:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishDispatcherSubnetBCidrBlockParameter
           - 'overwrite-me'
 
   CreatePreviewPublishDispatcherSubnetC:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishDispatcherSubnetCCidrBlockParameter
           - 'overwrite-me'
   CreatePreviewPublishSubnetA:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishSubnetACidrBlockParameter
           - 'overwrite-me'
 
   CreatePreviewPublishSubnetB:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishSubnetBCidrBlockParameter
           - 'overwrite-me'
 
   CreatePreviewPublishSubnetC:
-      Fn::Not:
-        - Fn::Equals:
+    Fn::Not:
+      - Fn::Equals:
           - Ref: PreviewPublishSubnetCCidrBlockParameter
           - 'overwrite-me'
   UseS3EndPoint:
@@ -258,13 +258,13 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherELBSubnetList
     Value:
-        - ','
-        - - Ref: PreviewPublishDispatcherELBSubnetA
-          - Fn::If:
+      - ','
+      - - Ref: PreviewPublishDispatcherELBSubnetA
+        - Fn::If:
             - CreatePreviewPublishDispatcherELBSubnetB
             - Ref: PreviewPublishDispatcherELBSubnetB
             - Ref: AWS::NoValue
-          - Fn::If:
+        - Fn::If:
             - CreatePreviewPublishDispatcherELBSubnetC
             - Ref: PreviewPublishDispatcherELBSubnetC
             - Ref: AWS::NoValue
@@ -299,13 +299,13 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherSubnetList
     Value:
-        - ','
-        - - Ref: PreviewPublishDispatcherSubnetA
-          - Fn::If:
+      - ','
+      - - Ref: PreviewPublishDispatcherSubnetA
+        - Fn::If:
             - CreatePreviewPublishDispatcherSubnetB
             - Ref: PreviewPublishDispatcherSubnetB
             - Ref: AWS::NoValue
-          - Fn::If:
+        - Fn::If:
             - CreatePreviewPublishDispatcherSubnetC
             - Ref: PreviewPublishDispatcherSubnetC
             - Ref: AWS::NoValue
@@ -340,13 +340,13 @@ Outputs:
       Name:
         Fn::Sub: ${StackPrefix}-PreviewPublishSubnetList
     Value:
-        - ','
-        - - Ref: PreviewPublishSubnetA
-          - Fn::If:
+      - ','
+      - - Ref: PreviewPublishSubnetA
+        - Fn::If:
             - CreatePreviewPublishSubnetB
             - Ref: PreviewPublishSubnetB
             - Ref: AWS::NoValue
-          - Fn::If:
+        - Fn::If:
             - CreatePreviewPublishSubnetC
             - Ref: PreviewPublishSubnetC
             - Ref: AWS::NoValue

@@ -13,7 +13,7 @@ from cfyaml import yaml
 
 def read_template(file_name):
     with open(file_name, "r") as f:
-        template = yaml.load(f)
+        template = yaml.full_load(f)
     return template
 
 
@@ -25,7 +25,7 @@ def write_template(file_name, template):
 
 def read_configuration():
     with open(configuration_file, "r") as f:
-        configuration = yaml.load(f)
+        configuration = yaml.full_load(f)
     return configuration
 
 

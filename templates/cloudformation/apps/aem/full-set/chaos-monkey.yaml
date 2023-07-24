@@ -59,6 +59,14 @@ Parameters:
   HttpsProxyParameter:
     Description: https_proxy parameter
     Type: String
+  PreviewPublisherASG:
+    Description: The Preview Publish Auto Scaling Group
+    Type: String
+    Default: ''
+  PreviewPublisherDispatcherASG:
+    Description: The Preview Publish Dispatcher Auto Scaling Group
+    Type: String
+    Default: ''
   NoProxyParameter:
     Description: no_proxy parameter
     Type: String
@@ -115,6 +123,10 @@ Resources:
         Value:
           Fn::ImportValue:
             Fn::Sub: ${MainStackPrefixParameter}-PublishAutoScalingGroup
+      - Key: PreviewPublisherASG
+        PropagateAtLaunch: true
+        Value:
+          Ref: PreviewPublisherASG
       - Key: PublisherDispatcherASG
         PropagateAtLaunch: true
         Value:
@@ -123,8 +135,7 @@ Resources:
       - Key: PreviewPublisherDispatcherASG
         PropagateAtLaunch: true
         Value:
-          Fn::ImportValue:
-            Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherAutoScalingGroup
+          Ref: PreviewPublisherDispatcherASG
       - Key: AuthorDispatcherASG
         PropagateAtLaunch: true
         Value:

@@ -1,4 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  CreatePreviewStackCondition:
+    Fn::Not:
+    - Fn::Equals:
+      - Ref: PreviewPublishDispatcherLoadBalancerDNSName
+      - overwrite-me
 Description: Create DNS Record Set in Route53 for AEM App Stacks
 Parameters:
   AuthorDNSRecordSetNameParameter:
@@ -9,6 +15,13 @@ Parameters:
     Type: String
   MainStackPrefixParameter:
     Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  PreviewPublishDispatcherDNSRecordSetNameParameter:
+    Description: PreviewPublishDispatcher DNS Record Set Name
+    Type: String
+  PreviewPublishDispatcherLoadBalancerDNSName:
+    Default: overwrite-me
+    Description: PreviewPublishDispatcher LoadBalancer DNS Name
     Type: String
   PublishDispatcherDNSRecordSetNameParameter:
     Description: PublishDispatcher DNS Record Set Name
@@ -41,6 +54,18 @@ Resources:
       ResourceRecords:
       - Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-AuthorLoadBalancerDNSName
+      TTL: 300
+      Type: CNAME
+    Type: AWS::Route53::RecordSet
+  PreviewPublishDispatcherRoute53RecordSet:
+    Condition: CreatePreviewStackCondition
+    Properties:
+      HostedZoneName:
+        Ref: Route53HostedZoneNameParameter
+      Name:
+        Fn::Sub: ${PreviewPublishDispatcherDNSRecordSetNameParameter}.${Route53HostedZoneNameParameter}
+      ResourceRecords:
+      - Ref: PreviewPublishDispatcherLoadBalancerDNSName
       TTL: 300
       Type: CNAME
     Type: AWS::Route53::RecordSet

@@ -12,6 +12,10 @@ Conditions:
     - Fn::Equals:
         - Ref: ChaosMonkeyIncludeStack
         - 'true'
+  CreatePreviewStackCondition:
+    Fn::Equals:
+    - Ref: PreviewIncludeStack
+    - 'true'
 Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -75,7 +79,7 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
   ChaosMonkeyImageParameter:
     Description: The Chaos Monkey Image Id
-    Type: AWS::EC2::Image::Id
+    Type: String
   ChaosMonkeyInstanceTypeParameter:
     Default: ''
     Description: The Chaos Monkey Instance Type
@@ -173,7 +177,7 @@ Parameters:
     Type: String
   PreviewPublishDispatcherImageParameter:
     Description: The Preview Publish Dispatcher Image Id
-    Type: AWS::EC2::Image::Id
+    Type: String
   PreviewPublishDispatcherInstanceTypeParameter:
     Description: The Preview Publish Dispatcher Instance Type
     Type: String
@@ -196,9 +200,14 @@ Parameters:
   PublishVolParameter:
     Description: Comma seperated list of Publish Instances Volume parameters
     Type: List<String>
+
+  PreviewIncludeStack:
+    Default: 'false'
+    Description: Creates the Preview stack or not
+    Type: String
   PreviewPublishImageParameter:
     Description: The Preview Publish Image Id
-    Type: AWS::EC2::Image::Id
+    Type: String
   PreviewPublishInstanceTypeParameter:
     Description: The Preview Publish Instance Type
     Type: String
@@ -383,6 +392,16 @@ Resources:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
+        PreviewPublisherASG:
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Fn::GetAtt: PreviewPublishStack.Outputs.PreviewPublishAutoScalingGroup
+            - Ref: AWS::NoValue
+        PreviewPublisherDispatcherASG:
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Fn::GetAtt: PreviewPublishDispatcherStack.Outputs.PreviewPublishDispatcherAutoScalingGroup
+            - Ref: AWS::NoValue
         HttpProxyParameter:
           Ref: HttpProxyParameter
         HttpsProxyParameter:
@@ -410,6 +429,11 @@ Resources:
           Ref: PublishDispatcherDNSRecordSetNameParameter
         PreviewPublishDispatcherDNSRecordSetNameParameter:
           Ref: PreviewPublishDispatcherDNSRecordSetNameParameter
+        PreviewPublishDispatcherLoadBalancerDNSName:
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Fn::GetAtt: PreviewPublishDispatcherStack.Outputs.PreviewPublishDispatcherLoadBalancerDNSName
+            - Ref: AWS::NoValue
         Route53HostedZoneNameParameter:
           Ref: Route53HostedZoneNameParameter
       TemplateURL:
@@ -477,15 +501,21 @@ Resources:
               - /
               - Ref: PublishDispatcherStack
         PreviewPublishDispatcherStackName:
-          Fn::Select:
-            - 1
-            - Fn::Split:
-              - /
-              - Ref: PreviewPublishDispatcherStack
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Fn::Select:
+              - 1
+              - Fn::Split:
+                - /
+                - Ref: PreviewPublishDispatcherStack
+            - Ref: AWS::NoValue
         PublishStackArn:
           Ref: PublishStack
         PreviewPublishStackArn:
-          Ref: PreviewPublishStack
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Ref: PreviewPublishStack
+            - Ref: AWS::NoValue
         HttpProxyParameter:
           Ref: HttpProxyParameter
         HttpsProxyParameter:
@@ -568,6 +598,7 @@ Resources:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish-dispatcher.yaml
     Type: AWS::CloudFormation::Stack
   PreviewPublishDispatcherStack:
+    Condition: CreatePreviewStackCondition
     Properties:
       Parameters:
         AemAwsStackProvisionerVersionParameter:
@@ -702,6 +733,7 @@ Resources:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish.yaml
     Type: AWS::CloudFormation::Stack
   PreviewPublishStack:
+    Condition: CreatePreviewStackCondition
     Properties:
       Parameters:
         AemAwsStackProvisionerVersionParameter:

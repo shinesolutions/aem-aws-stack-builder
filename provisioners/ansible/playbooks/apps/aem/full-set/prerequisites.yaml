@@ -167,7 +167,7 @@
               - CreateGrant
       with_items:
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
-      when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me' and chaos_monkey.include_stack == 'true'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me' and chaos_monkey.include_stack == true
       tags:
         - create
 
@@ -189,7 +189,7 @@
       with_items:
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
-      when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me' and preview_publish.include_stack == 'true'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.ebs_volume.enable and aws.encryption.ebs_volume.kms_key_id != 'overwrite-me' and aws.encryption.ebs_volume.managed_policy_arn == 'overwrite-me' and preview_publish.include_stack == true
       tags:
         - create
 
@@ -278,7 +278,7 @@
               - CreateGrant
       with_items:
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
-      when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me' and chaos_monkey.include_stack == 'true'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me' and chaos_monkey.include_stack == true
       tags:
         - create
 
@@ -300,7 +300,7 @@
       with_items:
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
         - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
-      when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me' and preview_publish.include_stack == 'true'
+      when: permission_type == "b" and stack_found is defined and aws.encryption.s3.kms_key_id != 'overwrite-me' and aws.encryption.s3.managed_policy_arn == 'overwrite-me' and preview_publish.include_stack == true
       tags:
         - create
 

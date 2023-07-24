@@ -13,10 +13,10 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishAutoScalingGroup
     Value:
       Ref: PreviewPublishAutoScalingGroup
-  PreviewPublishLaunchConfiguration:
-    Description: The Preview Publish Launch Configuration
+  PreviewPublishLaunchTemplate:
+    Description: The Preview Publish Launch Template
     Value:
-      Ref: PreviewPublishLaunchConfiguration
+      Ref: PreviewPublishLaunchTemplate
 Parameters:
   AemAwsStackProvisionerVersionParameter:
     Description: AEM AWS Stack Provisioner version number
@@ -75,7 +75,7 @@ Parameters:
     AllowedValues:
     - true
     - false
-    Description: Wheather to use the PreviewPublish Snapshot Data Volume.
+    Description: Wheather to use the Preview Publish Snapshot Data Volume.
     Type: String
   HttpProxyParameter:
     Description: http_proxy parameter
@@ -104,8 +104,13 @@ Resources:
           - 3
           - Ref: PreviewPublishASGConfigurationParameters
       HealthCheckType: EC2
-      LaunchConfigurationName:
-        Ref: PreviewPublishLaunchConfiguration
+      LaunchTemplate:
+        Version:
+          Fn::GetAtt:
+          - PreviewPublishLaunchTemplate
+          - LatestVersionNumber
+        LaunchTemplateId:
+          Ref: PreviewPublishLaunchTemplate
       MaxSize:
         Fn::Select:
           - 0
@@ -144,64 +149,85 @@ Resources:
           Ref: MainStackPrefixParameter
       - Key: Component
         PropagateAtLaunch: true
-        Value: publish
+        Value: preview-publish
       VPCZoneIdentifier:
         Fn::Split:
         - ','
         - Fn::ImportValue:
             Fn::Sub: ${NetworkStackPrefixParameter}-PreviewPublishSubnetList
     Type: AWS::AutoScaling::AutoScalingGroup
-  PreviewPublishLaunchConfiguration:
+  PreviewPublishLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
     Properties:
-      AssociatePublicIpAddress: false
-      BlockDeviceMappings:
-      - DeviceName:
-          Ref: PreviewPublishImageRootDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: PreviewPublishEnableVolEncryptionParameter
-          VolumeSize:
-            Ref: PreviewPublishRootVolSizeParameter
-          VolumeType: gp2
-      - DeviceName:
-          Ref: PreviewPublishImageDataDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: PreviewPublishEnableVolEncryptionParameter
-          SnapshotId:
-            Fn::If:
-            - UsePreviewPublishDataVolSnapshotCondition
-            - Ref: PreviewPublishDataVolSnapshotParameter
-            - Ref: AWS::NoValue
-          VolumeSize:
-            Ref: PreviewPublishDataVolSizeParameter
-          VolumeType: gp2
-      IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishInstanceProfile
-      ImageId:
-        Ref: PreviewPublishImageParameter
-      InstanceMonitoring: false
-      InstanceType:
-        Ref: PreviewPublishInstanceTypeParameter
-      KeyName:
-        Ref: ComputeKeyPairNameParameter
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishSecurityGroup
-      UserData:
-        Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
-            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
-            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} publish ${AemAwsStackProvisionerVersionParameter}\n"
-    Type: AWS::AutoScaling::LaunchConfiguration
+      LaunchTemplateData:
+        BlockDeviceMappings:
+        - DeviceName:
+            Ref: PreviewPublishImageRootDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: PreviewPublishRootVolSizeParameter
+            VolumeType: gp2
+        - DeviceName:
+            Ref: PreviewPublishImageDataDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishEnableVolEncryptionParameter
+            SnapshotId:
+              Fn::If:
+              - UsePreviewPublishDataVolSnapshotCondition
+              - Ref: PreviewPublishDataVolSnapshotParameter
+              - Ref: AWS::NoValue
+            VolumeSize:
+              Ref: PreviewPublishDataVolSizeParameter
+            VolumeType: gp2
+        IamInstanceProfile:
+          Name:
+            Fn::ImportValue:
+              Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishInstanceProfile
+        ImageId:
+          Ref: PreviewPublishImageParameter
+        Monitoring:
+          Enabled: false
+        InstanceType:
+          Ref: PreviewPublishInstanceTypeParameter
+        KeyName:
+          Ref: ComputeKeyPairNameParameter
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishSecurityGroup
+        UserData:
+          Fn::Base64:
+            Fn::Sub: |
+              #cloud-config
+              repo_upgrade: false
+              repo_upgrade: false
+              package_update: false
+              package_upgrade: false
 
+              runcmd:
+              - set -x
+              - export AWS_DEFAULT_REGION=${AWS::Region}
+              - export no_proxy=${NoProxyParameter}
+              - export http_proxy=${HttpProxyParameter}
+              - export https_proxy=${HttpsProxyParameter}
+              - source /etc/profile
+              - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
+              - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+              - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} preview-publish ${AemAwsStackProvisionerVersionParameter}
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+          - Key: Name
+            Value: AEM PreviewPublish Launch Template
+          - Key: StackPrefix
+            Value:
+              Ref: MainStackPrefixParameter
   WarningPreviewPublishMemoryHighAlarm:
     Properties:
       ActionsEnabled: true

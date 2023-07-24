@@ -3,33 +3,33 @@ Conditions:
   CreatePreviewPublishDispatcherELBSubnetList:
     Fn::Or:
       - Fn::Not:
-        - Fn::Equals:
-          - Ref: PreviewPublishDispatcherELBSubnetList
-          - ''
+          - Fn::Equals:
+              - Ref: PreviewPublishDispatcherELBSubnetList
+              - ''
       - Fn::Not:
-        - Fn::Equals:
-          - Ref: PreviewPublishDispatcherELBSubnetList
-          - 'overwrite-me'
+          - Fn::Equals:
+              - Ref: PreviewPublishDispatcherELBSubnetList
+              - 'overwrite-me'
   CreatePreviewPublishDispatcherSubnetList:
     Fn::Or:
       - Fn::Not:
-        - Fn::Equals:
-          - Ref: PreviewPublishDispatcherSubnetList
-          - ''
+          - Fn::Equals:
+              - Ref: PreviewPublishDispatcherSubnetList
+              - ''
       - Fn::Not:
-        - Fn::Equals:
-          - Ref: PreviewPublishDispatcherSubnetList
-          - 'overwrite-me'
+          - Fn::Equals:
+              - Ref: PreviewPublishDispatcherSubnetList
+              - 'overwrite-me'
   CreatePreviewPublishSubnetList:
     Fn::Or:
       - Fn::Not:
-        - Fn::Equals:
-          - Ref: PreviewPublishSubnetList
-          - ''
+          - Fn::Equals:
+              - Ref: PreviewPublishSubnetList
+              - ''
       - Fn::Not:
-        - Fn::Equals:
-          - Ref: PreviewPublishSubnetList
-          - 'overwrite-me'
+          - Fn::Equals:
+              - Ref: PreviewPublishSubnetList
+              - 'overwrite-me'
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Export Network Resources to Make It Available for Other Stacks
 Outputs:
