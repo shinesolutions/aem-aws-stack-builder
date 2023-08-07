@@ -68,6 +68,10 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
+  ChaosMonkeyIncludeStack:
+    Default: 'true'
+    Description: Creates the ChaosMonkey stack resources or not
+    Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
     Type: String
@@ -79,6 +83,13 @@ Parameters:
     Type: String
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
+  PreviewIncludeStack:
+    Default: 'false'
+    Description: Creates the Preview stack resources or not
+    Type: String
+  PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Preview Publish Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
   SSLCertificateARNParameter:
     Description: SSL Certificate ARN
@@ -94,6 +105,10 @@ Resources:
           Fn::Join:
           - ','
           - Ref: AWSEncryptionParameters
+        ChaosMonkeyIncludeStack: 
+          Ref: ChaosMonkeyIncludeStack
+        PreviewIncludeStack: 
+          Ref: PreviewIncludeStack
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
       TemplateURL:
@@ -126,6 +141,10 @@ Resources:
       Parameters:
         AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
           Ref: AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
+        ChaosMonkeyIncludeStack: 
+          Ref: ChaosMonkeyIncludeStack
+        PreviewIncludeStack: 
+          Ref: PreviewIncludeStack
         NetworkStackPrefixParameter:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
@@ -134,6 +153,8 @@ Resources:
           Ref: PrivateSubnetInternetOutboundCidrIpParameter
         PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
           Ref: PublishDispatcherELBSecurityGroupInboundCidrIpParameter
+        PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+          Ref: PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter
         SecureShellInboundCidrIpParameter:
           Ref: SecureShellInboundCidrIpParameter
       TemplateURL:

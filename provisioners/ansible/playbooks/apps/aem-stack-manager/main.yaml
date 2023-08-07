@@ -153,6 +153,7 @@
         BackupTopicArn: "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.BackupTopicArn }}"
         DynamoDBTableName: "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.AemStackManagerTableName }}"
         MinimumPublishInstances: "{{ stack_manager.publish.asg_min_size }}"
+        MinimumPreviewPublishInstances: "{{ stack_manager.preview_publish.asg_min_size }}"
         S3BucketCWStream: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
         S3PrefixCWStream: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
         state: present

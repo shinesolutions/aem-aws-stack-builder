@@ -1,5 +1,8 @@
 #jinja2:lstrip_blocks:True,trim_blocks:True
-
+---
+aws:
+  region: {{ az_array[0][:-1] }}
+  availability_zone_list: {{ az_array | join(', ') }}
 
 ec2_vpc:
   stack_name:
@@ -32,6 +35,27 @@ network:
     {{ az }}:
       cidr_block:
       tag_name: AEM Publish Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  preview_publish_dispatcher_elb:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Preview Publish Dispatcher ELB Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  preview_publish_dispatcher:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Preview Publish Dispatcher Subnet {{ az[-1] | upper }}
+  {% endfor %}
+
+  preview_publish:
+  {% for az in az_array %}
+    {{ az }}:
+      cidr_block:
+      tag_name: AEM Preview Publish Subnet {{ az[-1] | upper }}
   {% endfor %}
 
   author:

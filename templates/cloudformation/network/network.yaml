@@ -1,6 +1,57 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
+  CreatePreviewPublishDispatcherELBSubnetA:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishDispatcherELBSubnetACidrBlockParameter
+          - 'overwrite-me'
+
+  CreatePreviewPublishDispatcherELBSubnetB:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishDispatcherELBSubnetBCidrBlockParameter
+          - 'overwrite-me'
+
+  CreatePreviewPublishDispatcherELBSubnetC:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishDispatcherELBSubnetCCidrBlockParameter
+          - 'overwrite-me'
+  CreatePreviewPublishDispatcherSubnetA:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishDispatcherSubnetACidrBlockParameter
+          - 'overwrite-me'
+
+  CreatePreviewPublishDispatcherSubnetB:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishDispatcherSubnetBCidrBlockParameter
+          - 'overwrite-me'
+
+  CreatePreviewPublishDispatcherSubnetC:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishDispatcherSubnetCCidrBlockParameter
+          - 'overwrite-me'
+  CreatePreviewPublishSubnetA:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishSubnetACidrBlockParameter
+          - 'overwrite-me'
+
+  CreatePreviewPublishSubnetB:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishSubnetBCidrBlockParameter
+          - 'overwrite-me'
+
+  CreatePreviewPublishSubnetC:
+    Fn::Not:
+      - Fn::Equals:
+          - Ref: PreviewPublishSubnetCCidrBlockParameter
+          - 'overwrite-me'
   UseS3EndPoint:
     Fn::Not:
       - Fn::Equals:
@@ -176,6 +227,132 @@ Outputs:
         Fn::Sub: ${StackPrefix}-PublishSubnetList
     Value:
       Fn::Sub: ${PublishSubnetA},${PublishSubnetB}
+  PreviewPublishDispatcherELBSubnetA:
+    Condition: CreatePreviewPublishDispatcherELBSubnetA
+    Description: The Preview Publish Dispatcher ELB Subnet in Availability Zone A
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherELBSubnetA
+    Value:
+      Ref: PreviewPublishDispatcherELBSubnetA
+  PreviewPublishDispatcherELBSubnetB:
+    Condition: CreatePreviewPublishDispatcherELBSubnetB
+    Description: The Preview Publish Dispatcher ELB Subnet in Availability Zone B
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherELBSubnetB
+    Value:
+      Ref: PreviewPublishDispatcherELBSubnetB
+  PreviewPublishDispatcherELBSubnetC:
+    Condition: CreatePreviewPublishDispatcherELBSubnetC
+    Description: The Preview Publish Dispatcher ELB Subnet in Availability Zone C
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherELBSubnetC
+    Value:
+      Ref: PreviewPublishDispatcherELBSubnetC
+  PreviewPublishDispatcherELBSubnetList:
+    Condition: CreatePreviewPublishDispatcherELBSubnetA
+    Description: The Preview Publish Dispatcher ELB Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherELBSubnetList
+    Value:
+      Fn::Join:
+        - ','
+        - - Ref: PreviewPublishDispatcherELBSubnetA
+          - Fn::If:
+              - CreatePreviewPublishDispatcherELBSubnetB
+              - Ref: PreviewPublishDispatcherELBSubnetB
+              - Ref: AWS::NoValue
+          - Fn::If:
+              - CreatePreviewPublishDispatcherELBSubnetC
+              - Ref: PreviewPublishDispatcherELBSubnetC
+              - Ref: AWS::NoValue
+  PreviewPublishDispatcherSubnetA:
+    Condition: CreatePreviewPublishDispatcherSubnetA
+    Description: The Preview Publish Dispatcher Subnet in Availability Zone A
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherSubnetA
+    Value:
+      Ref: PreviewPublishDispatcherSubnetA
+  PreviewPublishDispatcherSubnetB:
+    Condition: CreatePreviewPublishDispatcherSubnetB
+    Description: The Preview Publish Dispatcher Subnet in Availability Zone B
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherSubnetB
+    Value:
+      Ref: PreviewPublishDispatcherSubnetB
+  PreviewPublishDispatcherSubnetC:
+    Condition: CreatePreviewPublishDispatcherSubnetC
+    Description: The Preview Publish Dispatcher Subnet in Availability Zone C
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherSubnetC
+    Value:
+      Ref: PreviewPublishDispatcherSubnetC
+  PreviewPublishDispatcherSubnetList:
+    Condition: CreatePreviewPublishDispatcherSubnetA
+    Description: The Preview Publish Dispatcher Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishDispatcherSubnetList
+    Value:
+      Fn::Join:
+        - ','
+        - - Ref: PreviewPublishDispatcherSubnetA
+          - Fn::If:
+              - CreatePreviewPublishDispatcherSubnetB
+              - Ref: PreviewPublishDispatcherSubnetB
+              - Ref: AWS::NoValue
+          - Fn::If:
+              - CreatePreviewPublishDispatcherSubnetC
+              - Ref: PreviewPublishDispatcherSubnetC
+              - Ref: AWS::NoValue
+  PreviewPublishSubnetA:
+    Condition: CreatePreviewPublishSubnetA
+    Description: The Preview Publish Subnet in Availability Zone A
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishSubnetA
+    Value:
+      Ref: PreviewPublishSubnetA
+  PreviewPublishSubnetB:
+    Condition: CreatePreviewPublishSubnetB
+    Description: The Preview Publish Subnet in Availability Zone B
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishSubnetB
+    Value:
+      Ref: PreviewPublishSubnetB
+  PreviewPublishSubnetC:
+    Condition: CreatePreviewPublishSubnetC
+    Description: The Preview Publish Subnet in Availability Zone C
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishSubnetC
+    Value:
+      Ref: PreviewPublishSubnetC
+  PreviewPublishSubnetList:
+    Condition: CreatePreviewPublishSubnetA
+    Description: The Preview Publish Subnet List
+    Export:
+      Name:
+        Fn::Sub: ${StackPrefix}-PreviewPublishSubnetList
+    Value:
+      Fn::Join:
+        - ','
+        - - Ref: PreviewPublishSubnetA
+          - Fn::If:
+              - CreatePreviewPublishSubnetB
+              - Ref: PreviewPublishSubnetB
+              - Ref: AWS::NoValue
+          - Fn::If:
+              - CreatePreviewPublishSubnetC
+              - Ref: PreviewPublishSubnetC
+              - Ref: AWS::NoValue
   ToolSubnetA:
     Description: The Tool Subnet in Availability Zone A
     Export:
@@ -301,6 +478,54 @@ Parameters:
     Default: AEM Publish Dispatcher ELB Subnet C
     Description: AEM Publish Dispatcher ELB Subnet C Name
     Type: String
+  PreviewPublishDispatcherELBSubnetACidrBlockParameter:
+    Default: 10.2.26.0/26
+    Description: AEM Preview Publish Dispatcher ELB Subnet A Cidr Block
+    Type: String
+  PreviewPublishDispatcherELBSubnetATagNameParameter:
+    Default: AEM Preview Publish Dispatcher ELB Subnet A
+    Description: AEM Preview Publish Dispatcher ELB Subnet A Name
+    Type: String
+  PreviewPublishDispatcherELBSubnetBCidrBlockParameter:
+    Default: 10.2.26.64/26
+    Description: AEM Preview Publish Dispatcher ELB Subnet B Cidr Block
+    Type: String
+  PreviewPublishDispatcherELBSubnetBTagNameParameter:
+    Default: AEM Preview Publish Dispatcher ELB Subnet B
+    Description: AEM Preview Publish Dispatcher ELB Subnet B Name
+    Type: String
+  PreviewPublishDispatcherELBSubnetCCidrBlockParameter:
+    Default: 10.2.26.128/26
+    Description: AEM Preview Publish Dispatcher ELB Subnet C Cidr Block
+    Type: String
+  PreviewPublishDispatcherELBSubnetCTagNameParameter:
+    Default: AEM Preview Publish Dispatcher ELB Subnet C
+    Description: AEM Preview Publish Dispatcher ELB Subnet C Name
+    Type: String
+  PreviewPublishDispatcherSubnetACidrBlockParameter:
+    Default: 10.2.27.0/26
+    Description: AEM Preview Publish Dispatcher Subnet A Cidr Block
+    Type: String
+  PreviewPublishDispatcherSubnetATagNameParameter:
+    Default: AEM Preview Publish Dispatcher Subnet A
+    Description: AEM Preview Publish Dispatcher Subnet A Name
+    Type: String
+  PreviewPublishDispatcherSubnetBCidrBlockParameter:
+    Default: 10.2.27.64/26
+    Description: AEM Preview Publish Dispatcher Subnet B Cidr Block
+    Type: String
+  PreviewPublishDispatcherSubnetBTagNameParameter:
+    Default: AEM Preview Publish Dispatcher Subnet B
+    Description: AEM Preview Publish Dispatcher Subnet B Name
+    Type: String
+  PreviewPublishDispatcherSubnetCCidrBlockParameter:
+    Default: 10.2.27.128/26
+    Description: AEM Preview Publish Dispatcher Subnet C Cidr Block
+    Type: String
+  PreviewPublishDispatcherSubnetCTagNameParameter:
+    Default: AEM Preview Publish Dispatcher Subnet C
+    Description: AEM Preview Publish Dispatcher Subnet C Name
+    Type: String
   PublishDispatcherSubnetACidrBlockParameter:
     Default: 10.2.21.0/26
     Description: AEM Publish Dispatcher Subnet A Cidr Block
@@ -348,6 +573,30 @@ Parameters:
   PublishSubnetCTagNameParameter:
     Default: AEM Publish Subnet C
     Description: AEM Publish Subnet C Name
+    Type: String
+  PreviewPublishSubnetACidrBlockParameter:
+    Default: 10.2.28.0/26
+    Description: AEM Preview Publish Subnet A Cidr Block
+    Type: String
+  PreviewPublishSubnetATagNameParameter:
+    Default: AEM Preview Publish Subnet A
+    Description: AEM Preview Publish Subnet A Name
+    Type: String
+  PreviewPublishSubnetBCidrBlockParameter:
+    Default: 10.2.28.64/26
+    Description: AEM Preview Publish Subnet B Cidr Block
+    Type: String
+  PreviewPublishSubnetBTagNameParameter:
+    Default: AEM Preview Publish Subnet B
+    Description: AEM Preview Publish Subnet B Name
+    Type: String
+  PreviewPublishSubnetCCidrBlockParameter:
+    Default: 10.2.28.128/26
+    Description: AEM Preview Publish Subnet C Cidr Block
+    Type: String
+  PreviewPublishSubnetCTagNameParameter:
+    Default: AEM Preview Publish Subnet C
+    Description: AEM Preview Publish Subnet C Name
     Type: String
   S3BucketParameter:
     Default: ''
@@ -755,6 +1004,222 @@ Resources:
         Ref: PrivateRouteTable
       SubnetId:
         Ref: PublishSubnetC
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishDispatcherELBSubnetA:
+    Condition: CreatePreviewPublishDispatcherELBSubnetA
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: PreviewPublishDispatcherELBSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishDispatcherELBSubnetATagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishDispatcherELBSubnetAPrivateRouteTableAssociation:
+    Condition: CreatePreviewPublishDispatcherELBSubnetA
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishDispatcherELBSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishDispatcherELBSubnetB:
+    Condition: CreatePreviewPublishDispatcherELBSubnetB
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: PreviewPublishDispatcherELBSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishDispatcherELBSubnetBTagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishDispatcherELBSubnetBPrivateRouteTableAssociation:
+    Condition: CreatePreviewPublishDispatcherELBSubnetB
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishDispatcherELBSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishDispatcherELBSubnetC:
+    Condition: CreatePreviewPublishDispatcherELBSubnetC
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneCParameter
+      CidrBlock:
+        Ref: PreviewPublishDispatcherELBSubnetCCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishDispatcherELBSubnetCTagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishDispatcherELBSubnetCPrivateRouteTableAssociation:
+    Condition: CreatePreviewPublishDispatcherELBSubnetC
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishDispatcherELBSubnetC
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishDispatcherSubnetA:
+    Condition: CreatePreviewPublishDispatcherSubnetA
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: PreviewPublishDispatcherSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishDispatcherSubnetATagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishDispatcherSubnetAPrivateRouteTableAssociation:
+    Condition: CreatePreviewPublishDispatcherSubnetA
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishDispatcherSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishDispatcherSubnetB:
+    Condition: CreatePreviewPublishDispatcherSubnetB
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: PreviewPublishDispatcherSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishDispatcherSubnetBTagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishDispatcherSubnetBPrivateRouteTableAssociation:
+    Condition: CreatePreviewPublishDispatcherSubnetB
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishDispatcherSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishDispatcherSubnetC:
+    Condition: CreatePreviewPublishDispatcherSubnetC
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneCParameter
+      CidrBlock:
+        Ref: PreviewPublishDispatcherSubnetCCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishDispatcherSubnetCTagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishDispatcherSubnetCPrivateRouteTableAssociation:
+    Condition: CreatePreviewPublishDispatcherSubnetC
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishDispatcherSubnetC
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishSubnetA:
+    Condition: CreatePreviewPublishSubnetA
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneAParameter
+      CidrBlock:
+        Ref: PreviewPublishSubnetACidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishSubnetATagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishSubnetAPrivatecRouteTableAssociation:
+    Condition: CreatePreviewPublishSubnetA
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishSubnetB:
+    Condition: CreatePreviewPublishSubnetB
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneBParameter
+      CidrBlock:
+        Ref: PreviewPublishSubnetBCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishSubnetBTagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishSubnetBPrivatecRouteTableAssociation:
+    Condition: CreatePreviewPublishSubnetB
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PreviewPublishSubnetC:
+    Condition: CreatePreviewPublishSubnetC
+    Properties:
+      AvailabilityZone:
+        Ref: AvailabilityZoneCParameter
+      CidrBlock:
+        Ref: PreviewPublishSubnetCCidrBlockParameter
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value:
+            Ref: PreviewPublishSubnetCTagNameParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${StackPrefix}-VPCId
+    Type: AWS::EC2::Subnet
+  PreviewPublishSubnetCPrivatecRouteTableAssociation:
+    Condition: CreatePreviewPublishSubnetC
+    Properties:
+      RouteTableId:
+        Ref: PrivateRouteTable
+      SubnetId:
+        Ref: PreviewPublishSubnetC
     Type: AWS::EC2::SubnetRouteTableAssociation
   S3Endpoint:
     Condition: UseS3EndPoint

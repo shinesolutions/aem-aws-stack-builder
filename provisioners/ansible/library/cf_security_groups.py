@@ -10,7 +10,7 @@ from cfyaml import yaml
 
 def read_template(file_name):
     with open(file_name, "r") as f:
-        template = yaml.load(f)
+        template = yaml.full_load(f)
     return template
 
 

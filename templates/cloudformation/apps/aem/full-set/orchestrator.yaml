@@ -80,9 +80,17 @@ Parameters:
     Default: ''
     Description: The name of the publish-dispatcher stack.
     Type: String
+  PreviewPublishDispatcherStackName:
+    Default: ''
+    Description: The name of the preview-publish-dispatcher stack.
+    Type: String
   PublishStackArn:
     Default: ''
-    Description: The ARN of the author stack.
+    Description: The ARN of the publish stack.
+    Type: String
+  PreviewPublishStackArn:
+    Default: ''
+    Description: The ARN of the preview-publish stack.
     Type: String
   HttpProxyParameter:
     Description: http_proxy parameter
@@ -192,6 +200,8 @@ Resources:
                     aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher: ${AuthorDispatcherStackArn}
                     aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish: ${PublishStackArn}
                     aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher: ${PublishDispatcherStackName}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_preview_publish: ${PreviewPublishStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_preview_publish_dispatcher: ${PreviewPublishDispatcherStackName}
                     aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging: ${MessagingStackArn}
                     aem_orchestrator::application_properties::aws_sqs_queue_name: ${AEMASGEventQueueName}
               runcmd:
