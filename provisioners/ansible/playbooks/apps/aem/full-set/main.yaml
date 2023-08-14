@@ -217,3 +217,22 @@
         "stack_query.rc == 0 and aws.cloudwatch.enable_cloudwatch_cleanup"
       tags:
       - delete
+
+    - name: Retrieve all available cloudwatch alarms to delete
+      cloudwatch_metric_alarm_info:
+        alarm_name_prefix: "contentHealthCheck-"
+      register: alarms_found
+      when:
+        "stack_query.rc == 0"
+      tags:
+      - delete
+
+    - name: Delete Cloudwatch Alarms
+      cloudwatch_metric_alarm:
+        state: absent
+        name: "{{ item.alarm_name}}"
+      when: "{{ stack_prefix }} in {{ item.alarm_name }}"}"
+      with_items:
+        - "{{ alarms_found.metric_alarms }}"
+      tags:
+      - delete
