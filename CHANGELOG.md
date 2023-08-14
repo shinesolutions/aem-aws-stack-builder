@@ -9,11 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added feature to delete CloudWatch Alarms of the deleted stack
 
+### Fixed
+- Fixed configuration documentation
+
 ## 7.0.1 - 2023-08-11
 ### Fixed
 - Fixed default value of Preview Publish ASG size
 
 ## 7.0.0 - 2023-08-07
+### Added
+- Added `Publish Preview` components to support Preview feature in AEM OpenCloud
+
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.0.1
+- Upgraded AEM Orchestrator to 4.0.0
+- Upgraded AEM Stack manager to 2.0.0
+
+### Fixed
+- Fixed `cf_tags` & `cf_security_group` Ansible libraries
+- Fixed Stack Creation with disabled Chaos Monkey component
 
 ## 6.10.0 - 2023-07-26
 ### Changed
