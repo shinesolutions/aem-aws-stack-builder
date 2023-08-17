@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Changed
 - Upgraded AEM AWS Stack Provisioner to 7.0.4
+- Update Stack Manager deletion to remove Stack Manager Cloudwatchlogs if enabled
 
 ## 7.0.6 - 2023-08-16
 ### Changed
