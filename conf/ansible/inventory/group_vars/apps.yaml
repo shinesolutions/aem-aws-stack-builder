@@ -411,9 +411,9 @@ preview_publish:
   root_vol_size: 20
   data_vol_size: 75
   enable_random_termination: false
-  asg_min_size: 0 # need to be modified in order to enable Preview Instances
-  asg_desired_capacity: 0 # need to be modified in order to enable Preview Instances
-  asg_max_size: 0 # need to be modified in order to enable Preview Instances
+  asg_min_size: 0  # need to be modified in order to enable Preview Instances
+  asg_desired_capacity: 0  # need to be modified in order to enable Preview Instances
+  asg_max_size: 0  # need to be modified in order to enable Preview Instances
   asg_health_check_grace_period: 1800
   asg_cooldown: 480
 
