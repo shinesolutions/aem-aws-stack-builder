@@ -31,13 +31,13 @@
       tags:
         - switch
 
-    - name: Create And Validating Preview Publish Dispatcher Hosted Zone Name Based On Input Data
-      debug:
-        msg:
-          - "{{ (preview_publish_dispatcher_hosted_zone if preview_publish_dispatcher_hosted_zone[-1] == '.' else preview_publish_dispatcher_hosted_zone+'.') }}"
-      register: sanitise_preview_publish_dispatcher_hosted_zone
-      tags:
-        - switch
+    # - name: Create And Validating Preview Publish Dispatcher Hosted Zone Name Based On Input Data
+    #   debug:
+    #     msg:
+    #       - "{{ (preview_publish_dispatcher_hosted_zone if preview_publish_dispatcher_hosted_zone[-1] == '.' else preview_publish_dispatcher_hosted_zone+'.') }}"
+    #   register: sanitise_preview_publish_dispatcher_hosted_zone
+    #   tags:
+    #     - switch
 
     - name: Create And Validating Publish Dispatcher Record Set Name Based On Input Data
       debug:
@@ -47,13 +47,13 @@
       tags:
         - switch
 
-    - name: Create And Validating Preview Publish Dispatcher Record Set Name Based On Input Data
-      debug:
-        msg:
-          - "{{ (preview_publish_dispatcher_record_set if preview_publish_dispatcher_record_set[-1] == '.' else preview_publish_dispatcher_record_set+'.')+(preview_publish_dispatcher_hosted_zone if preview_publish_dispatcher_hosted_zone[-1] == '.' else preview_publish_dispatcher_hosted_zone+'.') }}"
-      register: sanitise_preview_publish_dispatcher_record_set
-      tags:
-        - switch
+    # - name: Create And Validating Preview Publish Dispatcher Record Set Name Based On Input Data
+    #   debug:
+    #     msg:
+    #       - "{{ (preview_publish_dispatcher_record_set if preview_publish_dispatcher_record_set[-1] == '.' else preview_publish_dispatcher_record_set+'.')+(preview_publish_dispatcher_hosted_zone if preview_publish_dispatcher_hosted_zone[-1] == '.' else preview_publish_dispatcher_hosted_zone+'.') }}"
+    #   register: sanitise_preview_publish_dispatcher_record_set
+    #   tags:
+    #     - switch
 
     - name: Retrieve CloudFormation Stack Facts About "{{ stack_prefix }}-{{ main.stack_name }}"
       cloudformation_facts:
@@ -96,12 +96,12 @@
       tags:
         - switch
 
-    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Find Related Preview Publish Dispatcher Zone ID
-      shell: >
-        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_preview_publish_dispatcher_hosted_zone.msg[0] }}' ].[Id][0][0]"
-      register: preview_publish_dispatcher_hosted_zone_id
-      tags:
-        - switch
+    # - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Find Related Preview Publish Dispatcher Zone ID
+    #   shell: >
+    #     aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_preview_publish_dispatcher_hosted_zone.msg[0] }}' ].[Id][0][0]"
+    #   register: preview_publish_dispatcher_hosted_zone_id
+    #   tags:
+    #     - switch
 
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Check Status Author Dispatcher Host Is It Private Or Public
       shell: >
@@ -117,12 +117,12 @@
       tags:
         - switch
 
-    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Check Status Preview Publish Dispatcher Host Is It Private Or Public
-      shell: >
-        aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_preview_publish_dispatcher_hosted_zone.msg[0] }}' ].[Config][0][0].[PrivateZone][0]"
-      register: preview_publish_zone_private
-      tags:
-        - switch
+    # - name: Check  {{ stack_prefix }}-{{ main.stack_name }} To Check Status Preview Publish Dispatcher Host Is It Private Or Public
+    #   shell: >
+    #     aws route53 list-hosted-zones-by-name --query "HostedZones[?Name == '{{ sanitise_preview_publish_dispatcher_hosted_zone.msg[0] }}' ].[Config][0][0].[PrivateZone][0]"
+    #   register: preview_publish_zone_private
+    #   tags:
+    #     - switch
 
     - name: Check  {{ stack_prefix }}-{{ main.stack_name }} And Get Information About DNS Type Of Author Dispatcher
       shell: >
@@ -138,12 +138,12 @@
       tags:
         - switch
 
-    - name: Check  {{ stack_prefix }}-{{ main.stack_name }} And Get Information About DNS Type Of Preview Publish Dispatcher
-      shell: >
-        aws route53 list-resource-record-sets --hosted-zone-id {{ (preview_publish_dispatcher_hosted_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ sanitise_publish_dispatcher_record_set.msg[0] }}'].[Type][0][0]"
-      register: preview_publish_dispatcher_record_type
-      tags:
-        - switch
+    # - name: Check  {{ stack_prefix }}-{{ main.stack_name }} And Get Information About DNS Type Of Preview Publish Dispatcher
+    #   shell: >
+    #     aws route53 list-resource-record-sets --hosted-zone-id {{ (preview_publish_dispatcher_hosted_zone_id.stdout | regex_replace('\"', '')).split('/')[2] }} --query "ResourceRecordSets[?Name == '{{ sanitise_publish_dispatcher_record_set.msg[0] }}'].[Type][0][0]"
+    #   register: preview_publish_dispatcher_record_type
+    #   tags:
+    #     - switch
 
     - name: Change Publish Dispatcher Hosted Zone Record Set Value
       route53:
@@ -157,17 +157,17 @@
         ttl: "{{ dns_records.publish_dispatcher.ttl }}"
       tags: switch
 
-    - name: Change Preview Publish Dispatcher Hosted Zone Record Set Value
-      route53:
-        state: create
-        private_zone : "{{ 'yes' if ([preview_publish_zone_private.stdout][0]) == 'true' else 'no' }}"
-        zone: "{{ sanitise_preview_publish_dispatcher_hosted_zone.msg[0] }}"
-        record: '{{ sanitise_preview_publish_dispatcher_record_set.msg[0] }}'
-        value: "{{ PreviewPublishDispatcherStack['ansible_facts']['cloudformation'][stack_facts['ansible_facts']['cloudformation'][stack_prefix + '-' + main.stack_name]['stack_resources']['PreviewPublishDispatcherStack'].split('/')[1]]['stack_outputs']['PreviewPublishDispatcherLoadBalancerDNSName'] }}"
-        overwrite: yes
-        type: "{{ preview_publish_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
-        ttl: "{{ dns_records.preview_publish_dispatcher.ttl }}"
-      tags: switch
+    # - name: Change Preview Publish Dispatcher Hosted Zone Record Set Value
+    #   route53:
+    #     state: create
+    #     private_zone : "{{ 'yes' if ([preview_publish_zone_private.stdout][0]) == 'true' else 'no' }}"
+    #     zone: "{{ sanitise_preview_publish_dispatcher_hosted_zone.msg[0] }}"
+    #     record: '{{ sanitise_preview_publish_dispatcher_record_set.msg[0] }}'
+    #     value: "{{ PreviewPublishDispatcherStack['ansible_facts']['cloudformation'][stack_facts['ansible_facts']['cloudformation'][stack_prefix + '-' + main.stack_name]['stack_resources']['PreviewPublishDispatcherStack'].split('/')[1]]['stack_outputs']['PreviewPublishDispatcherLoadBalancerDNSName'] }}"
+    #     overwrite: yes
+    #     type: "{{ preview_publish_dispatcher_record_type.stdout | regex_replace('\"', '') }}"
+    #     ttl: "{{ dns_records.preview_publish_dispatcher.ttl }}"
+    #   tags: switch
 
     - name: Change Author Dispatcher Hosted Zone Record Set Value
       route53:
