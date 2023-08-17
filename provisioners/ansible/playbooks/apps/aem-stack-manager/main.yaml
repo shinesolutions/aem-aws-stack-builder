@@ -390,6 +390,6 @@
       with_items:
         - "{{ loggroups_found.log_groups }}"
       when:
-        "loggroups_found is defined"
+        "loggroups_found is defined and loggroups_found.log_groups is defined"
       tags:
       - delete
