@@ -4,6 +4,12 @@ Communication Flow
 The communication between components within AEM architecture is uses HTTPS by default. The intention is obviously to encourage users to use HTTPS for security reason.
 
 <table>
+
+<tr>
+<td valign="top">
+<img width="1200" alt="AEM Full-Set Communication Flow Diagram" src="communication-flow-full-set.png"/>
+</td>
+</tr>
 <tr>
 <td valign="top">
 <ol>
@@ -22,6 +28,21 @@ The communication between components within AEM architecture is uses HTTPS by de
 <p>AEM Publish-Dispatcher is configured to point to AEM Publish as its farm's website render via HTTPS on port 5433 with <code>secure</code> setting enabled.</p>
 <strong>From Publish EC2 instance to Publish-Dispatcher EC2 instance</strong>
 <p>AEM Publish is configured with a flush agent that points to AEM Publish-Dispatcher via HTTPS on port 443.</p>
+</li>
+<li>
+<strong>(Optional) From Stakeholder to Preview-Publish-Dispatcher ELB</strong>
+<p>Stakeholders can connect to Preview-Publish-Dispatcher ELB via HTTPS on port 443. Alternatively.</p>
+</li>
+<li>
+<strong>(optional) From Preview-Publish-Dispatcher ELB to Preview-Publish-Dispatcher EC2 instance</strong>
+<p>Preview-Publish-Dispatcher ELB connects to Preview-Publish-Dispatcher EC2 instance via HTTPS on port 443.</p>
+<p>Preview-Publish-Dispatcher ELB health monitoring checks Preview-Publish-Dispatcher EC2 instance only via HTTPS on port 443, at path <code>/system/health?tags=shallow</code> .</p>
+</li>
+<li>
+<strong>(Optional) From Publish-Dispatcher EC2 instance to Publish EC2 instance</strong>
+<p>AEM Preview-Publish-Dispatcher is configured to point to AEM Preview-Publish as its farm's website render via HTTPS on port 5433 with <code>secure</code> setting enabled.</p>
+<strong>From Preview-Publish EC2 instance to Preview-Publish-Dispatcher EC2 instance</strong>
+<p>AEM Preview-Publish is configured with a flush agent that points to AEM Preview-Publish-Dispatcher via HTTPS on port 443.</p>
 </li>
 <li>
 <strong>From Author-Primary EC2 instance to Publish EC2 instance</strong>
@@ -51,9 +72,6 @@ The communication between components within AEM architecture is uses HTTPS by de
 <p>However, most users often have a layer (e.g. routing via a reverse proxy) sitting in front of the AEM architecture, which connects to AEM Author-Dispatcher ELB only via HTTPS.</p>
 </li>
 </ol>
-</td>
-<td valign="top">
-<img width="600" alt="AEM Full-Set Communication Flow Diagram" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/communication-flow-full-set.png"/>
 </td>
 </tr>
 </table>

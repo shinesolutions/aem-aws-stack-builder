@@ -26,8 +26,8 @@ For example, `instance-profiles` stack contains AWS resources that will be provi
 
 ### Stack structure diagram for permission type b
 
-<img width="800" alt="AEM Full-Set Stacks Structure Diagram For Permission Type b" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/stacks-structure-permission-type-b.png"/>
+<img width="800" alt="AEM Full-Set Stacks Structure Diagram For Permission Type b" src="stacks-structure-permission-type-b.png"/>
 
 ### Stack structure diagram for permission type c
 
-<img width="800" alt="AEM Full-Set Stacks Structure Diagram For Permission Type c" src="https://raw.githubusercontent.com/shinesolutions/aem-aws-stack-builder/master/docs/stacks-structure-permission-type-c.png"/>
+<img width="800" alt="AEM Full-Set Stacks Structure Diagram For Permission Type c" src="stacks-structure-permission-type-c.png"/>
