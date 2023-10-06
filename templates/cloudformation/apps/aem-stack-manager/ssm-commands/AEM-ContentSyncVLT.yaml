@@ -11,12 +11,40 @@ parameters:
     type: String
     allowedPattern: ([1-9][0-9]{0,3})|(1[0-9]{1,4})|(2[0-7][0-9]{1,3})|(28[0-7][0-9]{1,2})|(28800)
     default: '14400'
+  sourceStackPrefix:
+    description: (Required) AEM OpenCloud AEM source stack prefix
+    type: String
+  targetStackPrefix:
+    description: (Required) AEM OpenCloud AEM target stack prefix
+    type: String
+  aemPort:
+    description: (Required) AEM HTTP listening port.
+    type: String
+  batchSize:
+      description: (Required) Number of nodes to be processed before an intermediate save
+      type: String
+  recursive:
+      description: (Required) Enable recursive for content sync
+      type: String
+  update:
+      description: Overwrite/delete existing nodes
+      type: String
+  newerOnly:
+      description: Respect lastModified properties for update
+      type: String
+  excludePath:
+      description: (Required) Regexp of excluded source paths
+      type: String
+  contentSyncPath:
+    description: (Required) AEM repository address path content sync
+    type: String
 mainSteps:
   - action: aws:runShellScript
     name: runShellScript
     inputs:
       runCommand:
         - '. /etc/profile'
-        - '/opt/shinesolutions/aem-tools/content-sync-vlt.sh'
+        - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
+        - '/opt/shinesolutions/aem-tools/content-sync-vlt.sh {{sourceStackPrefix}} {{targetStackPrefix}} {{aemPort}} {{recursive}} {{batchSize}} {{update}} {{newerOnly}} {{excludePath}} {{contentSyncPath}}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
