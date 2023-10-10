@@ -180,6 +180,18 @@ Parameters:
     Description: >-
       The name of the file containing the DisableSaml SSM command.
 
+  ContentSyncVLTIncludeFileParameter:
+    Type: String
+    Default: AEM-ContentSyncVLT.yaml
+    Description: >-
+      The name of the file containing the ContentSyncVLT SSM command.
+
+  AttachDetachContentSyncSGIncludeFileParameter:
+    Type: String
+    Default: AEM-AttachDetachContentSyncSG.yaml
+    Description: >-
+      The name of the file containing the AttachDetachContentSyncSG SSM command.
+
 Resources:
   DeployArtifact:
     Type: AWS::SSM::Document
@@ -493,6 +505,28 @@ Resources:
             Location:
               Fn::Sub: '${S3BucketAndPrefixParameter}/${DisableSamlIncludeFileParameter}'
 
+  ContentSyncVLT:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${ContentSyncVLTIncludeFileParameter}'
+
+  AttachContentSyncSG:
+    Type: AWS::SSM::Document
+    Properties:
+      DocumentType: Command
+      Content:
+        Fn::Transform:
+          Name: 'AWS::Include'
+          Parameters:
+            Location:
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${AttachContentSyncSGIncludeFileParameter}'
+
 Outputs:
   DeployArtifact:
     Description: Document name for Deploy Artifact
@@ -638,3 +672,13 @@ Outputs:
     Description: Document name for Disable Saml
     Value:
       Ref: DisableSaml
+
+  ContentSyncVLT:
+    Description: Document name for Content Sync VLT
+    Value:
+      Ref: ContentSyncVLT
+
+  AttachDetachContentSyncSG:
+    Description: Document name for Attach Detach Content Sync SG
+    Value:
+      Ref: AttachDetachContentSyncSG
