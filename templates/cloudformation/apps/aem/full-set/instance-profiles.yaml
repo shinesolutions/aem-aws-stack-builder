@@ -360,6 +360,8 @@ Resources:
             - ec2:CreateVolume
             - ec2:DetachVolume
             - ec2:CreateSnapshot
+            - ec2:ModifyInstanceAttribute
+            - cloudformation:Describe*
             - autoscaling:CreateOrUpdateTags
             - cloudwatch:PutMetricData
             Effect: Allow
