@@ -147,7 +147,7 @@
       generate_checksum_file:
         src: "{{ artifacts_dir }}/vault-cli-{{ library.aem_vlt_version }}-bin.tar.gz"
         dest_path: "{{ artifacts_dir }}"
-        dest_file: "vlt-cli-{{ library.aem_vlt_version }}-bin.tar.gz.metadata.json"
+        dest_file: "vault-cli-{{ library.aem_vlt_version }}-bin.tar.gz.metadata.json"
         outfile_type: json
         checksum_type: all
       when: library.aem_vlt_version is defined
