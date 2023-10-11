@@ -516,7 +516,7 @@ Resources:
             Location:
               Fn::Sub: '${S3BucketAndPrefixParameter}/${ContentSyncVLTIncludeFileParameter}'
 
-  AttachContentSyncSG:
+  AttachDetachContentSyncSG:
     Type: AWS::SSM::Document
     Properties:
       DocumentType: Command
@@ -525,7 +525,7 @@ Resources:
           Name: 'AWS::Include'
           Parameters:
             Location:
-              Fn::Sub: '${S3BucketAndPrefixParameter}/${AttachContentSyncSGIncludeFileParameter}'
+              Fn::Sub: '${S3BucketAndPrefixParameter}/${AttachDetachContentSyncSGIncludeFileParameter}'
 
 Outputs:
   DeployArtifact:

@@ -17,9 +17,6 @@ parameters:
   targetStackPrefix:
     description: (Required) AEM OpenCloud AEM target stack prefix
     type: String
-  aemPort:
-    description: (Required) AEM HTTP listening port.
-    type: String
   batchSize:
       description: (Required) Number of nodes to be processed before an intermediate save
       type: String
@@ -45,6 +42,6 @@ mainSteps:
       runCommand:
         - '. /etc/profile'
         - 'while [ ! -f /opt/shinesolutions/aem-aws-stack-builder/stack-init-completed ]; do sleep 15; echo "Waiting for component initialisation to complete..."; done'
-        - '/opt/shinesolutions/aem-tools/content-sync-vlt.sh {{sourceStackPrefix}} {{targetStackPrefix}} {{aemPort}} {{recursive}} {{batchSize}} {{update}} {{newerOnly}} {{excludePath}} {{contentSyncPath}}'
+        - '/opt/shinesolutions/aem-tools/content-sync-vlt.sh {{sourceStackPrefix}} {{targetStackPrefix}} {{recursive}} {{batchSize}} {{update}} {{newerOnly}} {{excludePath}} {{contentSyncPath}}'
       timeoutSeconds: '{{ executionTimeout }}'
       workingDirectory: /tmp
