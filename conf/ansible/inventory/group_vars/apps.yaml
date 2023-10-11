@@ -125,9 +125,6 @@ security_groups:
   secure_shell:
     inbound_cidr_ip: overwrite-me
 
-  aem_content_sync_inbound_cidr_ip:
-    inbound_cidr_ip: overwrite-me
-
   private_subnet_internet_outbound_cidr_ip: overwrite-me
 
   aem_content_sync_inbound_cidr_ip: overwrite-me
