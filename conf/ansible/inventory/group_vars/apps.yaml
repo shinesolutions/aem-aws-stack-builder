@@ -127,6 +127,8 @@ security_groups:
 
   private_subnet_internet_outbound_cidr_ip: overwrite-me
 
+  aem_content_sync_inbound_cidr_ip: overwrite-me
+
   publish_dispatcher_elb:
     inbound_cidr_ip: overwrite-me
     extra_groups:
