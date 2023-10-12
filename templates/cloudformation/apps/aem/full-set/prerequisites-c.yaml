@@ -127,6 +127,9 @@ Parameters:
   SecureShellInboundCidrIpParameter:
     Description: AEM Stack Secure Shell Inbound Cidr Ip
     Type: String
+  AemContentSyncInboundCidrIpParameter:
+    Description: AEM content sync Inbound Cidr range
+    Type: String
 Resources:
   InstanceProfilesStack:
     Properties:
@@ -199,6 +202,8 @@ Resources:
           Ref: PublishDispatcherELBSecurityGroupInboundCidrIpParameter
         SecureShellInboundCidrIpParameter:
           Ref: SecureShellInboundCidrIpParameter
+        AemContentSyncInboundCidrIpParameter:
+          Ref: AemContentSyncInboundCidrIpParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
     Type: AWS::CloudFormation::Stack

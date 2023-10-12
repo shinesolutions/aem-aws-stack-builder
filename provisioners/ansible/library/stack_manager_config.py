@@ -155,6 +155,8 @@ class config:
         # Create dict for task mapping
 
         messenger_task_mapping = {
+            "AttachDetachContentSyncSG": "attach-detach-content-sync-sg",
+            "ContentSyncVLT": "content-sync",
             "DeployArtifact": "deploy-artifact",
             "DeployArtifacts": "deploy-artifacts",
             "DisableCrxde": "disable-crxde",

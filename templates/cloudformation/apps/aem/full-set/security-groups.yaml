@@ -98,6 +98,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishSecurityGroup
     Value:
       Ref: PreviewPublishSecurityGroup
+  AemContentSyncSecurityGroup:
+    Description: Security Group for content sync, allowing access between AEM full set stacks
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AemContentSyncSecurityGroup
+    Value:
+      Ref: AemContentSyncSecurityGroup
 Parameters:
   AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Author Dispatcher ELB Security Group Inbound Cidr Ip
@@ -127,6 +134,9 @@ Parameters:
     Type: String
   SecureShellInboundCidrIpParameter:
     Description: AEM Stack Secure Shell Inbound Cidr Ip
+    Type: String
+  AemContentSyncInboundCidrIpParameter:
+    Description: Inbounc Cidr Ip range for AEM content sync between full set stacks
     Type: String
 Resources:
   AuthorDipatcherELBSecurityGroupEgress0:
@@ -759,6 +769,30 @@ Resources:
       SourceSecurityGroupId:
         Ref: OrchestratorSecurityGroup
       ToPort: '5433'
+    Type: AWS::EC2::SecurityGroupIngress
+
+  AemContentSyncSecurityGroup:
+    Properties:
+      GroupDescription: Security Group for content sync, allowing access between AEM full set stacks
+      Tags:
+      - Key: Name
+        Value: AEM Content Sync Security Group
+      - Key: StackPrefix
+        Value:
+          Ref: PrerequisitesStackPrefixParameter
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+    Type: AWS::EC2::SecurityGroup
+  AemContentSyncSecurityGroupIngress0:
+    Properties:
+      CidrIp:
+        Ref: AemContentSyncInboundCidrIpParameter
+      FromPort: '4502'
+      GroupId:
+        Ref: AemContentSyncSecurityGroup
+      IpProtocol: tcp
+      ToPort: '4503'
     Type: AWS::EC2::SecurityGroupIngress
 
   PreviewPublishSecurityGroup:
