@@ -362,6 +362,7 @@ Resources:
             - ec2:CreateSnapshot
             - ec2:ModifyInstanceAttribute
             - cloudformation:Describe*
+            - cloudformation:List*
             - autoscaling:CreateOrUpdateTags
             - cloudwatch:PutMetricData
             Effect: Allow
@@ -800,6 +801,7 @@ Resources:
             - ec2:CreateTags
             - ec2:ModifyInstanceAttribute
             - cloudformation:Describe*
+            - cloudformation:List*
             - cloudwatch:PutMetricData
             Effect: Allow
             Resource: '*'
