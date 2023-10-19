@@ -96,12 +96,8 @@ Resources:
           Ref: AEMStackManagerSSMServiceRoleArnParameter
         AEMStackManagerSSMServiceRoleNameParameter:
           Ref: AEMStackManagerSSMServiceRoleNameParameter
-        DataBucketNameParameter:
-          Ref: DataBucketNameParameter
         MainStackPrefixParameter:
           Ref: MainStackPrefixParameter
-        S3DataStackManagerPrefix:
-          Ref: S3DataStackManagerPrefix
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/instance-profiles-exports.yaml
     Type: AWS::CloudFormation::Stack
