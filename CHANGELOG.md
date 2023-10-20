@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 7.1.1 - 2023-10-20
+### Fixed
+- Fixed stack manager main-c template
+
 ## 7.1.0 - 2023-10-12
 ### Added
 - Added aem_content_sync_inbound_cidr_ip,aem_vlt_version config
