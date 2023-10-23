@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Upgraded AEM AWS Stack Provisioner to 7.1.1
 
+## 7.1.2 - 2023-10-23
+
 ## 7.1.1 - 2023-10-20
 ### Fixed
 - Fixed stack manager main-c template
