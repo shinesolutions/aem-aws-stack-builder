@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Replace deprecated AmazonEC2RoleforSSM with AmazonSSMManagedInstanceCore #RS-180
+
 ## 5.19.0 - 2022-11-22
 
 ## 5.18.0 - 2022-10-26
