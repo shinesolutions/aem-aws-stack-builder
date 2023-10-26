@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changes
 - Update lambda functions' version from python3.7 to python3.8 [#19]
 
+### Changed
+- Replace deprecated AmazonEC2RoleforSSM with AmazonSSMManagedInstanceCore #RS-180
+
 ## 7.1.3 - 2023-10-23
 ### Changed
 - Upgraded AEM AWS Stack Provisioner to 7.1.1
