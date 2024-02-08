@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Update prerequisites ansible Permission Type C to include PreviewIncludeStack parameter
+- Update prerequisites ansible Permission Type C to include ChaosMonkeyIncludeStack parameter
 
 ## 7.1.4 - 2023-10-26
 ### Changed
