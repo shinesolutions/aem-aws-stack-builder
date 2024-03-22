@@ -1,5 +1,7 @@
 # Common configuration parameters
 common::aws_region: {{ aws.region }}
+common::aws_tags:
+{{ aws.tags | to_nice_yaml | indent(width=2, first=True) }}
 common::proxy_enabled: {{ proxy.enabled }}
 common::proxy_protocol: '{{ proxy.protocol }}'
 common::proxy_host: '{{ proxy.host }}'
