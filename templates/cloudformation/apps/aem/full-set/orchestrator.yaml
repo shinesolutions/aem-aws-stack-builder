@@ -1,9 +1,4 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Metadata:
-  cfn-lint:
-    config:
-      ignore_checks:
-      - E3002
 Description: Create the Compute resources for the AEM Orchestrator
 Outputs:
   OrchestratorAutoScalingGroup:
