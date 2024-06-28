@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Added tagging for further resources: snapshots, CloudWatch alarms)  #RS-165
+- Added tagging for further resources: snapshots, CloudWatch alarms #RS-165
 
 ## 7.1.7 - 2024-03-21
 ### Fixed
