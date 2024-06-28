@@ -254,6 +254,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Publish Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishMemoryHighAlarm:
     Properties:
@@ -281,6 +287,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -312,6 +324,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Publish Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -343,6 +361,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -374,6 +398,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Publish Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -405,6 +435,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishCPUUtilizationAlarm:
     Properties:
@@ -432,6 +468,12 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Publish CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishCPUUtilizationAlarm:
     Properties:
@@ -459,4 +501,10 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm

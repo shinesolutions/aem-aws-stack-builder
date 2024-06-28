@@ -246,6 +246,12 @@ Resources:
       Period: 60
       Statistic: Average
       Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator No Instance Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
 
   WarningOrchestratorMemoryHighAlarm:
@@ -301,6 +307,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningOrchestratorRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -332,6 +344,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Orchestrator Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalOrchestratorRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -363,6 +381,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningOrchestratorCPUUtilizationAlarm:
     Properties:
@@ -390,6 +414,12 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Orchestrator CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalOrchestratorCPUUtilizationAlarm:
     Properties:
@@ -417,4 +447,10 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm

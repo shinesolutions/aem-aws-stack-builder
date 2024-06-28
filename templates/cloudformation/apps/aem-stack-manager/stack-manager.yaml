@@ -240,7 +240,7 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 60
     Type: AWS::Lambda::Function
   ManagerTopicPermission:
@@ -289,7 +289,7 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 60
     Type: AWS::Lambda::Function
   OfflineBackupTopic:
@@ -348,7 +348,7 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 60
     Type: AWS::Lambda::Function
   QueryLambdaProdAlias:

@@ -227,6 +227,12 @@ Resources:
           - 0
           - Ref: PreviewPublishDispatcherASGCPUScalingParameters
       TreatMissingData: breaching
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher AVG CPU High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPreviewPublishDispatcherAVGCPULowAlarm:
     Properties:
@@ -256,6 +262,12 @@ Resources:
           - 0
           - Ref: PreviewPublishDispatcherASGCPUScalingParameters
       TreatMissingData: breaching
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher AVG CPU Low Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPreviewPublishDispatcherAtLeastOneUnHealthyAlarm:
     Properties:
@@ -280,6 +292,12 @@ Resources:
       Period: 60
       Statistic: Average
       Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher At Least One Unhealthy Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPreviewPublishDispatcherMoreThanOneUnHealthyAlarm:
     Properties:
@@ -304,6 +322,12 @@ Resources:
       Period: 60
       Statistic: Average
       Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher More Than One Unhealthy Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   PreviewPublishDispatcherLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
@@ -488,6 +512,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPreviewPublishDispatcherMemoryHighAlarm:
     Properties:
@@ -515,6 +545,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPreviewPublishDispatcherRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -546,6 +582,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPreviewPublishDispatcherRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -577,6 +619,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPreviewPublishDispatcherDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -608,6 +656,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPreviewPublishDispatcherDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -639,6 +693,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPreviewPublishDispatcherCPUUtilizationAlarm:
     Properties:
@@ -666,6 +726,12 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPreviewPublishDispatcherCPUUtilizationAlarm:
     Properties:
@@ -693,4 +759,10 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
