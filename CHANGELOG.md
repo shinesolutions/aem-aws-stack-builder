@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
-- Updates permissions for AWS Secrets Mangager and Parameter #RS-188
+- Updates permissions for AWS Secrets Manager and Parameter #RS-188
 
 ## 7.1.7 - 2024-03-21
 ### Fixed
