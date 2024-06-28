@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - NOTE: Requires 'shinesolutions/aem-platform-buildenv:4.0.1' from this point onwards
 - Upgrade Lambda runtime of AEM Stack Manager Lambda function to Python3.12
 - Lock shinesolutions/aem-platform-buildenv image to v4.0.1
+- Updates permissions for AWS Secrets Manager and Parameter #RS-188
 
 ## 7.1.7 - 2024-03-21
 ### Fixed
