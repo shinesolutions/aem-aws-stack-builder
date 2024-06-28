@@ -131,7 +131,7 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 300
     Type: AWS::Lambda::Function
   CloudWatchS3StreamLambdaPermission:
@@ -280,6 +280,6 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 900
     Type: AWS::Lambda::Function
