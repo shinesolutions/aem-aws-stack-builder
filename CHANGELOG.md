@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Added tagging for further resources: snapshots, CloudWatch alarms #RS-165
+
 ### Changed
 - NOTE: Requires 'shinesolutions/aem-platform-buildenv:4.0.1' from this point onwards
 - Upgrade Lambda runtime of AEM Stack Manager Lambda function to Python3.12
