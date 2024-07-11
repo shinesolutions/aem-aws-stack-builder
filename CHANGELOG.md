@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- NOTE: Requires 'shinesolutions/the-works-buildenv:2.0.1' from this point onwards
+- Lock shinesolutions/the-works-buildenv image to v2.0.1
+
 ## 8.0.0 - 2024-07-05
 ### Added
 - Added tagging for further resources: snapshots, CloudWatch alarms #RS-165
