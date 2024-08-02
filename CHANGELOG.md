@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Changed
 - Updated syntax in rtk config; required by version upgrade in previous release
+- Explicitly set ownership on github workspace directory
 
 ### Fixed
 - NOTE: Requires 'shinesolutions/the-works-buildenv:2.0.1' from this point onwards
