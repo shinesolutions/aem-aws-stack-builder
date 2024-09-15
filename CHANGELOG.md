@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgrade Lambda runtime to python3.12
+
 ## 6.10.1 - 2024-09-01
 ### Changed
 - Upgrade Lambda runtime to python3.8
