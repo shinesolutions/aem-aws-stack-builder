@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.2.2
+
 ## 8.0.2 - 2024-08-15
 ### Changed
 - Explicitly set ownership on github workspace directory for publish action
