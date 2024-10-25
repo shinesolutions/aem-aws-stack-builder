@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Allow S3 put for full-set instance profile
+- Corrects RTK config
 
 ## 8.0.3 - 2024-09-16
 ### Changed
