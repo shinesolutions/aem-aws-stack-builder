@@ -18,6 +18,3 @@ jobs:
       - uses: ./.github/actions/publish-action
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps[0]:
-      with:
-        ref: main
