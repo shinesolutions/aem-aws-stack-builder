@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Upgrade shinesolutions/the-works-buildenv image to v2.0.1
+- Lock shinesolutions/aem-platform-buildenv image to v4.0.1
+- Upgrade cfn-lint to 0.87.4 - required for Python 3.12 runtime upgrade
 
 ## 6.11.1 - 2024-12-05
 ### Changed
