@@ -69,12 +69,12 @@ lint:
 	for playbook in provisioners/ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
-	cfn-lint --ignore-templates \
+	cfn-lint --ignore-checks E3030 --ignore-templates \
 		templates/cloudformation/apps/aem-stack-manager/ssm-commands-template.yaml \
 		templates/cloudformation/apps/cdn/main.yaml \
 		templates/cloudformation/apps/cert-private.yaml \
 		templates/cloudformation/apps/cert-public.yaml \
-	  templates/cloudformation/apps/aem-stack-manager/ssm-commands/*.yaml \
+		templates/cloudformation/apps/aem-stack-manager/ssm-commands/*.yaml \
 		-t \
 		templates/cloudformation/*/*/*/*.yaml \
 		templates/cloudformation/*/*/*.yaml \

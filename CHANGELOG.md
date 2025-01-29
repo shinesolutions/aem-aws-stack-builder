@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Downgrade shinesolutions/the-works-buildenv image to v1.9.0
+- Revert shinesolutions/aem-platform-buildenv image to latest
+- Revert cfn-lint to 0.58.4 (exclude rule E3030 as Python12 runtime not recognised)
+- Revert RTK config as older RTK version us used by this buildenv
 
 ## 6.11.2 - 2024-12-06
 ### Changed
