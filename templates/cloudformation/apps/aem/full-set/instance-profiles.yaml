@@ -225,6 +225,7 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyBaselineAccess
       - Fn::If:
           - EBSVolumeEncryptionCMKAddManagedPolicyCondition
           - Fn::Select:
@@ -287,6 +288,7 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyBaselineAccess
       - Fn::If:
           - EBSVolumeEncryptionCMKAddManagedPolicyCondition
           - Fn::Select:
@@ -355,6 +357,7 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyBaselineAccess
       - Fn::If:
           - EBSVolumeEncryptionCMKAddManagedPolicyCondition
           - Fn::Select:
@@ -444,6 +447,7 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyBaselineAccess
       - Fn::If:
           - EBSVolumeEncryptionCMKAddManagedPolicyCondition
           - Fn::Select:
@@ -544,6 +548,7 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyBaselineAccess
       - Fn::If:
           - EBSVolumeEncryptionCMKAddManagedPolicyCondition
           - Fn::Select:
@@ -627,6 +632,7 @@ Resources:
         Version: '2012-10-17'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - arn:aws:iam::aws:policy/AWSQuickSetupPatchPolicyBaselineAccess
       - Fn::If:
           - EBSVolumeEncryptionCMKAddManagedPolicyCondition
           - Fn::Select:
