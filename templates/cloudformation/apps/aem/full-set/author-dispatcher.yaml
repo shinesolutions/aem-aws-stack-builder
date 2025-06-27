@@ -334,6 +334,9 @@ Resources:
       - Name: LoadBalancerName
         Value:
           Ref: AuthorDispatcherLoadBalancer
+      - Name: TargetGroup
+        Value:
+          Ref: AuthorDispatcherLoadBalancerTargetGroup
       EvaluationPeriods: 10
       MetricName: UnHealthyHostCount
       Namespace: AWS/ELB
@@ -358,6 +361,9 @@ Resources:
       - Name: LoadBalancerName
         Value:
           Ref: AuthorDispatcherLoadBalancer
+      - Name: TargetGroup
+        Value:
+          Ref: AuthorDispatcherLoadBalancerTargetGroup
       EvaluationPeriods: 1
       MetricName: UnHealthyHostCount
       Namespace: AWS/ELB
