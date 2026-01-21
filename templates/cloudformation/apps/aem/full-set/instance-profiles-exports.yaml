@@ -50,6 +50,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
     Value:
       Ref: PublishDispatcherInstanceProfileParameter
+  PreviewPublishDispatcherInstanceProfile:
+    Description: The Preview Publish Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherInstanceProfile
+    Value:
+      Ref: PreviewPublishDispatcherInstanceProfileParameter
   PublishInstanceProfile:
     Description: The Publish Instance Profile
     Export:
@@ -57,6 +64,13 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishInstanceProfile
     Value:
       Ref: PublishInstanceProfileParameter
+  PreviewPublishInstanceProfile:
+    Description: The Preview Publish Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishInstanceProfile
+    Value:
+      Ref: PreviewPublishInstanceProfileParameter
 Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
@@ -82,8 +96,14 @@ Parameters:
   PublishDispatcherInstanceProfileParameter:
     Description: The Publish Dispatcher Instance Profile
     Type: String
+  PreviewPublishDispatcherInstanceProfileParameter:
+    Description: The Preview Publish Dispatcher Instance Profile
+    Type: String
   PublishInstanceProfileParameter:
     Description: The Publish Instance Profile
+    Type: String
+  PreviewPublishInstanceProfileParameter:
+    Description: The Preview Publish Instance Profile
     Type: String
 Resources:
   DummyParameter:

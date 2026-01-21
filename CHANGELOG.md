@@ -12,6 +12,222 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replace deprecated AmazonEC2RoleforSSM with AmazonSSMManagedInstanceCore #RS-180
 
+## 8.0.4 - 2024-10-25
+### Fixed
+- Allow S3 put for full-set instance profile
+- Corrects RTK config
+
+## 8.0.3 - 2024-09-16
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.2.2
+
+## 8.0.2 - 2024-08-15
+### Changed
+- Explicitly set ownership on github workspace directory for publish action
+
+## 8.0.1 - 2024-08-02
+### Changed
+- Updated syntax in rtk config; required by version upgrade in previous release
+- Explicitly set ownership on github workspace directory
+
+### Fixed
+- NOTE: Requires 'shinesolutions/the-works-buildenv:2.0.1' from this point onwards
+- Lock shinesolutions/the-works-buildenv image to v2.0.1
+
+## 8.0.0 - 2024-07-05
+### Added
+- Added tagging for further resources: snapshots, CloudWatch alarms #RS-165
+
+### Changed
+- NOTE: Requires 'shinesolutions/aem-platform-buildenv:4.0.1' from this point onwards
+- Upgrade Lambda runtime of AEM Stack Manager Lambda function to Python3.12
+- Lock shinesolutions/aem-platform-buildenv image to v4.0.1
+- Updates permissions for AWS Secrets Manager and Parameter #RS-188
+
+## 7.1.7 - 2024-03-21
+### Fixed
+- Fixed missing python3.7 to python3.8 upgrade for Utilitis lambda
+
+## 7.1.6 - 2024-02-29
+
+## 7.1.5 - 2024-02-08
+### Fixed
+- Fixed prerequisites ansible Permission Type C to include PreviewIncludeStack parameter
+- Fixed prerequisites ansible Permission Type C to include ChaosMonkeyIncludeStack parameter
+
+## 7.1.4 - 2023-10-26
+### Changed
+- Update lambda functions' version from python3.7 to python3.8
+- Replace deprecated AmazonEC2RoleforSSM with AmazonSSMManagedInstanceCore #RS-180
+
+## 7.1.3 - 2023-10-23
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.1.1
+
+## 7.1.2 - 2023-10-23
+
+## 7.1.1 - 2023-10-20
+### Fixed
+- Fixed stack manager main-c template
+
+## 7.1.0 - 2023-10-12
+### Added
+- Added aem_content_sync_inbound_cidr_ip,aem_vlt_version config
+- Download VLT tool from maven
+- Added SSM document for ContentSync, AttachDetachSG
+
+## 7.0.10 - 2023-08-17
+### Fixed
+- Disable DNS Switch for preview-publish-dispatcher
+
+## 7.0.9 - 2023-08-17
+### Fixed
+- Fixed stack manager main playbook
+
+## 7.0.8 - 2023-08-17
+### Fixed
+- Fixed lint errors
+
+## 7.0.7 - 2023-08-17
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.0.4
+- Update Stack Manager deletion to remove Stack Manager Cloudwatchlogs if enabled
+
+## 7.0.6 - 2023-08-16
+### Changed
+- Upgraded AEM Stack manager to 2.1.0
+
+## 7.0.5 - 2023-08-16
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.0.3
+
+## 7.0.4 - 2023-08-16
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.0.2
+
+## 7.0.3 - 2023-08-14
+### Changed
+- Disabled feature to delete CloudWatch Alarms of the deleted stack, as the ansible modules are not compatible with Ansible 4.8.0
+
+## 7.0.2 - 2023-08-14
+### Added
+- Added feature to delete CloudWatch Alarms of the deleted stack
+
+### Fixed
+- Fixed configuration documentation
+
+## 7.0.1 - 2023-08-11
+### Fixed
+- Fixed default value of Preview Publish ASG size
+
+## 7.0.0 - 2023-08-07
+### Added
+- Added `Publish Preview` components to support Preview feature in AEM OpenCloud
+
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 7.0.1
+- Upgraded AEM Orchestrator to 4.0.0
+- Upgraded AEM Stack manager to 2.0.0
+
+### Fixed
+- Fixed `cf_tags` & `cf_security_group` Ansible libraries
+- Fixed Stack Creation with disabled Chaos Monkey component
+
+## 6.10.0 - 2023-07-26
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 6.9.0
+
+## 6.9.0 - 2023-06-07
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 6.8.0
+
+## 6.8.0 - 2023-06-07
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 6.7.0
+
+## 6.7.0 - 2023-06-03
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 6.6.0
+
+## 6.6.1 - 2023-04-27
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 6.5.1
+
+## 6.6.0 - 2023-04-21
+### Added
+- Added AEM installation profile aem65_sp16 #RS-142
+
+### Changed
+- Upgraded AEM AWS Stack Provisioner to 6.5.0 #RS-142
+
+## 6.5.1 - 2023-03-24
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 6.4.1 #RS-139
+
+### Fixed
+- Revert removal of default Apache httpd files introduced in RS-138 #RS-139
+
+## 6.5.0 - 2023-03-09
+### Changed
+- Changed aem service management to systemd #RS-40
+- Upgrade AEM AWS Stack Provisioner to 6.4.0 #RS-40
+- Changed SSM AEM service management to use systemd #RS-40
+
+## 6.4.0 - 2023-03-01
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 6.3.0 #RS-138 #RS-40
+- Add removal of default Apache httpd configuration files #RS-138
+
+### Fixed
+- Fixed author-standby to primary promotion for Amazon Linux 2 #RS-40
+
+## 6.3.1 - 2023-02-28
+### Fixed
+- Fixed user-data for Orchestrator component #RS-138
+
+## 6.3.0 - 2023-02-28
+### Changed
+- Disabled Repository & Package update/upgrade during EC2 instance start #RS-138
+- Replaced cloud-init userdata script with runcmd script #RS-138
+- Update documentation #RS-138
+
+### Fixed
+- Fixed shellcheck lint
+
+## 6.2.1 - 2023-02-17
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 6.2.1 #RS-125
+
+### Fixed
+- Fixed syntax error in `action_promote_author_standby_to_primary` #RS-125
+
+## 6.2.0 - 2023-02-15
+### Added
+- Added generation of JMX User password to stack-provisioner-hieradata template file #RS-125
+
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 6.2.0 #RS-125
+
+## 6.1.0 - 2023-02-10
+### Changed
+- Upgrade AEM AWS Stack Provisioner to 6.1.0 #RS-124
+
+## 6.0.1 - 2023-01-30
+### Fixed
+- Fixed Stack Creation for Consolidated
+
+## 6.0.0 - 2023-01-29
+### Added
+- Added syntax check of Cloudformation templates with cfn-lint
+
+### Changed
+- Update AEM-AWS-Stack-Buiilder Release artifact name to aem-aws-stack-builder-internal #RS-111
+- Upgrade AEM AWS Stack Provisioner to 6.0.0 #RS-84
+- Replaced ASG Launch Configuration with EC2 Launch Template for all ASG #RS-84
+
+### Fixed
+- Fixed syntax errors in Cloudformation templates
+
 ## 5.19.0 - 2022-11-22
 
 ## 5.18.0 - 2022-10-26

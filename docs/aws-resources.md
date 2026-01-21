@@ -7,7 +7,7 @@ For creating AEM environments using AEM AWS Stack Builder, a number of AWS resou
 
 Due to the fact that majority of user's organisation policies requiring private key, SSL/TLS certificate, and bastion host to be managed by the users and not by any external automation process, the following resources must be provisioned by the users:
 
-- Create [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html), this key pair name needs to be set in `compute.key_pair_name` [configuration](https://github.com/shinesolutions/aem-aws-stack-builder/blob/master/docs/configuration.md) property.
+- Create [EC2 key pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html), this key pair name needs to be set in `compute.key_pair_name` [configuration](https://github.com/shinesolutions/aem-aws-stack-builder-internal/blob/master/docs/configuration.md) property.
 - Provision an SSL/TLS certificate either on [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/getting-started/) or [IAM](https://docs.aws.amazon.com/cli/latest/reference/iam/upload-server-certificate.html)
 - If your bastion host doesn't have any security group yet then you need to create one for it, and configure that security group in `compute.inbound_from_bastion_host_security_group` property
 

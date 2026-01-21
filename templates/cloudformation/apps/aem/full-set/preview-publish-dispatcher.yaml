@@ -1,0 +1,768 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UsePreviewPublishDispatcherDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UsePreviewPublishDispatcherDataVolSnapshotParameter
+    - true
+Description: Create the Compute resources for the AEM Preview Publish Dispatcher
+Outputs:
+  PreviewPublishDispatcherAutoScalingGroup:
+    Description: The Preview Publish Dispatcher Auto Scaling Group
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherAutoScalingGroup
+    Value:
+      Ref: PreviewPublishDispatcherAutoScalingGroup
+  PreviewPublishDispatcherLaunchTemplate:
+    Description: The Preview Publish Dispatcher Launch Configuration
+    Value:
+      Ref: PreviewPublishDispatcherLaunchTemplate
+  PreviewPublishDispatcherLoadBalancer:
+    Description: The Preview Publish Dispatcher Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherLoadBalancer
+    Value:
+      Ref: PreviewPublishDispatcherLoadBalancer
+  PreviewPublishDispatcherLoadBalancerTargetGroup:
+    Description: Target group of Preview Publish Dispatcher Load Balancer
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherLoadBalancerTargetGroup
+    Value:
+      Ref: PreviewPublishDispatcherLoadBalancerTargetGroup
+  PreviewPublishDispatcherLoadBalancerDNSName:
+    Description: The Preview Publish Dispatcher Load Balancer DNSName
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishDispatcherLoadBalancerDNSName
+    Value:
+      Fn::GetAtt:
+      - PreviewPublishDispatcherLoadBalancer
+      - DNSName
+Parameters:
+  AemAwsStackProvisionerVersionParameter:
+    Description: AEM AWS Stack Provisioner version number
+    Type: String
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  ELBCipherSuiteParameter:
+    Description: ELB Cipher Suite Policy
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  PreviewPublishDispatcherASGAvailabilityZoneListParameter:
+    Description: The Preview Publish Dispatcher Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PreviewPublishDispatcherASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: CommaDelimitedList
+  PreviewPublishDispatcherASGCPUScalingParameters:
+    Description: The ASG CPU scaling parameters that extra Preview Publish Dispatcher instances
+      are scaled up/down at
+    Type: CommaDelimitedList
+  PreviewPublishDispatcherDataVolSizeParameter:
+    Description: Preview Publish Dispatcher Instances Root EBS Volume Size
+    Type: Number
+  PreviewPublishDispatcherEnableVolEncryptionParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wether to enable or disable EBS volume encryption.
+    Type: String
+  PreviewPublishDispatcherImageParameter:
+    Description: The Preview Publish Dispatcher Image Id
+    Type: AWS::EC2::Image::Id
+  PreviewPublishDispatcherImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the Preview Publish Dispatcher Image Id
+    Type: String
+  PreviewPublishDispatcherImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the Preview Publish Dispatcher Image Id
+    Type: String
+  PreviewPublishDispatcherInstanceTypeParameter:
+    Description: The Preview Publish Dispatcher Instance Type
+    Type: String
+  PreviewPublishDispatcherLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Preview Publish Dispatcher ELB Health Check Target
+    Type: String
+  PreviewPublishDispatcherLoadBalancerSchemeParameter:
+    Description: AEM Preview Publish Dispatcher ELB Scheme
+    Type: String
+  PreviewPublishDispatcherRootVolSizeParameter:
+    Description: PreviewPublishDispatcher Instances Root EBS Volume Size
+    Type: Number
+  UsePreviewPublishDispatcherDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Preview Publish Dispatcher Snapshot Data Volume.
+    Type: String
+  PreviewPublishDispatcherDataVolSnapshotParameter:
+    Description: The Preview Publish Dispatcher Data Volume Snapshot Id
+    Type: String
+  HttpProxyParameter:
+    Description: http_proxy parameter
+    Type: String
+  HttpsProxyParameter:
+    Description: https_proxy parameter
+    Type: String
+  NoProxyParameter:
+    Description: no_proxy parameter
+    Type: String
+Resources:
+  PreviewPublishDispatcherAutoScalingGroup:
+    Properties:
+      AvailabilityZones:
+        Ref: PreviewPublishDispatcherASGAvailabilityZoneListParameter
+      Cooldown:
+        Fn::Select:
+          - 4
+          - Ref: PreviewPublishDispatcherASGConfigurationParameters
+      DesiredCapacity:
+        Fn::Select:
+          - 2
+          - Ref: PreviewPublishDispatcherASGConfigurationParameters
+      HealthCheckGracePeriod:
+        Fn::Select:
+          - 3
+          - Ref: PreviewPublishDispatcherASGConfigurationParameters
+      HealthCheckType: ELB
+      LaunchTemplate:
+        Version:
+          Fn::GetAtt:
+          - PreviewPublishDispatcherLaunchTemplate
+          - LatestVersionNumber
+        LaunchTemplateId:
+          Ref: PreviewPublishDispatcherLaunchTemplate
+      TargetGroupARNs:
+        - Ref: PreviewPublishDispatcherLoadBalancerTargetGroup
+      MaxSize:
+        Fn::Select:
+          - 0
+          - Ref: PreviewPublishDispatcherASGConfigurationParameters
+      MetricsCollection:
+      - Granularity: 1Minute
+        Metrics:
+        - GroupMinSize
+        - GroupMaxSize
+        - GroupDesiredCapacity
+        - GroupInServiceInstances
+        - GroupPendingInstances
+        - GroupStandbyInstances
+        - GroupTerminatingInstances
+        - GroupTotalInstances
+      MinSize:
+        Fn::Select:
+          - 1
+          - Ref: PreviewPublishDispatcherASGConfigurationParameters
+      NotificationConfigurations:
+      - NotificationTypes:
+        - autoscaling:EC2_INSTANCE_LAUNCH
+        - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+        - autoscaling:EC2_INSTANCE_TERMINATE
+        - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        TopicARN:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
+      Tags:
+      - Key: Name
+        PropagateAtLaunch: true
+        Value: AEM Preview Publish Dispatcher
+      - Key: StackPrefix
+        PropagateAtLaunch: true
+        Value:
+          Ref: MainStackPrefixParameter
+      - Key: Component
+        PropagateAtLaunch: true
+        Value: preview-publish-dispatcher
+      - Key: ApplicationDescriptorUrl
+        PropagateAtLaunch: true
+        Value: PLACEHOLDER
+      VPCZoneIdentifier:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-PreviewPublishDispatcherSubnetList
+    Type: AWS::AutoScaling::AutoScalingGroup
+  CriticalPreviewPublishDispatcherAVGCPUHighAlarm:
+    Properties:
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-PreviewPublishDispatcher-AVGCPUHighAlarm
+      AlarmActions:
+      - Ref: PreviewPublishDispatcherScaleUpPolicy
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Scale up if CPU Avg > X % for X minutes
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value:
+          Ref: PreviewPublishDispatcherAutoScalingGroup
+      EvaluationPeriods:
+        Fn::Select:
+          - 2
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period:
+        Fn::Select:
+          - 1
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      Statistic: Average
+      Threshold:
+        Fn::Select:
+          - 0
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      TreatMissingData: breaching
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher AVG CPU High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishDispatcherAVGCPULowAlarm:
+    Properties:
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-Warning-PreviewPublishDispatcher-AVGCPULowAlarm
+      AlarmActions:
+      - Ref: PreviewPublishDispatcherScaleDownPolicy
+      AlarmDescription: Scale down if CPU Avg < X % for X minutes
+      ComparisonOperator: LessThanThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value:
+          Ref: PreviewPublishDispatcherAutoScalingGroup
+      EvaluationPeriods:
+        Fn::Select:
+          - 4
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      MetricName: CPUUtilization
+      Namespace: AWS/EC2
+      Period:
+        Fn::Select:
+          - 3
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      Statistic: Average
+      Threshold:
+        Fn::Select:
+          - 0
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      TreatMissingData: breaching
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher AVG CPU Low Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishDispatcherAtLeastOneUnHealthyAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: At least one Preview Publish Dispatcher is Unhealthy
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-Warning-PreviewPublishDispatcher-AtLeastOneUnHealthyAlarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: PreviewPublishDispatcherLoadBalancer
+      EvaluationPeriods: 15
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher At Least One Unhealthy Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishDispatcherMoreThanOneUnHealthyAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: More than one Preview Publish Dispatcher is Unhealthy
+      AlarmName:
+        Fn::Sub: ${MainStackPrefixParameter}-Critical-PreviewPublishDispatcher-MoreThanOneUnHealthyAlarm
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: LoadBalancerName
+        Value:
+          Ref: PreviewPublishDispatcherLoadBalancer
+      EvaluationPeriods: 1
+      MetricName: UnHealthyHostCount
+      Namespace: AWS/ELB
+      OKActions:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 60
+      Statistic: Average
+      Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher More Than One Unhealthy Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  PreviewPublishDispatcherLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        BlockDeviceMappings:
+        - DeviceName:
+            Ref: PreviewPublishDispatcherImageRootDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishDispatcherEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: PreviewPublishDispatcherRootVolSizeParameter
+            VolumeType: gp2
+        - DeviceName:
+            Ref: PreviewPublishDispatcherImageDataDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishDispatcherEnableVolEncryptionParameter
+            SnapshotId:
+              Fn::If:
+              - UsePreviewPublishDispatcherDataVolSnapshotCondition
+              - Ref: PreviewPublishDispatcherDataVolSnapshotParameter
+              - Ref: AWS::NoValue
+            VolumeSize:
+              Ref: PreviewPublishDispatcherDataVolSizeParameter
+            VolumeType: gp2
+        IamInstanceProfile:
+          Name:
+            Fn::ImportValue:
+              Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherInstanceProfile
+        ImageId:
+          Ref: PreviewPublishDispatcherImageParameter
+        Monitoring:
+          Enabled: false
+        InstanceType:
+          Ref: PreviewPublishDispatcherInstanceTypeParameter
+        KeyName:
+          Ref: ComputeKeyPairNameParameter
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherSecurityGroup
+        UserData:
+          Fn::Base64:
+            Fn::Sub: |
+              #cloud-config
+              repo_upgrade: false
+              repo_upgrade: false
+              package_update: false
+              package_upgrade: false
+
+              runcmd:
+              - set -x
+              - export AWS_DEFAULT_REGION=${AWS::Region}
+              - export no_proxy=${NoProxyParameter}
+              - export http_proxy=${HttpProxyParameter}
+              - export https_proxy=${HttpsProxyParameter}
+              - source /etc/profile
+              - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
+              - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+              - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} preview-publish-dispatcher ${AemAwsStackProvisionerVersionParameter}
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+          - Key: Name
+            Value: AEM Preview Publish-Dispatcher Launch Template
+          - Key: StackPrefix
+            Value:
+              Ref: MainStackPrefixParameter
+  PreviewPublishDispatcherLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Scheme:
+        Ref: PreviewPublishDispatcherLoadBalancerSchemeParameter
+      Subnets:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-PreviewPublishDispatcherELBSubnetList
+      SecurityGroups:
+      - Fn::ImportValue:
+          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherELBSecurityGroup
+      Tags:
+      - Key: Name
+        Value: AEM Preview Publish Dispatcher Load Balancer
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+  PreviewPublishDispatcherLoadBalancerTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath:
+        Ref: PreviewPublishDispatcherLoadBalancerHealthCheckTargetParameter
+      HealthCheckPort: 443
+      HealthyThresholdCount: 2
+      HealthCheckTimeoutSeconds: 5
+      UnhealthyThresholdCount: 10
+      HealthCheckProtocol: HTTPS
+      Port: 443
+      Protocol: 'HTTPS'
+      VpcId:
+        Fn::ImportValue:
+          Fn::Sub: ${NetworkStackPrefixParameter}-VPCId
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: '30'
+      Tags:
+      - Key: Name
+        Value: AEM Preview Publish Dispatcher Load Balancer TargetGroup
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+  PreviewPublishDispatcherLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+      - CertificateArn:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-SSLCertificateARN
+      DefaultActions:
+      - Type: forward
+        TargetGroupArn:
+          Ref: PreviewPublishDispatcherLoadBalancerTargetGroup
+      LoadBalancerArn:
+        Ref: PreviewPublishDispatcherLoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      SslPolicy:
+        Ref: ELBCipherSuiteParameter
+  PreviewPublishDispatcherScaleDownPolicy:
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName:
+        Ref: PreviewPublishDispatcherAutoScalingGroup
+      Cooldown:
+        Fn::Select:
+          - 6
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      ScalingAdjustment: -1
+    Type: AWS::AutoScaling::ScalingPolicy
+  PreviewPublishDispatcherScaleUpPolicy:
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName:
+        Ref: PreviewPublishDispatcherAutoScalingGroup
+      Cooldown:
+        Fn::Select:
+          - 5
+          - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+      ScalingAdjustment: 1
+    Type: AWS::AutoScaling::ScalingPolicy
+
+  WarningPreviewPublishDispatcherMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublishDispatcher-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: AutoScalingGroupName
+        Value:
+          Ref: PreviewPublishDispatcherAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishDispatcherMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublishDispatcher-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishDispatcherAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishDispatcherRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublishDispatcher-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishDispatcherAutoScalingGroup
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishDispatcherRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublishDispatcher-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishDispatcherAutoScalingGroup
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishDispatcherDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublishDispatcher-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishDispatcherAutoScalingGroup
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishDispatcherDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublishDispatcher-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishDispatcherAutoScalingGroup
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishDispatcherCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublishDispatcher-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishDispatcherAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Maximum
+      Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Dispatcher CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishDispatcherCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublishDispatcher-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishDispatcherAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Maximum
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Dispatcher CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm

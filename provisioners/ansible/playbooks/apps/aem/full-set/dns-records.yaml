@@ -18,6 +18,7 @@
           AuthorDNSRecordSetNameParameter: "{{ dns.author.record_set_name }}"
           AuthorDispatcherDNSRecordSetNameParameter: "{{ dns.author_dispatcher.record_set_name }}"
           PublishDispatcherDNSRecordSetNameParameter: "{{ dns.publish_dispatcher.record_set_name }}"
+          PreviewPublishDispatcherDNSRecordSetNameParameter: "{{ dns.preview_publish_dispatcher.record_set_name }}"
       tags:
       - create
 

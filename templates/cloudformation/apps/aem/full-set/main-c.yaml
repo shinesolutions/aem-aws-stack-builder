@@ -5,9 +5,17 @@ Conditions:
       - Ref: ChaosMonkeyIncludeStack
       - 'true'
   CreateMonitoringStackCondition:
+    Fn::And:
+    - Fn::Equals:
+        - Ref: MonitoringIncludeStack
+        - 'true'
+    - Fn::Equals:
+        - Ref: ChaosMonkeyIncludeStack
+        - 'true'
+  CreatePreviewStackCondition:
     Fn::Equals:
-      - Ref: MonitoringIncludeStack
-      - 'true'
+    - Ref: PreviewIncludeStack
+    - 'true'
 Description: Overarching CF Template to Create AEM Full-Set Main Resources Stacks
 Parameters:
   AemAwsStackProvisionerVersionParameter:
@@ -20,20 +28,14 @@ Parameters:
     Type: String
     Default: 'true'
     AllowedValues:
-    - true
-    - false
-  AuthorDNSRecordSetNameParameter:
-    Description: Author DNS Record Set Name
-    Type: String
+    - 'true'
+    - 'false'
   AuthorDispatcherASGAvailabilityZoneListParameter:
     Description: The Author Dispatcher Availability Zone List
     Type: List<AWS::EC2::AvailabilityZone::Name>
   AuthorDispatcherASGConfigurationParameters:
     Description: The ASG configuration parameters
     Type: List<String>
-  AuthorDispatcherDNSRecordSetNameParameter:
-    Description: AuthorDispatcher DNS Record Set Name
-    Type: String
   AuthorDispatcherImageParameter:
     Description: The Author Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -71,7 +73,7 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
   ChaosMonkeyImageParameter:
     Description: The Chaos Monkey Image Id
-    Type: AWS::EC2::Image::Id
+    Type: String
   ChaosMonkeyInstanceTypeParameter:
     Default: ''
     Description: The Chaos Monkey Instance Type
@@ -113,6 +115,51 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
+  PreviewIncludeStack:
+    Default: 'false'
+    Description: Creates the Preview stack or not
+    Type: String
+  PreviewPublishASGConfigurationParameters:
+    Description: The Preview Publish ASG configuration parameters
+    Type: List<String>
+  PreviewPublishASGAvailabilityZoneListParameter:
+    Description: The Preview Publish Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PreviewPublishImageParameter:
+    Description: The Preview Publish Image Id
+    Type: String
+  PreviewPublishInstanceTypeParameter:
+    Description: The Preview Publish Instance Type
+    Type: String
+  PreviewPublishVolParameter:
+    Description: Comma seperated list of Preview Publish Instances Volume parameters
+    Type: List<String>
+  PreviewPublishDispatcherASGConfigurationParameters:
+    Description: The Preview Publish Disaptcher ASG configuration parameters
+    Type: List<String>
+  PreviewPublishDispatcherASGAvailabilityZoneListParameter:
+    Description: The Preview Publish Dispatcher Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PreviewPublishDispatcherASGCPUScalingParameters:
+    Description: The ASG CPU scaling parameters that extra Preview Publish Dispatcher instances
+      are scaled up/down at
+    Type: List<Number>
+  PreviewPublishDispatcherImageParameter:
+    Description: The Preview Publish Dispatcher Image Id
+    Type: String
+  PreviewPublishDispatcherInstanceTypeParameter:
+    Description: The Preview Publish Dispatcher Instance Type
+    Type: String
+  PreviewPublishDispatcherLoadBalancerHealthCheckTargetParameter:
+    Description: AEM Preview Publish Dispatcher ELB Health Check Target
+    Type: String
+  PreviewPublishDispatcherLoadBalancerSchemeParameter:
+    Description: AEM Preview Publish Dispatcher ELB Scheme
+    Type: String
+  PreviewPublishDispatcherVolParameter:
+    Description: Comma seperated list of Preview PublishDispatcher Instances Volume parameters
+    Type: List<String>
+
   PublishASGConfigurationParameters:
     Description: The ASG configuration parameters
     Type: List<String>
@@ -129,9 +176,6 @@ Parameters:
     Description: The ASG CPU scalang parameters that extra Publish Dispatcher instances
       are scaled up/down at
     Type: List<Number>
-  PublishDispatcherDNSRecordSetNameParameter:
-    Description: PublishDispatcher DNS Record Set Name
-    Type: String
   PublishDispatcherImageParameter:
     Description: The Publish Dispatcher Image Id
     Type: AWS::EC2::Image::Id
@@ -156,9 +200,6 @@ Parameters:
   PublishVolParameter:
     Description: Comma seperated list of Publish Instances Volume parameters
     Type: List<String>
-  Route53HostedZoneNameParameter:
-    Description: Route53 Hosted Zone Name the Record Set will be Created in
-    Type: String
   HttpProxyParameter:
     Description: http_proxy parameter
     Type: String
@@ -337,6 +378,16 @@ Resources:
           Ref: HttpsProxyParameter
         NoProxyParameter:
           Ref: NoProxyParameter
+        PreviewPublisherASG:
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Fn::GetAtt: PreviewPublishStack.Outputs.PreviewPublishAutoScalingGroup
+            - Ref: AWS::NoValue
+        PreviewPublisherDispatcherASG:
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Fn::GetAtt: PreviewPublishDispatcherStack.Outputs.PreviewPublishDispatcherAutoScalingGroup
+            - Ref: AWS::NoValue
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/chaos-monkey.yaml
     Type: AWS::CloudFormation::Stack
@@ -391,8 +442,6 @@ Resources:
           Ref: EnableVolumeEncryptionParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
-        PublishDispatcherStackArn:
-          Ref: PublishDispatcherStack
         PublishDispatcherStackName:
           # As of May '18, CloudFormation doesn't provide a way to retrieve the Stack Name with Fn::GetAtt or Ref functions
           # Resorting to parsing the ARN to obtain it
@@ -403,8 +452,22 @@ Resources:
             - Fn::Split:
               - /
               - Ref: PublishDispatcherStack
+        PreviewPublishDispatcherStackName:
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Fn::Select:
+              - 1
+              - Fn::Split:
+                - /
+                - Ref: PreviewPublishDispatcherStack
+            - Ref: AWS::NoValue
         PublishStackArn:
           Ref: PublishStack
+        PreviewPublishStackArn:
+          Fn::If:
+            - CreatePreviewStackCondition
+            - Ref: PreviewPublishStack
+            - Ref: AWS::NoValue
         HttpProxyParameter:
           Ref: HttpProxyParameter
         HttpsProxyParameter:
@@ -486,6 +549,79 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish-dispatcher.yaml
     Type: AWS::CloudFormation::Stack
+  PreviewPublishDispatcherStack:
+    Condition: CreatePreviewStackCondition
+    Properties:
+      Parameters:
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        ELBCipherSuiteParameter:
+          Ref: ELBCipherSuiteParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        PreviewPublishDispatcherASGAvailabilityZoneListParameter:
+          Fn::Join:
+            - ','
+            - Ref: PreviewPublishDispatcherASGAvailabilityZoneListParameter
+        PreviewPublishDispatcherASGCPUScalingParameters:
+          Fn::Join:
+            - ','
+            - Ref: PreviewPublishDispatcherASGCPUScalingParameters
+        PreviewPublishDispatcherASGConfigurationParameters:
+          Fn::Join:
+            - ','
+            - Ref: PreviewPublishDispatcherASGConfigurationParameters
+        PreviewPublishDispatcherRootVolSizeParameter:
+          Fn::Select:
+            - 0
+            - Ref: PreviewPublishDispatcherVolParameter
+        PreviewPublishDispatcherDataVolSizeParameter:
+          Fn::Select:
+            - 1
+            - Ref: PreviewPublishDispatcherVolParameter
+        PreviewPublishDispatcherEnableVolEncryptionParameter:
+          Ref: EnableVolumeEncryptionParameter
+        PreviewPublishDispatcherDataVolSnapshotParameter:
+          Fn::Select:
+            - 2
+            - Ref: PreviewPublishDispatcherVolParameter
+        UsePreviewPublishDispatcherDataVolSnapshotParameter:
+          Fn::Select:
+            - 3
+            - Ref: PreviewPublishDispatcherVolParameter
+        PreviewPublishDispatcherImageParameter:
+          Ref: PreviewPublishDispatcherImageParameter
+        PreviewPublishDispatcherImageRootDevice:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        PreviewPublishDispatcherImageDataDevice:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
+        PreviewPublishDispatcherInstanceTypeParameter:
+          Ref: PreviewPublishDispatcherInstanceTypeParameter
+        PreviewPublishDispatcherLoadBalancerHealthCheckTargetParameter:
+          Ref: PreviewPublishDispatcherLoadBalancerHealthCheckTargetParameter
+        PreviewPublishDispatcherLoadBalancerSchemeParameter:
+          Ref: PreviewPublishDispatcherLoadBalancerSchemeParameter
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/preview-publish-dispatcher.yaml
+    Type: AWS::CloudFormation::Stack
   PublishStack:
     Properties:
       Parameters:
@@ -548,6 +684,69 @@ Resources:
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/publish.yaml
     Type: AWS::CloudFormation::Stack
+  PreviewPublishStack:
+    Condition: CreatePreviewStackCondition
+    Properties:
+      Parameters:
+        AemAwsStackProvisionerVersionParameter:
+          Ref: AemAwsStackProvisionerVersionParameter
+        ComputeKeyPairNameParameter:
+          Ref: ComputeKeyPairNameParameter
+        DataBucketNameParameter:
+          Ref: DataBucketNameParameter
+        MainStackPrefixParameter:
+          Ref: MainStackPrefixParameter
+        NetworkStackPrefixParameter:
+          Ref: NetworkStackPrefixParameter
+        PrerequisitesStackPrefixParameter:
+          Ref: PrerequisitesStackPrefixParameter
+        PreviewPublishASGAvailabilityZoneListParameter:
+          Fn::Join:
+            - ','
+            - Ref: PreviewPublishASGAvailabilityZoneListParameter
+        PreviewPublishASGConfigurationParameters:
+          Fn::Join:
+            - ','
+            - Ref: PreviewPublishASGConfigurationParameters
+        PreviewPublishRootVolSizeParameter:
+          Fn::Select:
+            - 0
+            - Ref: PreviewPublishVolParameter
+        PreviewPublishDataVolSizeParameter:
+          Fn::Select:
+            - 1
+            - Ref: PreviewPublishVolParameter
+        PreviewPublishDataVolSnapshotParameter:
+          Fn::Select:
+            - 2
+            - Ref: PreviewPublishVolParameter
+        UsePreviewPublishDataVolSnapshotParameter:
+          Fn::Select:
+            - 3
+            - Ref: PreviewPublishVolParameter
+        PreviewPublishEnableVolEncryptionParameter:
+          Ref: EnableVolumeEncryptionParameter
+        PreviewPublishImageParameter:
+          Ref: PreviewPublishImageParameter
+        PreviewPublishImageRootDevice:
+          Fn::Select:
+            - 0
+            - Ref: ImageDevices
+        PreviewPublishImageDataDevice:
+          Fn::Select:
+            - 1
+            - Ref: ImageDevices
+        PreviewPublishInstanceTypeParameter:
+          Ref: PreviewPublishInstanceTypeParameter
+        HttpProxyParameter:
+          Ref: HttpProxyParameter
+        HttpsProxyParameter:
+          Ref: HttpsProxyParameter
+        NoProxyParameter:
+          Ref: NoProxyParameter
+      TemplateURL:
+        Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/preview-publish.yaml
+    Type: AWS::CloudFormation::Stack
   MonitoringStack:
     Condition: CreateMonitoringStackCondition
     DependsOn:
@@ -565,14 +764,6 @@ Resources:
           Ref: PrerequisitesStackPrefixParameter
         AwsRegionParameter:
           Fn::Sub: ${AWS::Region}
-        RootDeviceParameter:
-          Fn::Select:
-            - 0
-            - Ref: ImageDevices
-        DataDeviceParameter:
-          Fn::Select:
-            - 1
-            - Ref: ImageDevices
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${MainStackPrefixParameter}/monitoring.yaml
     Type: AWS::CloudFormation::Stack

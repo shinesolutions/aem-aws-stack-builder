@@ -139,8 +139,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   AuthorLoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -174,8 +172,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   AuthorLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -244,14 +240,25 @@ Resources:
         Value: author-primary
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
-            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
-            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-primary\
-            \ ${AemAwsStackProvisionerVersionParameter}\n"
+          Fn::Sub: |
+            #cloud-config
+            repo_upgrade: false
+            repo_upgrade: false
+            package_update: false
+            package_upgrade: false
+
+            runcmd:
+            - set -x
+            - export AWS_DEFAULT_REGION=${AWS::Region}
+            - export no_proxy=${NoProxyParameter}
+            - export http_proxy=${HttpProxyParameter}
+            - export https_proxy=${HttpsProxyParameter}
+            - source /etc/profile
+            - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
+            - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+            - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-primary ${AemAwsStackProvisionerVersionParameter}
     Type: AWS::EC2::Instance
   AuthorStandbyInstance:
     Properties:
@@ -309,14 +316,25 @@ Resources:
           - PrivateIp
       UserData:
         Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
-            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
-            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} author-standby\
-            \ ${AemAwsStackProvisionerVersionParameter}\n"
+          Fn::Sub: |
+            #cloud-config
+            repo_upgrade: false
+            repo_upgrade: false
+            package_update: false
+            package_upgrade: false
+
+            runcmd:
+            - set -x
+            - export AWS_DEFAULT_REGION=${AWS::Region}
+            - export no_proxy=${NoProxyParameter}
+            - export http_proxy=${HttpProxyParameter}
+            - export https_proxy=${HttpsProxyParameter}
+            - source /etc/profile
+            - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
+            - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+            - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+            - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} author-standby ${AemAwsStackProvisionerVersionParameter}
     Type: AWS::EC2::Instance
   CriticalAuthorSyncDelayAlarm:
     Properties:
@@ -343,6 +361,12 @@ Resources:
       Period: 60
       Statistic: Maximum
       Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Critical Author Sync Delay Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalMultiAuthorInstanceAlarm:
     Properties:
@@ -367,6 +391,12 @@ Resources:
       Period: 60
       Statistic: Maximum
       Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Critical Multi Author Instance Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalNoAuthorInstanceAlarm:
     Properties:
@@ -391,6 +421,12 @@ Resources:
       Period: 60
       Statistic: Average
       Threshold: 0
+      Tags:
+      - Key: Name
+        Value: Critical No Author Instance Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
 
   WarningAuthorPrimaryMemoryHighAlarm:
@@ -419,6 +455,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Author Primary Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorPrimaryMemoryHighAlarm:
     Properties:
@@ -446,6 +488,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Author Primary Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningAuthorPrimaryRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -477,6 +525,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Author Primary Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorPrimaryRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -509,6 +563,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Author Primary Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningAuthorPrimaryDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -540,6 +600,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Author Primary Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorPrimaryDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -571,6 +637,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Author Primary Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningAuthorPrimaryCPUUtilizationAlarm:
     Properties:
@@ -598,6 +670,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Author Primary CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorPrimaryCPUUtilizationAlarm:
     Properties:
@@ -625,6 +703,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Author Primary CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
 
 
@@ -654,6 +738,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Author Standby Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorStandbyMemoryHighAlarm:
     Properties:
@@ -681,6 +771,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Author Standby Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningAuthorStandbyRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -712,6 +808,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Author Standby Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorStandbyRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -743,6 +845,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Author Standby Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningAuthorStandbyDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -774,6 +882,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Author Standby Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorStandbyDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -805,6 +919,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Author Standby Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningAuthorStandbyCPUUtilizationAlarm:
     Properties:
@@ -832,6 +952,12 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 45
+      Tags:
+      - Key: Name
+        Value: Warning Author Standby CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalAuthorStandbyCPUUtilizationAlarm:
     Properties:
@@ -859,4 +985,10 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 45
+      Tags:
+      - Key: Name
+        Value: Critical Author Standby CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm

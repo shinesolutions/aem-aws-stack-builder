@@ -8,10 +8,10 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-OrchestratorAutoScalingGroup
     Value:
       Ref: OrchestratorAutoScalingGroup
-  OrchestratorLaunchConfiguration:
+  OrchestratorLaunchTemplate:
     Description: The Orchestrator Launch Configuration
     Value:
-      Ref: OrchestratorLaunchConfiguration
+      Ref: OrchestratorLaunchTemplate
 Parameters:
   AEMASGEventQueueName:
     Default: ''
@@ -76,17 +76,21 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
-  PublishDispatcherStackArn:
-    Default: ''
-    Description: The ARN of the publish-dispatcher stack.
-    Type: String
   PublishDispatcherStackName:
     Default: ''
     Description: The name of the publish-dispatcher stack.
     Type: String
+  PreviewPublishDispatcherStackName:
+    Default: ''
+    Description: The name of the preview-publish-dispatcher stack.
+    Type: String
   PublishStackArn:
     Default: ''
-    Description: The ARN of the author stack.
+    Description: The ARN of the publish stack.
+    Type: String
+  PreviewPublishStackArn:
+    Default: ''
+    Description: The ARN of the preview-publish stack.
     Type: String
   HttpProxyParameter:
     Description: http_proxy parameter
@@ -104,8 +108,13 @@ Resources:
         Ref: OrchestratorASGAvailabilityZoneListParameter
       HealthCheckGracePeriod: 300
       HealthCheckType: EC2
-      LaunchConfigurationName:
-        Ref: OrchestratorLaunchConfiguration
+      LaunchTemplate:
+        Version:
+          Fn::GetAtt:
+          - OrchestratorLaunchTemplate
+          - LatestVersionNumber
+        LaunchTemplateId:
+          Ref: OrchestratorLaunchTemplate
       MaxSize: 1
       MetricsCollection:
       - Granularity: 1Minute
@@ -136,60 +145,84 @@ Resources:
         - Fn::ImportValue:
             Fn::Sub: ${NetworkStackPrefixParameter}-OrchestratorSubnetList
     Type: AWS::AutoScaling::AutoScalingGroup
-  OrchestratorLaunchConfiguration:
+  OrchestratorLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
     Properties:
-      AssociatePublicIpAddress: false
-      BlockDeviceMappings:
-      - DeviceName:
-          Ref: OrchestratorImageRootDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: OrchestratorEnableVolEncryptionParameter
-          VolumeSize:
-            Ref: OrchestratorRootVolSizeParameter
-          VolumeType: gp2
-      - DeviceName:
-          Ref: OrchestratorImageDataDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: OrchestratorEnableVolEncryptionParameter
-          VolumeSize:
-            Ref: OrchestratorDataVolSizeParameter
-          VolumeType: gp2
-      IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorInstanceProfile
-      ImageId:
-        Ref: OrchestratorImageParameter
-      InstanceMonitoring: false
-      InstanceType:
-        Ref: OrchestratorInstanceTypeParameter
-      KeyName:
-        Ref: ComputeKeyPairNameParameter
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorSecurityGroup
-      UserData:
-        Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
-            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ # Configure other stack names in Orchestrator's stack provisioner's\
-            \ local.yaml\n echo '\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_author:\
-            \ \"${AuthorStackArn}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher:\
-            \ \"${AuthorDispatcherStackArn}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish:\
-            \ \"${PublishStackArn}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher:\
-            \ \"${PublishDispatcherStackName}\"\n aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging:\
-            \ \"${MessagingStackArn}\"\n aem_orchestrator::application_properties::aws_sqs_queue_name:\
-            \ \"${AEMASGEventQueueName}\"\n ' > /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n\
-            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
-            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} orchestrator\
-            \ ${AemAwsStackProvisionerVersionParameter} /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml\n"
-    Type: AWS::AutoScaling::LaunchConfiguration
+      LaunchTemplateData:
+        BlockDeviceMappings:
+        - DeviceName:
+            Ref: OrchestratorImageRootDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: OrchestratorEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: OrchestratorRootVolSizeParameter
+            VolumeType: gp2
+        - DeviceName:
+            Ref: OrchestratorImageDataDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: OrchestratorEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: OrchestratorDataVolSizeParameter
+            VolumeType: gp2
+        IamInstanceProfile:
+          Name:
+            Fn::ImportValue:
+              Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorInstanceProfile
+        ImageId:
+          Ref: OrchestratorImageParameter
+        Monitoring:
+          Enabled: false
+        InstanceType:
+          Ref: OrchestratorInstanceTypeParameter
+        KeyName:
+          Ref: ComputeKeyPairNameParameter
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-OrchestratorSecurityGroup
+        UserData:
+          Fn::Base64:
+            Fn::Sub: |
+              #cloud-config
+              repo_upgrade: false
+              repo_upgrade: false
+              package_update: false
+              package_upgrade: false
+
+              write_files:
+                - path: /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
+                  defer: true
+                  content: |
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_author: ${AuthorStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_author_dispatcher: ${AuthorDispatcherStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish: ${PublishStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_publish_dispatcher: ${PublishDispatcherStackName}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_preview_publish: ${PreviewPublishStackArn}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_preview_publish_dispatcher: ${PreviewPublishDispatcherStackName}
+                    aem_orchestrator::application_properties::aws_cloudformation_stack_name_messaging: ${MessagingStackArn}
+                    aem_orchestrator::application_properties::aws_sqs_queue_name: ${AEMASGEventQueueName}
+              runcmd:
+              - set -x
+              - export AWS_DEFAULT_REGION=${AWS::Region}
+              - export no_proxy=${NoProxyParameter}
+              - export http_proxy=${HttpProxyParameter}
+              - export https_proxy=${HttpsProxyParameter}
+              - source /etc/profile
+              - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+              - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} orchestrator ${AemAwsStackProvisionerVersionParameter} /opt/shinesolutions/aem-aws-stack-builder/extra_local.yaml
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+          - Key: Name
+            Value: AEM Orchestrator Launch Template
+          - Key: StackPrefix
+            Value:
+              Ref: MainStackPrefixParameter
   CriticalOrchestratorNoInstanceAlarm:
     Properties:
       ActionsEnabled: true
@@ -213,6 +246,12 @@ Resources:
       Period: 60
       Statistic: Average
       Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator No Instance Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
 
   WarningOrchestratorMemoryHighAlarm:
@@ -268,6 +307,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningOrchestratorRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -299,6 +344,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Orchestrator Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalOrchestratorRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -330,6 +381,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningOrchestratorCPUUtilizationAlarm:
     Properties:
@@ -357,6 +414,12 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Orchestrator CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalOrchestratorCPUUtilizationAlarm:
     Properties:
@@ -384,4 +447,10 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Orchestrator CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm

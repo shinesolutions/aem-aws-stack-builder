@@ -38,9 +38,6 @@ Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
     Type: String
-  SecureShellInboundCidrIpParameter:
-    Description: AEM Stack Secure Shell Inbound Cidr Ip
-    Type: String
 Resources:
   InstanceProfilesStack:
     Properties:
@@ -63,8 +60,6 @@ Resources:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
-        SecureShellInboundCidrIpParameter:
-          Ref: SecureShellInboundCidrIpParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
     Type: AWS::CloudFormation::Stack

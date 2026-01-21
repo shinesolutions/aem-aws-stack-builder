@@ -39,16 +39,6 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-BackupTopicArn
     Value:
       Ref: OfflineBackupTopic
-  SSMServiceRoleArn:
-    Description: Value is needed by Ansible
-    Value:
-      Fn::ImportValue:
-        Fn::Sub: ${MainStackPrefixParameter}-StackManagerSSMServiceRoleArn
-  LambdaServiceRoleArn:
-    Description: Value is needed by Ansible
-    Value:
-      Fn::ImportValue:
-        Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
   StackManagerTopicArn:
     Description: AEM stack manager SNS topic Arn
     Export:
@@ -159,14 +149,12 @@ Resources:
           Value:
             Fn::Sub: "${MainStackPrefixParameter}-AemTaskQuery"
   BackupInitialVersion:
-    DependsOn: OfflineBackupLambda
     Properties:
       Description: Initial Version to Start With
       FunctionName:
         Ref: OfflineBackupLambda
     Type: AWS::Lambda::Version
   BackupLambdaDevAlias:
-    DependsOn: OfflineBackupLambda
     Properties:
       Description: Lambda Alias for Development Use
       FunctionName:
@@ -175,9 +163,6 @@ Resources:
       Name: dev
     Type: AWS::Lambda::Alias
   BackupLambdaPermission:
-    DependsOn:
-      - BackupLambdaProdAlias
-      - OfflineBackupTopic
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -187,9 +172,6 @@ Resources:
         Ref: OfflineBackupTopic
     Type: AWS::Lambda::Permission
   BackupLambdaProdAlias:
-    DependsOn:
-      - OfflineBackupLambda
-      - BackupInitialVersion
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName:
@@ -199,9 +181,6 @@ Resources:
       Name: prod
     Type: AWS::Lambda::Alias
   BackupSNSSubscription:
-    DependsOn:
-      - BackupLambdaProdAlias
-      - OfflineBackupTopic
     Properties:
       Endpoint:
         Ref: BackupLambdaProdAlias
@@ -210,14 +189,12 @@ Resources:
         Ref: OfflineBackupTopic
     Type: AWS::SNS::Subscription
   InitialVersion:
-    DependsOn: ManagerLambdaFunction
     Properties:
       Description: Initial Version to Start With
       FunctionName:
         Ref: ManagerLambdaFunction
     Type: AWS::Lambda::Version
   LambdaDevAlias:
-    DependsOn: ManagerLambdaFunction
     Properties:
       Description: Lambda Alias for Development Use
       FunctionName:
@@ -226,7 +203,6 @@ Resources:
       Name: dev
     Type: AWS::Lambda::Alias
   LambdaProdAlias:
-    DependsOn: InitialVersion
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName:
@@ -264,13 +240,10 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 60
     Type: AWS::Lambda::Function
   ManagerTopicPermission:
-    DependsOn:
-      - StackManagerTopic
-      - LambdaProdAlias
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -280,9 +253,6 @@ Resources:
         Ref: StackManagerTopic
     Type: AWS::Lambda::Permission
   ManagerTopicSubscription:
-    DependsOn:
-      - StackManagerTopic
-      - LambdaProdAlias
     Properties:
       Endpoint:
         Ref: LambdaProdAlias
@@ -319,7 +289,7 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 60
     Type: AWS::Lambda::Function
   OfflineBackupTopic:
@@ -336,14 +306,12 @@ Resources:
         Fn::Sub: ${MainStackPrefixParameter}-AemOfflineBackup
     Type: AWS::SNS::Topic
   QueryInitialVersion:
-    DependsOn: QueryLambdaFunction
     Properties:
       Description: Initial Version to Start With
       FunctionName:
         Ref: QueryLambdaFunction
     Type: AWS::Lambda::Version
   QueryLambdaDevAlias:
-    DependsOn: QueryLambdaFunction
     Properties:
       Description: Lambda Alias for Development Use
       FunctionName:
@@ -380,11 +348,10 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 60
     Type: AWS::Lambda::Function
   QueryLambdaProdAlias:
-    DependsOn: QueryInitialVersion
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName:
@@ -394,9 +361,6 @@ Resources:
       Name: prod
     Type: AWS::Lambda::Alias
   StatusTopicPermission:
-    DependsOn:
-      - LambdaProdAlias
-      - TaskStatusTopic
     Properties:
       Action: lambda:InvokeFunction
       FunctionName:
@@ -406,7 +370,6 @@ Resources:
         Ref: TaskStatusTopic
     Type: AWS::Lambda::Permission
   StackManagerLambdaPolicy:
-    DependsOn: StackManagerTable
     Properties:
       Description: Lambda Policy for StackManagerLambdaServiceRole
       ManagedPolicyName:
@@ -434,7 +397,6 @@ Resources:
             Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleName
     Type: AWS::IAM::ManagedPolicy
   StackManagerLambdaSSMPolicy:
-    DependsOn: TaskStatusTopic
     Properties:
       Description: Lambda SSM policy for StackManagerLambdaServiceRole
       ManagedPolicyName:
@@ -537,9 +499,6 @@ Resources:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManager
     Type: AWS::SNS::Topic
   StatusTopicSubscription:
-    DependsOn:
-      - LambdaProdAlias
-      - TaskStatusTopic
     Properties:
       Endpoint:
         Ref: LambdaProdAlias
@@ -556,8 +515,7 @@ Resources:
               - 1
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
-      DisplayName:
-        Fn::Sub: AEM Stack Manager Topic
+      DisplayName: AEM Stack Manager Topic
       TopicName:
         Fn::Sub: ${MainStackPrefixParameter}-AemStackManagerStatus
     Type: AWS::SNS::Topic

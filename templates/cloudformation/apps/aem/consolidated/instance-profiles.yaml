@@ -99,11 +99,6 @@ Resources:
             - ec2:DetachVolume
             - ec2:CreateSnapshot
             - ec2:ModifyInstanceAttribute
-            - autoscaling:CreateLaunchConfiguration
-            - autoscaling:DeleteLaunchConfiguration
-            - autoscaling:DescribeLaunchConfigurations
-            - autoscaling:DescribeAutoScalingGroups
-            - autoscaling:UpdateAutoScalingGroup
             - autoscaling:CreateOrUpdateTags
             - iam:PassRole
             - cloudwatch:PutMetricData
@@ -117,6 +112,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*/*"
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*

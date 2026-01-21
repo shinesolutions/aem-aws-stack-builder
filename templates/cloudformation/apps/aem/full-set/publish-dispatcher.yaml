@@ -13,10 +13,10 @@ Outputs:
         Fn::Sub: ${MainStackPrefixParameter}-PublishDispatcherAutoScalingGroup
     Value:
       Ref: PublishDispatcherAutoScalingGroup
-  PublishDispatcherLaunchConfiguration:
+  PublishDispatcherLaunchTemplate:
     Description: The Publish Dispatcher Launch Configuration
     Value:
-      Ref: PublishDispatcherLaunchConfiguration
+      Ref: PublishDispatcherLaunchTemplate
   PublishDispatcherLoadBalancer:
     Description: The Publish Dispatcher Load Balancer
     Export:
@@ -140,8 +140,13 @@ Resources:
           - 3
           - Ref: PublishDispatcherASGConfigurationParameters
       HealthCheckType: ELB
-      LaunchConfigurationName:
-        Ref: PublishDispatcherLaunchConfiguration
+      LaunchTemplate:
+        Version:
+          Fn::GetAtt:
+          - PublishDispatcherLaunchTemplate
+          - LatestVersionNumber
+        LaunchTemplateId:
+          Ref: PublishDispatcherLaunchTemplate
       TargetGroupARNs:
         - Ref: PublishDispatcherLoadBalancerTargetGroup
       MaxSize:
@@ -222,6 +227,12 @@ Resources:
           - 0
           - Ref: PublishDispatcherASGCPUScalingParameters
       TreatMissingData: breaching
+      Tags:
+      - Key: Name
+        Value: Critical Publish Dispatcher AVG CPU High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishDispatcherAVGCPULowAlarm:
     Properties:
@@ -251,6 +262,12 @@ Resources:
           - 0
           - Ref: PublishDispatcherASGCPUScalingParameters
       TreatMissingData: breaching
+      Tags:
+      - Key: Name
+        Value: Warning Publish Dispatcher AVG CPU Low Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishDispatcherAtLeastOneUnHealthyAlarm:
     Properties:
@@ -275,6 +292,12 @@ Resources:
       Period: 60
       Statistic: Average
       Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Warning Publish Dispatcher At Least One Unhealthy Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishDispatcherMoreThanOneUnHealthyAlarm:
     Properties:
@@ -299,58 +322,85 @@ Resources:
       Period: 60
       Statistic: Average
       Threshold: 1
+      Tags:
+      - Key: Name
+        Value: Critical Publish Dispatcher More Than One Unhealthy Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
-  PublishDispatcherLaunchConfiguration:
+  PublishDispatcherLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
     Properties:
-      AssociatePublicIpAddress: false
-      BlockDeviceMappings:
-      - DeviceName:
-          Ref: PublishDispatcherImageRootDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: PublishDispatcherEnableVolEncryptionParameter
-          VolumeSize:
-            Ref: PublishDispatcherRootVolSizeParameter
-          VolumeType: gp2
-      - DeviceName:
-          Ref: PublishDispatcherImageDataDevice
-        Ebs:
-          DeleteOnTermination: true
-          Encrypted:
-            Ref: PublishDispatcherEnableVolEncryptionParameter
-          SnapshotId:
-            Fn::If:
-            - UsePublishDispatcherDataVolSnapshotCondition
-            - Ref: PublishDispatcherDataVolSnapshotParameter
-            - Ref: AWS::NoValue
-          VolumeSize:
-            Ref: PublishDispatcherDataVolSizeParameter
-          VolumeType: gp2
-      IamInstanceProfile:
-        Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
-      ImageId:
-        Ref: PublishDispatcherImageParameter
-      InstanceMonitoring: false
-      InstanceType:
-        Ref: PublishDispatcherInstanceTypeParameter
-      KeyName:
-        Ref: ComputeKeyPairNameParameter
-      SecurityGroups:
-      - Fn::ImportValue:
-          Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherSecurityGroup
-      UserData:
-        Fn::Base64:
-          Fn::Sub: "#!/bin/bash -x\nexport AWS_DEFAULT_REGION=${AWS::Region}\nexport no_proxy=${NoProxyParameter}\nexport http_proxy=${HttpProxyParameter}\nexport https_proxy=${HttpsProxyParameter}\n\
-            \ source /etc/profile\n mkdir -p /opt/shinesolutions/aem-aws-stack-builder/\n\
-            \ until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo \"Waiting for EC2 initilsation to finish.\";done\n\
-            \ aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n chmod 755\
-            \ /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\n /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh\
-            \ ${DataBucketNameParameter} ${MainStackPrefixParameter} publish-dispatcher\
-            \ ${AemAwsStackProvisionerVersionParameter}\n"
-    Type: AWS::AutoScaling::LaunchConfiguration
+      LaunchTemplateData:
+        BlockDeviceMappings:
+        - DeviceName:
+            Ref: PublishDispatcherImageRootDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PublishDispatcherEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: PublishDispatcherRootVolSizeParameter
+            VolumeType: gp2
+        - DeviceName:
+            Ref: PublishDispatcherImageDataDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PublishDispatcherEnableVolEncryptionParameter
+            SnapshotId:
+              Fn::If:
+              - UsePublishDispatcherDataVolSnapshotCondition
+              - Ref: PublishDispatcherDataVolSnapshotParameter
+              - Ref: AWS::NoValue
+            VolumeSize:
+              Ref: PublishDispatcherDataVolSizeParameter
+            VolumeType: gp2
+        IamInstanceProfile:
+          Name:
+            Fn::ImportValue:
+              Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherInstanceProfile
+        ImageId:
+          Ref: PublishDispatcherImageParameter
+        Monitoring:
+          Enabled: false
+        InstanceType:
+          Ref: PublishDispatcherInstanceTypeParameter
+        KeyName:
+          Ref: ComputeKeyPairNameParameter
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherSecurityGroup
+        UserData:
+          Fn::Base64:
+            Fn::Sub: |
+              #cloud-config
+              repo_upgrade: false
+              repo_upgrade: false
+              package_update: false
+              package_upgrade: false
+
+              runcmd:
+              - set -x
+              - export AWS_DEFAULT_REGION=${AWS::Region}
+              - export no_proxy=${NoProxyParameter}
+              - export http_proxy=${HttpProxyParameter}
+              - export https_proxy=${HttpsProxyParameter}
+              - source /etc/profile
+              - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
+              - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+              - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} publish-dispatcher ${AemAwsStackProvisionerVersionParameter}
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+          - Key: Name
+            Value: AEM Publish-Dispatcher Launch Template
+          - Key: StackPrefix
+            Value:
+              Ref: MainStackPrefixParameter
   PublishDispatcherLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -371,8 +421,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   PublishDispatcherLoadBalancerTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -398,8 +446,6 @@ Resources:
       - Key: StackPrefix
         Value:
           Ref: MainStackPrefixParameter
-      - Key: Project
-        Value: Open Source AEM Platform
   PublishDispatcherLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -466,6 +512,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Publish Dispatcher Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishDispatcherMemoryHighAlarm:
     Properties:
@@ -493,6 +545,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish Dispatcher Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishDispatcherRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -524,6 +582,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Publish Dispatcher Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishDispatcherRootDiskSpaceUtilizationAlarm:
     Properties:
@@ -555,6 +619,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish Dispatcher Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishDispatcherDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -586,6 +656,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Publish Dispatcher Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishDispatcherDataDiskSpaceUtilizationAlarm:
     Properties:
@@ -617,6 +693,12 @@ Resources:
       Period: 300
       Statistic: Average
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish Dispatcher Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   WarningPublishDispatcherCPUUtilizationAlarm:
     Properties:
@@ -644,6 +726,12 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Publish Dispatcher CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm
   CriticalPublishDispatcherCPUUtilizationAlarm:
     Properties:
@@ -671,4 +759,10 @@ Resources:
       Period: 300
       Statistic: Maximum
       Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Publish Dispatcher CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
     Type: AWS::CloudWatch::Alarm

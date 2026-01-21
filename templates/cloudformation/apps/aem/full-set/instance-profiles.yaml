@@ -1,5 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Conditions:
+  CreateChaosMonkeyStackCondition:
+    Fn::Equals:
+      - Ref: ChaosMonkeyIncludeStack
+      - 'true'
+  CreatePreviewStackCondition:
+    Fn::Equals:
+      - Ref: PreviewIncludeStack
+      - 'true'
   S3CMKAddManagedPolicyCondition:
     Fn::Not:
       - Fn::Equals:
@@ -105,6 +113,7 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyInstanceProfile
     Value:
       Ref: ChaosMonkeyInstanceProfile
+    Condition: CreateChaosMonkeyStackCondition
   ChaosMonkeyRoleArn:
     Description: The ChaosMonkeyAuthor Instance Role ARN
     Export:
@@ -112,6 +121,7 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-ChaosMonkeyRoleArn
     Value:
       Fn::GetAtt: ChaosMonkeyRole.Arn
+    Condition: CreateChaosMonkeyStackCondition
   OrchestratorInstanceProfile:
     Description: The Orchestrator Instance Profile
     Export:
@@ -134,7 +144,7 @@ Outputs:
     Value:
       Ref: PublishDispatcherInstanceProfile
   PublishDispatcherRoleArn:
-    Description: The PublishDispatcher Instance Role ARN
+    Description: The Publish Dispatcher Instance Role ARN
     Export:
       Name:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishDispatcherArn
@@ -154,6 +164,38 @@ Outputs:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-PublishArn
     Value:
       Fn::GetAtt: PublishRole.Arn
+  PreviewPublishDispatcherInstanceProfile:
+    Condition: CreatePreviewStackCondition
+    Description: The Preview Publish Dispatcher Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherInstanceProfile
+    Value:
+      Ref: PreviewPublishDispatcherInstanceProfile
+  PreviewPublishDispatcherRoleArn:
+    Condition: CreatePreviewStackCondition
+    Description: The Preview Publish Dispatcher Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishDispatcherArn
+    Value:
+      Fn::GetAtt: PreviewPublishDispatcherRole.Arn
+  PreviewPublishInstanceProfile:
+    Condition: CreatePreviewStackCondition
+    Description: The Preview Publish Instance Profile
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishInstanceProfile
+    Value:
+      Ref: PreviewPublishInstanceProfile
+  PreviewPublishRoleArn:
+    Condition: CreatePreviewStackCondition
+    Description: The Preview Publish Instance Role ARN
+    Export:
+      Name:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishArn
+    Value:
+      Fn::GetAtt: PreviewPublishRole.Arn
 Parameters:
   PrerequisitesStackPrefixParameter:
     Description: The AEM Stack Prerequisite Resources Stack Prefix
@@ -171,6 +213,14 @@ Parameters:
         - Managed Policy ARN for Lambda encryption
         - Managed Policy ARN for accessing S3 CMK
     Type: List<String>
+  ChaosMonkeyIncludeStack:
+    Default: 'true'
+    Description: Creates the ChaosMonkey stack resources or not
+    Type: String
+  PreviewIncludeStack:
+    Default: 'false'
+    Description: Creates the Preview stack resources or not
+    Type: String
 Resources:
   AEMStackManagerSnapshotLambdaServiceRole:
     Properties:
@@ -310,6 +360,9 @@ Resources:
             - ec2:CreateVolume
             - ec2:DetachVolume
             - ec2:CreateSnapshot
+            - ec2:ModifyInstanceAttribute
+            - cloudformation:Describe*
+            - cloudformation:List*
             - autoscaling:CreateOrUpdateTags
             - cloudwatch:PutMetricData
             Effect: Allow
@@ -337,12 +390,14 @@ Resources:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackAuthorRole
     Type: AWS::IAM::Role
   ChaosMonkeyInstanceProfile:
+    Condition: CreateChaosMonkeyStackCondition
     Properties:
       Path: /
       Roles:
       - Ref: ChaosMonkeyRole
     Type: AWS::IAM::InstanceProfile
   ChaosMonkeyRole:
+    Condition: CreateChaosMonkeyStackCondition
     Properties:
       AssumeRolePolicyDocument:
         Statement:
@@ -387,7 +442,6 @@ Resources:
             - autoscaling:DeleteAutoScalingGroup
             - autoscaling:DescribeAutoScalingGroups
             - autoscaling:DescribeAutoScalingInstances
-            - autoscaling:DescribeLaunchConfigurations
             Effect: Allow
             Resource: '*'
           - Action:
@@ -483,6 +537,7 @@ Resources:
           - Action:
             - s3:Get*
             - s3:List*
+            - s3:Put*
             Effect: Allow
             Resource: '*'
           - Action:
@@ -532,6 +587,13 @@ Resources:
       Roles:
       - Ref: PublishDispatcherRole
     Type: AWS::IAM::InstanceProfile
+  PreviewPublishDispatcherInstanceProfile:
+    Condition: CreatePreviewStackCondition
+    Properties:
+      Path: /
+      Roles:
+      - Ref: PreviewPublishDispatcherRole
+    Type: AWS::IAM::InstanceProfile
   PublishDispatcherRole:
     Properties:
       AssumeRolePolicyDocument:
@@ -564,13 +626,30 @@ Resources:
           - Action:
             - ec2:Describe*
             - ec2:CreateTags
-            - autoscaling:CreateLaunchConfiguration
-            - autoscaling:DescribeLaunchConfigurations
             - autoscaling:UpdateAutoScalingGroup
             - autoscaling:CreateOrUpdateTags
             - cloudwatch:PutMetricData
             Effect: Allow
             Resource: '*'
+          - Action:
+            - ec2:CreateLaunchTemplateVersion
+            - ec2:ModifyLaunchTemplate
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+          - Action:
+            - ec2:RunInstances # Required for updating ASG with a new Launch Template version
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:key-pair/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:subnet/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::image/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
           - Action:
             - ssm:GetParameter
             Effect: Allow
@@ -592,11 +671,97 @@ Resources:
       RoleName:
         Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackPublishDispatcherRole
     Type: AWS::IAM::Role
+  PreviewPublishDispatcherRole:
+    Condition: CreatePreviewStackCondition
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - ec2:Describe*
+            - ec2:CreateTags
+            - autoscaling:UpdateAutoScalingGroup
+            - autoscaling:CreateOrUpdateTags
+            - cloudwatch:PutMetricData
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - ec2:CreateLaunchTemplateVersion
+            - ec2:ModifyLaunchTemplate
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+          - Action:
+            - ec2:RunInstances # Required for updating ASG with a new Launch Template version
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:key-pair/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:subnet/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::image/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
+          - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          - Action:
+            - s3:Get*
+            - s3:List*
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - logs:*
+            Effect: Allow
+            Resource:
+            - arn:aws:logs:*:*:*
+          Version: '2012-10-17'
+        PolicyName: PreviewPublishDispatcherRolePolicy
+      RoleName:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackPreviewPublishDispatcherRole
+    Type: AWS::IAM::Role
+
   PublishInstanceProfile:
     Properties:
       Path: /
       Roles:
       - Ref: PublishRole
+    Type: AWS::IAM::InstanceProfile
+  PreviewPublishInstanceProfile:
+    Condition: CreatePreviewStackCondition
+    Properties:
+      Path: /
+      Roles:
+      - Ref: PreviewPublishRole
     Type: AWS::IAM::InstanceProfile
   PublishRole:
     Properties:
@@ -636,6 +801,107 @@ Resources:
             - ec2:CreateSnapshot
             - ec2:CreateTags
             - ec2:ModifyInstanceAttribute
+            - cloudformation:Describe*
+            - cloudformation:List*
+            - cloudwatch:PutMetricData
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - ssm:GetParameter
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*/*"
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
+          - Action:
+            - s3:Get*
+            - s3:List*
+            - s3:Put*
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - autoscaling:DescribeAutoScalingGroups
+            - autoscaling:UpdateAutoScalingGroup
+            - iam:PassRole
+            Effect: Allow
+            Resource: '*'
+          - Action:
+            - ec2:CreateLaunchTemplateVersion
+            - ec2:ModifyLaunchTemplate
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+          - Action:
+            - ec2:RunInstances # Required for updating ASG with a new Launch Template version
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:key-pair/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:subnet/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::image/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
+          - Action:
+            - logs:*
+            Effect: Allow
+            Resource:
+            - arn:aws:logs:*:*:*
+          Version: '2012-10-17'
+        PolicyName: PublishRolePolicy
+      RoleName:
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackPublishRole
+    Type: AWS::IAM::Role
+  PreviewPublishRole:
+    Condition: CreatePreviewStackCondition
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      - Fn::If:
+          - EBSVolumeEncryptionCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 2
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - S3CMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - ec2:Describe*
+            - ec2:AttachVolume
+            - ec2:CreateVolume
+            - ec2:DeleteVolume
+            - ec2:DetachVolume
+            - ec2:CreateSnapshot
+            - ec2:CreateTags
+            - ec2:ModifyInstanceAttribute
+            - cloudformation:Describe*
+            - cloudformation:List*
             - cloudwatch:PutMetricData
             Effect: Allow
             Resource: '*'
@@ -652,21 +918,37 @@ Resources:
             Effect: Allow
             Resource: '*'
           - Action:
-            - autoscaling:CreateLaunchConfiguration
-            - autoscaling:DeleteLaunchConfiguration
             - autoscaling:DescribeAutoScalingGroups
-            - autoscaling:DescribeLaunchConfigurations
             - autoscaling:UpdateAutoScalingGroup
             - iam:PassRole
             Effect: Allow
             Resource: '*'
+          - Action:
+            - ec2:CreateLaunchTemplateVersion
+            - ec2:ModifyLaunchTemplate
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+          - Action:
+            - ec2:RunInstances # Required for updating ASG with a new Launch Template version
+            Effect: Allow
+            Resource:
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:launch-template/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:key-pair/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:instance/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:subnet/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::image/*
+            - Fn::Sub: arn:${AWS::Partition}:ec2:${AWS::Region}::snapshot/*
           - Action:
             - logs:*
             Effect: Allow
             Resource:
             - arn:aws:logs:*:*:*
           Version: '2012-10-17'
-        PolicyName: PublishRolePolicy
+        PolicyName: PreviewPublishRolePolicy
       RoleName:
-        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackPublishRole
+        Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMStackPreviewPublishRole
     Type: AWS::IAM::Role

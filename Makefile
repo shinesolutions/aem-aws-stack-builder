@@ -1,4 +1,5 @@
-version ?= 5.19.1-pre.0
+version ?= 8.0.5-pre.0
+package_name ?= aem-aws-stack-builder-internal
 aem_stack_manager_messenger_version = 2.14.1
 aem_test_suite_version = 2.0.0
 aem_helloworld_custom_stack_provisioner_version = 0.15.0
@@ -32,8 +33,8 @@ package:
 	    --exclude='*.retry' \
 	    --exclude='*.iml' \
 	    -cvf \
-	    stage/aem-aws-stack-builder-$(version).tar ./
-	gzip stage/aem-aws-stack-builder-$(version).tar
+	    stage/$(package_name)-$(version).tar ./
+	gzip stage/$(package_name)-$(version).tar
 
 release-major:
 	rtk release --release-increment-type major
@@ -48,7 +49,7 @@ release: release-minor
 
 publish:
 	gh release create $(version) --title $(version) --notes "" || echo "Release $(version) has been created on GitHub"
-	gh release upload $(version) stage/aem-aws-stack-builder-$(version).tar.gz
+	gh release upload $(version) stage/$(package_name)-$(version).tar.gz
 
 ################################################################################
 # Code styling check and validation targets:
@@ -64,10 +65,21 @@ lint:
 	   provisioners/ansible/playbooks/*/*/*.yaml \
 	   templates/cloudformation/*/*.yaml \
 	 	templates/cloudformation/*/*/*.yaml
-	shellcheck scripts/*.sh test/integration/*.sh
+	shellcheck --exclude=SC2207 scripts/*.sh test/integration/*.sh
 	for playbook in provisioners/ansible/playbooks/*/*.yaml; do \
 		ANSIBLE_LIBRARY=conf/ansible/library ansible-playbook -vvv $$playbook --syntax-check; \
 	done
+	cfn-lint --ignore-templates \
+		templates/cloudformation/apps/aem-stack-manager/ssm-commands-template.yaml \
+		templates/cloudformation/apps/cdn/main.yaml \
+		templates/cloudformation/apps/cert-private.yaml \
+		templates/cloudformation/apps/cert-public.yaml \
+	  templates/cloudformation/apps/aem-stack-manager/ssm-commands/*.yaml \
+		-t \
+		templates/cloudformation/*/*/*/*.yaml \
+		templates/cloudformation/*/*/*.yaml \
+		templates/cloudformation/*/*.yaml
+
 	# TODO: re-enable template validation after sorting out CI credential
 	# for template in $$(find templates/cloudformation/ -type f -not -path "templates/cloudformation/apps/aem-stack-manager/ssm-commands/*" -name '*.yaml'); do \
 	# 	echo "Checking template $$template ...."; \

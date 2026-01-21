@@ -1,0 +1,510 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  UsePreviewPublishDataVolSnapshotCondition:
+    Fn::Equals:
+    - Ref: UsePreviewPublishDataVolSnapshotParameter
+    - true
+Description: Create the Compute resources for the AEM Preview Publish
+Outputs:
+  PreviewPublishAutoScalingGroup:
+    Description: The Preview Publish Auto Scaling Group
+    Export:
+      Name:
+        Fn::Sub: ${MainStackPrefixParameter}-PreviewPublishAutoScalingGroup
+    Value:
+      Ref: PreviewPublishAutoScalingGroup
+  PreviewPublishLaunchTemplate:
+    Description: The Preview Publish Launch Template
+    Value:
+      Ref: PreviewPublishLaunchTemplate
+Parameters:
+  AemAwsStackProvisionerVersionParameter:
+    Description: AEM AWS Stack Provisioner version number
+    Type: String
+  ComputeKeyPairNameParameter:
+    Description: The Compute Resources Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+  DataBucketNameParameter:
+    Description: Bucket name that stores Stack data files
+    Type: String
+  MainStackPrefixParameter:
+    Description: The AEM Stack Compute Resources Stack Prefix
+    Type: String
+  NetworkStackPrefixParameter:
+    Description: The AEM Stack Network Resources Stack Prefix
+    Type: String
+  PrerequisitesStackPrefixParameter:
+    Description: The AEM Stack Prerequisite Resources Stack Prefix
+    Type: String
+  PreviewPublishASGAvailabilityZoneListParameter:
+    Description: The Preview Publish Availability Zone List
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  PreviewPublishASGConfigurationParameters:
+    Description: The ASG configuration parameters
+    Type: CommaDelimitedList
+  PreviewPublishDataVolSizeParameter:
+    Description: The Preview Publish Instances Data EBS Volume Size
+    Type: Number
+  PreviewPublishDataVolSnapshotParameter:
+    Description: The Preview Publish Data Volume Snapshot Id
+    Type: String
+  PreviewPublishEnableVolEncryptionParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wether to enable or disable EBS volume encryption.
+    Type: String
+  PreviewPublishImageParameter:
+    Description: The PreviewPublish Image Id
+    Type: AWS::EC2::Image::Id
+  PreviewPublishImageRootDevice:
+    Default: /dev/sda1
+    Description: The root device name for the PreviewPublish Image Id
+    Type: String
+  PreviewPublishImageDataDevice:
+    Default: /dev/sdb
+    Description: The data device name for the PreviewPublish Image Id
+    Type: String
+  PreviewPublishInstanceTypeParameter:
+    Description: The Preview Publish Instance Type
+    Type: String
+  PreviewPublishRootVolSizeParameter:
+    Description: Preview Publish Instances Root EBS Volume Size
+    Type: Number
+  UsePreviewPublishDataVolSnapshotParameter:
+    AllowedValues:
+    - true
+    - false
+    Description: Wheather to use the Preview Publish Snapshot Data Volume.
+    Type: String
+  HttpProxyParameter:
+    Description: http_proxy parameter
+    Type: String
+  HttpsProxyParameter:
+    Description: https_proxy parameter
+    Type: String
+  NoProxyParameter:
+    Description: no_proxy parameter
+    Type: String
+Resources:
+  PreviewPublishAutoScalingGroup:
+    Properties:
+      AvailabilityZones:
+        Ref: PreviewPublishASGAvailabilityZoneListParameter
+      Cooldown:
+        Fn::Select:
+          - 4
+          - Ref: PreviewPublishASGConfigurationParameters
+      DesiredCapacity:
+        Fn::Select:
+          - 2
+          - Ref: PreviewPublishASGConfigurationParameters
+      HealthCheckGracePeriod:
+        Fn::Select:
+          - 3
+          - Ref: PreviewPublishASGConfigurationParameters
+      HealthCheckType: EC2
+      LaunchTemplate:
+        Version:
+          Fn::GetAtt:
+          - PreviewPublishLaunchTemplate
+          - LatestVersionNumber
+        LaunchTemplateId:
+          Ref: PreviewPublishLaunchTemplate
+      MaxSize:
+        Fn::Select:
+          - 0
+          - Ref: PreviewPublishASGConfigurationParameters
+      MetricsCollection:
+      - Granularity: 1Minute
+        Metrics:
+        - GroupMinSize
+        - GroupMaxSize
+        - GroupDesiredCapacity
+        - GroupInServiceInstances
+        - GroupPendingInstances
+        - GroupStandbyInstances
+        - GroupTerminatingInstances
+        - GroupTotalInstances
+      MinSize:
+        Fn::Select:
+          - 1
+          - Ref: PreviewPublishASGConfigurationParameters
+      NotificationConfigurations:
+      - NotificationTypes:
+        - autoscaling:EC2_INSTANCE_LAUNCH
+        - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+        - autoscaling:EC2_INSTANCE_TERMINATE
+        - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        TopicARN:
+          Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-AEMASGEventTopic
+      Tags:
+      - Key: Name
+        PropagateAtLaunch: true
+        Value: AEM Preview Publish
+      - Key: StackPrefix
+        PropagateAtLaunch: true
+        Value:
+          Ref: MainStackPrefixParameter
+      - Key: Component
+        PropagateAtLaunch: true
+        Value: preview-publish
+      VPCZoneIdentifier:
+        Fn::Split:
+        - ','
+        - Fn::ImportValue:
+            Fn::Sub: ${NetworkStackPrefixParameter}-PreviewPublishSubnetList
+    Type: AWS::AutoScaling::AutoScalingGroup
+  PreviewPublishLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        BlockDeviceMappings:
+        - DeviceName:
+            Ref: PreviewPublishImageRootDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishEnableVolEncryptionParameter
+            VolumeSize:
+              Ref: PreviewPublishRootVolSizeParameter
+            VolumeType: gp2
+        - DeviceName:
+            Ref: PreviewPublishImageDataDevice
+          Ebs:
+            DeleteOnTermination: true
+            Encrypted:
+              Ref: PreviewPublishEnableVolEncryptionParameter
+            SnapshotId:
+              Fn::If:
+              - UsePreviewPublishDataVolSnapshotCondition
+              - Ref: PreviewPublishDataVolSnapshotParameter
+              - Ref: AWS::NoValue
+            VolumeSize:
+              Ref: PreviewPublishDataVolSizeParameter
+            VolumeType: gp2
+        IamInstanceProfile:
+          Name:
+            Fn::ImportValue:
+              Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishInstanceProfile
+        ImageId:
+          Ref: PreviewPublishImageParameter
+        Monitoring:
+          Enabled: false
+        InstanceType:
+          Ref: PreviewPublishInstanceTypeParameter
+        KeyName:
+          Ref: ComputeKeyPairNameParameter
+        SecurityGroupIds:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-PreviewPublishSecurityGroup
+        UserData:
+          Fn::Base64:
+            Fn::Sub: |
+              #cloud-config
+              repo_upgrade: false
+              repo_upgrade: false
+              package_update: false
+              package_upgrade: false
+
+              runcmd:
+              - set -x
+              - export AWS_DEFAULT_REGION=${AWS::Region}
+              - export no_proxy=${NoProxyParameter}
+              - export http_proxy=${HttpProxyParameter}
+              - export https_proxy=${HttpsProxyParameter}
+              - source /etc/profile
+              - mkdir -p /opt/shinesolutions/aem-aws-stack-builder/
+              - until [[ $(aws s3 ls s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh) ]]; do echo "Waiting for EC2 initilsation to finish.";done
+              - aws s3 cp s3://${DataBucketNameParameter}/${MainStackPrefixParameter}/stack-init.sh /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - chmod 755 /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh
+              - /opt/shinesolutions/aem-aws-stack-builder/stack-init.sh ${DataBucketNameParameter} ${MainStackPrefixParameter} preview-publish ${AemAwsStackProvisionerVersionParameter}
+      TagSpecifications:
+        - ResourceType: launch-template
+          Tags:
+          - Key: Name
+            Value: AEM PreviewPublish Launch Template
+          - Key: StackPrefix
+            Value:
+              Ref: MainStackPrefixParameter
+  WarningPreviewPublishMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublish-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishMemoryHighAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Memory Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublish-MemoryHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: MemoryUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Memory High Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublish-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishRootDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublish-RootDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/"
+        - Name: Filesystem
+          Value: "/"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Root Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublish-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 80
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishDataDiskSpaceUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: Disk Space Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublish-DataDiskSpaceHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+        - Name: MountPath
+          Value: "/mnt/ebs1"
+        - Name: Filesystem
+          Value: "/mnt/ebs1"
+      EvaluationPeriods: 1
+      MetricName: DiskSpaceUtilization
+      Namespace: "System/Linux"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Average
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish Data Disk Space Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  WarningPreviewPublishCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Warning-PreviewPublish-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-WarningAlarmNotificationTopic
+      Period: 300
+      Statistic: Maximum
+      Threshold: 60
+      Tags:
+      - Key: Name
+        Value: Warning Preview Publish CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm
+  CriticalPreviewPublishCPUUtilizationAlarm:
+    Properties:
+      ActionsEnabled: true
+      AlarmActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      AlarmDescription: CPU Utilization is high
+      AlarmName:
+        Fn::Sub:
+          - "${MainStackPrefixParameter}-Critical-PreviewPublish-CPUHighAlarm"
+          - MainStackPrefixParameter:
+              Ref: 'MainStackPrefixParameter'
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: AutoScalingGroupName
+          Value:
+            Ref: PreviewPublishAutoScalingGroup
+      EvaluationPeriods: 1
+      MetricName: CPUUtilization
+      Namespace: "AWS/EC2"
+      OKActions:
+        - Fn::ImportValue:
+            Fn::Sub: ${PrerequisitesStackPrefixParameter}-CriticalAlarmNotificationTopic
+      Period: 300
+      Statistic: Maximum
+      Threshold: 90
+      Tags:
+      - Key: Name
+        Value: Critical Preview Publish CPU Utilization Alarm
+      - Key: StackPrefix
+        Value:
+          Ref: MainStackPrefixParameter
+    Type: AWS::CloudWatch::Alarm

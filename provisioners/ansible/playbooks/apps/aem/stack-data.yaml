@@ -69,6 +69,7 @@
         cron_https_proxy: "{{ cron.https_proxy }}"
         cron_no_proxy: "{{ cron.no_proxy }}"
         publish_dispatcher_allowed_client: "{{ publish_dispatcher.allowed_client }}"
+        preview_publish_dispatcher_allowed_client: "{{ preview_publish_dispatcher.allowed_client }}"
       register: stack_facter_facts
       tags:
         - create
@@ -240,6 +241,15 @@
         src_key: "library/oak-run-{{ library.oak_run_version }}.jar"
         dest_bucket: "{{ s3.data_bucket_name }}"
         dest_key: "{{ stack_prefix }}/oak-run-{{ library.oak_run_version }}.jar"
+      tags:
+        - create
+
+    - name: Copy VLT from library to data bucket
+      s3_copy_object:
+        src_bucket: "{{ s3.data_bucket_name }}"
+        src_key: "library/vault-cli-{{ library.aem_vlt_version }}-bin.tar.gz"
+        dest_bucket: "{{ s3.data_bucket_name }}"
+        dest_key: "{{ stack_prefix }}/vault-cli-{{ library.aem_vlt_version }}-bin.tar.gz"
       tags:
         - create
 

@@ -12,56 +12,74 @@ from cfyaml import yaml
 
 
 def read_template(file_name):
-    with open(file_name, 'r') as f:
-        template = yaml.load(f)
+    with open(file_name, "r") as f:
+        template = yaml.full_load(f)
     return template
 
 
 def write_template(file_name, template):
-    with open(file_name, 'w') as f:
+    with open(file_name, "w") as f:
         text = yaml.dump(template, default_flow_style=False)
         f.write(text)
 
 
 def read_configuration():
-    with open(configuration_file, 'r') as f:
-        configuration = yaml.load(f)
+    with open(configuration_file, "r") as f:
+        configuration = yaml.full_load(f)
     return configuration
 
 
+def add_tags(tags, global_tags, resource_type=None):
+    for global_tag in global_tags:
+        new_tag = global_tag.copy()
+        if resource_type == "AWS::AutoScaling::AutoScalingGroup":
+            new_tag["PropagateAtLaunch"] = True
+        tags.append(new_tag)
+    return tags
+
+
 def add_global_tags(global_tags, template):
-    for resource in template['Resources']:
-        if 'Tags' in template['Resources'][resource]['Properties']:
-            tags = template['Resources'][resource]['Properties']['Tags']
-            for global_tag in global_tags:
-                new_tag = global_tag.copy()
-                if template['Resources'][resource]['Type'] == 'AWS::AutoScaling::AutoScalingGroup':
-                    new_tag['PropagateAtLaunch'] = True
-                tags.append(new_tag)
+    for resource in template["Resources"]:
+        resource_type = template["Resources"][resource]["Type"]
+        if "Tags" in template["Resources"][resource]["Properties"]:
+            cf_tags = template["Resources"][resource]["Properties"]["Tags"]
+            tags = add_tags(cf_tags, global_tags, resource_type)
+
+        if "TagSpecifications" in template["Resources"][resource]["Properties"]:
+            tag_specifications = template["Resources"][resource]["Properties"][
+                "TagSpecifications"
+            ]
+            for tag_specification in tag_specifications:
+                tags = tag_specification["Tags"]
+                new_tags = add_tags(
+                    tags,
+                    global_tags,
+                )
     return template
 
 
 def add_resource_tags(resource_tags, template, resource_key):
-    resource = template['Resources'][resource_key]
-    tags = resource['Properties']['Tags']
+    resource = template["Resources"][resource_key]
+    tags = resource["Properties"]["Tags"]
     for resource_tag in resource_tags:
         new_tag = resource_tag.copy()
-        if resource['Type'] == 'AWS::AutoScaling::AutoScalingGroup':
-            new_tag['PropagateAtLaunch'] = True
+        if resource["Type"] == "AWS::AutoScaling::AutoScalingGroup":
+            new_tag["PropagateAtLaunch"] = True
         tags.append(new_tag)
     return template
+
 
 def main():
 
     module = AnsibleModule(
-      argument_spec = dict(
-        template_dir = dict(required=True, type='str'),
-        global_tags = dict(required=True, type='list')
-      )
+        argument_spec=dict(
+            template_dir=dict(required=True, type="str"),
+            global_tags=dict(required=True, type="list"),
+        )
     )
 
-    template_dir = module.params['template_dir']
-    global_tags = module.params['global_tags']
+    template_dir = module.params["template_dir"]
+    global_tags = module.params["global_tags"]
 
     template_files = glob.glob(template_dir + "*.yaml")
     for template_file in template_files:
@@ -80,7 +98,8 @@ def main():
     #
     #     write_template(path, template)
 
-    module.exit_json(changed = True, message = ", ".join(template_files))
+    module.exit_json(changed=True, message=", ".join(template_files))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

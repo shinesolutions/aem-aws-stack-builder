@@ -68,6 +68,10 @@ Parameters:
   DataBucketNameParameter:
     Description: Bucket name that stores Stack data files
     Type: String
+  ChaosMonkeyIncludeStack:
+    Default: 'true'
+    Description: Creates the ChaosMonkey stack resources or not
+    Type: String
   NetworkStackPrefixParameter:
     Description: The AEM Stack Network Resources Stack Prefix
     Type: String
@@ -80,11 +84,21 @@ Parameters:
   PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
     Description: AEM Publish Dispatcher ELB Security Group Inbound Cidr Ip
     Type: String
+  PreviewIncludeStack:
+    Default: 'false'
+    Description: Creates the Preview stack resources or not
+    Type: String
+  PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+    Description: AEM Preview Publish Dispatcher ELB Security Group Inbound Cidr Ip
+    Type: String
   SSLCertificateARNParameter:
     Description: SSL Certificate ARN
     Type: String
   SecureShellInboundCidrIpParameter:
     Description: AEM Stack Secure Shell Inbound Cidr Ip
+    Type: String
+  AemContentSyncInboundCidrIpParameter:
+    Description: AEM content sync Inbound Cidr range
     Type: String
 Resources:
   InstanceProfilesStack:
@@ -94,6 +108,10 @@ Resources:
           Fn::Join:
           - ','
           - Ref: AWSEncryptionParameters
+        ChaosMonkeyIncludeStack: 
+          Ref: ChaosMonkeyIncludeStack
+        PreviewIncludeStack: 
+          Ref: PreviewIncludeStack
         PrerequisitesStackPrefixParameter:
           Ref: PrerequisitesStackPrefixParameter
       TemplateURL:
@@ -126,6 +144,10 @@ Resources:
       Parameters:
         AuthorDispatcherELBSecurityGroupInboundCidrIpParameter:
           Ref: AuthorDispatcherELBSecurityGroupInboundCidrIpParameter
+        ChaosMonkeyIncludeStack: 
+          Ref: ChaosMonkeyIncludeStack
+        PreviewIncludeStack: 
+          Ref: PreviewIncludeStack
         NetworkStackPrefixParameter:
           Ref: NetworkStackPrefixParameter
         PrerequisitesStackPrefixParameter:
@@ -134,8 +156,12 @@ Resources:
           Ref: PrivateSubnetInternetOutboundCidrIpParameter
         PublishDispatcherELBSecurityGroupInboundCidrIpParameter:
           Ref: PublishDispatcherELBSecurityGroupInboundCidrIpParameter
+        PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter:
+          Ref: PreviewPublishDispatcherELBSecurityGroupInboundCidrIpParameter
         SecureShellInboundCidrIpParameter:
           Ref: SecureShellInboundCidrIpParameter
+        AemContentSyncInboundCidrIpParameter:
+          Ref: AemContentSyncInboundCidrIpParameter
       TemplateURL:
         Fn::Sub: https://s3-${AWS::Region}.amazonaws.com/${DataBucketNameParameter}/${PrerequisitesStackPrefixParameter}/security-groups.yaml
     Type: AWS::CloudFormation::Stack

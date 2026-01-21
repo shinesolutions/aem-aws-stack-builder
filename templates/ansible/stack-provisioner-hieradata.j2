@@ -1,7 +1,76 @@
+# Common configuration parameters
+common::aws_region: {{ aws.region }}
+common::aws_tags:
+{{ aws.tags | to_nice_yaml | indent(width=2, first=True) }}
+common::proxy_enabled: {{ proxy.enabled }}
+common::proxy_protocol: '{{ proxy.protocol }}'
+common::proxy_host: '{{ proxy.host }}'
+common::proxy_port: '{{ proxy.port }}'
+common::proxy_user: '{{ proxy.user }}'
+common::proxy_password: '{{ proxy.password }}'
+common::proxy_noproxy:
+{{ proxy.noproxy | to_nice_yaml | indent(width=2, first=True) }}
+common::aem_healthcheck_version: {{ library.aem_healthcheck_version }}
+common::enable_aem_reconfiguration: {{ aem.enable_reconfiguration }}
+common::enable_truststore_removal: {{ reconfiguration.enable_truststore_removal }}
+common::certificate_arn: {{ reconfiguration.certificate_arn }}
+common::certificate_key_arn: {{ reconfiguration.certificate_key_arn }}
+common::aem_ssl_keystore_password: {{ reconfiguration.ssl_keystore_password }}
+
+# JMX Configuration
+common::jmxremote::user_password: {{ lookup('community.general.random_string', length=12, special=false) }}
+
+# Configure Wait until login page is ready timeout for AEM Author & Publisher
+common::login_ready_max_tries: '{{ aem.login_ready_max_tries }}'
+common::login_ready_base_sleep_seconds: '{{ aem.login_ready_base_sleep_seconds }}'
+common::login_ready_max_sleep_seconds: '{{ aem.login_ready_max_sleep_seconds }}'
+
+# Configure Device names. device alias is used by snapshot_attach.py Depending on the block device driver of the kernel, the device could be attached with a different name than you specified.
+common::ami::device_name: {{ ami_device[os_type].data_name }}
+common::ami::device_alias: {{ ami_device[os_type].data_attached_name }}
+common::ami::author_device_name: {{ ami_device[os_type].author_data_name }}
+common::ami::author_device_alias: {{ ami_device[os_type].author_data_attached_name }}
+common::ami::publish_device_name: {{ ami_device[os_type].publish_data_name }}
+common::ami::publish_device_alias: {{ ami_device[os_type].publish_data_attached_name }}
+common::ami::publish_dispatcher_device_name: {{ ami_device[os_type].publish_dispatcher_data_name }}
+common::ami::publish_dispatcher_device_alias: {{ ami_device[os_type].publish_dispatcher_data_attached_name }}
+
+# Service start Post sleep configuration
+common::enable_post_start_sleep: {{ aem.enable_post_start_sleep }}
+common::post_start_sleep_seconds: {{ aem.post_start_sleep_seconds }}
+
+# ssh_public_keys Import
+common::ssh_public_keys:
+{{ ssh_public_keys | to_nice_yaml | indent(width=2, first=True) }}
+
+# Keystore parameters
+common::authorizable_keystore::enable_creation: {{ aem.authorizable_keystore.enable_creation }}
+common::authorizable_keystore::enable_certificate_chain_upload: {{ aem.authorizable_keystore.enable_certificate_chain_upload }}
+
+# Truststore parameters
+common::truststore::enable_creation: {{ aem.truststore.enable_creation }}
+common::truststore::enable_migration: {{ reconfiguration.enable_truststore_migration }}
+common::truststore::password: {{ aem.truststore.password }}
+
+# SAML Configuration parameters
+common::saml::enable: {{ aem.enable_saml }}
+common::saml::enable_saml_certificate_upload: {{ aem.truststore.enable_saml_certificate_upload }}
+common::saml::configuration:
+{{ saml | to_nice_yaml | indent(width=2, first=True) }}
+
+# Common Consolidated configuration parameters
 author_publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
 
-author::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+# Configuration of Publish replication-agent for Consolidated env.
+author_publish_dispatcher::publish_replication_agent_protocol: {{ author_publish_dispatcher.replication_agent.publish_protocol }}
+author_publish_dispatcher::publish_replication_agent_port: {{ author_publish_dispatcher.replication_agent.publish_port }}
 
+# Common Author configuration parameters
+author::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+author::aem_system_users:
+{{ system_users.author | to_nice_yaml | indent(width=2, first=True) }}
+
+# Common Author Primary configuration parameters
 author_primary::scheduled_jobs::enable::offline_compaction: {{ scheduled_jobs.author_primary.offline_compaction.enable }}
 author_primary::scheduled_jobs::weekday::offline_compaction: "{{ scheduled_jobs.author_primary.offline_compaction.weekday }}"
 author_primary::scheduled_jobs::hour::offline_compaction: "{{ scheduled_jobs.author_primary.offline_compaction.hour }}"
@@ -14,7 +83,57 @@ author_primary::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.author_
 author_primary::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.author_primary.live_snapshot.weekday }}"
 author_primary::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.author_primary.live_snapshot.hour }}"
 author_primary::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.author_primary.live_snapshot.minute }}"
+aem_curator::config_author_primary::aem_version: '{{ aem.version }}'
+aem_curator::config_author_primary::aem_password_reset_version: '{{ library.aem_password_reset_version }}'
+aem_curator::config_author_primary::enable_crxde: {{ aem.enable_crxde }}
+aem_curator::config_author_primary::enable_default_passwords: {{ aem.enable_default_passwords }}
+aem_curator::config_author_primary::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
+aem_curator::config_author_primary::jmxremote_port: {{ aem.author.jmxremote.port }}
+aem_curator::config_author_primary::jvm_opts: {{ aem.author.jvm_opts }}
+aem_curator::config_author_primary::author_timeout: {{ aem.client_timeout }}
+{% if aem.author.run_modes is defined and (aem.author.run_modes | length > 0)  %}
+aem_curator::config_author_primary::aem_runmodes:
+{% for run_mode in aem.author.run_modes %}
+- {{ run_mode }}
+{% endfor %}
+{% else %}
+aem_curator::config_author_primary::aem_runmodes: []
+{% endif %}
 
+# Common Author Standby Configuration parameters
+author_standby::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.author_standby.live_snapshot.enable }}
+author_standby::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.weekday }}"
+author_standby::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.hour }}"
+author_standby::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.minute }}"
+aem_curator::config_author_standby::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
+aem_curator::config_author_standby::jmxremote_port: {{ aem.author.jmxremote.port }}
+aem_curator::config_author_standby::jvm_opts: {{ aem.author.jvm_opts }}
+{% if aem.author.run_modes is defined and (aem.author.run_modes | length > 0)  %}
+aem_curator::config_author_standby::aem_runmodes:
+{% for run_mode in aem.author.run_modes %}
+- {{ run_mode }}
+{% endfor %}
+{% else %}
+aem_curator::config_author_standby::aem_runmodes: []
+{% endif %}
+aem_curator::config_author_standby::aem_version: '{{ aem.version }}'
+aem_curator::action_promote_author_standby_to_primary::aem_version: '{{ aem.version }}'
+{% if aem.author.run_modes is defined and (aem.author.run_modes | length > 0)  %}
+aem_curator::action_promote_author_standby_to_primary::aem_runmodes:
+{% for run_mode in aem.author.run_modes %}
+- {{ run_mode }}
+{% endfor %}
+{% else %}
+aem_curator::action_promote_author_standby_to_primary::aem_runmodes: []
+{% endif %}
+aem_curator::action_promote_author_standby_to_primary::jmxremote_port: {{ aem.author.jmxremote.port }}
+aem_curator::action_promote_author_standby_to_primary::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
+aem_curator::action_promote_author_standby_to_primary::jvm_opts: {{ aem.author.jvm_opts }}
+
+# Common Author Dispatcher configuration parameters
+author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+
+# Common Publish configuration parameters
 publish::scheduled_jobs::enable::offline_compaction: {{ scheduled_jobs.publish.offline_compaction.enable }}
 publish::scheduled_jobs::weekday::offline_compaction: "{{ scheduled_jobs.publish.offline_compaction.weekday }}"
 publish::scheduled_jobs::hour::offline_compaction: "{{ scheduled_jobs.publish.offline_compaction.hour }}"
@@ -27,12 +146,70 @@ publish::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.publish.live_s
 publish::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.weekday }}"
 publish::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.hour }}"
 publish::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.publish.live_snapshot.minute }}"
+publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
+aem_curator::config_publish::aem_password_reset_version: {{ library.aem_password_reset_version }}
+aem_curator::config_publish::enable_crxde: {{ aem.enable_crxde }}
+aem_curator::config_publish::enable_default_passwords: {{ aem.enable_default_passwords }}
+{% if aem.publish.run_modes is defined and (aem.publish.run_modes | length > 0)  %}
+publish::aem_runmodes:
+{% for run_mode in aem.publish.run_modes %}
+- {{ run_mode }}
+{% endfor %}
+{% else %}
+publish::aem_runmodes: []
+{% endif %}
+publish::jvm_mem_opts: {{ aem.publish.jvm_mem_opts }}
+publish::jmxremote_port: {{ aem.publish.jmxremote.port }}
+publish::jvm_opts: {{ aem.publish.jvm_opts }}
+publish::aem_system_users:
+{{ system_users.publish | to_nice_yaml | indent(width=2, first=True) }}
+aem_curator::config_publish::publish_timeout: {{ aem.client_timeout }}
 
-author_standby::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.author_standby.live_snapshot.enable }}
-author_standby::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.weekday }}"
-author_standby::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.hour }}"
-author_standby::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.author_standby.live_snapshot.minute }}"
+# Common Publish Dispatcher configuration parameters
+publish_dispatcher::scheduled_jobs::enable::content_health_check: {{ scheduled_jobs.publish_dispatcher.content_health_check.enable }}
+publish_dispatcher::scheduled_jobs::weekday::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.weekday }}"
+publish_dispatcher::scheduled_jobs::hour::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.hour }}"
+publish_dispatcher::scheduled_jobs::minute::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.minute }}"
+publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
+publish_dispatcher::enable_content_healthcheck: {{ aem.enable_content_healthcheck }}
 
+# Common Preview Publish configuration parameters
+preview_publish::scheduled_jobs::enable::offline_compaction: {{ scheduled_jobs.preview_publish.offline_compaction.enable }}
+preview_publish::scheduled_jobs::weekday::offline_compaction: "{{ scheduled_jobs.preview_publish.offline_compaction.weekday }}"
+preview_publish::scheduled_jobs::hour::offline_compaction: "{{ scheduled_jobs.preview_publish.offline_compaction.hour }}"
+preview_publish::scheduled_jobs::minute::offline_compaction: "{{ scheduled_jobs.preview_publish.offline_compaction.minute }}"
+preview_publish::scheduled_jobs::enable::export: {{ scheduled_jobs.preview_publish.export.enable }}
+preview_publish::scheduled_jobs::weekday::export: "{{ scheduled_jobs.preview_publish.export.weekday }}"
+preview_publish::scheduled_jobs::hour::export: "{{ scheduled_jobs.preview_publish.export.hour }}"
+preview_publish::scheduled_jobs::minute::export: "{{ scheduled_jobs.preview_publish.export.minute }}"
+preview_publish::scheduled_jobs::enable::live_snapshot: {{ scheduled_jobs.preview_publish.live_snapshot.enable }}
+preview_publish::scheduled_jobs::weekday::live_snapshot: "{{ scheduled_jobs.preview_publish.live_snapshot.weekday }}"
+preview_publish::scheduled_jobs::hour::live_snapshot: "{{ scheduled_jobs.preview_publish.live_snapshot.hour }}"
+preview_publish::scheduled_jobs::minute::live_snapshot: "{{ scheduled_jobs.preview_publish.live_snapshot.minute }}"
+preview_publish::include_stack: {{ preview_publish.include_stack }}
+preview_publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
+{% if aem.preview_publish.run_modes is defined and (aem.preview_publish.run_modes | length > 0)  %}
+preview_publish::aem_runmodes:
+{% for run_mode in aem.preview_publish.run_modes %}
+- {{ run_mode }}
+{% endfor %}
+{% else %}
+preview_publish::aem_runmodes: []
+{% endif %}
+preview_publish::jvm_mem_opts: {{ aem.preview_publish.jvm_mem_opts }}
+preview_publish::jmxremote_port: {{ aem.preview_publish.jmxremote.port }}
+preview_publish::jvm_opts: {{ aem.preview_publish.jvm_opts }}
+preview_publish::aem_system_users:
+{{ system_users.preview_publish | to_nice_yaml | indent(width=2, first=True) }}
+
+# Common Preview Publish Dispatcher configuration parameters
+preview_publish_dispatcher::scheduled_jobs::enable::content_health_check: {{ scheduled_jobs.preview_publish_dispatcher.content_health_check.enable }}
+preview_publish_dispatcher::scheduled_jobs::weekday::content_health_check: "{{ scheduled_jobs.preview_publish_dispatcher.content_health_check.weekday }}"
+preview_publish_dispatcher::scheduled_jobs::hour::content_health_check: "{{ scheduled_jobs.preview_publish_dispatcher.content_health_check.hour }}"
+preview_publish_dispatcher::scheduled_jobs::minute::content_health_check: "{{ scheduled_jobs.preview_publish_dispatcher.content_health_check.minute }}"
+
+# Common Orchestrator configuration parameters
 aem_orchestrator::scheduled_jobs::enable::offline_compaction_snapshot: {{ scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.enable }}
 aem_orchestrator::scheduled_jobs::weekday::offline_compaction_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.weekday }}"
 aem_orchestrator::scheduled_jobs::hour::offline_compaction_snapshot: "{{ scheduled_jobs.aem_orchestrator.offline_compaction_snapshot.hour }}"
@@ -44,36 +221,31 @@ aem_orchestrator::scheduled_jobs::minute::offline_snapshot: "{{ scheduled_jobs.a
 aem_orchestrator::scheduled_jobs::weekday::cloudwatch_s3_stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.weekday }}"
 aem_orchestrator::scheduled_jobs::hour::cloudwatch_s3_stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.hour }}"
 aem_orchestrator::scheduled_jobs::minute::cloudwatch_s3_stream: "{{ scheduled_jobs.aem_orchestrator.cloudwatch_s3_stream.minute }}"
-
-publish_dispatcher::scheduled_jobs::enable::content_health_check: {{ scheduled_jobs.publish_dispatcher.content_health_check.enable }}
-publish_dispatcher::scheduled_jobs::weekday::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.weekday }}"
-publish_dispatcher::scheduled_jobs::hour::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.hour }}"
-publish_dispatcher::scheduled_jobs::minute::content_health_check: "{{ scheduled_jobs.publish_dispatcher.content_health_check.minute }}"
-
-publish::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
-publish::revert_snapshot_type: {{ aem.revert_snapshot_type }}
-
-author_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
-
-publish_dispatcher::enable_deploy_on_init: {{ aem.enable_deploy_on_init }}
-publish_dispatcher::enable_content_healthcheck: {{ aem.enable_content_healthcheck }}
-
 orchestrator::aem_orchestrator_version: '{{ library.aem_orchestrator_version }}'
 orchestrator::stack_manager_stack_name: '{{ scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_prefix }}-{{ scheduled_jobs.aem_orchestrator.stack_manager_pair.stack_name }}'
 
-# Configure Chaos Monkey
-chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
+# AEM Orchestrator only takes snapshot from Publish instance in a Full-Set architecture, hence it only needs the data volume device name
+aem_orchestrator::application_properties::aws_device_name: {{ ami_device[os_type].data_name }}
+aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'
+aem_orchestrator::application_properties::alarm_content_health_check_terminate_instance_enable: '{{ aem.enable_content_healthcheck_terminate_instance }}'
+aem_orchestrator::jarfile_checksum_value: 133ad0f9a6c083701b2531b677a4458ebe021af88b3ea0eba87374fb9b12dc94
 
+# Enable Cloudwatch S3 stream to Lambda
+orchestrator::enable_cloudwatch_s3_stream: {{ aws.cloudwatch.enable_log_subscription }}
+action_scheduled_jobs::cloudwatch_log_subscription_arn: {{ aws.cloudwatch.log_subscription_arn }}
+
+# Common Chaos Monkey configuration parameters
+chaos_monkey::simian_army_version: '{{ library.simian_army_version }}'
 chaos_monkey::asg_probability: '{{ chaos_monkey.termination_settings.asg_probability }}'
 chaos_monkey::asg_max_terminations_per_day: '{{ chaos_monkey.termination_settings.asg_max_terminations_per_day }}'
-
 chaos_monkey::orchestrator_enable_random_termination: {{ orchestrator.enable_random_termination }}
 chaos_monkey::chaos_monkey_enable_random_termination: {{ chaos_monkey.enable_random_termination }}
 chaos_monkey::publish_enable_random_termination: {{ publish.enable_random_termination }}
+chaos_monkey::preview_publish_enable_random_termination: {{ preview_publish.enable_random_termination }}
 chaos_monkey::publish_dispatcher_enable_random_termination: {{ publish_dispatcher.enable_random_termination }}
+chaos_monkey::preview_publish_dispatcher_enable_random_termination: {{ preview_publish_dispatcher.enable_random_termination }}
 chaos_monkey::author_dispatcher_enable_random_termination: {{ author_dispatcher.enable_random_termination }}
 chaos_monkey::include_stack: {{ chaos_monkey.include_stack }}
-
 simianarmy::simianarmy_properties::simianarmy_calendar_open_hour: '{{ chaos_monkey.termination_settings.calendar_open_hour }}'
 simianarmy::simianarmy_properties::simianarmy_calendar_close_hour: '{{ chaos_monkey.termination_settings.calendar_close_hour }}'
 simianarmy::simianarmy_properties::simianarmy_calendar_timezone: '{{ chaos_monkey.termination_settings.calendar_timezone }}'
@@ -81,79 +253,16 @@ simianarmy::simianarmy_properties::simianarmy_scheduler_frequency_in_minutes: '{
 simianarmy::chaos_properties::simianarmy_chaos_asg_probability: '{{ chaos_monkey.termination_settings.asg_probability }}'
 simianarmy::chaos_properties::simianarmy_chaos_asg_max_terminations_per_day: '{{ chaos_monkey.termination_settings.asg_max_terminations_per_day }}'
 
-# AWS Region parameter
-common::aws_region: {{ aws.region }}
 
-common::proxy_enabled: {{ proxy.enabled }}
-common::proxy_protocol: '{{ proxy.protocol }}'
-common::proxy_host: '{{ proxy.host }}'
-common::proxy_port: '{{ proxy.port }}'
-common::proxy_user: '{{ proxy.user }}'
-common::proxy_password: '{{ proxy.password }}'
-common::proxy_noproxy:
-{{ proxy.noproxy | to_nice_yaml | indent(width=2, first=True) }}
-
-aem_curator::config_author_primary::aem_password_reset_version: '{{ library.aem_password_reset_version }}'
-aem_curator::config_author_primary::enable_crxde: {{ aem.enable_crxde }}
-aem_curator::config_author_primary::enable_default_passwords: {{ aem.enable_default_passwords }}
-{% if aem.author.run_modes is defined and (aem.author.run_modes | length > 0)  %}
-aem_curator::config_author_primary::aem_runmodes:
-{% for run_mode in aem.author.run_modes %}
-- {{ run_mode }}
-{% endfor %}
-{% endif %}
-
-aem_curator::config_author_primary::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
-aem_curator::config_author_primary::jmxremote_port: {{ aem.author.jmxremote.port }}
-aem_curator::config_author_primary::jvm_opts: {{ aem.author.jvm_opts }}
-aem_curator::config_author_primary::author_timeout: {{ aem.client_timeout }}
-
-aem_curator::config_author_standby::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
-aem_curator::config_author_standby::jmxremote_port: {{ aem.author.jmxremote.port }}
-aem_curator::config_author_standby::jvm_opts: {{ aem.author.jvm_opts }}
-{% if aem.author.run_modes is defined and (aem.author.run_modes | length > 0)  %}
-aem_curator::config_author_standby::aem_runmodes:
-{% for run_mode in aem.author.run_modes %}
-- {{ run_mode }}
-{% endfor %}
-{% endif %}
-
-aem_curator::config_publish::aem_password_reset_version: {{ library.aem_password_reset_version }}
-aem_curator::config_publish::enable_crxde: {{ aem.enable_crxde }}
-aem_curator::config_publish::enable_default_passwords: {{ aem.enable_default_passwords }}
-{% if aem.publish.run_modes is defined and (aem.publish.run_modes | length > 0)  %}
-aem_curator::config_publish::aem_runmodes:
-{% for run_mode in aem.publish.run_modes %}
-- {{ run_mode }}
-{% endfor %}
-{% endif %}
-
-aem_curator::config_publish::jvm_mem_opts: {{ aem.publish.jvm_mem_opts }}
-aem_curator::config_publish::jmxremote_port: {{ aem.publish.jmxremote.port }}
-aem_curator::config_publish::jvm_opts: {{ aem.publish.jvm_opts }}
-aem_curator::config_publish::publish_timeout: {{ aem.client_timeout }}
-
+# AEM Tools configuration parameters
 aem_curator::config_aem_tools::oak_run_version: '{{ library.oak_run_version }}'
+aem_curator::config_aem_tools::aem_vlt_version: '{{ library.aem_vlt_version }}'
 aem_curator::config_aem_tools::enable_compaction_remove_bak_files: {{ aem.enable_bak_files_cleanup }}
 aem_curator::config_aem_tools::compaction_remove_bak_files_older_than_in_days: '{{ aem.bak_files_cleanup_max_age_in_days }}'
 aem_curator::config_aem_tools::aem_compaction_jvm_mem_opts: '{{ aem.compaction.jvm_mem_opts }}'
 
 # Enable configuration of AEM Upgrade tools
 aem_curator::config_aem_upgrade_tools::enable_upgrade_tools: {{ aem.enable_upgrade_tools }}
-
-aem_curator::config_author_primary::aem_version: '{{ aem.version }}'
-aem_curator::config_author_standby::aem_version: '{{ aem.version }}'
-aem_curator::action_promote_author_standby_to_primary::aem_version: '{{ aem.version }}'
-{% if aem.author.run_modes is defined and (aem.author.run_modes | length > 0)  %}
-aem_curator::action_promote_author_standby_to_primary::aem_runmodes:
-{% for run_mode in aem.author.run_modes %}
-- {{ run_mode }}
-{% endfor %}
-{% endif %}
-
-aem_curator::action_promote_author_standby_to_primary::jmxremote_port: {{ aem.author.jmxremote.port }}
-aem_curator::action_promote_author_standby_to_primary::jvm_mem_opts: {{ aem.author.jvm_mem_opts }}
-aem_curator::action_promote_author_standby_to_primary::jvm_opts: {{ aem.author.jvm_opts }}
 
 aem_curator::config_collectd::proxy_protocol: '{{ proxy.protocol }}'
 aem_curator::config_collectd::proxy_host: '{{ proxy.host }}'
@@ -176,18 +285,6 @@ aem_curator::config_author_primary::aem_ssl_method: {{ reconfiguration.author.ae
 aem_curator::config_publish::aem_keystore_path: {{ reconfiguration.publish.ssl_keystore_path }}
 aem_curator::config_publish::aem_ssl_method: {{ reconfiguration.publish.aem_ssl_method }}
 
-common::aem_healthcheck_version: {{ library.aem_healthcheck_version }}
-common::enable_aem_reconfiguration: {{ aem.enable_reconfiguration }}
-common::enable_truststore_removal: {{ reconfiguration.enable_truststore_removal }}
-common::certificate_arn: {{ reconfiguration.certificate_arn }}
-common::certificate_key_arn: {{ reconfiguration.certificate_key_arn }}
-common::aem_ssl_keystore_password: {{ reconfiguration.ssl_keystore_password }}
-
-# define AEM System Users
-author::aem_system_users:
-{{ system_users.author | to_nice_yaml | indent(width=2, first=True) }}
-publish::aem_system_users:
-{{ system_users.publish | to_nice_yaml | indent(width=2, first=True) }}
 
 # Logrotation configuration. For configuration parameters see https://github.com/voxpupuli/puppet-logrotate
 common::logrotation::config:
@@ -202,66 +299,15 @@ author_standby::logrotation:
 {{ logrotation.author_standby | to_nice_yaml | indent(width=2, first=True) }}
 publish::logrotation:
 {{ logrotation.publish | to_nice_yaml | indent(width=2, first=True) }}
+preview_publish::logrotation:
+{{ logrotation.preview_publish | to_nice_yaml | indent(width=2, first=True) }}
 author_dispatcher::logrotation:
 {{ logrotation.author_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
 publish_dispatcher::logrotation:
 {{ logrotation.publish_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
+preview_publish_dispatcher::logrotation:
+{{ logrotation.preview_publish_dispatcher | to_nice_yaml | indent(width=2, first=True) }}
 aem_orchestrator::logrotation:
 {{ logrotation.orchestrator | to_nice_yaml | indent(width=2, first=True) }}
 simianarmy::logrotation:
 {{ logrotation.simianarmy | to_nice_yaml | indent(width=2, first=True) }}
-
-# Keystore parameters
-common::authorizable_keystore::enable_creation: {{ aem.authorizable_keystore.enable_creation }}
-common::authorizable_keystore::enable_certificate_chain_upload: {{ aem.authorizable_keystore.enable_certificate_chain_upload }}
-
-# Truststore parameters
-common::truststore::enable_creation: {{ aem.truststore.enable_creation }}
-common::truststore::enable_migration: {{ reconfiguration.enable_truststore_migration }}
-common::truststore::password: {{ aem.truststore.password }}
-
-# SAML Configuration parameters
-common::saml::enable: {{ aem.enable_saml }}
-common::saml::enable_saml_certificate_upload: {{ aem.truststore.enable_saml_certificate_upload }}
-common::saml::configuration:
-{{ saml | to_nice_yaml | indent(width=2, first=True) }}
-
-# AEM Orchestrator only takes snapshot from Publish instance in a Full-Set architecture, hence it only needs the data volume device name
-aem_orchestrator::application_properties::aws_device_name: {{ ami_device[os_type].data_name }}
-
-aem_orchestrator::application_properties::aem_reverse_replication_enable: '{{ aem.enable_reverse_replication }}'
-aem_orchestrator::application_properties::alarm_content_health_check_terminate_instance_enable: '{{ aem.enable_content_healthcheck_terminate_instance }}'
-aem_orchestrator::jarfile_checksum_value: 133ad0f9a6c083701b2531b677a4458ebe021af88b3ea0eba87374fb9b12dc94
-
-# Configure Wait until login page is ready timeout for AEM Author & Publisher
-common::login_ready_max_tries: '{{ aem.login_ready_max_tries }}'
-common::login_ready_base_sleep_seconds: '{{ aem.login_ready_base_sleep_seconds }}'
-common::login_ready_max_sleep_seconds: '{{ aem.login_ready_max_sleep_seconds }}'
-
-# Configure Device names. device alias is used by snapshot_attach.py Depending on the block device driver of the kernel, the device could be attached with a different name than you specified.
-common::ami::device_name: {{ ami_device[os_type].data_name }}
-common::ami::device_alias: {{ ami_device[os_type].data_attached_name }}
-common::ami::author_device_name: {{ ami_device[os_type].author_data_name }}
-common::ami::author_device_alias: {{ ami_device[os_type].author_data_attached_name }}
-common::ami::publish_device_name: {{ ami_device[os_type].publish_data_name }}
-common::ami::publish_device_alias: {{ ami_device[os_type].publish_data_attached_name }}
-common::ami::publish_dispatcher_device_name: {{ ami_device[os_type].publish_dispatcher_data_name }}
-common::ami::publish_dispatcher_device_alias: {{ ami_device[os_type].publish_dispatcher_data_attached_name }}
-
-
-# Service start Post sleep configuration
-common::enable_post_start_sleep: {{ aem.enable_post_start_sleep }}
-common::post_start_sleep_seconds: {{ aem.post_start_sleep_seconds }}
-
-# ssh_public_keys Import
-common::ssh_public_keys:
-{{ ssh_public_keys | to_nice_yaml | indent(width=2, first=True) }}
-
-# Enable Cloudwatch S3 stream to Lambda
-orchestrator::enable_cloudwatch_s3_stream: {{ aws.cloudwatch.enable_log_subscription }}
-action_scheduled_jobs::cloudwatch_log_subscription_arn: {{ aws.cloudwatch.log_subscription_arn }}
-
-# Configuration of Publish replication-agent for Consolidated env.
-author_publish_dispatcher::publish_replication_agent_protocol: {{ author_publish_dispatcher.replication_agent.publish_protocol }}
-author_publish_dispatcher::publish_replication_agent_port: {{ author_publish_dispatcher.replication_agent.publish_port }}
-

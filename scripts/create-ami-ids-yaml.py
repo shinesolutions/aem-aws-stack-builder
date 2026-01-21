@@ -42,6 +42,7 @@ filters = yaml.load(open(args.filter_file)) if args.filter_file else {}
 
 author_ami_id = most_recent_ami('Author AMI', filters.get('author_ami_filters', ["Name=tag:Application Role,Values=author AMI"]))
 publish_ami_id = most_recent_ami('Publish AMI', filters.get('publish_ami_id', ["Name=tag:Application Role,Values=publish AMI"]))
+preview_publish_ami_id = most_recent_ami('Publish AMI', filters.get('preview_publish_ami_id', ["Name=tag:Application Role,Values=preview publish AMI"]))
 dispatcher_ami_id = most_recent_ami('Dispatcher AMI', filters.get('dispatcher_ami_id', ["Name=tag:Application Role,Values=dispatcher AMI"]))
 java_ami_id = most_recent_ami('Java AMI', filters.get('java_ami_id', ["Name=tag:Application Role,Values=java AMI"]))
 
@@ -54,7 +55,9 @@ yaml.dump({
     'ami_ids': {
         'author_dispatcher': dispatcher_ami_id,
         'publish_dispatcher': dispatcher_ami_id,
+        'preview_publish_dispatcher': dispatcher_ami_id,
         'publish': publish_ami_id,
+        'preview_publish': preview_publish_ami_id,
         'author': author_ami_id,
         'orchestrator': java_ami_id,
         'chaos_monkey': java_ami_id,

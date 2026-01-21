@@ -80,14 +80,12 @@ Parameters:
     Type: String
 Resources:
   CloudWatchS3StreamInitialVersion:
-    DependsOn: CloudWatchS3StreamLambdaFunction
     Properties:
       Description: Initial Version to Start With
       FunctionName:
         Ref: CloudWatchS3StreamLambdaFunction
     Type: AWS::Lambda::Version
   CloudWatchS3StreamLambdaDevAlias:
-    DependsOn: CloudWatchS3StreamLambdaFunction
     Properties:
       Description: Lambda Alias for Development Use
       FunctionName:
@@ -96,7 +94,6 @@ Resources:
       Name: dev
     Type: AWS::Lambda::Alias
   CloudWatchS3StreamLambdaProdAlias:
-    DependsOn: CloudWatchS3StreamInitialVersion
     Properties:
       Description: Lambda Alias for Production Use
       FunctionName:
@@ -134,7 +131,7 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 300
     Type: AWS::Lambda::Function
   CloudWatchS3StreamLambdaPermission:
@@ -283,6 +280,6 @@ Resources:
       Role:
         Fn::ImportValue:
           Fn::Sub: ${MainStackPrefixParameter}-StackManagerLambdaServiceRoleArn
-      Runtime: python3.8
+      Runtime: python3.12
       Timeout: 900
     Type: AWS::Lambda::Function

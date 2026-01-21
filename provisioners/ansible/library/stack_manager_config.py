@@ -29,6 +29,9 @@ options:
     MinimumPublishInstances:
         description:
          - Integer of minimum instances configured in the ASG
+    MinimumPreviewPublishInstances:
+        description:
+         - Integer of minimum instances configured in the ASG
     SSMServiceRoleArn:
         description:
           - ARN of the SSM Service Role
@@ -71,6 +74,7 @@ EXAMPLES = '''
     S3Folder: "AEM63/StackManager"
     TaskStatusTopicArn: arn:aws:sns:region:account-id:TaskStatusTopicArn
     MinimumPublishInstances: 2
+    MinimumPreviewPublishInstances: 2
     SSMServiceRoleArn: arn:aws:iam::account-id:role/role-name
     S3BucketSSMOutput: "AEM-Bucket"
     S3PrefixSSMOutput: "AEM63/StackManager/SSMOutput"
@@ -135,6 +139,7 @@ class config:
         backuptopicarn = self.module.params.get("BackupTopicArn")
         dynamodbtablename = self.module.params.get("DynamoDBTableName")
         minpublishinstances = self.module.params.get("MinimumPublishInstances")
+        minpreviewpublishinstances = self.module.params.get("MinimumPreviewPublishInstances")
         changed = False
 
         # Create dict for run_cmd
@@ -150,6 +155,8 @@ class config:
         # Create dict for task mapping
 
         messenger_task_mapping = {
+            "AttachDetachContentSyncSG": "attach-detach-content-sync-sg",
+            "ContentSyncVLT": "content-sync",
             "DeployArtifact": "deploy-artifact",
             "DeployArtifacts": "deploy-artifacts",
             "DisableCrxde": "disable-crxde",
@@ -194,6 +201,7 @@ class config:
         offline_snapshot = {
                 "offline_snapshot": {
                     "min-publish-instances": minpublishinstances,\
+                    "min-preview-publish-instances": minpreviewpublishinstances,
                             "sns-topic-arn": backuptopicarn
                 }
         }
@@ -235,6 +243,7 @@ def main():
             S3Folder=dict(required=True, type='str'),
             TaskStatusTopicArn=dict(required=True, type='str'),
             MinimumPublishInstances=dict(required=True, type='str'),
+            MinimumPreviewPublishInstances=dict(required=True, type='str'),
             SSMServiceRoleArn=dict(required=True, type='str'),
             S3BucketSSMOutput=dict(required=True, type='str'),
             S3PrefixSSMOutput=dict(required=True, type='str'),

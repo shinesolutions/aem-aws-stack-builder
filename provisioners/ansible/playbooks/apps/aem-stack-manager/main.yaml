@@ -153,6 +153,7 @@
         BackupTopicArn: "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.BackupTopicArn }}"
         DynamoDBTableName: "{{ stack_manager_main_stack_info.ansible_facts.cloudformation[stack_manager_main_stack_name].stack_outputs.AemStackManagerTableName }}"
         MinimumPublishInstances: "{{ stack_manager.publish.asg_min_size }}"
+        MinimumPreviewPublishInstances: "{{ stack_manager.preview_publish.asg_min_size }}"
         S3BucketCWStream: "{{ stack_manager.cloudwatch_stream.s3_bucket }}"
         S3PrefixCWStream: "{{ stack_manager.cloudwatch_stream.s3_prefix }}"
         state: present
@@ -370,5 +371,25 @@
       command: >
               aws s3 rm s3://"{{ s3.data_bucket_name }}"/"{{ stack_prefix }}"/"{{ stack_manager.s3_prefix }}"
                --recursive --region "{{ aws.region }}"
+      tags:
+        - delete
+
+    - name: Retrieve all available cloudwatch groups to delete
+      cloudwatchlogs_log_group_facts:
+        log_group_name: "/aws/lambda/{{ stack_prefix }}"
+      register: loggroups_found
+      when:
+        "stack_found is defined and aws.cloudwatch.enable_cloudwatch_cleanup"
+      tags:
+        - delete
+
+    - name: Delete Cloudwatch Loggroups
+      cloudwatchlogs_log_group:
+        state: absent
+        log_group_name: "{{ item.log_group_name}}"
+      with_items:
+        - "{{ loggroups_found.log_groups }}"
+      when:
+        "loggroups_found is defined and loggroups_found.log_groups is defined"
       tags:
         - delete
