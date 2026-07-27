@@ -8,6 +8,6 @@ jobs:
       - uses: cliffano/release-action@v2.0.0
         with:
           release_type: minor
-          github_token: ${{ secrets.SHINEWORKS_GITHUB_TOKEN }}
+          github_token: ${{ secrets.SHINEOPENSOURCE_GITHUB_TOKEN }}
           git_user_email: shinesworks@shinesolutions.com
           git_user_name: Shine Works

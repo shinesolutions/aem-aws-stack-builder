@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplify GitHub Actions release workflows to not use custom action
 - Replace deprecated AmazonEC2RoleforSSM with AmazonSSMManagedInstanceCore #RS-180
 
+### Fixed
+- Fix release workflows to use SHINEOPENSOURCE_GITHUB_TOKEN instead of SHINEWORKS_GITHUB_TOKEN, matching this repo's original token
+
 ## 8.0.4 - 2024-10-25
 ### Fixed
 - Allow S3 put for full-set instance profile
