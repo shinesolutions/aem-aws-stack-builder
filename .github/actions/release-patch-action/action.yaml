@@ -1,4 +1,0 @@
-name: 'Release Patch'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'

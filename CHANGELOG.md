@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update lambda functions' version from python3.7 to python3.8 [#472]
 
 ### Changed
+- Simplify GitHub Actions release workflows to not use custom action
 - Replace deprecated AmazonEC2RoleforSSM with AmazonSSMManagedInstanceCore #RS-180
 
 ## 8.0.4 - 2024-10-25
