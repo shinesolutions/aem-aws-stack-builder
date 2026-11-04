@@ -49,7 +49,7 @@
           AEMASGEventTopicDisplayNameParameter: "{{ stack_prefix }} - {{ messaging.asg_event_sns_topic_display_name }}"
           AEMASGEventTopicNameParameter: "{{ stack_prefix }}-{{ messaging.asg_event_sns_topic_name }}"
           AWSNotificationParameters: "{{ messaging.alarm_notification.contact_email }}, {{ messaging.alarm_notification.https_endpoint }}"
-          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
+          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}, {{ aws.encryption.secrets_manager.managed_policy_arn }}"
           SSLCertificateARNParameter: "{{ certificate_manager.ssl_certificate_arn }}"
       register: prereq_stack_info
       tags:
@@ -91,7 +91,7 @@
           PreviewPublishDispatcherInstanceProfileParameter: "{{ preview_publish_dispatcher.instance_profile }}"
           PreviewPublishInstanceProfileParameter: "{{ preview_publish.instance_profile }}"
           AWSNotificationParameters: "{{ messaging.alarm_notification.contact_email }}, {{ messaging.alarm_notification.https_endpoint }}"
-          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
+          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.sns.kms_key_id }}, {{ aws.encryption.sns.managed_policy_arn }}, {{ aws.encryption.lambda.kms_key_arn }}, {{ aws.encryption.lambda.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}, {{ aws.encryption.secrets_manager.managed_policy_arn }}"
       tags:
         - create
       when:
@@ -308,6 +308,57 @@
       tags:
         - create
 
+    # Instances only decrypt the system users credentials secret
+    - name: "Grant permissions for AEM App Instance Roles to Secrets Manager CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.secrets_manager.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-SecretsManager-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Decrypt
+              - DescribeKey
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn }}"
+      when: permission_type == "b" and stack_found is defined and aws.encryption.secrets_manager.kms_key_id != 'overwrite-me' and aws.encryption.secrets_manager.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM App Instance Roles to Secrets Manager CMK for permission type b for ChaosMonkey component"
+      aws_kms:
+        key_id: "{{ aws.encryption.secrets_manager.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-SecretsManager-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Decrypt
+              - DescribeKey
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn }}"
+      when: permission_type == "b" and stack_found is defined and aws.encryption.secrets_manager.kms_key_id != 'overwrite-me' and aws.encryption.secrets_manager.managed_policy_arn == 'overwrite-me' and chaos_monkey.include_stack == true
+      tags:
+        - create
+
+    - name: "Grant permissions for AEM App Instance Roles to Secrets Manager CMK for permission type b for Preview components"
+      aws_kms:
+        key_id: "{{ aws.encryption.secrets_manager.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-SecretsManager-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Decrypt
+              - DescribeKey
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn }}"
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn }}"
+      when: permission_type == "b" and stack_found is defined and aws.encryption.secrets_manager.kms_key_id != 'overwrite-me' and aws.encryption.secrets_manager.managed_policy_arn == 'overwrite-me' and preview_publish.include_stack == true
+      tags:
+        - create
+
     - name: Report Stack Problem
       debug:
         msg: "Stack {{ stack_name }} does not exist or some other errors occured"
@@ -429,6 +480,42 @@
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
             (kms_s3_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn)
+      tags:
+        - delete
+
+    - name: "Gather information for Secrets Manager CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.secrets_manager.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and permission_type == "b" and aws.encryption.secrets_manager.kms_key_id != 'overwrite-me' and aws.encryption.secrets_manager.managed_policy_arn == 'overwrite-me'
+      register: kms_secrets_manager_facts
+      tags:
+        - delete
+
+    - name: "Save found Secrets Manager CMK Details"
+      set_fact:
+        kms_secrets_manager_key_grants: "{{ kms_secrets_manager_facts['keys'][0].grants }}"
+      when: "'keys' in kms_secrets_manager_facts and (kms_secrets_manager_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    # ChaosMonkey and Preview role outputs only exist when those stacks are included,
+    # so they are checked behind the same flags the grant tasks use
+    - name: "Remove granted permissions for AEM App Instance Roles to use Secrets Manager CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.secrets_manager.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_secrets_manager_key_grants }}"
+      when: (kms_secrets_manager_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorDispatcherRoleArn) or
+            (kms_secrets_manager_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorRoleArn) or
+            (kms_secrets_manager_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.OrchestratorRoleArn) or
+            (kms_secrets_manager_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishDispatcherRoleArn) or
+            (kms_secrets_manager_key_grants is defined and stack_found is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PublishRoleArn) or
+            (kms_secrets_manager_key_grants is defined and stack_found is defined and chaos_monkey.include_stack == true and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.ChaosMonkeyRoleArn) or
+            (kms_secrets_manager_key_grants is defined and stack_found is defined and preview_publish.include_stack == true and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishDispatcherRoleArn) or
+            (kms_secrets_manager_key_grants is defined and stack_found is defined and preview_publish.include_stack == true and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.PreviewPublishRoleArn)
       tags:
         - delete
 

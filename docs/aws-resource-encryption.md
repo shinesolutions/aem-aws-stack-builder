@@ -38,6 +38,11 @@ Permissions which needs to be applied to the CMK
 |------|-------------|------|
 | None| None | |
 
+##### Secrets Manager CMK
+| Role/Service | Required Permissions | Notes |
+|------|-------------|------|
+| None| None | |
+
 #### managed-policy permissions
 Only needed if managed-policies are used rather than permission grants. Make sure that the general permissions as described in **CMK Permissions** are defined to the CMK as described.
 ##### EBS encryption
@@ -64,6 +69,11 @@ Only needed if managed-policies are used rather than permission grants. Make sur
 | Role/Service | Required Permissions | Notes |
 |------|-------------|------|
 | S3 CMK managed-policy | Encrypt, Decrypt, DescribeKey, GenerateDataKey, ReEncryptFrom, ReEncryptTo, RetireGrant, CreateGrant | |
+
+##### Secrets Manager CMK
+| Role/Service | Required Permissions | Notes |
+|------|-------------|------|
+| Secrets Manager CMK managed-policy | Decrypt, DescribeKey | |
 
 ### Permission-Type B Consolidated
 Permissions required for Permission-Type B Consolidated
@@ -94,6 +104,11 @@ Permissions which needs to be applied to the CMK
 |------|-------------|------|
 | None| None | |
 
+##### Secrets Manager CMK
+| Role/Service | Required Permissions | Notes |
+|------|-------------|------|
+| None| None | |
+
 #### managed-policy permissions
 Only needed if managed-policies are used rather than permission grants. Make sure that the general permissions as described in **CMK Permissions** are defined to the CMK as described.
 ##### EBS encryption
@@ -120,6 +135,11 @@ Only needed if managed-policies are used rather than permission grants. Make sur
 | Role/Service | Required Permissions | Notes |
 |------|-------------|------|
 | S3 CMK managed-policy | Encrypt, Decrypt, DescribeKey, GenerateDataKey, ReEncryptFrom, ReEncryptTo, RetireGrant, CreateGrant | |
+
+##### Secrets Manager CMK
+| Role/Service | Required Permissions | Notes |
+|------|-------------|------|
+| Secrets Manager CMK managed-policy | Decrypt, DescribeKey | |
 
 ### Permission-Type B AEM Stack Manager
 Permissions required for Permission-Type B AEM Stack Manager.
@@ -227,6 +247,18 @@ Permissions which needs to be applied to the CMK
 | orchestrator.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
 | chaos_monkey.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
 
+##### Secrets Manager CMK
+| Role/Service | Required Permissions | Notes |
+|------|-------------|------|
+| publish_dispatcher.instance_profile | Decrypt, DescribeKey | |
+| publish.instance_profile | Decrypt, DescribeKey | |
+| author.instance_profile | Decrypt, DescribeKey | |
+| author_dispatcher.instance_profile | Decrypt, DescribeKey | |
+| orchestrator.instance_profile | Decrypt, DescribeKey | |
+| chaos_monkey.instance_profile | Decrypt, DescribeKey | |
+| preview_publish_dispatcher.instance_profile | Decrypt, DescribeKey | |
+| preview_publish.instance_profile | Decrypt, DescribeKey | |
+
 ### Permission-Type C Consolidated
 Permissions required for Permission-Type C Consolidated
 
@@ -258,6 +290,11 @@ Permissions which needs to be applied to the CMK
 | Role/Service | Required Permissions | Notes |
 |------|-------------|------|
 | author_publish_dispatcher.instance_profile | Encrypt, Decrypt, ReEncrypt*, GenerateDataKey*, DescribeKey | |
+
+##### Secrets Manager CMK
+| Role/Service | Required Permissions | Notes |
+|------|-------------|------|
+| author_publish_dispatcher.instance_profile | Decrypt, DescribeKey | |
 
 ### Permission-Type C AEM Stack Manager
 Permissions required for Permission-Type C AEM Stack Manager

@@ -2,6 +2,12 @@
 
 This upgrade guide covers the changes required when you already use AEM AWS Stack Builder and you need to upgrade it to a higher version.
 
+### Unreleased
+- AEM system users credentials are now stored in AWS Secrets Manager as `aem-opencloud/<stack_prefix>/system-users-credentials` instead of `s3://<data_bucket>/<stack_prefix>/system-users-credentials.json`. Stacks created by an earlier version are not migrated, create a new stack instead
+- The IAM user or role running AEM AWS Stack Builder needs `secretsmanager:CreateSecret`, `secretsmanager:DescribeSecret`, `secretsmanager:PutSecretValue`, `secretsmanager:UpdateSecret` and `secretsmanager:DeleteSecret` on `arn:aws:secretsmanager:<region>:<account>:secret:aem-opencloud/*`. When `aws.encryption.secrets_manager.kms_key_id` is set, it also needs `kms:GenerateDataKey` and `kms:Decrypt` on that CMK
+- For permission type c, every instance profile needs `secretsmanager:GetSecretValue` on `arn:aws:secretsmanager:<region>:<account>:secret:aem-opencloud/*`, and `kms:Decrypt` on the CMK when `aws.encryption.secrets_manager.kms_key_id` is set
+- Deleting a stack deletes its credentials secret without a recovery window, so a new stack can reuse the same stack prefix straight away
+
 ### To 4.40.0
 - If you want to set additional AEM runmodes, set configuration properties `aem.author.run_modes` and `aem.publish.run_modes`
 

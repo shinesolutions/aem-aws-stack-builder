@@ -9,8 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changes
 - Update lambda functions' version from python3.7 to python3.8 [#472]
 
+### Added
+- Add `aws.encryption.secrets_manager.kms_key_id` and `aws.encryption.secrets_manager.managed_policy_arn` configurations
+
 ### Changed
 - Replace deprecated AmazonEC2RoleforSSM with AmazonSSMManagedInstanceCore #RS-180
+- Store AEM system users credentials in AWS Secrets Manager secret `aem-opencloud/<stack_prefix>/system-users-credentials` instead of the S3 data bucket, deleted without recovery window on stack deletion
+- Allow all AEM instance profiles to read `aem-opencloud/*` secrets from AWS Secrets Manager
 
 ## 8.0.4 - 2024-10-25
 ### Fixed

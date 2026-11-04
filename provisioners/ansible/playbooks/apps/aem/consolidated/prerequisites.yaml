@@ -38,7 +38,7 @@
           NetworkStackPrefixParameter: "{{ network_stack_prefix }}"
           DataBucketNameParameter: "{{ s3.data_bucket_name }}"
           AuthorPublishDispatcherSecurityGroupInboundCidrIpParameter: "{{ security_groups.author_publish_dispatcher.inbound_cidr_ip }}"
-          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}"
+          AWSEncryptionParameters: "{{ aws.encryption.ebs_volume.enable | lower }}, {{ aws.encryption.ebs_volume.kms_key_id }}, {{ aws.encryption.ebs_volume.managed_policy_arn }}, {{ aws.encryption.s3.managed_policy_arn }}, {{ aws.encryption.secrets_manager.managed_policy_arn }}"
       tags:
       - create
       when:
@@ -135,6 +135,22 @@
       tags:
         - create
 
+    # Instances only decrypt the system users credentials secret
+    - name: "Grant permissions for AEM App Instance Roles to Secrets Manager CMK for permission type b"
+      aws_kms:
+        key_id: "{{ aws.encryption.secrets_manager.kms_key_id }}"
+        grants:
+          - name: "{{ stack_prefix }}-{{ item | replace('.', '_') }}-SecretsManager-Grants"
+            grantee_principal: "{{ item }}"
+            operations:
+              - Decrypt
+              - DescribeKey
+      with_items:
+        - "{{ instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorPublishDispatcherRoleArn }}"
+      when: permission_type == "b" and aws.encryption.secrets_manager.kms_key_id != 'overwrite-me' and aws.encryption.secrets_manager.managed_policy_arn == 'overwrite-me'
+      tags:
+        - create
+
     - name: Report Stack Problem
       debug:
         msg: Stack "{{ stack_prefix }}-{{ prerequisites.stack_name }}" does not exist or some other errors occured
@@ -193,6 +209,33 @@
       with_items:
         - "{{ kms_s3_key_grants }}"
       when: kms_s3_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorPublishDispatcherRoleArn
+      tags:
+        - delete
+
+    - name: "Gather information for Secrets Manager CMK"
+      aws_kms_facts:
+        filters:
+          key-id: "{{ aws.encryption.secrets_manager.kms_key_id.split('/')[1] }}"
+      when: stack_found is defined and permission_type == "b" and aws.encryption.secrets_manager.kms_key_id != 'overwrite-me' and aws.encryption.secrets_manager.managed_policy_arn == 'overwrite-me'
+      register: kms_secrets_manager_facts
+      tags:
+        - delete
+
+    - name: "Save found Secrets Manager CMK Details"
+      set_fact:
+        kms_secrets_manager_key_grants: "{{ kms_secrets_manager_facts['keys'][0].grants }}"
+      when: "'keys' in kms_secrets_manager_facts and (kms_secrets_manager_facts['keys'] | length > 0)"
+      tags:
+        - delete
+
+    - name: "Remove granted permissions for AEM App Instance Roles to Secrets Manager CMK"
+      command: >
+              aws kms revoke-grant
+                --key-id "{{ aws.encryption.secrets_manager.kms_key_id }}"
+                --grant-id "{{ item.grant_id }}"
+      with_items:
+        - "{{ kms_secrets_manager_key_grants }}"
+      when: kms_secrets_manager_key_grants is defined and item.grantee_principal == instance_profile_stack_info.ansible_facts.cloudformation[instance_profile_stack_name].stack_outputs.AuthorPublishDispatcherRoleArn
       tags:
         - delete
 

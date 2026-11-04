@@ -54,7 +54,8 @@ Parameters:
       \ Managed Policy ARN for EBS Volume encryption\n  - KMS Key ID used for SNS-Topic\
       \ & SNS Queue encryption\n  - Managed Policy ARN for SNS-Topic & SNS Queue encryption\n\
       \  - KMS Key ID used for Lambda encryption\n  - Managed Policy ARN for Lambda\
-      \ encryption\n  - Managed Policy ARN for accessing S3 CMK\n"
+      \ encryption\n  - Managed Policy ARN for accessing S3 CMK\n  - Managed Policy ARN for\
+      \ accessing Secrets Manager CMK\n"
     Type: List<String>
   AWSNotificationParameters:
     Description: "A list of AWS notification parameters.\nList must contain the following\

@@ -28,6 +28,8 @@ These configurations are applicable to both network and AEM application infrastr
 | aws.encryption.s3.managed_policy_arn | Managed policy arn with permissions to access the CMK defined in the configuration parameter `aws.encryption.s3.kms_key_id`. If no managed policy is defined, permissions for the AEM Stack Manager, Full-Set & Consolidated instance profiles for accessing the CMK key is set via grants. | Optional(permission-type b) | None |
 | aws.encryption.sns.kms_key_id | Use to define CMK for AEM Stack Manager & Full-Set SNS Topic & SNS Queue SSE encryption.| Optional | None |
 | aws.encryption.sns.managed_policy_arn | Managed policy arn with permissions to access the CMK defined in the configuration parameter `aws.encryption.sns.kms_key_arn`. If no managed policy is defined, permissions for the AEM Stack Manager & Full-Set instance profiles for accessing the CMK key is set via grants. | Optional(permission-type b) | None |
+| aws.encryption.secrets_manager.kms_key_id | Use to define CMK for encrypting the AEM system users credentials secret `aem-opencloud/<stack_prefix>/system-users-credentials` in AWS Secrets Manager. If not defined, the AWS managed key `aws/secretsmanager` is used.| Optional | None |
+| aws.encryption.secrets_manager.managed_policy_arn | Managed policy arn with permissions to access the CMK defined in the configuration parameter `aws.encryption.secrets_manager.kms_key_id`. If no managed policy is defined, permissions for the Full-Set & Consolidated instance profiles for accessing the CMK key is set via grants. | Optional(permission-type b) | None |
 | proxy.enabled | If true, then web proxy will be used during provisioning steps. Note: this web proxy setting is not used for cron jobs | Optional | `false` |
 | proxy.protocol | Web proxy server protocol used during provisioning steps | Optional | None |
 | proxy.host | Web proxy server host used during provisioning steps | Optional | None |
@@ -142,7 +144,7 @@ These configurations are applicable to AWS resources used by the AEM environment
 | messaging.alarm_notification.https_endpoint | Notification https endpoint where AEM Full-Set alarm notification will be sent to.  | Optional | |
 | compute.key_pair_name | [EC2 key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to be provisioned on all EC2 instances within the AEM environment. | Mandatory | |
 | compute.elb_cipher_suite | Cipher to use for the AEM Full-Set Author-Dispatcher, Publish-Dispatcher & Author ELB. Default parameter is a 1:1 copy of AWS default SSL policy `ELBSecurityPolicy-TLS-1-2-2017-01`| optional | `AOCELBSecurityPolicy-TLS-1-2-2017-01` |
-| s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors and credentials. | Mandatory | |
+| s3.data_bucket_name | S3 data bucket which stores all AEM environment's object files such as descriptors. | Mandatory | |
 | s3.create_bucket_flag | If "true", an S3 bucket with name: `s3.data_bucket_name` will be created as part of `make create-aws-resources` | Optional | "true" |
 | dns_records.create_hosted_zone_flag | If "true", a Route53 Private HostedZone with name: `dns_records.route53_hosted_zone_name` will be created as part of `make create-aws-resources` | Optional | "true" |
 | dns_records.route53_hosted_zone_name | A Route 53 hosted zone which the AEM environment DNS records will be created on. | Mandatory | |

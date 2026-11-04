@@ -30,6 +30,10 @@ aws:
     sns:
       kms_key_id: overwrite-me
       managed_policy_arn: overwrite-me
+    secrets_manager:
+      # System users credentials secret uses the aws/secretsmanager key unless a CMK is set
+      kms_key_id: overwrite-me
+      managed_policy_arn: overwrite-me
 proxy:
   enabled: false
   protocol:

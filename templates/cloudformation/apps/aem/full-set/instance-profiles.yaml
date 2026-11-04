@@ -15,6 +15,13 @@ Conditions:
           - 7
           - Ref: AWSEncryptionParameters
         - 'overwrite-me'
+  SecretsManagerCMKAddManagedPolicyCondition:
+    Fn::Not:
+      - Fn::Equals:
+        - Fn::Select:
+          - 8
+          - Ref: AWSEncryptionParameters
+        - 'overwrite-me'
   LambdaCMKAddManagedPolicyCondition:
     Fn::And:
       - Fn::Not:
@@ -212,6 +219,7 @@ Parameters:
         - KMS Key ID used for Lambda encryption
         - Managed Policy ARN for Lambda encryption
         - Managed Policy ARN for accessing S3 CMK
+        - Managed Policy ARN for accessing Secrets Manager CMK
     Type: List<String>
   ChaosMonkeyIncludeStack:
     Default: 'true'
@@ -287,6 +295,12 @@ Resources:
               - 7
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -303,6 +317,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          # System users credentials are read from aem-opencloud/<stack_prefix>/system-users-credentials
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -349,6 +371,12 @@ Resources:
               - 7
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -373,6 +401,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          # System users credentials are read from aem-opencloud/<stack_prefix>/system-users-credentials
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -422,6 +458,12 @@ Resources:
               - 7
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -465,6 +507,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          # System users credentials are read from aem-opencloud/<stack_prefix>/system-users-credentials
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -517,6 +567,12 @@ Resources:
               - 7
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -534,6 +590,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          # System users credentials are read from aem-opencloud/<stack_prefix>/system-users-credentials
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -619,6 +683,12 @@ Resources:
               - 7
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -656,6 +726,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          # System users credentials are read from aem-opencloud/<stack_prefix>/system-users-credentials
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -697,6 +775,12 @@ Resources:
               - 7
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -734,6 +818,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          # System users credentials are read from aem-opencloud/<stack_prefix>/system-users-credentials
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*
@@ -786,6 +878,12 @@ Resources:
           - S3CMKAddManagedPolicyCondition
           - Fn::Select:
               - 7
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
       Path: /
@@ -887,6 +985,12 @@ Resources:
               - 7
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 8
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
       Path: /
       Policies:
       - PolicyDocument:
@@ -911,6 +1015,14 @@ Resources:
             Resource:
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*"
             - Fn::Sub: "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/aem-opencloud/*/*"
+          # System users credentials are read from aem-opencloud/<stack_prefix>/system-users-credentials
+          - Action:
+            - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*"
+            - Fn::Sub: "arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:aem-opencloud/*/*/*"
           - Action:
             - s3:Get*
             - s3:List*

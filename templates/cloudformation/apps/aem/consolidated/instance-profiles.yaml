@@ -26,6 +26,13 @@ Conditions:
             - 3
             - Ref: AWSEncryptionParameters
           - 'overwrite-me'
+  SecretsManagerCMKAddManagedPolicyCondition:
+    Fn::Not:
+      - Fn::Equals:
+          - Fn::Select:
+            - 4
+            - Ref: AWSEncryptionParameters
+          - 'overwrite-me'
 Description: Create Instance Profiles for AEM Stack
 Outputs:
   AuthorPublishDispatcherInstanceProfile:
@@ -54,6 +61,7 @@ Parameters:
         - KMS Key ID used for EBS Volume encryption
         - Managed Policy ARN for EBS Volume encryption
         - Managed Policy ARN for accessing S3 CMK
+        - Managed Policy ARN for accessing Secrets Manager CMK
     Type: List<String>
 Resources:
   AuthorPublishDispatcherInstanceProfile:
@@ -85,6 +93,12 @@ Resources:
           - S3CMKAddManagedPolicyCondition
           - Fn::Select:
               - 3
+              - Ref: AWSEncryptionParameters
+          - Ref: AWS::NoValue
+      - Fn::If:
+          - SecretsManagerCMKAddManagedPolicyCondition
+          - Fn::Select:
+              - 4
               - Ref: AWSEncryptionParameters
           - Ref: AWS::NoValue
       Path: /

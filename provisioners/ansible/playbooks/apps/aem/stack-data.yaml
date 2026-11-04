@@ -40,22 +40,24 @@
       tags:
         - create
 
-    - name: Create temporary file containing generated credentials
-      copy:
-        content: "{{ system_users_credentials.meta }}"
-        dest: ../../../../../stage/system-users-credentials.json
-      when: "stack_query.rc != 0"
-      tags:
-        - create
-
-    - name: Upload system user credentials
-      aws_s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/system-users-credentials.json"
-        src: ../../../../../stage/system-users-credentials.json
-        mode: put
-        encrypt: true
-        overwrite: always
+    # Credentials are stored in Secrets Manager instead of the data bucket, as the
+    # same JSON the system-users-credentials.json file used to hold
+    - name: Store system user credentials
+      aws_secret:
+        name: "aem-opencloud/{{ stack_prefix }}/system-users-credentials"
+        description: "AEM system users credentials for {{ stack_prefix }} stack"
+        secret_type: string
+        secret: "{{ system_users_credentials.meta | to_json }}"
+        kms_key_id: "{{ aws.encryption.secrets_manager.kms_key_id if aws.encryption.secrets_manager.kms_key_id != 'overwrite-me' else omit }}"
+        region: "{{ aws.region }}"
+        state: present
+      register: system_users_credentials_secret
+      # A force-deleted secret with the same name is removed asynchronously, so
+      # recreating a stack straight after deleting it can fail for a short while
+      until: system_users_credentials_secret is succeeded
+      retries: 10
+      delay: 6
+      no_log: true
       when: "stack_query.rc != 0"
       tags:
         - create
@@ -289,18 +291,14 @@
       tags:
         - create
 
-    - name: Delete temporary file containing generated credentials
-      file:
-        path: ../../../../../stage/system-users-credentials.json
+    # No recovery window: a secret pending deletion keeps its name reserved and
+    # would block creating a new stack with the same stack prefix
+    - name: Delete system user credentials
+      aws_secret:
+        name: "aem-opencloud/{{ stack_prefix }}/system-users-credentials"
+        region: "{{ aws.region }}"
         state: absent
-      tags:
-        - delete
-
-    - name: Delete system user credentials from S3 bucket
-      aws_s3:
-        bucket: "{{ s3.data_bucket_name }}"
-        object: "{{ stack_prefix }}/system-users-credentials.json"
-        mode: delobj
+        recovery_window: 0
       tags:
         - delete
 
