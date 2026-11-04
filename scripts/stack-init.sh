@@ -229,7 +229,9 @@ HOME=/root inspec exec "${component}_spec.rb"
 handle_exit_code "$?"
 
 echo "${label} Cleaning up provisioner temp directory..."
-rm -rf "${tmp_dir:?}/*"
+# The glob is outside the quotes so it expands. Inside them it only matched a file named after the literal asterisk,
+# which left the plain-text system users credentials in tmp_dir after initialisation
+rm -rf "${tmp_dir:?}"/*
 
 echo "${label} Completed ${component} component initialisation"
 

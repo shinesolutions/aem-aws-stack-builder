@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Store AEM system users credentials in AWS Secrets Manager secret `aem-opencloud/<stack_prefix>/system-users-credentials` instead of the S3 data bucket, deleted without recovery window on stack deletion
 - Allow all AEM instance profiles to read `aem-opencloud/*` secrets from AWS Secrets Manager
 
+### Fixed
+- Clean up the provisioner temp directory at the end of stack initialisation, which never deleted anything and left the system users credentials file on the instances
+
 ## 8.0.4 - 2024-10-25
 ### Fixed
 - Allow S3 put for full-set instance profile
